@@ -13,6 +13,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "D2.UserManagement", "D2.Use
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "D2.ServiceBroker.Test.Persistence", "D2.ServiceBroker.Test.Persistence\D2.ServiceBroker.Test.Persistence.fsproj", "{33E47674-EC62-4884-992C-23946EA6ACAB}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "D2.ServiceBroker.Test.Endpoints", "D2.ServiceBroker.Test.Endpoints\D2.ServiceBroker.Test.Endpoints.fsproj", "{B678C00E-5BB0-46F3-A973-C6CAD049212C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +88,17 @@ Global
 		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x64.Build.0 = Release|x64
 		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x86.ActiveCfg = Release|x86
 		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x86.Build.0 = Release|x86
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|x64.ActiveCfg = Debug|x64
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|x64.Build.0 = Debug|x64
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|x86.ActiveCfg = Debug|x86
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|x86.Build.0 = Debug|x86
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x64.ActiveCfg = Release|x64
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x64.Build.0 = Release|x64
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x86.ActiveCfg = Release|x86
+		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.9.0"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"/>
+    <PackageReference Include="FsUnit" Version="3.0.0"/>
+    <PackageReference Include="RestSharp.CoreNet" Version="105.2.4-rc4-24214-03"/>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Routes.fs"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\D2.Common\D2.Common.fsproj"/>
+    <ProjectReference Include="..\D2.ServiceBroker\D2.ServiceBroker.fsproj"/>
+    <ProjectReference Include="..\D2.ServiceBroker.Persistence\D2.ServiceBroker.Persistence.fsproj"/>
+  </ItemGroup>
+</Project>

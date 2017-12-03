@@ -249,6 +249,4 @@ module StorageTest =
                           service.EndPoints.[0].Uri |> should equal "/"
         | _ -> failwith "unknown error"
 
-    [<EntryPoint>]
-    let main args =
-        0
+module Program = let [<EntryPoint>] main _ = 0
