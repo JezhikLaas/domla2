@@ -3,26 +3,18 @@
 open D2.Common
 open Microsoft.AspNetCore.Mvc
 
-[<Route("api/[controller]")>]
+[<Route("[controller]")>]
 type AppsController () =
     inherit Controller()
 
-    [<HttpGet>]
-    member this.Get() =
-        [|"value1"; "value2"|]
-
-    [<HttpGet("{name}/(?<version>[\d]{2})/{service}")>]
+    [<HttpGet("{name}/{version:regex(^([\d]{2})$)}/{service}")>]
     member this.Get(name : string, version : int, service : string) =
         Response.emit (ResolveRoutes.endpoints name version service)
 
-    [<HttpPost>]
-    member this.Post([<FromBody>]value:string) =
-        ()
+    [<HttpPut("{name}/{version:regex(^([\d]{2})$)}/register")>]
+    member this.Put(name : string, version : int, [<FromBody>] service : string) =
+        Response.confirm (ResolveRoutes.register name version service)
 
-    [<HttpPut("{id}")>]
-    member this.Put(id:int, [<FromBody>]value:string ) =
-        ()
-
-    [<HttpDelete("{id}")>]
-    member this.Delete(id:int) =
-        ()
+    [<HttpGet("{name}/{version:regex(^([\d]{2})$)}")>]
+    member this.Get(name : string, version : int) =
+        Response.emit (ResolveRoutes.routes name version)

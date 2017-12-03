@@ -33,5 +33,5 @@ module Request =
         member b.Return(h) = succeed h
         member b.ReturnFrom(h : HandleRequest<'Result>) = h
     
-    let handle = new HandleRequestBuilder()
+    let handle = HandleRequestBuilder()
     
