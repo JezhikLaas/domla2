@@ -1,4 +1,4 @@
-namespace D2.ServiceBroker
+﻿namespace D2.ServiceBroker
 
 open System
 open System.Collections.Generic

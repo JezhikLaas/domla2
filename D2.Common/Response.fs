@@ -5,12 +5,15 @@ open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 
 module Response =
-
     let logger = LogManager.GetLogger ("D2.Common.Response")
 
     let emit f = 
         match f with
-        | Success x -> JsonResult(x) :> ActionResult
+        | Success x         -> new ContentResult(
+                                   Content = x,
+                                   ContentType = "application/json"
+                               )
+                               :> ActionResult
         | InternalFailure s -> logger.Error(s)
                                StatusCodeResult(StatusCodes.Status500InternalServerError) :> ActionResult
         | ExternalFailure s -> StatusCodeResult(StatusCodes.Status422UnprocessableEntity) :> ActionResult

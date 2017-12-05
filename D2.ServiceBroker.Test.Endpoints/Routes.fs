@@ -92,9 +92,10 @@ module RoutesTest =
     let mutable browser = null
 
     [<OneTimeSetUp>]
-    let setupOnce() =
+    let setupOnce () =
+        CompositionRoot.setStorage testStorage
         let server = new TestServer((new WebHostBuilder()).UseStartup<Startup>())
-        browser = server.CreateClient()
+        browser <- server.CreateClient()
 
     [<SetUp>]
     let init () =
@@ -107,7 +108,7 @@ module RoutesTest =
                        |> Async.RunSynchronously
         let result = response.StatusCode
 
-        result |> should equal StatusCodes.Status200OK
+        int result |> should equal StatusCodes.Status200OK
     
     [<Test>]
     let ``Service broker answers 'Unprocessable Entity' when application is unknown``() =
@@ -116,7 +117,7 @@ module RoutesTest =
                        |> Async.RunSynchronously
         let result = response.StatusCode
 
-        result |> should equal StatusCodes.Status422UnprocessableEntity
+        int result |> should equal StatusCodes.Status422UnprocessableEntity
     
     [<Test>]
     let ``Service broker lists known applications``() =
@@ -125,7 +126,7 @@ module RoutesTest =
                        |> Async.RunSynchronously
         let result = response.StatusCode
 
-        result |> should equal StatusCodes.Status200OK
+        int result |> should equal StatusCodes.Status200OK
     
     [<Test>]
     let ``Service broker answers 'Ok' when registering service``() =
@@ -142,7 +143,7 @@ module RoutesTest =
                        |> Async.RunSynchronously
         let result = response.StatusCode
 
-        result |> should equal Net.HttpStatusCode.OK
+        int result |> should equal StatusCodes.Status200OK
     
     [<Test>]
     let ``Service broker answers 'Ok' when registering service with Endpoints``() =
@@ -153,7 +154,7 @@ module RoutesTest =
                               Patch = 0,
                               EndPoints = [
                                   new EndPointI(Name = "123", Uri = "/")
-                              ]
+                                ]
                           )
         let body = Newtonsoft.Json.JsonConvert.SerializeObject(service)
         let response = browser.PutAsync("/apps/Domla2/01/register", new StringContent(body, Text.Encoding.UTF8, "application/json"))
@@ -161,7 +162,7 @@ module RoutesTest =
                        |> Async.RunSynchronously
         let result = response.StatusCode
 
-        result |> should equal Net.HttpStatusCode.OK
+        int result |> should equal StatusCodes.Status200OK
     
     [<Test>]
     let ``Service broker delivers infos for specific service``() =
@@ -185,7 +186,7 @@ module RoutesTest =
                        |> Async.AwaitTask
                        |> Async.RunSynchronously
         
-        response.StatusCode |> should equal Net.HttpStatusCode.OK
+        int response.StatusCode |> should equal StatusCodes.Status200OK
         let text = response.Content.ReadAsStringAsync()
                    |> Async.AwaitTask
                    |> Async.RunSynchronously
