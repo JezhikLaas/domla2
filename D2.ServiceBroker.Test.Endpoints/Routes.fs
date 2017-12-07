@@ -94,7 +94,7 @@ module RoutesTest =
     [<OneTimeSetUp>]
     let setupOnce () =
         CompositionRoot.setStorage testStorage
-        let server = new TestServer((new WebHostBuilder()).UseStartup<Startup>())
+        let server = new TestServer((WebHostBuilder()).UseStartup<Startup>())
         browser <- server.CreateClient()
 
     [<SetUp>]
@@ -130,13 +130,13 @@ module RoutesTest =
     
     [<Test>]
     let ``Service broker answers 'Ok' when registering service``() =
-        let service = new ServiceI(
-                              Name = "Test",
-                              BaseUrl = "http://localhost:2300",
-                              Version = 1,
-                              Patch = 0,
-                              EndPoints = []
-                          )
+        let service = ServiceI(
+                          Name = "Test",
+                          BaseUrl = "http://localhost:2300",
+                          Version = 1,
+                          Patch = 0,
+                          EndPoints = []
+                      )
         let body = Newtonsoft.Json.JsonConvert.SerializeObject(service)
         let response = browser.PutAsync("/apps/Domla2/01/register",  new StringContent(body, Text.Encoding.UTF8, "application/json"))
                        |> Async.AwaitTask
@@ -147,15 +147,15 @@ module RoutesTest =
     
     [<Test>]
     let ``Service broker answers 'Ok' when registering service with Endpoints``() =
-        let service = new ServiceI(
-                              Name = "Test",
-                              BaseUrl = "http://localhost:2300",
-                              Version = 1,
-                              Patch = 0,
-                              EndPoints = [
-                                  new EndPointI(Name = "123", Uri = "/")
-                                ]
-                          )
+        let service = ServiceI(
+                          Name = "Test",
+                          BaseUrl = "http://localhost:2300",
+                          Version = 1,
+                          Patch = 0,
+                          EndPoints = [
+                              EndPointI(Name = "123", Uri = "/")
+                          ]
+                      )
         let body = Newtonsoft.Json.JsonConvert.SerializeObject(service)
         let response = browser.PutAsync("/apps/Domla2/01/register", new StringContent(body, Text.Encoding.UTF8, "application/json"))
                        |> Async.AwaitTask
@@ -166,16 +166,16 @@ module RoutesTest =
     
     [<Test>]
     let ``Service broker delivers infos for specific service``() =
-        let endpoint = new EndPointI(Name = "123", Uri = "/")
-        let service = new ServiceI(
-                              Name = "Test",
-                              BaseUrl = "http://localhost:2300",
-                              Version = 1,
-                              Patch = 0,
-                              EndPoints = [
-                                  endpoint
-                              ]
-                          )
+        let endpoint = EndPointI(Name = "123", Uri = "/")
+        let service = ServiceI(
+                          Name = "Test",
+                          BaseUrl = "http://localhost:2300",
+                          Version = 1,
+                          Patch = 0,
+                          EndPoints = [
+                              endpoint
+                          ]
+                      )
         let body = Newtonsoft.Json.JsonConvert.SerializeObject(service)
         browser.PutAsync("/apps/Domla2/01/register", new StringContent(body, Text.Encoding.UTF8, "application/json"))
         |> Async.AwaitTask

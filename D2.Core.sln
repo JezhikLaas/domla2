@@ -8,11 +8,13 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker", "D2.Serv
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker.Persistence", "D2.ServiceBroker.Persistence\D2.ServiceBroker.Persistence.fsproj", "{48814C03-0A5B-4A83-86AE-ADC19891A014}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement", "D2.UserManagement\D2.UserManagement.fsproj", "{BDE46765-C8D9-4DB3-80AC-91B4FC257BB9}"
-EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker.Test.Persistence", "D2.ServiceBroker.Test.Persistence\D2.ServiceBroker.Test.Persistence.fsproj", "{33E47674-EC62-4884-992C-23946EA6ACAB}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker.Test.Endpoints", "D2.ServiceBroker.Test.Endpoints\D2.ServiceBroker.Test.Endpoints.fsproj", "{B678C00E-5BB0-46F3-A973-C6CAD049212C}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement", "D2.UserManagement\D2.UserManagement.fsproj", "{BDE46765-C8D9-4DB3-80AC-91B4FC257BB9}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "D2.UserManagement.Persistence", "D2.UserManagement.Persistence\D2.UserManagement.Persistence.fsproj", "{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +98,18 @@ Global
 		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x64.Build.0 = Release|Any CPU
 		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x86.ActiveCfg = Release|Any CPU
 		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Release|x86.Build.0 = Release|Any CPU
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Debug|x64.ActiveCfg = Debug|x64
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Debug|x64.Build.0 = Debug|x64
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Debug|x86.ActiveCfg = Debug|x86
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Debug|x86.Build.0 = Debug|x86
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Release|x64.ActiveCfg = Release|x64
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Release|x64.Build.0 = Release|x64
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Release|x86.ActiveCfg = Release|x86
+		{6DF2CF00-7B0B-4C7F-8BF3-E5ADB2D9BD79}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
