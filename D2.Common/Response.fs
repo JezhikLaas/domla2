@@ -9,7 +9,7 @@ module Response =
 
     let emit f = 
         match f with
-        | Success x         -> new ContentResult(
+        | Success x         -> ContentResult(
                                    Content = x,
                                    ContentType = "application/json"
                                )
@@ -20,7 +20,7 @@ module Response =
 
     let confirm f = 
         match f with
-        | Success _ -> StatusCodeResult(StatusCodes.Status200OK) :> ActionResult
+        | Success _         -> StatusCodeResult(StatusCodes.Status200OK) :> ActionResult
         | InternalFailure s -> logger.Error(s)
                                StatusCodeResult(StatusCodes.Status500InternalServerError) :> ActionResult
         | ExternalFailure s -> StatusCodeResult(StatusCodes.Status422UnprocessableEntity) :> ActionResult
