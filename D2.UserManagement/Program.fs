@@ -1,14 +1,7 @@
 namespace D2.UserManagement
 
-open System
-open System.Collections.Generic
-open System.IO
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.Configuration
-open Microsoft.Extensions.Logging
 
 module Program =
     let exitCode = 0
@@ -21,6 +14,8 @@ module Program =
 
     [<EntryPoint>]
     let main args =
-        BuildWebHost(args).Run()
-
-        exitCode
+        if ServiceRegistration.registerSelf () then
+            BuildWebHost(args).Run()
+            0
+        else
+            1

@@ -37,11 +37,11 @@ module ServiceRegistration =
         
         logger.debug(sprintf "Trying to register with %s" url)
         
-        client.BaseAddress <- new Uri(url)
+        client.BaseAddress <- Uri url
         client.DefaultRequestHeaders.Accept.Clear()
-        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"))
+        client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue("application/json"))
         
-        let textData = JsonConvert.SerializeObject(new Service())
+        let textData = JsonConvert.SerializeObject(Service ())
         let content = new StringContent(textData, Encoding.UTF8, "application/json")
         
         logger.trace(sprintf "Sending registration %s" textData)
