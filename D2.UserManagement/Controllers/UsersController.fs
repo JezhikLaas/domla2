@@ -12,8 +12,8 @@ type UsersController () =
 
     let logger = Logger.get "D2.UserManagement.Controllers.UsersController"
 
-    [<HttpPost("register")>]
-    member this.Post() =
+    [<HttpPut("register")>]
+    member this.Put() =
         let user = this.Request.Body.AsUtf8String()
         match Registration.register user with
         | Success Ok        -> StatusCodeResult(StatusCodes.Status200OK)
