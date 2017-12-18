@@ -11,6 +11,7 @@
     <Compile Include="CorsPolicyService.fs" />
     <Compile Include="PersistedGrantStore.fs" />
     <Compile Include="ResourceStore.fs" />
+    <Compile Include="TokenCleanup.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
