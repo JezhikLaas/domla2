@@ -230,3 +230,13 @@ type ConsentStorage = {
     getConsents : string -> Async<Consent seq>
     revokeConsent : string -> string -> Async<unit>
 }
+
+
+type PersistedGrantStorage = {
+    getAll : string -> Async<PersistedGrant seq>
+    get : string-> Async<PersistedGrant option>
+    removeAll : string -> string -> Async<unit>
+    removeAllType : string -> string -> string -> Async<unit>
+    remove : string -> Async<unit>
+    store : PersistedGrant -> Async<unit>
+}

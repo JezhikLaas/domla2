@@ -4,23 +4,38 @@ open IdentityServer4.Models
 open IdentityServer4.Stores
 open System.Threading.Tasks
 
-type PersistedGrantStore (storage : AuthorizationStorage) =
+type PersistedGrantStore (storage : PersistedGrantStorage) =
     interface IPersistedGrantStore with
         
         member this.GetAllAsync (subjectId : string) =
-            Task.FromResult (Seq.empty<PersistedGrant>)
+            storage.getAll subjectId
+            |> Async.StartAsTask
         
         member this.GetAsync (key : string) =
-            Task.FromResult (new PersistedGrant())
+            async {
+                let! item = storage.get key
+                match item with
+                | Some p -> return p
+                | None   -> return null
+            }
+            |> Async.StartAsTask
         
         member this.RemoveAllAsync (subjectId : string, clientId : string) =
-            Task.CompletedTask
+            storage.removeAll subjectId clientId
+            |> Async.StartAsTask
+            :> Task
         
         member this.RemoveAllAsync (subjectId : string, clientId : string, grantType : string) =
-            Task.CompletedTask
+            storage.removeAllType subjectId clientId grantType
+            |> Async.StartAsTask
+            :> Task
         
         member this.RemoveAsync (key : string) =
-            Task.CompletedTask
+            storage.remove key
+            |> Async.StartAsTask
+            :> Task
         
         member this.StoreAsync (grant : PersistedGrant) =
-            Task.CompletedTask
+            storage.store grant
+            |> Async.StartAsTask
+            :> Task
