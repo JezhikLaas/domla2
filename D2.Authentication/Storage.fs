@@ -54,6 +54,7 @@ module Storage =
                                               persisted_grants
                                           WHERE
                                               subject_id = :subject_id"""
+                
                 command.Parameters.AddWithValue("subject_id", subjectId) |> ignore
                 
                 let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
@@ -82,6 +83,7 @@ module Storage =
                                               persisted_grants
                                           WHERE
                                               key = :key"""
+                
                 command.Parameters.AddWithValue("key", key) |> ignore
                 
                 let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
@@ -100,8 +102,45 @@ module Storage =
                                               subject_id = :subject_id
                                               AND
                                               client_id = :client_id"""
+                
                 command.Parameters.AddWithValue("subject_id", subjectId) |> ignore
                 command.Parameters.AddWithValue("client_id", clientId) |> ignore
+
+                let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+                ()
+            }
+        
+        let removeAllType (options : ConnectionOptions) (subjectId : string) (clientId : string) (grantType : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- """DELETE FROM
+                                              persisted_grants
+                                          WHERE
+                                              subject_id = :subject_id
+                                              AND
+                                              client_id = :client_id
+                                              AND
+                                              type = :type"""
+                
+                command.Parameters.AddWithValue("subject_id", subjectId) |> ignore
+                command.Parameters.AddWithValue("client_id", clientId) |> ignore
+                command.Parameters.AddWithValue("type", grantType) |> ignore
+
+                let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+                ()
+            }
+        
+        let remove (options : ConnectionOptions) (key : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- """DELETE FROM
+                                              persisted_grants
+                                          WHERE
+                                              key = :key"""
+                
+                command.Parameters.AddWithValue("key", key) |> ignore
 
                 let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
                 ()
@@ -113,8 +152,8 @@ module Storage =
                 getAll = getAll options;
                 get = get options;
                 removeAll = removeAll options;
-                removeAllType = fun _ _ _ -> async { () };
-                remove = fun _ -> async { () };
+                removeAllType = removeAllType options;
+                remove = remove options;
                 store = fun _ -> async { () };
             }
 
