@@ -231,6 +231,13 @@ type ConsentStorage = {
     revokeConsent : string -> string -> Async<unit>
 }
 
+type ConnectionOptions = {
+    Database : string
+    Host : string
+    User : string
+    Password : string
+    Port : int
+}
 
 type PersistedGrantStorage = {
     getAll : string -> Async<PersistedGrant seq>
@@ -239,4 +246,8 @@ type PersistedGrantStorage = {
     removeAllType : string -> string -> string -> Async<unit>
     remove : string -> Async<unit>
     store : PersistedGrant -> Async<unit>
+}
+
+type Storages = {
+    persistedGrantStorage : ConnectionOptions -> PersistedGrantStorage
 }

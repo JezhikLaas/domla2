@@ -15,8 +15,16 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
+        let connectionOptions = {
+            Database = this.Configuration.GetValue<string>("Database:Name");
+            Host = this.Configuration.GetValue<string>("Database:Host");
+            User = this.Configuration.GetValue<string>("Database:User");
+            Password = this.Configuration.GetValue<string>("Database:Password");
+            Port = this.Configuration.GetValue<int>("Database:Port");
+        }
+        let persistedGrantStore = Storage.storages.persistedGrantStorage connectionOptions
         services
-            .AddScoped<IPersistedGrantStore, PersistedGrantStore>(fun _ -> new PersistedGrantStore (Storage.persistedGrantStore))
+            .AddScoped<IPersistedGrantStore, PersistedGrantStore>(fun _ -> new PersistedGrantStore (persistedGrantStore))
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
             .AddClientStore<ClientStore>()
