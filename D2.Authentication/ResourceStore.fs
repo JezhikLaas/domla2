@@ -4,7 +4,7 @@ open IdentityServer4.Models
 open IdentityServer4.Stores
 open System.Threading.Tasks
 
-type ResourceStore (storage : AuthorizationStorage) =
+type ResourceStore (storage : ResourceStorage) =
     interface IResourceStore with
 
         member this.FindApiResourceAsync (name : string) =

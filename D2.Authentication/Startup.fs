@@ -22,14 +22,17 @@ type Startup private () =
             Password = this.Configuration.GetValue<string>("Database:Password");
             Port = this.Configuration.GetValue<int>("Database:Port");
         }
+        
         let persistedGrantStore = Storage.storages.persistedGrantStorage connectionOptions
+        let resourceStore = Storage.storages.resourceStorage connectionOptions
+
         services
-            .AddScoped<IPersistedGrantStore, PersistedGrantStore>(fun _ -> new PersistedGrantStore (persistedGrantStore))
+            .AddScoped<IPersistedGrantStore, PersistedGrantStore>(fun _ -> PersistedGrantStore (persistedGrantStore))
+            .AddScoped<IResourceStore, ResourceStore>(fun _ -> ResourceStore (resourceStore))
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
             .AddClientStore<ClientStore>()
             .AddCorsPolicyService<CorsPolicyService>()
-            .AddResourceStore<ResourceStore>()
         |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

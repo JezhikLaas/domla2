@@ -9,7 +9,7 @@ module Storage =
 
     let authentication (options : ConnectionOptions) =
         let builder = new NpgsqlConnectionStringBuilder()
-        builder.ApplicationName <- "Domla / 2 Authentication"
+        builder.ApplicationName <- "Domla/2 Authentication"
         builder.Database <- options.Database
         builder.Host <- options.Host
         builder.Password <- options.Password
@@ -34,7 +34,7 @@ module Storage =
                                     Nullable<DateTime>()
                                 else
                                     Nullable<DateTime>(reader.GetDateTime 5)
-                            ),
+                             ),
                 Data = reader.GetString 6
             )
 
@@ -145,18 +145,169 @@ module Storage =
                 let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
                 ()
             }
+        
+        let store (options : ConnectionOptions) (grant : PersistedGrant) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- """INSERT INTO
+                                              persisted_grants (
+                                                  key,
+                                                  type,
+                                                  subject_id,
+                                                  client_id,
+                                                  creation_time,
+                                                  expiration,
+                                                  data
+                                              )
+                                              VALUES (
+                                                  :key,
+                                                  :type,
+                                                  :subject_id,
+                                                  :client_id,
+                                                  :creation_time,
+                                                  :expiration,
+                                                  :data
+                                              )
+                                              ON CONFLICT (key) DO UPDATE SET
+                                                  SET type = EXCLUDED.type,
+                                                  SET subject_id = EXCLUDED.subject_id,
+                                                  SET client_id = EXCLUDED.client_id,
+                                                  SET creation_time = EXCLUDED.creation_time,
+                                                  SET expiration = EXCLUDED.expiration,
+                                                  SET data = EXCLUDED.data"""
+                
+                command.Parameters.AddWithValue("key", grant.Key) |> ignore
+                command.Parameters.AddWithValue("type", grant.Type) |> ignore
+                command.Parameters.AddWithValue("subject_id", grant.SubjectId) |> ignore
+                command.Parameters.AddWithValue("client_id", grant.ClientId) |> ignore
+                command.Parameters.AddWithValue("creation_time", grant.CreationTime) |> ignore
+                if grant.Expiration.HasValue then
+                    command.Parameters.AddWithValue("expiration", grant.Expiration) |> ignore
+                command.Parameters.AddWithValue("data", grant.Data) |> ignore
 
-        let connection (options : ConnectionOptions) =
-            let connectionOptions = options
+                let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+                ()
+            }
+
+        let access (options : ConnectionOptions) =
             {
                 getAll = getAll options;
                 get = get options;
                 removeAll = removeAll options;
                 removeAllType = removeAllType options;
                 remove = remove options;
-                store = fun _ -> async { () };
+                store = store options;
             }
 
+    module ResourceData =
+
+        let findApiResource (options : ConnectionOptions) (name : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- """SELECT
+                                              data
+                                          FROM
+                                              api_resources
+                                          WHERE
+                                              name = :name"""
+                
+                command.Parameters.AddWithValue("name", name) |> ignore
+                
+                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                match reader.Read () with
+                | true  -> return Some (Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0)))
+                | false -> return None
+            }
+
+        let findApiResourcesByScope (options : ConnectionOptions) (names : string seq) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- sprintf
+                                        """SELECT
+                                               data
+                                           FROM
+                                               api_resources
+                                           WHERE
+                                               data -> Scopes ->> Name IN (%s)"""
+                                        (String.Join (",", names))
+                
+                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+
+                return seq {
+                    while reader.Read () do
+                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0))
+                }
+                |> Seq.toList
+                |> List.toSeq
+            }
+
+        let findIdentityResourcesByScope (options : ConnectionOptions) (names : string seq) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- sprintf
+                                        """SELECT
+                                               data
+                                           FROM
+                                               identity_resources
+                                           WHERE
+                                               name IN (%s)"""
+                                        (String.Join (",", names))
+                
+                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+
+                return seq {
+                    while reader.Read () do
+                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<IdentityResource>(reader.GetString(0))
+                }
+                |> Seq.toList
+                |> List.toSeq
+            }
+
+        let getAllResources (options : ConnectionOptions) () =
+            async {
+                use connection = authentication options
+                
+                use commandIdentities = connection.CreateCommand ()
+                commandIdentities.CommandText <- """SELECT
+                                                        data
+                                                    FROM
+                                                        identity_resources"""
+                
+                use commandApis = connection.CreateCommand ()
+                commandApis.CommandText <- """SELECT
+                                                  data
+                                              FROM
+                                                  api_resources"""
+                
+                let! readerIdentities = commandIdentities.ExecuteReaderAsync () |> Async.AwaitTask
+                let! readerApis = commandApis.ExecuteReaderAsync () |> Async.AwaitTask
+
+                let identityResources = seq {
+                    while readerIdentities.Read () do
+                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<IdentityResource>(readerIdentities.GetString(0))
+                }
+                let apiResources = seq {
+                    while readerApis.Read () do
+                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResource>(readerIdentities.GetString(0))
+                }
+                
+                return new Resources (identityResources, apiResources)
+            }
+
+        let acccess (options : ConnectionOptions) =
+            {
+                findApiResource = findApiResource options;
+                findApiResourcesByScope = findApiResourcesByScope options;
+                findIdentityResourcesByScope = findIdentityResourcesByScope options;
+                getAllResources = getAllResources options;
+            }
+
+
     let storages = {
-        persistedGrantStorage = PersistedGrantData.connection
+        persistedGrantStorage = PersistedGrantData.access;
+        resourceStorage = ResourceData.acccess;
     }

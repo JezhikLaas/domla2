@@ -248,6 +248,14 @@ type PersistedGrantStorage = {
     store : PersistedGrant -> Async<unit>
 }
 
+type ResourceStorage = {
+    findApiResource : string -> Async<ApiResource option>
+    findApiResourcesByScope : string seq -> Async<ApiResource seq>
+    findIdentityResourcesByScope : string seq -> Async<IdentityResource seq>
+    getAllResources : unit -> Async<Resources>
+}
+
 type Storages = {
     persistedGrantStorage : ConnectionOptions -> PersistedGrantStorage
+    resourceStorage : ConnectionOptions -> ResourceStorage
 }
