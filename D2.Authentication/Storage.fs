@@ -3,6 +3,7 @@
 module Storage =
 
     open IdentityServer4.Models
+    open Newtonsoft.Json
     open Npgsql
     open System
     open System.Data.Common
@@ -217,7 +218,7 @@ module Storage =
                 
                 let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
                 match reader.Read () with
-                | true  -> return Some (Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0)))
+                | true  -> return Some (JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0)))
                 | false -> return None
             }
 
@@ -238,7 +239,7 @@ module Storage =
 
                 return seq {
                     while reader.Read () do
-                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0))
+                        yield JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0))
                 }
                 |> Seq.toList
                 |> List.toSeq
@@ -261,7 +262,7 @@ module Storage =
 
                 return seq {
                     while reader.Read () do
-                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<IdentityResource>(reader.GetString(0))
+                        yield JsonConvert.DeserializeObject<IdentityResource>(reader.GetString(0))
                 }
                 |> Seq.toList
                 |> List.toSeq
@@ -288,17 +289,17 @@ module Storage =
 
                 let identityResources = seq {
                     while readerIdentities.Read () do
-                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<IdentityResource>(readerIdentities.GetString(0))
+                        yield JsonConvert.DeserializeObject<IdentityResource>(readerIdentities.GetString(0))
                 }
                 let apiResources = seq {
                     while readerApis.Read () do
-                        yield Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResource>(readerIdentities.GetString(0))
+                        yield JsonConvert.DeserializeObject<ApiResource>(readerIdentities.GetString(0))
                 }
                 
                 return new Resources (identityResources, apiResources)
             }
 
-        let acccess (options : ConnectionOptions) =
+        let access (options : ConnectionOptions) =
             {
                 findApiResource = findApiResource options;
                 findApiResourcesByScope = findApiResourcesByScope options;
@@ -306,8 +307,34 @@ module Storage =
                 getAllResources = getAllResources options;
             }
 
+    module ClientData =
+
+        let findClientById (options : ConnectionOptions) (clientId : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- """SELECT
+                                              data
+                                          FROM
+                                              clients
+                                          WHERE
+                                              id = :id"""
+                
+                command.Parameters.AddWithValue("id", id) |> ignore
+                
+                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                match reader.Read () with
+                | true  -> return Some (Newtonsoft.Json.JsonConvert.DeserializeObject<Client>(reader.GetString(0)))
+                | false -> return None
+            }
+
+        let access (options : ConnectionOptions) =
+            {
+                findClientById = findClientById options;
+            }
 
     let storages = {
         persistedGrantStorage = PersistedGrantData.access;
-        resourceStorage = ResourceData.acccess;
+        resourceStorage = ResourceData.access;
+        clientStorage = ClientData.access
     }

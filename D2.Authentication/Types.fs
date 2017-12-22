@@ -255,7 +255,12 @@ type ResourceStorage = {
     getAllResources : unit -> Async<Resources>
 }
 
+type ClientStorage = {
+    findClientById : string -> Async<Client option>
+}
+
 type Storages = {
     persistedGrantStorage : ConnectionOptions -> PersistedGrantStorage
     resourceStorage : ConnectionOptions -> ResourceStorage
+    clientStorage : ConnectionOptions -> ClientStorage
 }

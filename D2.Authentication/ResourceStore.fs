@@ -1,20 +1,24 @@
 ﻿namespace D2.Authentication
 
-open IdentityServer4.Models
 open IdentityServer4.Stores
-open System.Threading.Tasks
 
 type ResourceStore (storage : ResourceStorage) =
     interface IResourceStore with
 
         member this.FindApiResourceAsync (name : string) =
-            Task.FromResult (new ApiResource())
+            async {
+                let! result = storage.findApiResource name
+                match result with
+                | Some r -> return r
+                | None   -> return null
+            }
+            |> Async.StartAsTask
         
         member this.FindApiResourcesByScopeAsync (scopeNames : string seq) =
-            Task.FromResult (Seq.empty<ApiResource>)
+            storage.findApiResourcesByScope scopeNames |> Async.StartAsTask
         
         member this.FindIdentityResourcesByScopeAsync (scopeNames : string seq) =
-            Task.FromResult (Seq.empty<IdentityResource>)
+            storage.findIdentityResourcesByScope scopeNames |> Async.StartAsTask
         
         member this.GetAllResourcesAsync () =
-            Task.FromResult (new Resources())
+            storage.getAllResources () |> Async.StartAsTask

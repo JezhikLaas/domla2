@@ -25,13 +25,14 @@ type Startup private () =
         
         let persistedGrantStore = Storage.storages.persistedGrantStorage connectionOptions
         let resourceStore = Storage.storages.resourceStorage connectionOptions
+        let clientStore = Storage.storages.clientStorage connectionOptions
 
         services
             .AddScoped<IPersistedGrantStore, PersistedGrantStore>(fun _ -> PersistedGrantStore (persistedGrantStore))
             .AddScoped<IResourceStore, ResourceStore>(fun _ -> ResourceStore (resourceStore))
+            .AddScoped<IClientStore, ClientStore>(fun _ -> ClientStore (clientStore))
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
-            .AddClientStore<ClientStore>()
             .AddCorsPolicyService<CorsPolicyService>()
         |> ignore
 
