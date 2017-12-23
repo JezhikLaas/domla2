@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Common", "D2.Common\D2.Common.fsproj", "{D8535F18-06ED-40C2-B82B-C00416A60762}"
 EndProject
@@ -25,6 +25,8 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test", "D2.UserManagement.Test\D2.UserManagement.Test.fsproj", "{9029B436-B63C-4B24-AAE3-335A6FE9E282}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Authentication", "D2.Authentication\D2.Authentication.fsproj", "{B94B2366-E012-4910-A73A-94EC2598659C}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Authentication.Test", "D2.Authentication.Test\D2.Authentication.Test.fsproj", "{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -180,6 +182,18 @@ Global
 		{B94B2366-E012-4910-A73A-94EC2598659C}.Release|x64.Build.0 = Release|Any CPU
 		{B94B2366-E012-4910-A73A-94EC2598659C}.Release|x86.ActiveCfg = Release|Any CPU
 		{B94B2366-E012-4910-A73A-94EC2598659C}.Release|x86.Build.0 = Release|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Debug|x64.Build.0 = Debug|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Debug|x86.Build.0 = Debug|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Release|x64.ActiveCfg = Release|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Release|x64.Build.0 = Release|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{AED4D6A0-0013-47F3-A807-C7FAA9CB3C6D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
