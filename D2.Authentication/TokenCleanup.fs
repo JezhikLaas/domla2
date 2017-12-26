@@ -2,17 +2,20 @@
 
 open System.Threading
 
-type TokenCleanup () =
+type TokenCleanup (storage : PersistedGrantStorage) =
 
     let source = new CancellationTokenSource()
 
     let clearOutdatedTokens () =
+        storage.removeOutdated ()
+        |> Async.RunSynchronously
         ()
 
     let run =
         async {
-            do! Async.Sleep(1000)
-            clearOutdatedTokens ()
+            while true do
+                do! Async.Sleep(5000)
+                clearOutdatedTokens ()
         }
 
     member this.Start () =

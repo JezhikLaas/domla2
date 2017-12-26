@@ -28,12 +28,16 @@ type Startup private () =
         let clientStore = Storage.storages.clientStorage connectionOptions
 
         services
-            .AddScoped<IPersistedGrantStore, PersistedGrantStore>(fun _ -> PersistedGrantStore (persistedGrantStore))
-            .AddScoped<IResourceStore, ResourceStore>(fun _ -> ResourceStore (resourceStore))
-            .AddScoped<IClientStore, ClientStore>(fun _ -> ClientStore (clientStore))
+            .AddSingleton(clientStore)
+            .AddSingleton(resourceStore)
+            .AddSingleton(persistedGrantStore)
+            .AddSingleton(PersistedGrantStore (persistedGrantStore))
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
+            .AddClientStore<ClientStore>()
             .AddCorsPolicyService<CorsPolicyService>()
+            .AddProfileService<ProfileService>()
+            .AddResourceStore<ResourceStore>()
         |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

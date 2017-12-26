@@ -132,6 +132,20 @@ module Storage =
                 ()
             }
         
+        let removeOutdated (options : ConnectionOptions) () =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand ()
+                command.CommandText <- """DELETE FROM
+                                              persisted_grants
+                                          WHERE
+                                              expiration IS NOT NULL
+                                              AND
+                                              expiration < 'now'"""
+                let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+                ()
+            }
+        
         let remove (options : ConnectionOptions) (key : string) =
             async {
                 use connection = authentication options
@@ -198,6 +212,7 @@ module Storage =
                 removeAll = removeAll options;
                 removeAllType = removeAllType options;
                 remove = remove options;
+                removeOutdated = removeOutdated options;
                 store = store options;
             }
 

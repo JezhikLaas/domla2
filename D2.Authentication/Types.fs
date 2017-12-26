@@ -245,6 +245,7 @@ type PersistedGrantStorage = {
     removeAll : string -> string -> Async<unit>
     removeAllType : string -> string -> string -> Async<unit>
     remove : string -> Async<unit>
+    removeOutdated : unit -> Async<unit>
     store : PersistedGrant -> Async<unit>
 }
 

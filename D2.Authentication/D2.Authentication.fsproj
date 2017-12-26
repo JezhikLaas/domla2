@@ -10,6 +10,7 @@
     <Compile Include="ClientStore.fs" />
     <Compile Include="CorsPolicyService.fs" />
     <Compile Include="PersistedGrantStore.fs" />
+    <Compile Include="ProfileService.fs" />
     <Compile Include="ResourceStore.fs" />
     <Compile Include="TokenCleanup.fs" />
     <Compile Include="Storage.fs" />

@@ -6,6 +6,10 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>NU1603</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FsUnit" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />
