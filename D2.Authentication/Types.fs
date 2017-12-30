@@ -191,15 +191,6 @@ type UserI () =
             LoggedIn = (reader.IsDBNull(loggedInIndex) = false)
         ) :> User
 
-type StorageService = {
-    findUser : string -> string -> Async<User option>
-    updateActive : string -> bool -> Async<unit>
-    fetchUser : string -> Async<User option>
-    loadAllScopes : unit -> Async<Scope seq>
-    loadScopes : string seq -> Async<Scope seq>
-    fetchClient : string -> Async<Client option>
-}
-
 type AuthorizationStorage = {
     storeAuthorizationCode : AuthorizationCode -> Async<string>
     getAuthorizationCode : string -> Async<AuthorizationCode option>
@@ -208,35 +199,16 @@ type AuthorizationStorage = {
     getAuthorizationCodes : unit -> Async<AuthorizationCode seq>
 }
 
-type TokenStorage = {
-    storeToken : string -> Token -> Async<unit>
-    getToken : string -> Async<Token option>
-    deleteToken : string -> Async<unit>
-    revokeToken : string -> string -> Async<unit>
-    getTokens : unit -> Async<Token seq>
-}
-
-type RefreshTokenStorage = {
-    storeRefreshToken : string -> RefreshToken -> Async<unit>
-    getRefreshToken : string -> Async<RefreshToken option>
-    deleteRefreshToken : string -> Async<unit>
-    revokeRefreshToken : string -> string -> Async<unit>
-    getRefreshTokens : unit -> Async<RefreshToken seq>
-}
-
-type ConsentStorage = {
-    loadConsent : string -> string -> Async<Consent option>
-    updateConsent : Consent -> Async<unit>
-    getConsents : string -> Async<Consent seq>
-    revokeConsent : string -> string -> Async<unit>
-}
-
 type ConnectionOptions = {
     Database : string
     Host : string
     User : string
     Password : string
     Port : int
+}
+
+type SetupStorage = {
+    initialize : unit -> Async<unit>
 }
 
 type PersistedGrantStorage = {
@@ -261,6 +233,7 @@ type ClientStorage = {
 }
 
 type Storages = {
+    setupStorage : ConnectionOptions -> SetupStorage
     persistedGrantStorage : ConnectionOptions -> PersistedGrantStorage
     resourceStorage : ConnectionOptions -> ResourceStorage
     clientStorage : ConnectionOptions -> ClientStorage

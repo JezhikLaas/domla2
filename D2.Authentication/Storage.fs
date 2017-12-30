@@ -2,6 +2,7 @@
 
 module Storage =
 
+    open IdentityServer4
     open IdentityServer4.Models
     open Newtonsoft.Json
     open Npgsql
@@ -58,7 +59,7 @@ module Storage =
                 
                 command.Parameters.AddWithValue("subject_id", subjectId) |> ignore
                 
-                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
                 return seq {
                     while reader.Read () do
@@ -87,7 +88,8 @@ module Storage =
                 
                 command.Parameters.AddWithValue("key", key) |> ignore
                 
-                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+
                 match reader.Read () with
                 | true  -> return Some (fromReader reader)
                 | false -> return None
@@ -231,7 +233,8 @@ module Storage =
                 
                 command.Parameters.AddWithValue("name", name) |> ignore
                 
-                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+
                 match reader.Read () with
                 | true  -> return Some (JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0)))
                 | false -> return None
@@ -250,7 +253,7 @@ module Storage =
                                                data -> Scopes ->> Name IN (%s)"""
                                         (String.Join (",", names))
                 
-                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
                 return seq {
                     while reader.Read () do
@@ -273,7 +276,7 @@ module Storage =
                                                name IN (%s)"""
                                         (String.Join (",", names))
                 
-                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
                 return seq {
                     while reader.Read () do
@@ -287,31 +290,40 @@ module Storage =
             async {
                 use connection = authentication options
                 
-                use commandIdentities = connection.CreateCommand ()
-                commandIdentities.CommandText <- """SELECT
+                let identityResources () = 
+                    use commandIdentities = connection.CreateCommand ()
+                    commandIdentities.CommandText <- """SELECT
+                                                            data
+                                                        FROM
+                                                            identity_resources"""
+                
+                    use readerIdentities = commandIdentities.ExecuteReader ()
+                
+                    seq {
+                        while readerIdentities.Read () do
+                            yield JsonConvert.DeserializeObject<IdentityResource>(readerIdentities.GetString(0))
+                    }
+                    |> Seq.toList
+                
+                let apiResources () = 
+                    use commandApis = connection.CreateCommand ()
+                    commandApis.CommandText <- """SELECT
                                                         data
                                                     FROM
-                                                        identity_resources"""
-                
-                use commandApis = connection.CreateCommand ()
-                commandApis.CommandText <- """SELECT
-                                                  data
-                                              FROM
-                                                  api_resources"""
-                
-                let! readerIdentities = commandIdentities.ExecuteReaderAsync () |> Async.AwaitTask
-                let! readerApis = commandApis.ExecuteReaderAsync () |> Async.AwaitTask
+                                                        api_resources"""
+                    
+                    use readerApis = commandApis.ExecuteReader ()
 
-                let identityResources = seq {
-                    while readerIdentities.Read () do
-                        yield JsonConvert.DeserializeObject<IdentityResource>(readerIdentities.GetString(0))
-                }
-                let apiResources = seq {
-                    while readerApis.Read () do
-                        yield JsonConvert.DeserializeObject<ApiResource>(readerIdentities.GetString(0))
-                }
+                    seq {
+                        while readerApis.Read () do
+                            yield JsonConvert.DeserializeObject<ApiResource>(readerApis.GetString(0))
+                    }
+                    |> Seq.toList
                 
-                return new Resources (identityResources, apiResources)
+                return new Resources (
+                    identityResources (),
+                    apiResources ()
+                )
             }
 
         let access (options : ConnectionOptions) =
@@ -337,7 +349,8 @@ module Storage =
                 
                 command.Parameters.AddWithValue("id", id) |> ignore
                 
-                let! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+                use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
+
                 match reader.Read () with
                 | true  -> return Some (Newtonsoft.Json.JsonConvert.DeserializeObject<Client>(reader.GetString(0)))
                 | false -> return None
@@ -347,8 +360,77 @@ module Storage =
             {
                 findClientById = findClientById options;
             }
+    
+    module SetupData =
+
+        let initialize (options : ConnectionOptions) () =
+            async {
+                use connection = authentication options
+
+                let isDatabaseFilled () =
+                    use command = connection.CreateCommand ()
+                    command.CommandText <- """SELECT
+                                                  CASE WHEN EXISTS (SELECT 1 FROM clients)
+                                                      THEN 1
+                                                      ELSE 0
+                                                  END"""
+                
+                    match command.ExecuteScalar () :?> int32 with
+                    | 1 -> true
+                    | _ -> false
+                
+                let insertClients () =
+                    use command = connection.CreateCommand ()
+                    let silicon = Client (
+                                      ClientId = "service",
+                                      AllowedGrantTypes = GrantTypes.ClientCredentials,
+                                      ClientSecrets = [| Secret ("{E9B7C075-8704-4BC4-BB17-B45AFC8CCB5C}".Sha256 ()) |],
+                                      AllowedScopes = [| "api" |]
+                                  )
+                    let interactive = Client (
+                                          ClientId = "interactive",
+                                          ClientName = "Interactive user",
+                                          AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                                          ClientSecrets = [| Secret ("{513501CB-6B8F-4D22-8D1C-6A32EA6C589B}".Sha256 ()) |],
+                                          RedirectUris = [| "http://localhost:5002/signin-oidc" |],
+                                          PostLogoutRedirectUris = [| "http://localhost:5002/signout-callback-oidc" |],
+                                          RequireConsent = false,
+                                          AllowedScopes =
+                                              [|
+                                                  IdentityServerConstants.StandardScopes.OpenId;
+                                                  IdentityServerConstants.StandardScopes.Profile;
+                                                  "role.profile";
+                                                  "api"
+                                              |]
+                                      )
+                    
+                    command.CommandText <- """INSERT INTO
+                                                  clients (id, data)
+                                              VALUES
+                                                  (:id, :data)"""
+                    
+                    for client in [| silicon; interactive |] do
+                        command.Parameters.Clear ()
+                        command.Parameters.AddWithValue ("id", client.ClientId) |> ignore
+                        command.Parameters.AddWithValue (
+                            "data",
+                            NpgsqlTypes.NpgsqlDbType.Jsonb,
+                            JsonConvert.SerializeObject (client)
+                        ) |> ignore
+                        command.ExecuteNonQuery () |> ignore
+
+                match isDatabaseFilled () with
+                | true  -> ()
+                | false -> insertClients ()
+            }
+
+        let access (options : ConnectionOptions) =
+            {
+                initialize = initialize options;
+            }
 
     let storages = {
+        setupStorage = SetupData.access;
         persistedGrantStorage = PersistedGrantData.access;
         resourceStorage = ResourceData.access;
         clientStorage = ClientData.access
