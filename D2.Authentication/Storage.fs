@@ -9,6 +9,7 @@ module Storage =
     open Npgsql
     open System
     open System.Data.Common
+    open System.Security.Claims
 
     let authentication (options : ConnectionOptions) =
         let builder = new NpgsqlConnectionStringBuilder()
@@ -539,7 +540,18 @@ module Storage =
                         command.ExecuteNonQuery () |> ignore
                 
                 let insertAdmin () =
-                    ()
+                    let salt = BCrypt.GenerateSalt()
+                    let password = BCrypt.HashPassword("secret", salt)
+
+                    use insert = connection.CreateCommand()
+                    insert.CommandText <- "INSERT INTO users (id, login, password, last_name, email, claims) VALUES (:id, :login, :password, :last_name, :email, :claims)"
+                    insert.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Uuid, Guid.NewGuid()) |> ignore
+                    insert.Parameters.AddWithValue("login", NpgsqlTypes.NpgsqlDbType.Varchar, "admin") |> ignore
+                    insert.Parameters.AddWithValue("password", NpgsqlTypes.NpgsqlDbType.Varchar, password) |> ignore
+                    insert.Parameters.AddWithValue("last_name", NpgsqlTypes.NpgsqlDbType.Varchar, "<unknown>") |> ignore
+                    insert.Parameters.AddWithValue("email", NpgsqlTypes.NpgsqlDbType.Varchar, "<unknown>") |> ignore
+                    insert.Parameters.AddWithValue("claims", NpgsqlTypes.NpgsqlDbType.Jsonb, JsonConvert.SerializeObject([| new Claim("role", "admin") |])) |> ignore
+                    insert.ExecuteNonQuery() |> ignore
                 
                 match isDatabaseFilled () with
                 | true  -> ()
