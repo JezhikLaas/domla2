@@ -232,9 +232,16 @@ type ClientStorage = {
     findClientById : string -> Async<Client option>
 }
 
+type UserStorage = {
+    findUser : string -> string -> Async<User option>
+    fetchUser : string -> Async<User option>
+    updateActive : string -> bool -> Async<unit>
+}
+
 type Storages = {
     setupStorage : ConnectionOptions -> SetupStorage
     persistedGrantStorage : ConnectionOptions -> PersistedGrantStorage
     resourceStorage : ConnectionOptions -> ResourceStorage
     clientStorage : ConnectionOptions -> ClientStorage
+    userStorage : ConnectionOptions -> UserStorage
 }

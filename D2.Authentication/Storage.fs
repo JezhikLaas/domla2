@@ -2,6 +2,7 @@
 
 module Storage =
 
+    open BCrypt.Net
     open IdentityServer4
     open IdentityServer4.Models
     open Newtonsoft.Json
@@ -361,6 +362,74 @@ module Storage =
                 findClientById = findClientById options;
             }
     
+    module UserData = 
+        
+        let findUser (options : ConnectionOptions) (name : string) (password : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand()
+    
+                command.CommandText <- """SELECT
+                                              id,
+                                              login,
+                                              first_name,
+                                              last_name,
+                                              email,
+                                              password,
+                                              title,
+                                              salutation,
+                                              claims,
+                                              logged_in
+                                          FROM
+                                              users
+                                          WHERE
+                                              login = :login"""
+                command.Parameters.AddWithValue("login", name) |> ignore
+    
+                use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
+                match reader.Read() with
+                | true  -> let storedPassword = reader.GetString(5)
+                           match BCrypt.Verify(password, storedPassword) with
+                           | true  -> return Some (UserI.fromReader reader)
+                           | false -> return None
+                | false -> return None
+            }
+    
+        let fetchUser (options : ConnectionOptions) (id : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand()
+    
+                command.CommandText <- "SELECT id, login, first_name, last_name, email, title, salutation, claims, logged_in FROM users WHERE id = :id"
+                command.Parameters.AddWithValue("id", new Guid(id)) |> ignore
+    
+                use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
+                match reader.Read() with
+                | true  -> return Some (UserI.fromReader reader)
+                | false -> return None
+            }
+        
+        let updateActive (options : ConnectionOptions) (id : string) (state : bool) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand()
+    
+                command.CommandText <- sprintf "UPDATE users SET logged_in = %s FROM WHERE id = :id" (if state then "LOCALTIMESTAMP" else "NULL")
+                command.Parameters.AddWithValue("id", new Guid(id)) |> ignore
+    
+                let! result = command.ExecuteNonQueryAsync() |> Async.AwaitTask
+                match result with
+                | 1 -> return ()
+                | _ -> failwith "failed to update login state"
+            }
+
+        let access (options : ConnectionOptions) =
+            {
+                findUser = findUser options;
+                fetchUser = fetchUser options;
+                updateActive = updateActive options;
+            }
+        
     module SetupData =
 
         let initialize (options : ConnectionOptions) () =
@@ -395,6 +464,7 @@ module Storage =
                                           RedirectUris = [| "http://localhost:5002/signin-oidc" |],
                                           PostLogoutRedirectUris = [| "http://localhost:5002/signout-callback-oidc" |],
                                           RequireConsent = false,
+                                          AllowOfflineAccess = true,
                                           AllowedScopes =
                                               [|
                                                   IdentityServerConstants.StandardScopes.OpenId;
@@ -419,9 +489,64 @@ module Storage =
                         ) |> ignore
                         command.ExecuteNonQuery () |> ignore
 
+                let insertIdentities () =
+                    use command = connection.CreateCommand ()
+                    command.CommandText <- """INSERT INTO
+                                                  identity_resources (name, data)
+                                              VALUES
+                                                  (:name, :data)"""
+                    
+                    let resources = 
+                        [|
+                            IdentityResource(
+                                name = "role.profile",
+                                displayName = "Role profile",
+                                claimTypes = [| "role" |]);
+                            IdentityResources.OpenId() :> IdentityResource;
+                            IdentityResources.Profile() :> IdentityResource;
+                        |]
+                    
+                    for resource in resources do
+                        command.Parameters.Clear ()
+                        command.Parameters.AddWithValue ("name", resource.Name) |> ignore
+                        command.Parameters.AddWithValue (
+                            "data",
+                            NpgsqlTypes.NpgsqlDbType.Jsonb,
+                            JsonConvert.SerializeObject (resource)
+                        ) |> ignore
+                        command.ExecuteNonQuery () |> ignore
+                
+                let insertApis () =
+                    use command = connection.CreateCommand ()
+                    command.CommandText <- """INSERT INTO
+                                                  api_resources (name, data)
+                                              VALUES
+                                                  (:name, :data)"""
+                    
+                    let resources = 
+                        [|
+                            ApiResource ("api", "REST Api")
+                        |]
+                    
+                    for resource in resources do
+                        command.Parameters.Clear ()
+                        command.Parameters.AddWithValue ("name", resource.Name) |> ignore
+                        command.Parameters.AddWithValue (
+                            "data",
+                            NpgsqlTypes.NpgsqlDbType.Jsonb,
+                            JsonConvert.SerializeObject (resource)
+                        ) |> ignore
+                        command.ExecuteNonQuery () |> ignore
+                
+                let insertAdmin () =
+                    ()
+                
                 match isDatabaseFilled () with
                 | true  -> ()
                 | false -> insertClients ()
+                           insertIdentities ()
+                           insertApis ()
+                           insertAdmin ()
             }
 
         let access (options : ConnectionOptions) =
@@ -433,5 +558,6 @@ module Storage =
         setupStorage = SetupData.access;
         persistedGrantStorage = PersistedGrantData.access;
         resourceStorage = ResourceData.access;
-        clientStorage = ClientData.access
+        clientStorage = ClientData.access;
+        userStorage = UserData.access;
     }
