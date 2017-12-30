@@ -35,7 +35,7 @@ type Startup private () =
             .AddSingleton(clientStore)
             .AddSingleton(resourceStore)
             .AddSingleton(persistedGrantStore)
-            .AddSingleton(PersistedGrantStore (persistedGrantStore))
+            .AddScoped<IPersistedGrantStore, PersistedGrantStore>()
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
             .AddClientStore<ClientStore>()
