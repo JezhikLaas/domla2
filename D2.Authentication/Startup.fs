@@ -30,11 +30,13 @@ type Startup private () =
         let persistedGrantStore = Storage.storages.persistedGrantStorage connectionOptions
         let resourceStore = Storage.storages.resourceStorage connectionOptions
         let clientStore = Storage.storages.clientStorage connectionOptions
+        let userStore = Storage.storages.userStorage connectionOptions
 
         services
             .AddSingleton(clientStore)
             .AddSingleton(resourceStore)
             .AddSingleton(persistedGrantStore)
+            .AddSingleton(userStore)
             .AddScoped<IPersistedGrantStore, PersistedGrantStore>()
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()

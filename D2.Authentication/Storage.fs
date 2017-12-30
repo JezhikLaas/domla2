@@ -401,7 +401,20 @@ module Storage =
                 use connection = authentication options
                 use command = connection.CreateCommand()
     
-                command.CommandText <- "SELECT id, login, first_name, last_name, email, title, salutation, claims, logged_in FROM users WHERE id = :id"
+                command.CommandText <- """SELECT
+                                              id,
+                                              login,
+                                              first_name,
+                                              last_name,
+                                              email,
+                                              title,
+                                              salutation,
+                                              claims,
+                                              logged_in
+                                          FROM
+                                              users
+                                          WHERE
+                                              id = :id"""
                 command.Parameters.AddWithValue("id", new Guid(id)) |> ignore
     
                 use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
@@ -415,7 +428,12 @@ module Storage =
                 use connection = authentication options
                 use command = connection.CreateCommand()
     
-                command.CommandText <- sprintf "UPDATE users SET logged_in = %s FROM WHERE id = :id" (if state then "LOCALTIMESTAMP" else "NULL")
+                command.CommandText <- sprintf """UPDATE
+                                                      users
+                                                  SET
+                                                      logged_in = %s
+                                                  WHERE
+                                                      id = :id""" (if state then "LOCALTIMESTAMP" else "NULL")
                 command.Parameters.AddWithValue("id", new Guid(id)) |> ignore
     
                 let! result = command.ExecuteNonQueryAsync() |> Async.AwaitTask
@@ -544,7 +562,11 @@ module Storage =
                     let password = BCrypt.HashPassword("secret", salt)
 
                     use insert = connection.CreateCommand()
-                    insert.CommandText <- "INSERT INTO users (id, login, password, last_name, email, claims) VALUES (:id, :login, :password, :last_name, :email, :claims)"
+                    insert.CommandText <- """INSERT INTO
+                                                 users (id, login, password, last_name, email, claims)
+                                             VALUES
+                                                 (:id, :login, :password, :last_name, :email, :claims)"""
+                    
                     insert.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Uuid, Guid.NewGuid()) |> ignore
                     insert.Parameters.AddWithValue("login", NpgsqlTypes.NpgsqlDbType.Varchar, "admin") |> ignore
                     insert.Parameters.AddWithValue("password", NpgsqlTypes.NpgsqlDbType.Varchar, password) |> ignore
