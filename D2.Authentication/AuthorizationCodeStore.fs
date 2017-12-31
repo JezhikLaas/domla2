@@ -23,6 +23,6 @@ type AuthorizationCodeStore(storage : AuthorizationStorage) =
 
         member this.RemoveAuthorizationCodeAsync(key : string) =
             async {
-                do! storage.deleteAuthorizationCode key
+                do! storage.removeAuthorizationCode key
             }
             |> Async.StartAsTask :> Task

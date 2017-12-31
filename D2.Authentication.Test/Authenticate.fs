@@ -101,7 +101,7 @@ module AuthenticationTest =
         users.AlwaysSendClientClaims <- true
         
         let services = new Client()
-        services.ClientId <- "silicon"
+        services.ClientId <- "service"
         services.ClientName <- "Silicon-only Client"
         services.Enabled <- true
         services.AccessTokenType <- AccessTokenType.Reference
@@ -139,7 +139,7 @@ module AuthenticationTest =
 
     [<Test>]
     let ``Token for API can be fetched``() =
-        let client = new TokenClient(tokenUrl, "silicon", "1B0A7C32-1A60-4D5D-AE4C-4163F72E467D")
+        let client = new TokenClient(tokenUrl, "service", "1B0A7C32-1A60-4D5D-AE4C-4163F72E467D")
         let result = client.RequestClientCredentialsAsync("api").Result
 
         result |> should not' (equal null)

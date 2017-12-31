@@ -194,9 +194,7 @@ type UserI () =
 type AuthorizationStorage = {
     storeAuthorizationCode : AuthorizationCode -> Async<string>
     getAuthorizationCode : string -> Async<AuthorizationCode option>
-    deleteAuthorizationCode : string -> Async<unit>
-    revokeAuthorizationCode : string -> string -> Async<unit>
-    getAuthorizationCodes : unit -> Async<AuthorizationCode seq>
+    removeAuthorizationCode : string -> Async<unit>
 }
 
 type ConnectionOptions = {
@@ -244,4 +242,5 @@ type Storages = {
     resourceStorage : ConnectionOptions -> ResourceStorage
     clientStorage : ConnectionOptions -> ClientStorage
     userStorage : ConnectionOptions -> UserStorage
+    authorizationStorage : ConnectionOptions -> AuthorizationStorage
 }

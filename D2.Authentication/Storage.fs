@@ -455,31 +455,19 @@ module Storage =
             async {
                 use connection = authentication options
 
-                let isDatabaseFilled () =
-                    use command = connection.CreateCommand ()
-                    command.CommandText <- """SELECT
-                                                  CASE WHEN EXISTS (SELECT 1 FROM clients)
-                                                      THEN 1
-                                                      ELSE 0
-                                                  END"""
-                
-                    match command.ExecuteScalar () :?> int32 with
-                    | 1 -> true
-                    | _ -> false
-                
-                let insertClients () =
+                let insertOrUpdateClients () =
                     use command = connection.CreateCommand ()
                     let silicon = Client (
                                       ClientId = "service",
                                       AllowedGrantTypes = GrantTypes.ClientCredentials,
-                                      ClientSecrets = [| Secret ("{E9B7C075-8704-4BC4-BB17-B45AFC8CCB5C}".Sha256 ()) |],
+                                      ClientSecrets = [| Secret ("1B0A7C32-1A60-4D5D-AE4C-4163F72E467D".Sha256 ()) |],
                                       AllowedScopes = [| "api" |]
                                   )
                     let interactive = Client (
                                           ClientId = "interactive",
                                           ClientName = "Interactive user",
                                           AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
-                                          ClientSecrets = [| Secret ("{513501CB-6B8F-4D22-8D1C-6A32EA6C589B}".Sha256 ()) |],
+                                          ClientSecrets = [| Secret ("0A0C7C53-1A60-4D5D-AE4C-4163F72E467D".Sha256 ()) |],
                                           RedirectUris = [| "http://localhost:5002/signin-oidc" |],
                                           PostLogoutRedirectUris = [| "http://localhost:5002/signout-callback-oidc" |],
                                           RequireConsent = false,
@@ -496,7 +484,10 @@ module Storage =
                     command.CommandText <- """INSERT INTO
                                                   clients (id, data)
                                               VALUES
-                                                  (:id, :data)"""
+                                                  (:id, :data)
+                                              ON CONFLICT (id)
+                                              DO UPDATE SET
+                                                  data = EXCLUDED.data"""
                     
                     for client in [| silicon; interactive |] do
                         command.Parameters.Clear ()
@@ -508,12 +499,15 @@ module Storage =
                         ) |> ignore
                         command.ExecuteNonQuery () |> ignore
 
-                let insertIdentities () =
+                let insertOrUpdateIdentities () =
                     use command = connection.CreateCommand ()
                     command.CommandText <- """INSERT INTO
                                                   identity_resources (name, data)
                                               VALUES
-                                                  (:name, :data)"""
+                                                  (:name, :data)
+                                              ON CONFLICT (name)
+                                              DO UPDATE SET
+                                                  data = EXCLUDED.data"""
                     
                     let resources = 
                         [|
@@ -535,12 +529,15 @@ module Storage =
                         ) |> ignore
                         command.ExecuteNonQuery () |> ignore
                 
-                let insertApis () =
+                let insertOrUpdateApis () =
                     use command = connection.CreateCommand ()
                     command.CommandText <- """INSERT INTO
                                                   api_resources (name, data)
                                               VALUES
-                                                  (:name, :data)"""
+                                                  (:name, :data)
+                                              ON CONFLICT (name)
+                                              DO UPDATE SET
+                                                  data = EXCLUDED.data"""
                     
                     let resources = 
                         [|
@@ -558,34 +555,96 @@ module Storage =
                         command.ExecuteNonQuery () |> ignore
                 
                 let insertAdmin () =
-                    let salt = BCrypt.GenerateSalt()
-                    let password = BCrypt.HashPassword("secret", salt)
-
-                    use insert = connection.CreateCommand()
-                    insert.CommandText <- """INSERT INTO
-                                                 users (id, login, password, last_name, email, claims)
-                                             VALUES
-                                                 (:id, :login, :password, :last_name, :email, :claims)"""
-                    
-                    insert.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Uuid, Guid.NewGuid()) |> ignore
-                    insert.Parameters.AddWithValue("login", NpgsqlTypes.NpgsqlDbType.Varchar, "admin") |> ignore
-                    insert.Parameters.AddWithValue("password", NpgsqlTypes.NpgsqlDbType.Varchar, password) |> ignore
-                    insert.Parameters.AddWithValue("last_name", NpgsqlTypes.NpgsqlDbType.Varchar, "<unknown>") |> ignore
-                    insert.Parameters.AddWithValue("email", NpgsqlTypes.NpgsqlDbType.Varchar, "<unknown>") |> ignore
-                    insert.Parameters.AddWithValue("claims", NpgsqlTypes.NpgsqlDbType.Jsonb, JsonConvert.SerializeObject([| new Claim("role", "admin") |])) |> ignore
-                    insert.ExecuteNonQuery() |> ignore
+                    let isUserTableFilled () =
+                        use command = connection.CreateCommand ()
+                        command.CommandText <- """SELECT
+                                                      CASE WHEN EXISTS (SELECT 1 FROM users)
+                                                          THEN 1
+                                                          ELSE 0
+                                                      END"""
                 
-                match isDatabaseFilled () with
-                | true  -> ()
-                | false -> insertClients ()
-                           insertIdentities ()
-                           insertApis ()
-                           insertAdmin ()
+                        match command.ExecuteScalar () :?> int32 with
+                        | 1 -> true
+                        | _ -> false
+                    
+                    match isUserTableFilled () with
+                    | true  -> ()
+                    | false -> let salt = BCrypt.GenerateSalt()
+                               let password = BCrypt.HashPassword("secret", salt)
+
+                               use insert = connection.CreateCommand()
+                               insert.CommandText <- """INSERT INTO
+                                                            users (id, login, password, last_name, email, claims)
+                                                        VALUES
+                                                            (:id, :login, :password, :last_name, :email, :claims)"""
+                    
+                               insert.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Uuid, Guid.NewGuid()) |> ignore
+                               insert.Parameters.AddWithValue("login", NpgsqlTypes.NpgsqlDbType.Varchar, "admin") |> ignore
+                               insert.Parameters.AddWithValue("password", NpgsqlTypes.NpgsqlDbType.Varchar, password) |> ignore
+                               insert.Parameters.AddWithValue("last_name", NpgsqlTypes.NpgsqlDbType.Varchar, "<unknown>") |> ignore
+                               insert.Parameters.AddWithValue("email", NpgsqlTypes.NpgsqlDbType.Varchar, "<unknown>") |> ignore
+                               insert.Parameters.AddWithValue("claims", NpgsqlTypes.NpgsqlDbType.Jsonb, JsonConvert.SerializeObject([| new Claim("role", "admin") |])) |> ignore
+                               insert.ExecuteNonQuery() |> ignore
+                
+                insertAdmin ()
+                insertOrUpdateIdentities ()
+                insertOrUpdateApis ()
+                insertOrUpdateClients ()
             }
 
         let access (options : ConnectionOptions) =
             {
                 initialize = initialize options;
+            }
+    
+    module AuthorizationCodeData =
+    
+        let storeAuthorizationCode (options : ConnectionOptions) (value : AuthorizationCode) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand()
+                let key = Guid.NewGuid().ToString("N")
+
+                command.CommandText <- "INSERT INTO authorization_codes(id, data) VALUES (:id, :data) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data"
+                command.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Varchar, key) |> ignore
+                command.Parameters.AddWithValue("data", NpgsqlTypes.NpgsqlDbType.Jsonb, JsonConvert.SerializeObject(value, Json.jsonOptions)) |> ignore
+
+                let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
+                return key
+            }
+
+        let getAuthorizationCode (options : ConnectionOptions) (key : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand()
+        
+                command.CommandText <- "SELECT data FROM authorization_codes WHERE id = :id"
+                command.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Varchar, key) |> ignore
+        
+                use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
+                match reader.Read() with
+                | true  -> let result = JsonConvert.DeserializeObject<AuthorizationCode>(reader.GetString(0), Json.jsonOptions)
+                           return Some result
+                | false -> return None
+            }
+
+        let removeAuthorizationCode (options : ConnectionOptions) (key : string) =
+            async {
+                use connection = authentication options
+                use command = connection.CreateCommand()
+        
+                command.CommandText <- "DELETE FROM authorization_codes WHERE id = :id"
+                command.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Varchar, key) |> ignore
+
+                let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
+                ()
+            }
+
+        let access (options : ConnectionOptions) =
+            {
+                storeAuthorizationCode = storeAuthorizationCode options;
+                getAuthorizationCode = getAuthorizationCode options;
+                removeAuthorizationCode = removeAuthorizationCode options;
             }
 
     let storages = {
@@ -594,4 +653,5 @@ module Storage =
         resourceStorage = ResourceData.access;
         clientStorage = ClientData.access;
         userStorage = UserData.access;
+        authorizationStorage = AuthorizationCodeData.access
     }
