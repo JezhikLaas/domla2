@@ -24,7 +24,7 @@ module ClientData =
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
             match reader.Read () with
-            | true  -> return Some (Newtonsoft.Json.JsonConvert.DeserializeObject<Client>(reader.GetString(0)))
+            | true  -> return Some (Json.deserialize<Client>(reader.GetString 0) Json.jsonOptions)
             | false -> return None
         }
 

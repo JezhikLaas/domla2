@@ -6,7 +6,6 @@ module SetupData =
     open D2.Common
     open IdentityServer4
     open IdentityServer4.Models
-    open Newtonsoft.Json
     open Npgsql
     open System
     open System.Security.Claims

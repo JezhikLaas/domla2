@@ -4,7 +4,6 @@ module ResourceData =
 
     open D2.Common
     open IdentityServer4.Models
-    open Newtonsoft.Json
     open Npgsql
     open System
     open System.Data.Common
@@ -25,7 +24,7 @@ module ResourceData =
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
             match reader.Read () with
-            | true  -> return Some (JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0)))
+            | true  -> return Some (Json.deserialize<ApiResource>(reader.GetString 0) Json.jsonOptions)
             | false -> return None
         }
 
@@ -46,7 +45,7 @@ module ResourceData =
 
             return seq {
                 while reader.Read () do
-                    yield JsonConvert.DeserializeObject<ApiResource>(reader.GetString(0))
+                    yield Json.deserialize<ApiResource>(reader.GetString 0) Json.jsonOptions
             }
             |> Seq.toList
             |> List.toSeq
@@ -69,7 +68,7 @@ module ResourceData =
 
             return seq {
                 while reader.Read () do
-                    yield JsonConvert.DeserializeObject<IdentityResource>(reader.GetString(0))
+                    yield Json.deserialize<IdentityResource>(reader.GetString 0) Json.jsonOptions
             }
             |> Seq.toList
             |> List.toSeq
@@ -90,7 +89,7 @@ module ResourceData =
                 
                 seq {
                     while readerIdentities.Read () do
-                        yield JsonConvert.DeserializeObject<IdentityResource>(readerIdentities.GetString(0))
+                        yield Json.deserialize<IdentityResource>(readerIdentities.GetString 0) Json.jsonOptions
                 }
                 |> Seq.toList
                 
@@ -105,7 +104,7 @@ module ResourceData =
 
                 seq {
                     while readerApis.Read () do
-                        yield JsonConvert.DeserializeObject<ApiResource>(readerApis.GetString(0))
+                        yield Json.deserialize<ApiResource>(readerApis.GetString 0) Json.jsonOptions
                 }
                 |> Seq.toList
                 

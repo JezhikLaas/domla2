@@ -5,7 +5,6 @@ module AuthorizationCodeData =
     open D2.Common
     open IdentityServer4.Models
     open Json
-    open Newtonsoft.Json
     open Npgsql
     open System
     open System.Data.Common
@@ -40,7 +39,7 @@ module AuthorizationCodeData =
         
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
             match reader.Read() with
-            | true  -> let result = JsonConvert.DeserializeObject<AuthorizationCode>(reader.GetString(0), Json.jsonOptions)
+            | true  -> let result = Json.deserialize<AuthorizationCode> (reader.GetString 0) Json.jsonOptions
                        return Some result
             | false -> return None
         }
