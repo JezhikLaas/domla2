@@ -3,6 +3,7 @@
 module SetupData =
 
     open BCrypt.Net
+    open D2.Common
     open IdentityServer4
     open IdentityServer4.Models
     open Newtonsoft.Json
@@ -50,12 +51,9 @@ module SetupData =
                     
                 for client in [| silicon; interactive |] do
                     command.Parameters.Clear ()
-                    command.Parameters << ("id", client.ClientId)
-                                      <<< (
-                        "data",
-                        NpgsqlTypes.NpgsqlDbType.Jsonb,
-                        JsonConvert.SerializeObject (client)
-                    ) |> ignore
+                    command.Parameters << ("id", StringField client.ClientId)
+                                       << ("data", Json.serialize client Json.jsonOptions)
+                                       |> ignore
                     command.ExecuteNonQuery () |> ignore
 
             let insertOrUpdateIdentities () =
@@ -80,12 +78,9 @@ module SetupData =
                     
                 for resource in resources do
                     command.Parameters.Clear ()
-                    command.Parameters << ("name", resource.Name)
-                                      <<< (
-                        "data",
-                        NpgsqlTypes.NpgsqlDbType.Jsonb,
-                        JsonConvert.SerializeObject (resource)
-                    ) |> ignore
+                    command.Parameters << ("name", StringField resource.Name)
+                                       << ("data", Json.serialize resource Json.jsonOptions)
+                                       |> ignore
                     command.ExecuteNonQuery () |> ignore
                 
             let insertOrUpdateApis () =
@@ -105,12 +100,9 @@ module SetupData =
                     
                 for resource in resources do
                     command.Parameters.Clear ()
-                    command.Parameters << ("name", resource.Name)
-                                      <<< (
-                        "data",
-                        NpgsqlTypes.NpgsqlDbType.Jsonb,
-                        JsonConvert.SerializeObject (resource)
-                    ) |> ignore
+                    command.Parameters << ("name", StringField resource.Name)
+                                       << ("data", Json.serialize resource Json.jsonOptions)
+                                       |> ignore
                     command.ExecuteNonQuery () |> ignore
                 
             let insertAdmin () =
@@ -136,13 +128,13 @@ module SetupData =
                                                         users (id, login, password, last_name, email, claims)
                                                     VALUES
                                                         (:id, :login, :password, :last_name, :email, :claims)"""
-                    
-                           insert.Parameters << ("id", Guid.NewGuid())
-                                             << ("login", "admin")
-                                             << ("password", password)
-                                             << ("last_name", "<unknown>")
-                                             << ("email", "<unknown>")
-                                            <<< ("claims", NpgsqlTypes.NpgsqlDbType.Jsonb, JsonConvert.SerializeObject([| new Claim("role", "admin") |]))
+                           
+                           insert.Parameters << ("id",  GuidField (Guid.NewGuid()))
+                                             << ("login", StringField "admin")
+                                             << ("password", StringField password)
+                                             << ("last_name", StringField "<unknown>")
+                                             << ("email", StringField "<unknown>")
+                                             << ("claims", Json.serialize [| new Claim("role", "admin") |] Json.jsonOptions)
                                              |> ignore
                            insert.ExecuteNonQuery() |> ignore
                 

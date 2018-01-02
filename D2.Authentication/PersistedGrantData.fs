@@ -2,6 +2,7 @@
 
 module PersistedGrantData =
 
+    open D2.Common
     open IdentityServer4.Models
     open Npgsql
     open System
@@ -40,7 +41,7 @@ module PersistedGrantData =
                                       WHERE
                                           subject_id = :subject_id"""
                 
-            command.Parameters << ("subject_id", subjectId) |> ignore
+            command.Parameters << ("subject_id", StringField subjectId) |> ignore
                 
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
@@ -69,7 +70,7 @@ module PersistedGrantData =
                                       WHERE
                                           key = :key"""
                 
-            command.Parameters << ("key", key) |> ignore
+            command.Parameters << ("key", StringField key) |> ignore
                 
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
@@ -89,8 +90,8 @@ module PersistedGrantData =
                                           AND
                                           client_id = :client_id"""
                 
-            command.Parameters << ("subject_id", subjectId)
-                               << ("client_id", clientId) |> ignore
+            command.Parameters << ("subject_id", StringField subjectId)
+                               << ("client_id", StringField clientId) |> ignore
 
             let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
@@ -109,9 +110,9 @@ module PersistedGrantData =
                                           AND
                                           type = :type"""
                 
-            command.Parameters << ("subject_id", subjectId)
-                               << ("client_id", clientId)
-                               << ("type", grantType) |> ignore
+            command.Parameters << ("subject_id", StringField subjectId)
+                               << ("client_id", StringField clientId)
+                               << ("type", StringField grantType) |> ignore
 
             let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
@@ -140,7 +141,7 @@ module PersistedGrantData =
                                       WHERE
                                           key = :key"""
                 
-            command.Parameters << ("key", key) |> ignore
+            command.Parameters << ("key", StringField key) |> ignore
 
             let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
@@ -177,14 +178,14 @@ module PersistedGrantData =
                                               expiration = EXCLUDED.expiration,
                                               data = EXCLUDED.data"""
                 
-            command.Parameters << ("key", grant.Key)
-                               << ("type", grant.Type)
-                               << ("subject_id", grant.SubjectId)
-                               << ("client_id", grant.ClientId)
-                               << ("creation_time", grant.CreationTime)
-                               << ("data", grant.Data) |> ignore
+            command.Parameters << ("key", StringField grant.Key)
+                               << ("type", StringField grant.Type)
+                               << ("subject_id", StringField grant.SubjectId)
+                               << ("client_id", StringField grant.ClientId)
+                               << ("creation_time", TimeStampField grant.CreationTime)
+                               << ("data", StringField grant.Data) |> ignore
             if grant.Expiration.HasValue then
-                command.Parameters << ("expiration", grant.Expiration) |> ignore
+                command.Parameters << ("expiration", TimeStampField grant.Expiration.Value) |> ignore
 
             let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()

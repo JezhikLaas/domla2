@@ -2,7 +2,9 @@
 
 module AuthorizationCodeData =
     
+    open D2.Common
     open IdentityServer4.Models
+    open Json
     open Newtonsoft.Json
     open Npgsql
     open System
@@ -21,8 +23,8 @@ module AuthorizationCodeData =
                                       ON CONFLICT (id)
                                       DO UPDATE SET
                                           data = EXCLUDED.data"""
-            command.Parameters << ("id", key)
-                              <<< ("data", NpgsqlTypes.NpgsqlDbType.Jsonb, JsonConvert.SerializeObject(value, Json.jsonOptions)) |> ignore
+            command.Parameters << ("id", StringField key)
+                               << ("data", Json.serialize value Json.jsonOptions) |> ignore
 
             let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
             return key
@@ -34,7 +36,7 @@ module AuthorizationCodeData =
             use command = connection.CreateCommand()
         
             command.CommandText <- "SELECT data FROM authorization_codes WHERE id = :id"
-            command.Parameters << ("id", key) |> ignore
+            command.Parameters << ("id", StringField key) |> ignore
         
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
             match reader.Read() with
@@ -49,7 +51,7 @@ module AuthorizationCodeData =
             use command = connection.CreateCommand()
         
             command.CommandText <- "DELETE FROM authorization_codes WHERE id = :id"
-            command.Parameters << ("id", key) |> ignore
+            command.Parameters << ("id", StringField key) |> ignore
 
             let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
             ()

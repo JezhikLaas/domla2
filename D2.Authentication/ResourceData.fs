@@ -2,6 +2,7 @@
 
 module ResourceData =
 
+    open D2.Common
     open IdentityServer4.Models
     open Newtonsoft.Json
     open Npgsql
@@ -19,7 +20,7 @@ module ResourceData =
                                       WHERE
                                           name = :name"""
                 
-            command.Parameters << ("name", name) |> ignore
+            command.Parameters << ("name", StringField name) |> ignore
                 
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 

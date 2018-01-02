@@ -3,6 +3,8 @@
 module UserData = 
     
     open BCrypt.Net
+    open D2.Common
+    open Json
     open Npgsql
     open System
     open System.Data.Common
@@ -27,7 +29,7 @@ module UserData =
                                           users
                                       WHERE
                                           login = :login"""
-            command.Parameters << ("login", name) |> ignore
+            command.Parameters << ("login", StringField name) |> ignore
     
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
             match reader.Read() with
@@ -57,7 +59,7 @@ module UserData =
                                           users
                                       WHERE
                                           id = :id"""
-            command.Parameters << ("id", new Guid(id)) |> ignore
+            command.Parameters << ("id", GuidField (new Guid(id))) |> ignore
     
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
             match reader.Read() with
@@ -76,7 +78,7 @@ module UserData =
                                                   logged_in = %s
                                               WHERE
                                                   id = :id""" (if state then "LOCALTIMESTAMP" else "NULL")
-            command.Parameters << ("id", new Guid(id)) |> ignore
+            command.Parameters << ("id", GuidField (new Guid(id))) |> ignore
     
             let! result = command.ExecuteNonQueryAsync() |> Async.AwaitTask
             match result with

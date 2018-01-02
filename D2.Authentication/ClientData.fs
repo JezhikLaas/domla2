@@ -2,8 +2,9 @@
 
 module ClientData =
 
+    open D2.Common
     open IdentityServer4.Models
-    open Newtonsoft.Json
+    open Json
     open Npgsql
     open System.Data.Common
 
@@ -18,7 +19,7 @@ module ClientData =
                                       WHERE
                                           id = :id"""
                 
-            command.Parameters << ("id", id) |> ignore
+            command.Parameters << ("id", StringField clientId) |> ignore
                 
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
