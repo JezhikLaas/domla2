@@ -9,7 +9,7 @@ module UserData =
     open System
     open System.Data.Common
 
-    let findUser (options : ConnectionOptions) (name : string) (password : string) =
+    let private findUser (options : ConnectionOptions) (name : string) (password : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand()
@@ -40,7 +40,7 @@ module UserData =
             | false -> return None
         }
     
-    let fetchUser (options : ConnectionOptions) (id : string) =
+    let private fetchUser (options : ConnectionOptions) (id : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand()
@@ -67,7 +67,7 @@ module UserData =
             | false -> return None
         }
         
-    let updateActive (options : ConnectionOptions) (id : string) (state : bool) =
+    let private updateActive (options : ConnectionOptions) (id : string) (state : bool) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand()

@@ -8,7 +8,7 @@ module PersistedGrantData =
     open System
     open System.Data.Common
 
-    let fromReader (reader : DbDataReader) =
+    let private fromReader (reader : DbDataReader) =
         PersistedGrant (
             Key = reader.GetString 0,
             Type = reader.GetString 1,
@@ -24,7 +24,7 @@ module PersistedGrantData =
             Data = reader.GetString 6
         )
 
-    let getAll (options : ConnectionOptions) (subjectId : string) =
+    let private getAll (options : ConnectionOptions) (subjectId : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -53,7 +53,7 @@ module PersistedGrantData =
             |> List.toSeq
         }
     
-    let get (options : ConnectionOptions) (key : string) =
+    let private get (options : ConnectionOptions) (key : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -79,7 +79,7 @@ module PersistedGrantData =
             | false -> return None
         }
         
-    let removeAll (options : ConnectionOptions) (subjectId : string) (clientId : string) =
+    let private removeAll (options : ConnectionOptions) (subjectId : string) (clientId : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -93,11 +93,11 @@ module PersistedGrantData =
             command.Parameters << ("subject_id", StringField subjectId)
                                << ("client_id", StringField clientId) |> ignore
 
-            let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+            let! _ = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
         }
         
-    let removeAllType (options : ConnectionOptions) (subjectId : string) (clientId : string) (grantType : string) =
+    let private removeAllType (options : ConnectionOptions) (subjectId : string) (clientId : string) (grantType : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -114,11 +114,11 @@ module PersistedGrantData =
                                << ("client_id", StringField clientId)
                                << ("type", StringField grantType) |> ignore
 
-            let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+            let! _ = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
         }
         
-    let removeOutdated (options : ConnectionOptions) () =
+    let private removeOutdated (options : ConnectionOptions) () =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -128,11 +128,11 @@ module PersistedGrantData =
                                           expiration IS NOT NULL
                                           AND
                                           expiration < 'now'"""
-            let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+            let! _ = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
         }
         
-    let remove (options : ConnectionOptions) (key : string) =
+    let private remove (options : ConnectionOptions) (key : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -143,11 +143,11 @@ module PersistedGrantData =
                 
             command.Parameters << ("key", StringField key) |> ignore
 
-            let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+            let! _ = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
         }
         
-    let store (options : ConnectionOptions) (grant : PersistedGrant) =
+    let private store (options : ConnectionOptions) (grant : PersistedGrant) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -187,7 +187,7 @@ module PersistedGrantData =
             if grant.Expiration.HasValue then
                 command.Parameters << ("expiration", TimeStampField grant.Expiration.Value) |> ignore
 
-            let! result = command.ExecuteNonQueryAsync () |> Async.AwaitTask
+            let! _ = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
         }
 

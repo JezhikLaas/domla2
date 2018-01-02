@@ -9,7 +9,9 @@ module AuthorizationCodeData =
     open System
     open System.Data.Common
 
-    let storeAuthorizationCode (options : ConnectionOptions) (value : AuthorizationCode) =
+    let private json = Json.Converter Json.jsonOptions
+
+    let private storeAuthorizationCode (options : ConnectionOptions) (value : AuthorizationCode) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand()
@@ -23,13 +25,13 @@ module AuthorizationCodeData =
                                       DO UPDATE SET
                                           data = EXCLUDED.data"""
             command.Parameters << ("id", StringField key)
-                               << ("data", Json.serialize value Json.jsonOptions) |> ignore
+                               << ("data", json.serialize value) |> ignore
 
             let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
             return key
         }
 
-    let getAuthorizationCode (options : ConnectionOptions) (key : string) =
+    let private getAuthorizationCode (options : ConnectionOptions) (key : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand()
@@ -39,12 +41,12 @@ module AuthorizationCodeData =
         
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
             match reader.Read() with
-            | true  -> let result = Json.deserialize<AuthorizationCode> (reader.GetString 0) Json.jsonOptions
+            | true  -> let result = json.deserialize<AuthorizationCode> (reader.GetString 0)
                        return Some result
             | false -> return None
         }
 
-    let removeAuthorizationCode (options : ConnectionOptions) (key : string) =
+    let private removeAuthorizationCode (options : ConnectionOptions) (key : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand()

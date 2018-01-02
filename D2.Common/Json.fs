@@ -1,13 +1,12 @@
 ﻿namespace D2.Common
 
-open System
-
 module Json =
 
     open Newtonsoft.Json
 
-    let serialize (instance : obj) (options : JsonSerializerSettings) =
-        JsonField (JsonConvert.SerializeObject (instance, options))
-
-    let deserialize<'T> (data : string) (options : JsonSerializerSettings) =
-        JsonConvert.DeserializeObject<'T> (data, options)
+    type Converter (options : JsonSerializerSettings) =
+        member this.serialize (instance : obj) =
+            JsonField (JsonConvert.SerializeObject (instance, options))
+        
+        member this.deserialize<'T> (data : string) =
+            JsonConvert.DeserializeObject<'T> (data, options)

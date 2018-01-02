@@ -8,7 +8,9 @@ module ClientData =
     open Npgsql
     open System.Data.Common
 
-    let findClientById (options : ConnectionOptions) (clientId : string) =
+    let private json = Json.Converter Json.jsonOptions
+
+    let private findClientById (options : ConnectionOptions) (clientId : string) =
         async {
             use connection = authentication options
             use command = connection.CreateCommand ()
@@ -24,7 +26,7 @@ module ClientData =
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
             match reader.Read () with
-            | true  -> return Some (Json.deserialize<Client>(reader.GetString 0) Json.jsonOptions)
+            | true  -> return Some (json.deserialize<Client> (reader.GetString 0))
             | false -> return None
         }
 

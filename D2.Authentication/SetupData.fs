@@ -10,7 +10,9 @@ module SetupData =
     open System
     open System.Security.Claims
 
-    let initialize (options : ConnectionOptions) () =
+    let private json = Json.Converter Json.jsonOptions
+
+    let private initialize (options : ConnectionOptions) () =
         async {
             use connection = authentication options
 
@@ -51,7 +53,7 @@ module SetupData =
                 for client in [| silicon; interactive |] do
                     command.Parameters.Clear ()
                     command.Parameters << ("id", StringField client.ClientId)
-                                       << ("data", Json.serialize client Json.jsonOptions)
+                                       << ("data", json.serialize client)
                                        |> ignore
                     command.ExecuteNonQuery () |> ignore
 
@@ -78,7 +80,7 @@ module SetupData =
                 for resource in resources do
                     command.Parameters.Clear ()
                     command.Parameters << ("name", StringField resource.Name)
-                                       << ("data", Json.serialize resource Json.jsonOptions)
+                                       << ("data", json.serialize resource)
                                        |> ignore
                     command.ExecuteNonQuery () |> ignore
                 
@@ -100,7 +102,7 @@ module SetupData =
                 for resource in resources do
                     command.Parameters.Clear ()
                     command.Parameters << ("name", StringField resource.Name)
-                                       << ("data", Json.serialize resource Json.jsonOptions)
+                                       << ("data", json.serialize resource)
                                        |> ignore
                     command.ExecuteNonQuery () |> ignore
                 
@@ -133,7 +135,7 @@ module SetupData =
                                              << ("password", StringField password)
                                              << ("last_name", StringField "<unknown>")
                                              << ("email", StringField "<unknown>")
-                                             << ("claims", Json.serialize [| new Claim("role", "admin") |] Json.jsonOptions)
+                                             << ("claims", json.serialize [| new Claim("role", "admin") |])
                                              |> ignore
                            insert.ExecuteNonQuery() |> ignore
                 
