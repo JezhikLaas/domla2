@@ -13,6 +13,13 @@
     <Compile Include="ProfileService.fs" />
     <Compile Include="ResourceStore.fs" />
     <Compile Include="TokenCleanup.fs" />
+    <Compile Include="StoreAuthentication.fs" />
+    <Compile Include="AuthorizationCodeData.fs" />
+    <Compile Include="ClientData.fs" />
+    <Compile Include="PersistedGrantData.fs" />
+    <Compile Include="ResourceData.fs" />
+    <Compile Include="SetupData.fs" />
+    <Compile Include="UserData.fs" />
     <Compile Include="Storage.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />

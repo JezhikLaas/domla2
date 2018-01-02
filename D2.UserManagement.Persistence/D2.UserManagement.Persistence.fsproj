@@ -9,7 +9,7 @@
     <Compile Include="Users.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="3.2.5" />
+    <PackageReference Include="Npgsql" Version="3.2.6" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>

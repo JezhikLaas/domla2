@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Parameters.fs" />
     <Compile Include="Request.fs" />
     <Compile Include="Response.fs" />
     <Compile Include="Logger.fs" />
@@ -18,5 +19,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.0.1" />
     <PackageReference Include="NLog" Version="5.0.0-beta11" />
+    <PackageReference Include="Npgsql" Version="3.2.6" />
   </ItemGroup>
 </Project>
