@@ -1,0 +1,21 @@
+<form [formGroup]="loginForm" (ngSubmit)="login()" class="ui form" autocomplete="off">
+  <h4 class="ui dividing header">Logindaten</h4>
+
+  <div class="field">
+    <label>Login:</label>
+    <input formControlName="login" type="text" id="login" autocomplete="off">
+    <div *ngIf="errors?.login" class="ui negative message">
+      {{ errors?.login }}
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Passwort:</label>
+    <input formControlName="password" type="password" autocomplete="off">
+    <div *ngIf="errors?.password" class="ui negative message">
+      {{ errors?.password }}
+    </div>
+  </div>
+
+  <button type="submit">Anmelden</button>
+</form>
