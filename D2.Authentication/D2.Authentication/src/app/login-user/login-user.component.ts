@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../shared/user';
 import { ErrorMessages } from './login-user-error-messages';
@@ -11,7 +11,7 @@ declare var $: any;
   styles: []
 })
 
-export class LoginUserComponent implements OnInit {
+export class LoginUserComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup;
   errors: { [key: string]: string};
   formValidation: boolean;
@@ -41,7 +41,9 @@ export class LoginUserComponent implements OnInit {
     this.loginForm.statusChanges.subscribe(
       () => this.updateErrorMessages()
     );
+  }
 
+  ngAfterViewInit() {
     $('#login').focus();
   }
 
@@ -53,7 +55,7 @@ export class LoginUserComponent implements OnInit {
     }
   }
 
-    updateErrorMessages() {
+  updateErrorMessages() {
     this.errors = {'hasErrors': 'false'};
     for (const message of ErrorMessages) {
       const control = this.loginForm.get(message.forControl);
