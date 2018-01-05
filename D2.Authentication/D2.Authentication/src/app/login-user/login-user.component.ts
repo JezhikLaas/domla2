@@ -53,6 +53,13 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
     if (this.errors['hasErrors'] === 'true') {
       return;
     }
+
+    const user = new User(
+      this.loginForm.get('login').value,
+      this.loginForm.get('password').value
+    );
+
+    // login user
   }
 
   updateErrorMessages() {
