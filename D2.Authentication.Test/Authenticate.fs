@@ -4,6 +4,9 @@ open D2.Authentication
 open FsUnit
 open IdentityModel.Client
 open IdentityServer4.Models
+open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.TestHost
 open NUnit.Framework
 open RestSharp
 open System
@@ -14,9 +17,12 @@ open System.Security.Claims
 [<TestFixture>]
 [<Category("Authentication")>]
 module AuthenticationTest = 
+    open Microsoft.Extensions.Configuration
+
     let serverUrl = sprintf "%s://%s:%d" "http" "localhost" 8120
     let tokenUrl = sprintf "%s://%s:%d/connect/token" "http" "localhost" 8120
     let mutable (web : Object) = null
+    let mutable (server : TestServer) = null
     let userId = Guid.NewGuid()
     let fejaClaims =
         [
@@ -118,25 +124,33 @@ module AuthenticationTest =
             | Some client -> return Some client
             | None        -> return None
         }
-    
+    *)
     [<OneTimeSetUp>]
     let setupOnce() =
-        Startup.testingMode <- true
-        Startup.storageService <-
-            {
-                findUser = findUser;
-                fetchUser = fetchUser;
-                updateActive = updateActive;
-                loadAllScopes = loadAllScopes;
-                loadScopes = loadScopes;
-                fetchClient = fetchClient
-            }
-        web <- WebApp.Start<Startup>(serverUrl)
+        //Startup.testingMode <- true
+        let configurationValues = Dictionary<string, string>
+                                    (
+                                      [|
+                                        KeyValuePair("Database:Name", "D2.Authentication");
+                                        KeyValuePair("Database:Host", "localhost");
+                                        KeyValuePair("Database:User", "d2admin");
+                                        KeyValuePair("Database:Password", "d2admin");
+                                        KeyValuePair("Database:Port", "5432");
+                                      |]
+                                    )
+        let builder = new ConfigurationBuilder()
+        builder.AddInMemoryCollection(configurationValues) |> ignore
+
+        let configuration = builder.Build()
+
+        server <- new TestServer((WebHostBuilder()).UseConfiguration(configuration).UseStartup<Startup>())
+        web <- server.CreateClient()
+    
     
     [<OneTimeTearDown>]
     let tearDownOnce() =
-        web.Dispose()
-
+        server.Dispose()
+        (*
     [<Test>]
     let ``Token for API can be fetched``() =
         let client = new TokenClient(tokenUrl, "service", "1B0A7C32-1A60-4D5D-AE4C-4163F72E467D")
@@ -145,16 +159,16 @@ module AuthenticationTest =
         result |> should not' (equal null)
         result.HttpStatusCode |> should equal HttpStatusCode.OK
         result.AccessToken |> should not' (equal null)
-
+    *)
     [<Test>]
     let ``Token for User can be fetched``() =
-        let client = new TokenClient(tokenUrl, "interactive", "0A0C7C53-1A60-4D5D-AE4C-4163F72E467D")
+        let client = new TokenClient(server.BaseAddress.ToString(), "interactive", "0A0C7C53-1A60-4D5D-AE4C-4163F72E467D")
         let result = client.RequestResourceOwnerPasswordAsync("feja", "geheim", "user openid").Result
 
         result |> should not' (equal null)
         result.HttpStatusCode |> should equal HttpStatusCode.OK
         result.AccessToken |> should not' (equal null)
-
+    (*
     [<Test>]
     let ``User can request refresh token``() =
         let client = new TokenClient(tokenUrl, "interactive", "0A0C7C53-1A60-4D5D-AE4C-4163F72E467D")

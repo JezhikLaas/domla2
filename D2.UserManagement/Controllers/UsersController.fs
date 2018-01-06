@@ -22,7 +22,7 @@ type UsersController () =
                                :> ActionResult
         | Success Conflict  -> StatusCodeResult(StatusCodes.Status409Conflict)
                                :> ActionResult
-        | InternalFailure s -> logger.error s "register"
+        | InternalFailure e -> logger.error e "register"
                                StatusCodeResult(StatusCodes.Status500InternalServerError)
                                :> ActionResult
         | ExternalFailure s -> logger.info s
