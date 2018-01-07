@@ -7,7 +7,10 @@ type SecurityHeadersAttribute () =
     inherit ActionFilterAttribute ()
 
     override this.OnResultExecuting (context : ResultExecutingContext) =
-        let result = context.Result :?> ViewResult
+        let result = match context.Result with
+                     | :? ViewResult as r -> r
+                     | _                  -> null
+
         if result <> null then
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
             if not (context.HttpContext.Response.Headers.ContainsKey("X-Content-Type-Options")) then

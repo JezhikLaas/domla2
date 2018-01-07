@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { User } from '../shared/user';
 import { ErrorMessages } from './login-user-error-messages';
 
@@ -16,7 +17,7 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
   errors: { [key: string]: string};
   formValidation: boolean;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
   }
 
   ngOnInit() {
@@ -59,7 +60,8 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
       this.loginForm.get('password').value
     );
 
-    // login user
+    console.log('now navigating ...');
+    this.router.navigate(['/app/logout']);
   }
 
   updateErrorMessages() {

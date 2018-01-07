@@ -6,7 +6,15 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.FileProviders
+open System
+open System.IO
 
+type Route = {
+    controller: string
+    action : string
+}
 
 type Startup private () =
     new (configuration: IConfiguration) as this =
@@ -31,7 +39,8 @@ type Startup private () =
         let resourceStore = Storage.storages.resourceStorage connectionOptions
         let clientStore = Storage.storages.clientStorage connectionOptions
         let userStore = Storage.storages.userStorage connectionOptions
-
+        
+        services.AddMvc() |> ignore
         services
             .AddSingleton(clientStore)
             .AddSingleton(resourceStore)
@@ -48,11 +57,26 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment, appLifetime : IApplicationLifetime) =
-        app.UseIdentityServer() |> ignore
+        app
+            .UseStaticFiles()
+            .UseMvc(
+                fun routes ->
+                    routes.MapRoute(
+                        name = "default", 
+                        template = "{controller=Home}/{action=Index}/{id?}"
+                    )
+                    |> ignore
+                    routes.MapSpaFallbackRoute(
+                        name = "spa-fallback", 
+                        defaults = { controller = "Home"; action = "Index" }
+                    )
+                    |> ignore
+            )
+            .UseIdentityServer()
+            |> ignore
         
         let tokenCleanup = app.ApplicationServices.GetService<TokenCleanup>()
         appLifetime.ApplicationStarted.Register (fun () -> tokenCleanup.Start ()) |> ignore
         appLifetime.ApplicationStopping.Register (fun () -> tokenCleanup.Stop ()) |> ignore
-
 
     member val Configuration : IConfiguration = null with get, set

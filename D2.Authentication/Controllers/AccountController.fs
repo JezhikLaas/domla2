@@ -26,7 +26,7 @@ type AccountController
     member this.Get (returnUrl : string) =
         async {
             let model = account.BuildLoginViewModel returnUrl
-            return RedirectToPageResult ("~/app")
+            return RedirectResult ("/app/login")
         }
         |> Async.StartAsTask
 

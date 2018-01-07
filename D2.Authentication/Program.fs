@@ -1,14 +1,8 @@
 namespace D2.Authentication
 
-open System
-open System.Collections.Generic
-open System.IO
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.Configuration
-open Microsoft.Extensions.Logging
+open System
 
 module Program =
     let exitCode = 0
@@ -16,6 +10,8 @@ module Program =
     let BuildWebHost args =
         WebHost
             .CreateDefaultBuilder(args)
+            .UseWebRoot("app")
+            .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
             .UseStartup<Startup>()
             .Build()
 
