@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { User } from '../shared/user';
 import { ErrorMessages } from './login-user-error-messages';
+import 'rxjs/add/operator/map';
 
 declare var $: any;
 
@@ -13,14 +15,20 @@ declare var $: any;
 })
 
 export class LoginUserComponent implements OnInit, AfterViewInit {
+  returnUrl: Observable<string>;
   loginForm: FormGroup;
-  errors: { [key: string]: string};
+  errors: { [key: string]: string };
   formValidation: boolean;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    console.log('init');
+    this.returnUrl = this.route
+      .queryParamMap
+      .map(params => params.get('returnUrl') || 'None');
+
     this.errors = {'hasErrors': 'false'};
     this.formValidation = false;
 
