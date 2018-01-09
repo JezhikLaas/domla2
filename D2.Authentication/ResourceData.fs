@@ -29,6 +29,18 @@ module ResourceData =
             | true  -> return Some (json.deserialize<ApiResource> (reader.GetString 0))
             | false -> return None
         }
+    
+    let private scopeNameWhere (values : string seq) =
+        let rec appendLine clause values =
+            match values with
+            | []           -> clause
+            | head :: tail -> clause
+                              +
+                              match clause = "" with
+                              | true  -> appendLine (sprintf "'%s'" head) tail
+                              | false -> appendLine (sprintf ", '%s'" head) tail
+        
+        appendLine "" (values |> Seq.toList)
 
     let private findApiResourcesByScope (options : ConnectionOptions) (names : string seq) =
         async {
@@ -40,8 +52,8 @@ module ResourceData =
                                        FROM
                                            api_resources
                                        WHERE
-                                           data -> Scopes ->> Name IN (%s)"""
-                                    (String.Join (",", names))
+                                           name IN (%s)"""
+                                    (scopeNameWhere names)
                 
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 
@@ -64,7 +76,7 @@ module ResourceData =
                                            identity_resources
                                        WHERE
                                            name IN (%s)"""
-                                    (String.Join (",", names))
+                                    (scopeNameWhere names)
                 
             use! reader = command.ExecuteReaderAsync () |> Async.AwaitTask
 

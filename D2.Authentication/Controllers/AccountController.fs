@@ -25,8 +25,7 @@ type AccountController
     [<HttpGet("login")>]
     member this.Get (returnUrl : string) =
         async {
-            let model = account.BuildLoginViewModel returnUrl
-            return RedirectResult ("/app/login")
+            return RedirectResult (sprintf "/app/login?returnUrl=%s" returnUrl)
         }
         |> Async.StartAsTask
 

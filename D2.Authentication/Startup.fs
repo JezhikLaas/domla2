@@ -59,6 +59,7 @@ type Startup private () =
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment, appLifetime : IApplicationLifetime) =
         app
             .UseStaticFiles()
+            .UseIdentityServer()
             .UseMvc(
                 fun routes ->
                     routes.MapRoute(
@@ -72,7 +73,6 @@ type Startup private () =
                     )
                     |> ignore
             )
-            .UseIdentityServer()
             |> ignore
         
         let tokenCleanup = app.ApplicationServices.GetService<TokenCleanup>()
