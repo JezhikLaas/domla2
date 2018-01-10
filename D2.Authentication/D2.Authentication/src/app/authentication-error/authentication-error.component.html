@@ -1,0 +1,14 @@
+<h4 class="ui dividing header">Fehler</h4>
+
+<div>
+  <h5>Entschuldigung, ein Fehler ist aufgetreten</h5>
+</div>
+<br>
+<div>
+  <div class="ui negative message">
+    {{ error?.error }}
+  </div>
+  <div *ngIf="error?.description" class="ui negative message">
+    {{ error?.description }}
+  </div>
+</div>

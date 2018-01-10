@@ -20,11 +20,13 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
   errors: { [key: string]: string };
   formValidation: boolean;
 
-  constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute) {
-  }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
-    console.log('init');
     this.returnUrl = this.route
       .queryParamMap
       .map(params => params.get('returnUrl') || 'None');

@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { LoginUserComponent } from './login-user/login-user.component';
 import { LogoutUserComponent } from './logout-user/logout-user.component';
 import { AuthenticationWelcomeComponent } from './authentication-welcome/authentication-welcome.component';
+import { AuthenticationErrorComponent } from './authentication-error/authentication-error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginUserComponent,
     LogoutUserComponent,
-    AuthenticationWelcomeComponent
+    AuthenticationWelcomeComponent,
+    AuthenticationErrorComponent
   ],
   imports: [
     BrowserModule,
