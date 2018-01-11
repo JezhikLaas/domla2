@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'da-root',

@@ -2,7 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { User } from '../shared/user';
+import { AccountServiceService } from '../shared/account-service.service';
+import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
+import { UserLogin } from '../shared/user-login';
 import { ErrorMessages } from './login-user-error-messages';
 import 'rxjs/add/operator/map';
 
@@ -15,21 +17,25 @@ declare var $: any;
 })
 
 export class LoginUserComponent implements OnInit, AfterViewInit {
-  returnUrl: Observable<string>;
+  returnUrl: string;
   loginForm: FormGroup;
   errors: { [key: string]: string };
   formValidation: boolean;
+  errorDialog: ErrorDialogComponent;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private service: AccountServiceService,
   ) { }
 
   ngOnInit() {
-    this.returnUrl = this.route
+    this.errorDialog = new ErrorDialogComponent();
+    this.route
       .queryParamMap
-      .map(params => params.get('returnUrl') || 'None');
+      .map(params => params.get('returnUrl'))
+      .subscribe(value => this.returnUrl = value);
 
     this.errors = {'hasErrors': 'false'};
     this.formValidation = false;
@@ -65,13 +71,15 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const user = new User(
+    const user = new UserLogin(
       this.loginForm.get('login').value,
-      this.loginForm.get('password').value
+      this.loginForm.get('password').value,
+      this.returnUrl
     );
 
-    console.log('now navigating ...');
-    this.router.navigate(['/app/logout']);
+    this.service.login(user, () => {}, (message) => {
+      this.errorDialog.show('Fehler', message);
+    });
   }
 
   updateErrorMessages() {
