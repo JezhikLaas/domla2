@@ -27,7 +27,7 @@ export class AccountServiceService {
     this.http.post(this.apiUrl(), login)
       .retry(3)
       .catch(error => {
-        failed(error.toString());
+        failed(error.message);
         return Observable.throw(error);
       })
       .subscribe(() => completed());

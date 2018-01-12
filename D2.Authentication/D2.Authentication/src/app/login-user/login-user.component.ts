@@ -21,17 +21,16 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup;
   errors: { [key: string]: string };
   formValidation: boolean;
-  errorDialog: ErrorDialogComponent;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private service: AccountServiceService,
+    private errorDialog: ErrorDialogComponent
   ) { }
 
   ngOnInit() {
-    this.errorDialog = new ErrorDialogComponent();
     this.route
       .queryParamMap
       .map(params => params.get('returnUrl'))
