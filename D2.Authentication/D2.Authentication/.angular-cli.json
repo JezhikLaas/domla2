@@ -26,6 +26,7 @@
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/semantic-ui-css/semantic.js",
+        "../node_modules/underscore/underscore-min.js",
         "../node_modules/vex-js/dist/js/vex.combined.min.js",
         "../node_modules/vex-dialog/dist/vex.dialog.min.js"
       ],
