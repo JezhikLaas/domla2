@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ModalModule } from 'ngx-modialog';
-import { VexModalModule } from 'ngx-modialog/plugins/vex';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginUserComponent } from './login-user/login-user.component';
@@ -24,8 +22,6 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
   ],
   imports: [
     BrowserModule,
-    ModalModule.forRoot(),
-    VexModalModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule

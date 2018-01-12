@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Component, ViewContainerRef } from '@angular/core';
-import { Overlay } from 'ngx-modialog';
-import { Modal } from 'ngx-modialog/plugins/vex';
 
 declare var $: any;
 declare var vex: any;
 
 @Component({
   selector: 'da-error-dialog',
-  template: `<button (click)="onClick()">Alert</button>`,
+  template: ``,
   styles: []
 })
 
 @Injectable()
 export class ErrorDialogComponent {
 
-  constructor(public modal: Modal) {
+  constructor() {
   }
 
   show(title: string, message: string) {
