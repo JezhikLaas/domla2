@@ -10,6 +10,8 @@ import 'rxjs/add/observable/throw';
 @Injectable()
 export class AccountServiceService {
 
+  private static readonly Login_Url = 'account/login';
+
   constructor(
     @Inject(API_URL) private api: string,
     private http: HttpClient
@@ -23,17 +25,12 @@ export class AccountServiceService {
   }
 
   login(login: UserLogin, completed: () => void, failed: (message: string) => void) {
-    console.log('login')
-    this.http.post(this.apiUrl(), login)
+    this.http.post(this.apiUrl() + AccountServiceService.Login_Url, login)
       .retry(3)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
       })
       .subscribe(() => completed());
-  }
-
-  private errorHandler(error: Error | any): Observable<any> {
-    return Observable.throw(error);
   }
 }

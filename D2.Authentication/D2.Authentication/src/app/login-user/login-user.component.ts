@@ -22,6 +22,7 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup;
   errors: { [key: string]: string };
   formValidation: boolean;
+  loginInProcess: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -39,6 +40,8 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
 
     this.errors = {'hasErrors': 'false'};
     this.formValidation = false;
+    this.loginInProcess = false;
+    this.loader.useDimmer = false;
 
     this.loginForm = this.fb.group({
       login: this.fb.control(
@@ -65,9 +68,15 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
   }
 
   login() {
+    if (this.loginInProcess) {
+      return;
+    }
+    this.loginInProcess = true;
     this.formValidation = true;
+
     this.updateErrorMessages();
     if (this.errors['hasErrors'] === 'true') {
+      this.loginInProcess = false;
       return;
     }
 
@@ -79,9 +88,11 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
 
     this.loader.show('Anmeldung läuft...');
     this.service.login(user, () => {
+      this.loginInProcess = false;
       this.loader.hide();
       },
       (message) => {
+        this.loginInProcess = false;
         this.loader.hide();
         this.errorDialog.show('Fehler', message);
       }
