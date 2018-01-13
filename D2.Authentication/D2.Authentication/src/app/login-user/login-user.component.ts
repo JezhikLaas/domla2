@@ -1,9 +1,9 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { AccountServiceService } from '../shared/account-service.service';
 import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
+import { LoaderComponent } from '../shared/loader/loader.component';
 import { UserLogin } from '../shared/user-login';
 import { ErrorMessages } from './login-user-error-messages';
 import 'rxjs/add/operator/map';
@@ -17,6 +17,7 @@ declare var $: any;
 })
 
 export class LoginUserComponent implements OnInit, AfterViewInit {
+  @ViewChild(LoaderComponent) loader: LoaderComponent;
   returnUrl: string;
   loginForm: FormGroup;
   errors: { [key: string]: string };
@@ -76,9 +77,15 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
       this.returnUrl
     );
 
-    this.service.login(user, () => {}, (message) => {
-      this.errorDialog.show('Fehler', message);
-    });
+    this.loader.show('Anmeldung läuft...');
+    this.service.login(user, () => {
+      this.loader.hide();
+      },
+      (message) => {
+        this.loader.hide();
+        this.errorDialog.show('Fehler', message);
+      }
+    );
   }
 
   updateErrorMessages() {

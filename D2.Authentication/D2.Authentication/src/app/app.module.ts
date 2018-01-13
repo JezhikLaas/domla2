@@ -10,6 +10,7 @@ import { AuthenticationWelcomeComponent } from './authentication-welcome/authent
 import { AuthenticationErrorComponent } from './authentication-error/authentication-error.component';
 import { AccountServiceService } from './shared/account-service.service';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
+import { LoaderComponent } from './shared/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
     LogoutUserComponent,
     AuthenticationWelcomeComponent,
     AuthenticationErrorComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
