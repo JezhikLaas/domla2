@@ -42,29 +42,32 @@ module UserData =
     
     let private fetchUser (options : ConnectionOptions) (id : string) =
         async {
-            use connection = authentication options
-            use command = connection.CreateCommand()
+            if id = null then
+                return None
+            else
+                use connection = authentication options
+                use command = connection.CreateCommand()
     
-            command.CommandText <- """SELECT
-                                          id,
-                                          login,
-                                          first_name,
-                                          last_name,
-                                          email,
-                                          title,
-                                          salutation,
-                                          claims,
-                                          logged_in
-                                      FROM
-                                          users
-                                      WHERE
-                                          login = :login"""
-            command.Parameters << ("login", StringField id) |> ignore
+                command.CommandText <- """SELECT
+                                              id,
+                                              login,
+                                              first_name,
+                                              last_name,
+                                              email,
+                                              title,
+                                              salutation,
+                                              claims,
+                                              logged_in
+                                          FROM
+                                              users
+                                          WHERE
+                                              login = :login"""
+                command.Parameters << ("login", StringField id) |> ignore
     
-            use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
-            match reader.Read() with
-            | true  -> return Some (UserI.fromReader reader)
-            | false -> return None
+                use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
+                match reader.Read() with
+                | true  -> return Some (UserI.fromReader reader)
+                | false -> return None
         }
         
     let private updateActive (options : ConnectionOptions) (id : string) (state : bool) =

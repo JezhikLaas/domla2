@@ -3,7 +3,9 @@
 open D2.Common
 open IdentityServer4.Services
 open IdentityServer4.Events
+open IdentityServer4.Extensions
 open IdentityServer4.Stores
+open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 
@@ -53,7 +55,26 @@ type AccountController
                         | false -> return RedirectResult ("~/")            :> ActionResult
         }
 
+    [<HttpGet>]
+    member this.Logout (logoutId : string) =
+        async {
+            let request = sprintf "/app/logout?logoutId=%s" logoutId
+            return RedirectResult (request)
+        }
+        |> Async.StartAsTask
+
     [<HttpPost("logout")>]
     [<ValidateAntiForgeryToken>]
     member this.Post (model : LogoutInputModel) =
-        ()
+        let user = this.HttpContext.User
+        if user <> null then
+            if user.Identity.IsAuthenticated = true then
+                this.HttpContext.SignOutAsync()
+                |> Async.AwaitTask
+                |> Async.RunSynchronously
+
+                events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
+                |> Async.AwaitTask
+                |> Async.RunSynchronously
+        
+        StatusCodeResult(StatusCodes.Status200OK)
