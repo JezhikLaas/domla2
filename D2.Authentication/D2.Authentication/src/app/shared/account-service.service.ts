@@ -30,7 +30,12 @@ export class AccountServiceService {
     const token = this.cookieService.get('XSRF-TOKEN');
     const httpHeaders = (token) ? new HttpHeaders({ 'X-XSRF-TOKEN': token }) : null;
 
-    this.http.post(this.apiUrl() + AccountServiceService.Login_Url, login, { headers: httpHeaders })
+    const loginData: FormData = new FormData();
+    loginData.append('Username', login.login);
+    loginData.append('Password', login.password);
+    loginData.append('ReturnUrl', login.returnUrl);
+
+    this.http.post(this.apiUrl() + AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
       .retry(3)
       .catch(error => {
         failed(error.message);

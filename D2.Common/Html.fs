@@ -8,18 +8,21 @@ module StringExtensions
             WebUtility.HtmlEncode (this)
         
         member this.Base64UrlEncode() =
-            let result = this
-                         |>
-                         System.Text.Encoding.UTF8.GetBytes
-                         |>
-                         Convert.ToBase64String
-                         |>
-                         String.map(
-                             fun c -> match c with
-                             | '+' -> '-'
-                             | '/' -> '_'
-                             | _   -> c
-                        )
-            result.Replace("=", "%3d")
+            if this = null then
+                ""
+            else
+                let result = this
+                             |>
+                             System.Text.Encoding.UTF8.GetBytes
+                             |>
+                             Convert.ToBase64String
+                             |>
+                             String.map(
+                                 fun c -> match c with
+                                 | '+' -> '-'
+                                 | '/' -> '_'
+                                 | _   -> c
+                            )
+                result.Replace("=", "%3d")
                               
 
