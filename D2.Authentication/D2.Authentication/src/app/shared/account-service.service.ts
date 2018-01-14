@@ -12,6 +12,7 @@ import 'rxjs/add/observable/throw';
 export class AccountServiceService {
 
   private static readonly Login_Url = 'account/login';
+  private static readonly Logout_Url = 'account/logout';
 
   constructor(
     @Inject(API_URL) private api: string,
@@ -42,5 +43,20 @@ export class AccountServiceService {
         return Observable.throw(error);
       })
       .subscribe(() => completed());
+  }
+
+  logout(id: string, failed: (message: string) => void) {
+    const token = this.cookieService.get('XSRF-TOKEN');
+    const httpHeaders = (token) ? new HttpHeaders({ 'X-XSRF-TOKEN': token }) : null;
+
+    const loginData: FormData = new FormData();
+    loginData.append('LogoutId', id);
+    this.http.post(this.apiUrl() + AccountServiceService.Logout_Url, loginData, { headers: httpHeaders })
+      .retry(3)
+      .catch(error => {
+        failed(error.message);
+        return Observable.throw(error);
+      })
+      .subscribe();
   }
 }

@@ -18,6 +18,7 @@ declare var $: any;
 })
 
 export class LoginUserComponent implements OnInit, AfterViewInit {
+
   @ViewChild(LoaderComponent) loader: LoaderComponent;
   private returnUrl: string;
   private token: string;
@@ -28,7 +29,6 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private route: ActivatedRoute,
     private service: AccountServiceService,
     private errorDialog: ErrorDialogComponent
