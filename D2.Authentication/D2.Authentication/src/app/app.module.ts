@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginUserComponent } from './login-user/login-user.component';
@@ -30,7 +31,8 @@ import { LoaderComponent } from './shared/loader/loader.component';
   ],
   providers: [
     AccountServiceService,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

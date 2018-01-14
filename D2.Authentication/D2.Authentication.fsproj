@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="D2.Authentication\tsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="Models\LoginInputModel.fs" />
     <Compile Include="Models\LogoutInputModel.fs" />
     <Compile Include="Models\LoginViewModel.fs" />
@@ -32,6 +36,10 @@
     <Compile Include="Controllers\HomeController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D2.Authentication\tsconfig.json" />
   </ItemGroup>
 
   <ItemGroup>

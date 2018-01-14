@@ -2,6 +2,7 @@ export class UserLogin {
   constructor(
     public login: string,
     public password: string,
-    public returnUrl: string
+    public returnUrl: string,
+    public cookie: string
   ) { }
 }

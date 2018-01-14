@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import base64url from 'base64url';
 import { AccountServiceService } from '../shared/account-service.service';
 import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
@@ -18,11 +19,12 @@ declare var $: any;
 
 export class LoginUserComponent implements OnInit, AfterViewInit {
   @ViewChild(LoaderComponent) loader: LoaderComponent;
-  returnUrl: string;
+  private returnUrl: string;
+  private token: string;
   loginForm: FormGroup;
   errors: { [key: string]: string };
-  formValidation: boolean;
-  loginInProcess: boolean;
+  private formValidation: boolean;
+  private loginInProcess: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -36,7 +38,9 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
     this.route
       .queryParamMap
       .map(params => params.get('returnUrl'))
-      .subscribe(value => this.returnUrl = value);
+      .subscribe(value => {
+        this.returnUrl = base64url.decode(value);
+      });
 
     this.errors = {'hasErrors': 'false'};
     this.formValidation = false;
@@ -83,7 +87,8 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
     const user = new UserLogin(
       this.loginForm.get('login').value,
       this.loginForm.get('password').value,
-      this.returnUrl
+      this.returnUrl,
+      this.token
     );
 
     this.loader.show('Anmeldung läuft...');

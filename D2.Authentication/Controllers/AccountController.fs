@@ -25,7 +25,8 @@ type AccountController
     [<HttpGet("login")>]
     member this.Get (returnUrl : string) =
         async {
-            return RedirectResult (sprintf "/app/login?returnUrl=%s" returnUrl)
+            let request = sprintf "/app/login?returnUrl=%s" (returnUrl.Base64UrlEncode())
+            return RedirectResult (request)
         }
         |> Async.StartAsTask
 

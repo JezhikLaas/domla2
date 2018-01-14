@@ -2,14 +2,15 @@ namespace D2.Authentication
 
 open IdentityServer4.Models
 open IdentityServer4.Stores
+open Microsoft.AspNetCore.Antiforgery
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.Http
-open Microsoft.Extensions.FileProviders
 open System
 open System.IO
+open System.Threading.Tasks
 
 type Route = {
     controller: string
@@ -40,7 +41,13 @@ type Startup private () =
         let clientStore = Storage.storages.clientStorage connectionOptions
         let userStore = Storage.storages.userStorage connectionOptions
         
-        services.AddMvc() |> ignore
+        services.AddMvc()  |> ignore
+        services.AddAntiforgery(
+            fun options -> options.HeaderName <- "X-XSRF-TOKEN"
+                           options.Cookie.HttpOnly <- false
+                           options.Cookie.Path <- null
+        )  |> ignore
+
         services
             .AddSingleton(clientStore)
             .AddSingleton(resourceStore)
@@ -56,10 +63,22 @@ type Startup private () =
         |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment, appLifetime : IApplicationLifetime) =
+    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment, appLifetime : IApplicationLifetime, antiforgery : IAntiforgery) =
+        let tokenMiddleware = fun (context : HttpContext) (next: Func<Task>) ->
+                                  let path = context.Request.Path.Value
+                                  if path <> null && not (path.ToLower().Contains("/api")) then
+                                      let tokens = antiforgery.GetAndStoreTokens(context)
+                                      context.Response.Cookies.Append("XSRF-TOKEN", 
+                                          tokens.RequestToken, CookieOptions (
+                                                                   HttpOnly = false, 
+                                                                   Secure = false
+                                                               )
+                                      )
+                                  next.Invoke ()
         app
             .UseStaticFiles()
             .UseIdentityServer()
+            .Use(tokenMiddleware)
             .UseMvc(
                 fun routes ->
                     routes.MapRoute(
