@@ -45,9 +45,12 @@ type AccountController
                         |> Async.AwaitTask
                         |> Async.RunSynchronously
 
+                        users.updateActive (s.Id.ToString()) true
+                        |> Async.RunSynchronously
+
                         match interaction.IsValidReturnUrl model.ReturnUrl with
-                        | true  -> return RedirectToPageResult (model.ReturnUrl) :> ActionResult
-                        | false -> return RedirectToPageResult ("~/")            :> ActionResult
+                        | true  -> return RedirectResult (model.ReturnUrl) :> ActionResult
+                        | false -> return RedirectResult ("~/")            :> ActionResult
         }
 
     [<HttpPost("logout")>]

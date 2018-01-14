@@ -56,6 +56,7 @@ type Startup private () =
             .AddScoped<IPersistedGrantStore, PersistedGrantStore>()
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
+            .AddDeveloperSigningCredential()
             .AddClientStore<ClientStore>()
             .AddCorsPolicyService<CorsPolicyService>()
             .AddProfileService<ProfileService>()

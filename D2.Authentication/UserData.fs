@@ -58,8 +58,8 @@ module UserData =
                                       FROM
                                           users
                                       WHERE
-                                          id = :id"""
-            command.Parameters << ("id", GuidField (new Guid(id))) |> ignore
+                                          login = :login"""
+            command.Parameters << ("login", StringField id) |> ignore
     
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
             match reader.Read() with
