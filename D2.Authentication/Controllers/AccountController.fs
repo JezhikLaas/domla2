@@ -82,6 +82,6 @@ type AccountController
                     users.updateActive (user.Identity.GetSubjectId()) false
                     |> Async.RunSynchronously
         
-            return StatusCodeResult(StatusCodes.Status200OK)
+            return RedirectResult ("/app/goodbye")
         }
         |> Async.StartAsTask
