@@ -54,11 +54,12 @@ type AccountController
                         | true  -> return RedirectResult (model.ReturnUrl) :> ActionResult
                         | false -> return RedirectResult ("~/")            :> ActionResult
         }
+        |> Async.StartAsTask
 
-    [<HttpGet>]
+    [<HttpGet("logout")>]
     member this.Logout (logoutId : string) =
         async {
-            let request = sprintf "/app/logout?logoutId=%s" logoutId
+            let request = sprintf "/app/logout?logoutId=%s" (logoutId.Base64UrlEncode())
             return RedirectResult (request)
         }
         |> Async.StartAsTask
@@ -66,15 +67,21 @@ type AccountController
     [<HttpPost("logout")>]
     [<ValidateAntiForgeryToken>]
     member this.Post (model : LogoutInputModel) =
-        let user = this.HttpContext.User
-        if user <> null then
-            if user.Identity.IsAuthenticated = true then
-                this.HttpContext.SignOutAsync()
-                |> Async.AwaitTask
-                |> Async.RunSynchronously
+        async {
+            let user = this.HttpContext.User
+            if user <> null then
+                if user.Identity.IsAuthenticated = true then
+                    this.HttpContext.SignOutAsync()
+                    |> Async.AwaitTask
+                    |> Async.RunSynchronously
 
-                events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
-                |> Async.AwaitTask
-                |> Async.RunSynchronously
+                    events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
+                    |> Async.AwaitTask
+                    |> Async.RunSynchronously
+
+                    users.updateActive (user.Identity.GetSubjectId()) false
+                    |> Async.RunSynchronously
         
-        StatusCodeResult(StatusCodes.Status200OK)
+            return StatusCodeResult(StatusCodes.Status200OK)
+        }
+        |> Async.StartAsTask

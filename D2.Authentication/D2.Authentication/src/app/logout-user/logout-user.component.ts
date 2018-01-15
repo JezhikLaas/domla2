@@ -29,6 +29,7 @@ export class LogoutUserComponent implements OnInit {
   }
 
   logout() {
+    console.log('logout id: ' + this.logoutId)
     this.service.logout(
       this.logoutId,
       (message) => this.errorDialog.show('Fehler', message)

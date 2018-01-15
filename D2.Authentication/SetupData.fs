@@ -32,6 +32,7 @@ module SetupData =
                                       RedirectUris = [| "http://localhost:5002/signin-oidc" |],
                                       PostLogoutRedirectUris = [| "http://localhost:5002/signout-callback-oidc" |],
                                       RequireConsent = false,
+                                      AlwaysIncludeUserClaimsInIdToken = true,
                                       AllowOfflineAccess = true,
                                       AllowedScopes =
                                           [|

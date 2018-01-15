@@ -7,6 +7,9 @@ module StringExtensions
         member this.Html() =
             WebUtility.HtmlEncode (this)
         
+        member this.HtmlDecode() =
+            WebUtility.HtmlDecode (this)
+        
         member this.Base64UrlEncode() =
             if this = null then
                 ""

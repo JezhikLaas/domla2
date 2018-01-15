@@ -61,8 +61,8 @@ module UserData =
                                           FROM
                                               users
                                           WHERE
-                                              login = :login"""
-                command.Parameters << ("login", StringField id) |> ignore
+                                              id = :id"""
+                command.Parameters << ("id", GuidField (Guid (id))) |> ignore
     
                 use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
                 match reader.Read() with
@@ -81,7 +81,7 @@ module UserData =
                                                   logged_in = %s
                                               WHERE
                                                   id = :id""" (if state then "LOCALTIMESTAMP" else "NULL")
-            command.Parameters << ("id", GuidField (new Guid(id))) |> ignore
+            command.Parameters << ("id", GuidField (Guid (id))) |> ignore
     
             let! result = command.ExecuteNonQueryAsync() |> Async.AwaitTask
             match result with
