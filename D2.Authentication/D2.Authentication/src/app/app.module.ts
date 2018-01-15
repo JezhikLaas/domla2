@@ -12,6 +12,7 @@ import { AuthenticationErrorComponent } from './authentication-error/authenticat
 import { AccountServiceService } from './shared/account-service.service';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { LoaderComponent } from './shared/loader/loader.component';
+import { LoggedOutComponent } from './logged-out/logged-out.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { LoaderComponent } from './shared/loader/loader.component';
     AuthenticationWelcomeComponent,
     AuthenticationErrorComponent,
     ErrorDialogComponent,
-    LoaderComponent
+    LoaderComponent,
+    LoggedOutComponent
   ],
   imports: [
     BrowserModule,
