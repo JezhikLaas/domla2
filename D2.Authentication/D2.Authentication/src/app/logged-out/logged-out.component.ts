@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'da-logged-out',
   template: `
-    <h4 class="ui dividing header">Auf Wiedersehen!</h4>
+    <h4 class="ui centered text dividing header">Auf Wiedersehen!</h4>
 
     <div>
       <h5>Sie sind nun abgemeldet.</h5>
