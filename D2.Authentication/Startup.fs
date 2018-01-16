@@ -1,5 +1,6 @@
 namespace D2.Authentication
 
+open D2.Common
 open IdentityServer4.Models
 open IdentityServer4.Stores
 open Microsoft.AspNetCore.Antiforgery
@@ -11,11 +12,6 @@ open Microsoft.AspNetCore.Http
 open System
 open System.IO
 open System.Threading.Tasks
-
-type Route = {
-    controller: string
-    action : string
-}
 
 type Startup private () =
     new (configuration: IConfiguration) as this =

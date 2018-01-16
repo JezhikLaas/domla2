@@ -22,9 +22,9 @@ module StringExtensions
                              |>
                              String.map(
                                  fun c -> match c with
-                                 | '+' -> '-'
-                                 | '/' -> '_'
-                                 | _   -> c
+                                          | '+' -> '-'
+                                          | '/' -> '_'
+                                          | _   -> c
                             )
                 result.Replace("=", "%3d")
                               

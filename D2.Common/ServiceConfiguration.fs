@@ -1,4 +1,4 @@
-﻿namespace D2.Authentication
+﻿namespace D2.Common
 
 module ServiceConfiguration =
 

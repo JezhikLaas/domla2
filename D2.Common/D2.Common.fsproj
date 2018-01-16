@@ -11,6 +11,8 @@
     <Compile Include="Logger.fs" />
     <Compile Include="Cast.fs" />
     <Compile Include="Extensions.fs" />
+    <Compile Include="Route.fs" />
+    <Compile Include="ServiceConfiguration.fs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NLog.config">
@@ -18,8 +20,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Core" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
     <PackageReference Include="NLog" Version="5.0.0-beta11" />
     <PackageReference Include="Npgsql" Version="3.2.6" />
   </ItemGroup>
