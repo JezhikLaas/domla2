@@ -37,7 +37,6 @@ export class AccountServiceService {
     loginData.append('ReturnUrl', login.returnUrl);
 
     this.http.post(this.apiUrl() + AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
-      .retry(3)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
@@ -52,7 +51,6 @@ export class AccountServiceService {
     const loginData: FormData = new FormData();
     loginData.append('LogoutId', id);
     this.http.post(this.apiUrl() + AccountServiceService.Logout_Url, loginData, { headers: httpHeaders })
-      .retry(3)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);

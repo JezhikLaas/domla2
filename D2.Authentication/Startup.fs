@@ -2,21 +2,25 @@ namespace D2.Authentication
 
 open D2.Common
 open IdentityServer4.Models
+open IdentityServer4.Services
 open IdentityServer4.Stores
 open Microsoft.AspNetCore.Antiforgery
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
-open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.Logging
 open System
 open System.IO
 open System.Threading.Tasks
+open IdentityServer4.Configuration
 
 type Startup private () =
-    new (configuration: IConfiguration) as this =
+    new (configuration: IConfiguration, loggerFactory : ILoggerFactory) as this =
         Startup() then
         this.Configuration <- configuration
+        this.LoggerFactory <- loggerFactory
 
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
@@ -42,13 +46,28 @@ type Startup private () =
             fun options -> options.HeaderName <- "X-XSRF-TOKEN"
                            options.Cookie.HttpOnly <- false
                            options.Cookie.Path <- null
-        )  |> ignore
+        ).AddCors(
+            fun options -> options.AddPolicy(
+                               "default",
+                               fun policy ->
+                                   policy.WithOrigins("http://localhost:8130")
+                                         .AllowAnyHeader()
+                                         .AllowAnyMethod()
+                                   |> ignore
+                           )
+        )
+        |> ignore
+
+        let cors = DefaultCorsPolicyService (this.LoggerFactory.CreateLogger())
+        cors.AllowAll <- true
 
         services
             .AddSingleton(clientStore)
             .AddSingleton(resourceStore)
             .AddSingleton(persistedGrantStore)
             .AddSingleton(userStore)
+            .AddSingleton<ICorsPolicyService>(cors)
+            .AddTransient<Authorizer>()
             .AddScoped<IPersistedGrantStore, PersistedGrantStore>()
             .AddSingleton<TokenCleanup>()
             .AddIdentityServer()
@@ -73,6 +92,7 @@ type Startup private () =
                                       )
                                   next.Invoke ()
         app
+            .UseCors("default")
             .UseStaticFiles()
             .UseIdentityServer()
             .Use(tokenMiddleware)
@@ -96,3 +116,4 @@ type Startup private () =
         appLifetime.ApplicationStopping.Register (fun () -> tokenCleanup.Stop ()) |> ignore
 
     member val Configuration : IConfiguration = null with get, set
+    member val LoggerFactory : ILoggerFactory = null with get, set

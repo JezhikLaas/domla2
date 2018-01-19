@@ -51,8 +51,8 @@ type AccountController
                         |> Async.RunSynchronously
 
                         match interaction.IsValidReturnUrl model.ReturnUrl with
-                        | true  -> return RedirectResult (model.ReturnUrl) :> ActionResult
-                        | false -> return RedirectResult ("~/")            :> ActionResult
+                        | true  -> return this.Redirect (model.ReturnUrl) :> ActionResult
+                        | false -> return this.Redirect ("~/")            :> ActionResult
         }
         |> Async.StartAsTask
 
@@ -60,7 +60,7 @@ type AccountController
     member this.Logout (logoutId : string) =
         async {
             let request = sprintf "/app/logout?logoutId=%s" (logoutId.Base64UrlEncode())
-            return RedirectResult (request)
+            return this.Redirect (request)
         }
         |> Async.StartAsTask
 
