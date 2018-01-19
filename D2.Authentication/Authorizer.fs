@@ -1,21 +1,73 @@
 ﻿namespace D2.Authentication
 
+open IdentityServer4.Events
+open IdentityServer4.Extensions
 open IdentityServer4.ResponseHandling
-open IdentityServer4.Validation
-open IdentityServer4.Models
-open Microsoft.AspNetCore.Authentication
-open Microsoft.Extensions.Logging
 open IdentityServer4.Services
-open System.Threading.Tasks
+open IdentityServer4.Validation
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.Mvc
+open Microsoft.Extensions.Logging
+open System
+open System.Security.Claims
 
 type Authorizer
      (
-         clock : ISystemClock,
-         logger : ILogger<AuthorizeInteractionResponseGenerator>,
-         consent : IConsentService,
-         profile : IProfileService
-
+         events : IEventService,
+         logger : ILogger<Authorizer>,
+         validator : IAuthorizeRequestValidator,
+         authorizeResponseGenerator : IAuthorizeResponseGenerator,
+         userSession : IUserSession,
+         users : UserStorage
      ) =
     
-    member this.ProcessInteractionAsync (request : ValidatedAuthorizeRequest, consent : ConsentResponse) =
-        ()
+    member this.Authorize (context : HttpContext) =
+        logger.LogDebug "Start to authorize"
+
+        let authorize parameters (user : ClaimsPrincipal) =
+            match user = null with
+            | true  -> logger.LogDebug "no user present in authorize request"
+            | false -> logger.LogDebug (sprintf "user in authorize request: %s" (user.GetSubjectId ()))
+
+            let result = validator.ValidateAsync (parameters, user)
+                         |> Async.AwaitTask
+                         |> Async.RunSynchronously
+            
+            match result.IsError with
+            | true  ->  logger.LogWarning (sprintf "failed to authenticate %s" (user.GetSubjectId ()))
+                        logger.LogWarning (sprintf "%s %s %s" result.Error Environment.NewLine result.ErrorDescription)
+                        StatusCodeResult StatusCodes.Status403Forbidden
+                        :> IActionResult
+            
+            | false -> let request = result.ValidatedRequest
+                       let response = authorizeResponseGenerator.CreateResponseAsync request
+                                      |> Async.AwaitTask
+                                      |> Async.RunSynchronously
+                       
+                       if response.IsError = false then
+                           logger.LogDebug (sprintf "trigger success event for user %s" (user.GetSubjectId ()))
+                           events.RaiseAsync (TokenIssuedSuccessEvent (response))
+                           |> Async.AwaitTask
+                           |> Async.RunSynchronously
+                           
+                           logger.LogDebug (sprintf "setting user %s to state ACTIVE" (user.GetSubjectId ()))
+                           users.updateActive (user.GetSubjectId().ToString()) true
+                           |> Async.RunSynchronously
+                           
+                           logger.LogDebug (sprintf "user %s authorized" (user.GetSubjectId ()))
+                       else
+                           logger.LogError (sprintf "response for user %s indicates an error" (user.GetSubjectId ()))
+                           logger.LogError (sprintf "%s %s %s" response.Error Environment.NewLine response.ErrorDescription)
+
+                       JsonResult (response)
+                       :> IActionResult
+
+        match context.Request.Method with
+        | "GET" -> let parameters = context.Request.Query.AsNameValueCollection ()
+                   let user = userSession.GetUserAsync ()
+                              |> Async.AwaitTask
+                              |> Async.RunSynchronously
+                   authorize parameters user
+
+        | _     -> StatusCodeResult StatusCodes.Status405MethodNotAllowed
+                   :> IActionResult

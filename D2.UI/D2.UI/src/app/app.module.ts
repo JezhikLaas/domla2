@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { AccountService } from './shared/account.service';
+import { StorageService } from './shared/storage.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AccountService } from './shared/account.service';
   ],
   providers: [
     ErrorDialogComponent,
-    AccountService
+    AccountService,
+    StorageService
   ],
   bootstrap: [AppComponent]
 })

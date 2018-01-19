@@ -8,6 +8,7 @@ open IdentityServer4.Stores
 open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
+open Microsoft.Extensions.Logging
 
 [<Route("[controller]")>]
 [<SecurityHeaders>]
@@ -16,18 +17,17 @@ type AccountController
          interaction : IIdentityServerInteractionService,
          users : UserStorage,
          events : IEventService,
-         clientStore : IClientStore,
-         httpContextAccessor : IHttpContextAccessor
+         grantStore : PersistedGrantStorage,
+         logger : ILogger<AccountController>,
+         authorizer : Authorizer
      ) =
     inherit Controller()
-
-    let logger = Logger.get "D2.Authentication.Controllers.AccountController"
-    let account = AccountService (interaction, clientStore, httpContextAccessor)
 
     [<HttpGet("login")>]
     member this.Get (returnUrl : string) =
         async {
             let request = sprintf "/app/login?returnUrl=%s" (returnUrl.Base64UrlEncode())
+            logger.LogDebug request
             return RedirectResult (request)
         }
         |> Async.StartAsTask
@@ -36,37 +36,31 @@ type AccountController
     [<ValidateAntiForgeryToken>]
     member this.Post (model : LoginInputModel) =
         async {
+            logger.LogDebug (sprintf "login requested, starting to authenticate %s" model.Username)
             let! result = users.findUser model.Username model.Password
             match result with
-            | None   -> return StatusCodeResult (StatusCodes.Status403Forbidden) :> ActionResult
-            | Some s -> events.RaiseAsync(new UserLoginSuccessEvent(s.Login, s.Id.ToString("N"), s.Login))
+            | None   -> logger.LogWarning (sprintf "failed to authenticate %s" model.Username)
+                        return StatusCodeResult (StatusCodes.Status403Forbidden)
+                        :> IActionResult
+            
+            | Some s -> logger.LogDebug (sprintf "authentication for %s succeeded" model.Username)
+                        events.RaiseAsync(new UserLoginSuccessEvent(s.Login, s.Id.ToString("N"), s.Login))
                         |> Async.AwaitTask
-                        |> Async.RunSynchronously
-
-                        this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
-                        |> Async.AwaitTask
-                        |> Async.RunSynchronously
-
-                        users.updateActive (s.Id.ToString()) true
                         |> Async.RunSynchronously
 
                         match interaction.IsValidReturnUrl model.ReturnUrl with
-                        | true  -> return this.Redirect (model.ReturnUrl) :> ActionResult
-                        | false -> return this.Redirect ("~/")            :> ActionResult
+                        | true  -> this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
+                                   |> Async.AwaitTask
+                                   |> Async.RunSynchronously
+                                   return authorizer.Authorize (this.HttpContext)
+
+                        | false -> return StatusCodeResult (StatusCodes.Status403Forbidden)
+                                   :> IActionResult
         }
         |> Async.StartAsTask
 
     [<HttpGet("logout")>]
-    member this.Logout (logoutId : string) =
-        async {
-            let request = sprintf "/app/logout?logoutId=%s" (logoutId.Base64UrlEncode())
-            return this.Redirect (request)
-        }
-        |> Async.StartAsTask
-
-    [<HttpPost("logout")>]
-    [<ValidateAntiForgeryToken>]
-    member this.Post (model : LogoutInputModel) =
+    member this.Logout () =
         async {
             let user = this.HttpContext.User
             if user <> null then
@@ -81,6 +75,8 @@ type AccountController
 
                     users.updateActive (user.Identity.GetSubjectId()) false
                     |> Async.RunSynchronously
+
+                    do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
         
             return RedirectResult ("/app/goodbye")
         }

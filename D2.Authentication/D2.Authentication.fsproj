@@ -10,12 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Authorizer.fs" />
     <Compile Include="Models\LoginInputModel.fs" />
     <Compile Include="Models\LogoutInputModel.fs" />
     <Compile Include="Models\LoginViewModel.fs" />
     <Compile Include="SecurityHeadersAttribute.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="Authorizer.fs" />
     <Compile Include="AuthorizationCodeStore.fs" />
     <Compile Include="ClientStore.fs" />
     <Compile Include="CorsPolicyService.fs" />
