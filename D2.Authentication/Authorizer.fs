@@ -10,6 +10,7 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
 open System
 open System.Security.Claims
+open System.Web
 
 type Authorizer
      (
@@ -21,7 +22,7 @@ type Authorizer
          users : UserStorage
      ) =
     
-    member this.Authorize (context : HttpContext) =
+    member this.Authorize (context : HttpContext) (query : string) =
         logger.LogDebug "Start to authorize"
 
         let authorize parameters (user : ClaimsPrincipal) =
@@ -36,6 +37,12 @@ type Authorizer
             match result.IsError with
             | true  ->  logger.LogWarning (sprintf "failed to authenticate %s" (user.GetSubjectId ()))
                         logger.LogWarning (sprintf "%s %s %s" result.Error Environment.NewLine result.ErrorDescription)
+                        events.RaiseAsync(TokenIssuedFailureEvent(result.ValidatedRequest, result.Error, result.ErrorDescription))
+                        |> Async.AwaitTask
+                        |> Async.RunSynchronously
+
+                        context.Response.Clear ()
+                           
                         StatusCodeResult StatusCodes.Status403Forbidden
                         :> IActionResult
             
@@ -43,6 +50,8 @@ type Authorizer
                        let response = authorizeResponseGenerator.CreateResponseAsync request
                                       |> Async.AwaitTask
                                       |> Async.RunSynchronously
+
+                       let responseData = AuthorizeResultModel (response)
                        
                        if response.IsError = false then
                            logger.LogDebug (sprintf "trigger success event for user %s" (user.GetSubjectId ()))
@@ -59,15 +68,19 @@ type Authorizer
                            logger.LogError (sprintf "response for user %s indicates an error" (user.GetSubjectId ()))
                            logger.LogError (sprintf "%s %s %s" response.Error Environment.NewLine response.ErrorDescription)
 
-                       JsonResult (response)
+                       JsonResult (responseData)
                        :> IActionResult
 
         match context.Request.Method with
-        | "GET" -> let parameters = context.Request.Query.AsNameValueCollection ()
-                   let user = userSession.GetUserAsync ()
-                              |> Async.AwaitTask
-                              |> Async.RunSynchronously
-                   authorize parameters user
+        | "POST" -> let index = query.IndexOf('?')
+                    let source = match index with
+                                 | -1 -> query
+                                 | _  -> query.Substring (index + 1)
+                    let parameters = HttpUtility.ParseQueryString (source)
+                    let user = userSession.GetUserAsync ()
+                               |> Async.AwaitTask
+                               |> Async.RunSynchronously
+                    authorize parameters user
 
-        | _     -> StatusCodeResult StatusCodes.Status405MethodNotAllowed
-                   :> IActionResult
+        | _      -> StatusCodeResult StatusCodes.Status405MethodNotAllowed
+                    :> IActionResult

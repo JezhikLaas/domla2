@@ -8,6 +8,7 @@ open IdentityServer4.Stores
 open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
+open Microsoft.AspNetCore.Http.Extensions
 open Microsoft.Extensions.Logging
 
 [<Route("[controller]")>]
@@ -38,6 +39,8 @@ type AccountController
         async {
             logger.LogDebug (sprintf "login requested, starting to authenticate %s" model.Username)
             let! result = users.findUser model.Username model.Password
+            let parameters = this.HttpContext.Request.Query.AsNameValueCollection ()
+            logger.LogDebug (parameters.ToString())
             match result with
             | None   -> logger.LogWarning (sprintf "failed to authenticate %s" model.Username)
                         return StatusCodeResult (StatusCodes.Status403Forbidden)
@@ -52,7 +55,7 @@ type AccountController
                         | true  -> this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
                                    |> Async.AwaitTask
                                    |> Async.RunSynchronously
-                                   return authorizer.Authorize (this.HttpContext)
+                                   return authorizer.Authorize (this.HttpContext) (model.ReturnUrl.HtmlDecode ())
 
                         | false -> return StatusCodeResult (StatusCodes.Status403Forbidden)
                                    :> IActionResult
@@ -78,6 +81,15 @@ type AccountController
 
                     do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
         
-            return RedirectResult ("/app/goodbye")
+            let result = LogoutResponseModel (
+                             url = this.HttpContext.Request.Scheme
+                                   +
+                                   "://"
+                                   +
+                                   this.HttpContext.Request.Host.ToUriComponent()
+                                   +
+                                   "/app/goodbye"
+                         )
+            return JsonResult (result)
         }
         |> Async.StartAsTask

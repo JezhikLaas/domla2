@@ -1,9 +1,14 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { DOCUMENT } from '@angular/common';
 import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+
+interface LogoutUrl {
+  url: string;
+}
 
 @Injectable()
 export class AccountService {
@@ -13,6 +18,7 @@ export class AccountService {
 
   constructor(
     private http: HttpClient,
+    @Inject(DOCUMENT) private document: any
   ) { }
 
   logout(id: string, failed: (message: string) => void) {
@@ -21,11 +27,16 @@ export class AccountService {
 
     // const loginData: FormData = new FormData();
     // loginData.append('LogoutId', id);
-    this.http.get(AccountService.Logout_Url)
+    this.http.get<LogoutUrl>(AccountService.Logout_Url)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
       })
-      .subscribe();
+      .subscribe(
+        data => {
+          console.log('relocating to: ' + data.url);
+          this.document.location.href = data.url;
+        }
+      );
   }
 }
