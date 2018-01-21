@@ -34,7 +34,6 @@ export class AccountService {
       })
       .subscribe(
         data => {
-          console.log('relocating to: ' + data.url);
           this.document.location.href = data.url;
         }
       );

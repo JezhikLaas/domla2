@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { UserLogin } from './user-login';
 import { API_URL } from '../../url';
@@ -7,6 +8,21 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import * as parseUri from 'parse-uri';
+
+interface AuthorizeResult {
+  redirectUri: string;
+  state: string;
+  scope: string;
+  identityToken: string;
+  accessToken: string;
+  accessTokenLifetime: number;
+  code: string;
+  sessionState: string;
+  error: string;
+  errorDescritpion: string;
+  isError: boolean;
+}
 
 @Injectable()
 export class AccountServiceService {
@@ -16,6 +32,7 @@ export class AccountServiceService {
 
   constructor(
     @Inject(API_URL) private api: string,
+    @Inject(DOCUMENT) private document: any,
     private http: HttpClient,
     private cookieService: CookieService
   ) { }
@@ -36,12 +53,28 @@ export class AccountServiceService {
     loginData.append('Password', login.password);
     loginData.append('ReturnUrl', login.returnUrl);
 
-    this.http.post(this.apiUrl() + AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
+    this.http.post<AuthorizeResult>(this.apiUrl() + AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
       })
-      .subscribe(() => completed());
+      .subscribe(data => {
+        console.log(data);
+        if (!data.isError) {
+          completed();
+
+          const uri = parseUri(data.redirectUri);
+          let target = uri.protocol + '://' + uri.host
+          if (uri.port) {
+            target = target + ':' + uri.port;
+          }
+          target = target + '/';
+
+          this.document.location.href = target;
+        } else {
+          failed(data.error);
+        }
+      });
   }
 
   logout(id: string, failed: (message: string) => void) {

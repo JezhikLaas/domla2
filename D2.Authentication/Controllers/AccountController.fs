@@ -1,14 +1,11 @@
 ﻿namespace D2.Authentication
 
-open D2.Common
 open IdentityServer4.Services
 open IdentityServer4.Events
 open IdentityServer4.Extensions
-open IdentityServer4.Stores
 open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
-open Microsoft.AspNetCore.Http.Extensions
 open Microsoft.Extensions.Logging
 
 [<Route("[controller]")>]
@@ -79,7 +76,8 @@ type AccountController
                     users.updateActive (user.Identity.GetSubjectId()) false
                     |> Async.RunSynchronously
 
-                    do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
+                    grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
+                    |> Async.RunSynchronously
         
             let result = LogoutResponseModel (
                              url = this.HttpContext.Request.Scheme
