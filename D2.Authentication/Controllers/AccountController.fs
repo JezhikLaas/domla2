@@ -1,8 +1,9 @@
 ﻿namespace D2.Authentication
 
-open IdentityServer4.Services
 open IdentityServer4.Events
 open IdentityServer4.Extensions
+open IdentityServer4.Services
+open IdentityServer4.Validation
 open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
@@ -17,7 +18,8 @@ type AccountController
          events : IEventService,
          grantStore : PersistedGrantStorage,
          logger : ILogger<AccountController>,
-         authorizer : Authorizer
+         authorizer : Authorizer,
+         requestValidator : IUserInfoRequestValidator
      ) =
     inherit Controller()
 
@@ -60,34 +62,39 @@ type AccountController
         |> Async.StartAsTask
 
     [<HttpGet("logout")>]
-    member this.Logout () =
+    member this.Logout (logoutId : string) =
         async {
-            let user = this.HttpContext.User
-            if user <> null then
-                if user.Identity.IsAuthenticated = true then
-                    this.HttpContext.SignOutAsync()
-                    |> Async.AwaitTask
-                    |> Async.RunSynchronously
+            let token = match this.HttpContext.Request.Headers.TryGetValue ("Authorization") with
+                        | true, value -> value.[0].Substring(7)
+                        | false, _    -> null
+            let! validation = requestValidator.ValidateRequestAsync token
+                              |> Async.AwaitTask
+            
+            match validation.IsError with
+            | false -> let user = validation.Subject
+                       do! this.HttpContext.SignOutAsync()
+                           |> Async.AwaitTask
 
-                    events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
-                    |> Async.AwaitTask
-                    |> Async.RunSynchronously
+                       do! events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
+                           |> Async.AwaitTask
 
-                    users.updateActive (user.Identity.GetSubjectId()) false
-                    |> Async.RunSynchronously
-
-                    grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
-                    |> Async.RunSynchronously
+                       do! users.updateActive (user.Identity.GetSubjectId()) false
+                       do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
         
-            let result = LogoutResponseModel (
-                             url = this.HttpContext.Request.Scheme
-                                   +
-                                   "://"
-                                   +
-                                   this.HttpContext.Request.Host.ToUriComponent()
-                                   +
-                                   "/app/goodbye"
-                         )
-            return JsonResult (result)
+                       let result = LogoutResponseModel (
+                                        url = this.HttpContext.Request.Scheme
+                                        +
+                                        "://"
+                                        +
+                                        this.HttpContext.Request.Host.ToUriComponent()
+                                        +
+                                        "/app/goodbye"
+                                    )
+                       return JsonResult (result)
+                              :> IActionResult
+
+            
+            | true  -> return StatusCodeResult (StatusCodes.Status200OK)
+                              :> IActionResult
         }
         |> Async.StartAsTask

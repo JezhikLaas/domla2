@@ -5,6 +5,7 @@ open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
+open Microsoft.Extensions.Primitives
 
 type HomeController () =
     inherit Controller()
@@ -28,15 +29,14 @@ type HomeController () =
         }
         |> Async.StartAsTask
     
+    [<Authorize>]
     member this.Logout () =
         async {
-            this.HttpContext.SignOutAsync("Cookies")
-            |> Async.AwaitTask
-            |> Async.RunSynchronously
-
-            this.HttpContext.SignOutAsync("oidc")
-            |> Async.AwaitTask
-            |> Async.RunSynchronously
+            do! this.HttpContext.SignOutAsync("Cookies")
+                |> Async.AwaitTask
+            
+            do! this.HttpContext.SignOutAsync("oidc")
+                |> Async.AwaitTask
         }
         |> Async.StartAsTask
 

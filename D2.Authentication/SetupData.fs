@@ -27,6 +27,7 @@ module SetupData =
                 let interactive = Client (
                                       ClientId = "interactive",
                                       ClientName = "Interactive user",
+                                      AccessTokenType = AccessTokenType.Reference,
                                       AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                                       ClientSecrets = [| Secret ("0A0C7C53-1A60-4D5D-AE4C-4163F72E467D".Sha256 ()) |],
                                       RedirectUris = [| "http://localhost:8130/signin-oidc" |],
