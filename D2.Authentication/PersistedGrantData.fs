@@ -127,7 +127,8 @@ module PersistedGrantData =
                                       WHERE
                                           expiration IS NOT NULL
                                           AND
-                                          expiration < 'now'"""
+                                          expiration < :expiration"""
+            command.Parameters << ("expiration", TimeStampField DateTime.UtcNow) |> ignore
             let! _ = command.ExecuteNonQueryAsync () |> Async.AwaitTask
             ()
         }

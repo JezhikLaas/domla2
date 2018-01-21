@@ -21,10 +21,21 @@ type Startup private () =
     member this.ConfigureServices(services: IServiceCollection) =
         services.AddMvc() |> ignore
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear()
-        services.AddAuthentication(fun options ->
-            options.DefaultScheme <- "Cookies"
-            options.DefaultChallengeScheme <- "oidc"
-        )
+        services
+            .AddCors(
+                fun options -> options.AddPolicy(
+                                   "default",
+                                   fun policy ->
+                                       policy.WithOrigins("http://localhost:8130")
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod()
+                                    |> ignore
+                            )
+            )
+            .AddAuthentication(fun options ->
+                options.DefaultScheme <- "Cookies"
+                options.DefaultChallengeScheme <- "oidc"
+            )
             .AddCookie("Cookies")
             .AddOpenIdConnect("oidc", fun options -> 
                 options.SignInScheme <- "Cookies"
@@ -49,6 +60,7 @@ type Startup private () =
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
         app
+            .UseCors("default")
             .UseAuthentication()
             .UseStaticFiles()
             .UseMvc(

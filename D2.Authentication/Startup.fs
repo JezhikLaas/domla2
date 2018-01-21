@@ -42,20 +42,22 @@ type Startup private () =
         let userStore = Storage.storages.userStorage connectionOptions
         
         services.AddMvc()  |> ignore
-        services.AddAntiforgery(
-            fun options -> options.HeaderName <- "X-XSRF-TOKEN"
-                           options.Cookie.HttpOnly <- false
-                           options.Cookie.Path <- null
-        ).AddCors(
-            fun options -> options.AddPolicy(
-                               "default",
-                               fun policy ->
-                                   policy.WithOrigins("http://localhost:8130")
-                                         .AllowAnyHeader()
-                                         .AllowAnyMethod()
-                                   |> ignore
-                           )
-        )
+        services
+            .AddAntiforgery(
+                fun options -> options.HeaderName <- "X-XSRF-TOKEN"
+                               options.Cookie.HttpOnly <- false
+                               options.Cookie.Path <- null
+            )
+            .AddCors(
+                fun options -> options.AddPolicy(
+                                   "default",
+                                   fun policy ->
+                                       policy.WithOrigins("http://localhost:8130")
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod()
+                                    |> ignore
+                            )
+            )
         |> ignore
 
         let cors = DefaultCorsPolicyService (this.LoggerFactory.CreateLogger())
@@ -73,7 +75,6 @@ type Startup private () =
             .AddIdentityServer()
             .AddDeveloperSigningCredential()
             .AddClientStore<ClientStore>()
-            .AddCorsPolicyService<CorsPolicyService>()
             .AddProfileService<ProfileService>()
             .AddResourceStore<ResourceStore>()
         |> ignore
