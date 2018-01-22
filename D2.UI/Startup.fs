@@ -26,7 +26,7 @@ type Startup private () =
                 fun options -> options.AddPolicy(
                                    "default",
                                    fun policy ->
-                                       policy.WithOrigins("http://localhost:8130")
+                                       policy.AllowAnyOrigin()
                                              .AllowAnyHeader()
                                              .AllowAnyMethod()
                                     |> ignore
@@ -40,7 +40,7 @@ type Startup private () =
             .AddOpenIdConnect("oidc", fun options -> 
                 options.SignInScheme <- "Cookies"
 
-                options.Authority <- "http://localhost:8120"
+                options.Authority <- (ServiceConfiguration.authority().FullAddress)
                 options.RequireHttpsMetadata <- false
 
                 options.ClientId <- "interactive"
