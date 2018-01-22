@@ -7,14 +7,19 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Primitives
 
-type HomeController () =
+type HomeController
+     (
+        logger : ILogger<HomeController>
+     ) =
     inherit Controller()
 
     [<Authorize>]
     member this.Index () =
         async {
+            logger.LogDebug "starting authorized request for UI"
             let user = this.HttpContext.User
             if user <> null then
+                logger.LogDebug (sprintf "user identified as %s" user.Identity.Name)
                 let! accessToken = this.HttpContext.GetTokenAsync "access_token"
                                    |> Async.AwaitTask
                 this.HttpContext.Response.Cookies.Append(
@@ -31,6 +36,12 @@ type HomeController () =
     
     [<Authorize>]
     member this.Logout () =
+        let user = this.HttpContext.User
+        if user <> null then
+            logger.LogInformation (sprintf "user %s attempts to sign off" user.Identity.Name)
+        else
+            logger.LogWarning "anonymous user attempts to sign off"
+
         async {
             do! this.HttpContext.SignOutAsync("Cookies")
                 |> Async.AwaitTask
@@ -40,3 +51,7 @@ type HomeController () =
         }
         |> Async.StartAsTask
 
+    
+    [<Authorize>]
+    member this.Routes () =
+        ()
