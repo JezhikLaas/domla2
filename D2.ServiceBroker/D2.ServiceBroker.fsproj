@@ -10,6 +10,7 @@
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="ResolveRoutes.fs" />
     <Compile Include="Controllers/AppsController.fs" />
+    <Compile Include="StartupTesting.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

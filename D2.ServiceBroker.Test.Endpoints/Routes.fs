@@ -15,6 +15,7 @@ open System.Net.Http
 [<TestFixture>]
 [<Category("Endpoints")>]
 module RoutesTest = 
+    open Microsoft.Extensions.Configuration
 
     let private applicationRoutes (name : string) (version : int) =
         async {
@@ -94,7 +95,8 @@ module RoutesTest =
     [<OneTimeSetUp>]
     let setupOnce () =
         CompositionRoot.setStorage testStorage
-        let server = new TestServer((WebHostBuilder()).UseStartup<Startup>())
+        let server = new TestServer((WebHostBuilder())
+                        .UseStartup<StartupTesting>())
         browser <- server.CreateClient()
 
     [<SetUp>]
