@@ -14,6 +14,8 @@ open Microsoft.AspNetCore.Authorization.Infrastructure
 open Microsoft.AspNetCore.Identity
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Authentication.Cookies
+open Microsoft.EntityFrameworkCore
+open Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
 
 type DummyAuthorizationHandler () =
@@ -28,14 +30,49 @@ type DummyAuthorizationHandler () =
             Task.FromResult(0)
             :> Task
 
+type ApplicationDbContext (options : DbContextOptions<ApplicationDbContext>) =
+    inherit IdentityDbContext<ApplicationUser> (options)
+
 type StartupTesting private () =
     new (configuration: IConfiguration) as this =
         StartupTesting() then
         this.Configuration <- configuration
 
     member this.ConfigureServices(services: IServiceCollection) =
+        services.AddDbContext<ApplicationDbContext>(
+            fun options -> options.UseInMemoryDatabase(Guid.NewGuid().ToString())
+                           |> ignore
+        )
+        |> ignore
+
+        services
+            .AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+        |> ignore
+
+        services.Configure<IdentityOptions>(
+            fun (options : IdentityOptions) -> options.Password.RequireDigit <- false
+                                               options.Password.RequiredLength <- 4
+                                               options.Password.RequireNonAlphanumeric <- false
+                                               options.Password.RequireUppercase <- false
+                                               options.Password.RequireLowercase <- false
+                                               options.Password.RequiredUniqueChars <- 1
+                                               options.Lockout.DefaultLockoutTimeSpan <- TimeSpan.FromMinutes(30.0)
+                                               options.Lockout.MaxFailedAccessAttempts <- 10
+                                               options.Lockout.AllowedForNewUsers <- true
+                                               options.User.RequireUniqueEmail <- false
+        )
+        |> ignore
+        (*
+        services.ConfigureApplicationCookie(
+            fun options -> options.Cookie.HttpOnly <- false
+                           options.SlidingExpiration <- true
+        )
+        |> ignore
+        *)
         services.AddMvc() |> ignore
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear()
+
         services
             .AddCors(
                 fun options -> options.AddPolicy(
@@ -47,11 +84,9 @@ type StartupTesting private () =
                                     |> ignore
                             )
             )
-            .AddSingleton<IAuthorizationHandler, DummyAuthorizationHandler>()
-            .AddIdentity<IdentityRole, IdentityRole>()
-            .AddDefaultTokenProviders()
+            //.AddDefaultTokenProviders()
             |> ignore
-        
+        (*
         services.ConfigureApplicationCookie(fun options ->
             options.Events <- CookieAuthenticationEvents(
                                   OnRedirectToLogin = fun context ->
@@ -60,7 +95,7 @@ type StartupTesting private () =
                               )
         )
         |> ignore
-
+        *)
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
         app
             .UseCors("default")

@@ -16,6 +16,7 @@ open System.Net.Http
 [<Category("Endpoints")>]
 module RoutesTest = 
     open Microsoft.Extensions.Configuration
+    open System.Text
 
     let private applicationRoutes (name : string) (version : int) =
         async {
@@ -96,12 +97,21 @@ module RoutesTest =
     let setupOnce () =
         CompositionRoot.setStorage testStorage
         let server = new TestServer((WebHostBuilder())
+                        .UseEnvironment("testing")
                         .UseStartup<StartupTesting>())
         browser <- server.CreateClient()
 
     [<SetUp>]
     let init () =
         storageFake.Clear()
+        let response1 = browser.PostAsync("/Account/Register", new StringContent("""{"Email": "willi@example.com", "Password": "abc_123"}""", Encoding.UTF8, "application/json"))
+                        |> Async.AwaitTask
+                        |> Async.RunSynchronously
+        let response2 = browser.PostAsync("/Account/Login", new StringContent("""{"Email": "willi@example.com", "Password": "abc_123"}""", Encoding.UTF8, "application/json"))
+                        |> Async.AwaitTask
+                        |> Async.RunSynchronously
+        ()
+
     
     [<Test>]
     let ``Service broker answers 'Ok' when request is valid``() =
