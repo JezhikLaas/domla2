@@ -10,13 +10,14 @@ open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.TestHost
 open System
 open System.Collections.Generic
+open System.Linq
+open Microsoft.Extensions.Configuration
+open System.Text
 open System.Net.Http
 
 [<TestFixture>]
 [<Category("Endpoints")>]
 module RoutesTest = 
-    open Microsoft.Extensions.Configuration
-    open System.Text
 
     let private applicationRoutes (name : string) (version : int) =
         async {
@@ -107,10 +108,19 @@ module RoutesTest =
         let response1 = browser.PostAsync("/Account/Register", new StringContent("""{"Email": "willi@example.com", "Password": "abc_123"}""", Encoding.UTF8, "application/json"))
                         |> Async.AwaitTask
                         |> Async.RunSynchronously
+        
+        match response1.EnsureSuccessStatusCode().Headers.TryGetValues("Set-Cookie") with
+        | true, cookie -> browser.DefaultRequestHeaders.Add("Cookie", cookie.First())
+        | false, _     -> failwith "no cookie"
+
         let response2 = browser.PostAsync("/Account/Login", new StringContent("""{"Email": "willi@example.com", "Password": "abc_123"}""", Encoding.UTF8, "application/json"))
                         |> Async.AwaitTask
                         |> Async.RunSynchronously
-        ()
+
+        match response2.EnsureSuccessStatusCode().Headers.TryGetValues("Set-Cookie") with
+        | true, cookie -> browser.DefaultRequestHeaders.Clear()
+                          browser.DefaultRequestHeaders.Add("Cookie", cookie.First())
+        | false, _     -> failwith "no cookie"
 
     
     [<Test>]

@@ -7,16 +7,19 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
-open System.IdentityModel.Tokens.Jwt
 
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Authorization.Infrastructure
 open Microsoft.AspNetCore.Identity
 open System.Threading.Tasks
-open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.EntityFrameworkCore
 open Microsoft.AspNetCore.Identity.EntityFrameworkCore
+open Microsoft.AspNetCore.Http
 
+type AuthenticatedTestRequestMiddleware (next : RequestDelegate) =
+
+    member this.Invoke (context: HttpContext) =
+        Task.FromResult 0
 
 type DummyAuthorizationHandler () =
     inherit AuthorizationHandler<OperationAuthorizationRequirement> () with
@@ -40,8 +43,9 @@ type StartupTesting private () =
 
     member this.ConfigureServices(services: IServiceCollection) =
         services.AddDbContext<ApplicationDbContext>(
-            fun options -> options.UseInMemoryDatabase(Guid.NewGuid().ToString())
-                           |> ignore
+            (fun options -> options.UseInMemoryDatabase(Guid.NewGuid().ToString()) |> ignore),
+            ServiceLifetime.Singleton,
+            ServiceLifetime.Singleton
         )
         |> ignore
 
@@ -64,13 +68,13 @@ type StartupTesting private () =
                                                options.User.RequireUniqueEmail <- false
         )
         |> ignore
-        (*
+        
         services.ConfigureApplicationCookie(
             fun options -> options.Cookie.HttpOnly <- false
                            options.SlidingExpiration <- true
         )
         |> ignore
-        *)
+        
         services.AddMvc() |> ignore
 
         services
@@ -99,8 +103,9 @@ type StartupTesting private () =
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
         app
             .UseCors("default")
-            .UseMvc()
             .UseAuthentication()
+            .UseMiddleware<AuthenticatedTestRequestMiddleware>()
+            .UseMvc()
             |> ignore
 
     member val Configuration : IConfiguration = null with get, set

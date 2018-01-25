@@ -1,11 +1,8 @@
 ﻿namespace D2.ServiceBroker
 
-open D2.Common
-open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Identity
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
-open Microsoft.Extensions.Options
 open System
 
 type LoginModel () =
@@ -35,7 +32,11 @@ type AccountController
         | false -> StatusCodeResult (StatusCodes.Status422UnprocessableEntity)
                    :> IActionResult
         
-        | true  -> StatusCodeResult (StatusCodes.Status200OK)
+        | true  -> signInManager.SignInAsync(user, false)
+                   |> Async.AwaitTask
+                   |> Async.RunSynchronously
+                   
+                   StatusCodeResult (StatusCodes.Status200OK)
                    :> IActionResult
 
     [<HttpPost("Login")>]
