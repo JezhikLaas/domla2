@@ -7,10 +7,8 @@
     <ProjectReference Include="..\D2.ServiceBroker.Persistence\D2.ServiceBroker.Persistence.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationUser.fs" />
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="ResolveRoutes.fs" />
-    <Compile Include="Controllers/AccountController.fs" />
     <Compile Include="Controllers/AppsController.fs" />
     <Compile Include="StartupTesting.fs" />
     <Compile Include="Startup.fs" />

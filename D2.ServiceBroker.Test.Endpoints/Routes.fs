@@ -101,27 +101,12 @@ module RoutesTest =
                         .UseEnvironment("testing")
                         .UseStartup<StartupTesting>())
         browser <- server.CreateClient()
-
+        browser.DefaultRequestHeaders.Add("X-Integration-Testing", "abcde-12345")
+        browser.DefaultRequestHeaders.Add("user-name", "john.doe")
+    
     [<SetUp>]
     let init () =
         storageFake.Clear()
-        let response1 = browser.PostAsync("/Account/Register", new StringContent("""{"Email": "willi@example.com", "Password": "abc_123"}""", Encoding.UTF8, "application/json"))
-                        |> Async.AwaitTask
-                        |> Async.RunSynchronously
-        
-        match response1.EnsureSuccessStatusCode().Headers.TryGetValues("Set-Cookie") with
-        | true, cookie -> browser.DefaultRequestHeaders.Add("Cookie", cookie.First())
-        | false, _     -> failwith "no cookie"
-
-        let response2 = browser.PostAsync("/Account/Login", new StringContent("""{"Email": "willi@example.com", "Password": "abc_123"}""", Encoding.UTF8, "application/json"))
-                        |> Async.AwaitTask
-                        |> Async.RunSynchronously
-
-        match response2.EnsureSuccessStatusCode().Headers.TryGetValues("Set-Cookie") with
-        | true, cookie -> browser.DefaultRequestHeaders.Clear()
-                          browser.DefaultRequestHeaders.Add("Cookie", cookie.First())
-        | false, _     -> failwith "no cookie"
-
     
     [<Test>]
     let ``Service broker answers 'Ok' when request is valid``() =
