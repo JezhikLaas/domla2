@@ -14,35 +14,43 @@ module ServiceConfiguration =
         member val Port = 0 with get, set
     
     type AuthorityProperties () =
-        member val Protocol = String.Empty with get, set
-        member val Address = String.Empty with get, set
-        member val Port = 0 with get, set
-        member this.FullAddress
-            with get () =
-                sprintf "%s://%s:%d" this.Protocol this.Address this.Port
+        inherit ServiceAddress ()
+            member this.FullAddress
+                with get () =
+                    sprintf "%s://%s:%d" this.Protocol this.Address this.Port
+    
+    type BrokerProperties () =
+        inherit ServiceAddress ()
+            member this.FullAddress
+                with get () =
+                    sprintf "%s://%s:%d" this.Protocol this.Address this.Port
     
     type Service () = 
         member val Hosting = List<ServiceAddress>() with get, set
-    
-    let configuration =
+
+    let configurationSources =
         let builder = ConfigurationBuilder()
         builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-               .AddJsonFile("appsettings.json") |> ignore
-        
-        let configuration = builder.Build()
+               .AddJsonFile("appsettings.json")
+               .AddJsonFile("appsettings.Development.json")
+               .AddEnvironmentVariables () |> ignore
+        builder.Build ()
+    
+    let configuration =
         let config = Service ()
-        configuration.GetSection("Service").Bind config
+        configurationSources.GetSection("Service").Bind config
 
         config
     
     let authority () =
-        let builder = ConfigurationBuilder()
-        builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-               .AddJsonFile("appsettings.json") |> ignore
-        
-        let configuration = builder.Build()
         let config = AuthorityProperties ()
-        configuration.GetSection("Authority").Bind config
+        configurationSources.GetSection("Authority").Bind config
+
+        config
+    
+    let services () =
+        let config = BrokerProperties ()
+        configurationSources.GetSection("ServiceBroker").Bind config
 
         config
     
