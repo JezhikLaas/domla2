@@ -8,6 +8,7 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
 open System.Net.Http
 open Newtonsoft.Json.Linq
+open System
 
 type HomeController
      (
@@ -54,20 +55,13 @@ type HomeController
         |> Async.StartAsTask
 
     [<Authorize>]
-    member this.Routes () =
+    member this.Services () =
         async {
+            logger.LogDebug "Starting service services broker request"
             let serviceBroker = ServiceConfiguration.services ()
-            let! accessToken = this.HttpContext.GetTokenAsync "access_token"
-                               |> Async.AwaitTask
-
-            use client = new HttpClient ()
-            client.SetBearerToken accessToken
-            let! content = client.GetStringAsync serviceBroker.FullAddress
-                           |> Async.AwaitTask
-
-            let result = JArray.Parse(content).ToString()
+            
             return ContentResult(
-                       Content = result,
+                       Content = sprintf """{"Broker: "%s"}""" serviceBroker.FullAddress,
                        ContentType = "application/json"
                    )
         }
