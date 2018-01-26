@@ -1,11 +1,13 @@
 ﻿namespace D2.UI.Controllers
 
+open D2.Common
 open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
-open Microsoft.Extensions.Primitives
+open System.Net.Http
+open Newtonsoft.Json.Linq
 
 type HomeController
      (
@@ -51,7 +53,22 @@ type HomeController
         }
         |> Async.StartAsTask
 
-    
     [<Authorize>]
     member this.Routes () =
-        ()
+        async {
+            let serviceBroker = ServiceConfiguration.services ()
+            let! accessToken = this.HttpContext.GetTokenAsync "access_token"
+                               |> Async.AwaitTask
+
+            use client = new HttpClient ()
+            client.SetBearerToken accessToken
+            let! content = client.GetStringAsync serviceBroker.FullAddress
+                           |> Async.AwaitTask
+
+            let result = JArray.Parse(content).ToString()
+            return ContentResult(
+                       Content = result,
+                       ContentType = "application/json"
+                   )
+        }
+        |> Async.StartAsTask
