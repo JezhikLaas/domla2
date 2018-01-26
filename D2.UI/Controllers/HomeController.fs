@@ -61,7 +61,7 @@ type HomeController
             let serviceBroker = ServiceConfiguration.services ()
             
             return ContentResult(
-                       Content = sprintf """{"Broker: "%s"}""" serviceBroker.FullAddress,
+                       Content = sprintf """{"Broker": "%s"}""" serviceBroker.FullAddress,
                        ContentType = "application/json"
                    )
         }
