@@ -1,21 +1,13 @@
 ﻿namespace D2.ServiceBroker
 
-open System
-open D2.Common
 open System.Collections.Generic
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
-
-open Microsoft.AspNetCore.Authorization
-open Microsoft.AspNetCore.Authorization.Infrastructure
-open Microsoft.AspNetCore.Identity
-open System.Threading.Tasks
-open Microsoft.EntityFrameworkCore
-open Microsoft.AspNetCore.Identity.EntityFrameworkCore
-open Microsoft.AspNetCore.Http
 open System.Security.Claims
+open System.Threading.Tasks
 
 type AuthenticatedTestRequestMiddleware (next : RequestDelegate) =
 
