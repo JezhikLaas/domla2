@@ -52,7 +52,7 @@ type Startup private () =
                 fun options -> options.AddPolicy(
                                    "default",
                                    fun policy ->
-                                       policy.WithOrigins("http://localhost:8130")
+                                       policy.AllowAnyOrigin()
                                              .AllowAnyHeader()
                                              .AllowAnyMethod()
                                     |> ignore

@@ -98,10 +98,13 @@ module SetupData =
                                           ON CONFLICT (name)
                                           DO UPDATE SET
                                               data = EXCLUDED.data"""
-                    
+                
+                let apiResource = ApiResource ("api", "REST Api")
+                apiResource.ApiSecrets <- [| Secret ("78C2A2A1-6167-45E4-A9D7-46C5D921F7D5".Sha256()) |]
+
                 let resources = 
                     [|
-                        ApiResource ("api", "REST Api")
+                        apiResource
                     |]
                     
                 for resource in resources do

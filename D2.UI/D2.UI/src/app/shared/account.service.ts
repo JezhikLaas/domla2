@@ -10,23 +10,60 @@ interface LogoutUrl {
   url: string;
 }
 
+interface BrokerUrl {
+  Broker: string;
+}
+
+interface EndPointInfo {
+  name: string;
+  uri: string;
+}
+
+interface ServiceInfo {
+  name: string;
+  baseUrl: string;
+  version: number;
+  patch: number;
+  endPoints: EndPointInfo[];
+}
+
 @Injectable()
 export class AccountService {
 
-  private static readonly Login_Url = 'account/login';
   private static readonly Logout_Url = 'http://localhost:8130/home/logout';
+  private static readonly Services_Url = 'http://localhost:8130/home/services';
+  private brokerUrl: string;
+  private services: ServiceInfo[];
 
   constructor(
     private http: HttpClient,
     @Inject(DOCUMENT) private document: any
   ) { }
 
-  logout(id: string, failed: (message: string) => void) {
-    // const token = this.cookieService.get('XSRF-TOKEN');
-    // const httpHeaders = (token) ? new HttpHeaders({ 'X-XSRF-TOKEN': token }) : null;
+  fetchServices(succeeded: () => void, failed: (message: string) => void) {
+    this.http.get<BrokerUrl>(AccountService.Services_Url)
+      .catch(error => {
+        failed(error.message);
+        return Observable.throw(error);
+      })
+      .subscribe(
+        data => {
+          console.log('received: ' + data);
+          this.brokerUrl = data.Broker;
+          this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/`)
+            .catch(error => {
+              failed(error.message);
+              return Observable.throw(error);
+            })
+            .subscribe(answer => {
+              this.services = answer;
+              succeeded();
+            });
+        }
+      );
+  }
 
-    // const loginData: FormData = new FormData();
-    // loginData.append('LogoutId', id);
+  logout(id: string, failed: (message: string) => void) {
     this.http.get<LogoutUrl>(AccountService.Logout_Url)
       .catch(error => {
         failed(error.message);

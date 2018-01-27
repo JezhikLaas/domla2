@@ -33,7 +33,7 @@ type AccountController
         |> Async.StartAsTask
 
     [<HttpPost("login")>]
-    [<ValidateAntiForgeryToken>]
+    [<AutoValidateAntiforgeryToken>]
     member this.Post (model : LoginInputModel) =
         async {
             logger.LogDebug (sprintf "login requested, starting to authenticate %s" model.Username)

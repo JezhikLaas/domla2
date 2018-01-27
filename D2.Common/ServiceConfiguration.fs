@@ -32,7 +32,7 @@ module ServiceConfiguration =
         let builder = ConfigurationBuilder()
         builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                .AddJsonFile("appsettings.json")
-               .AddJsonFile("appsettings.Development.json")
+               .AddJsonFile("appsettings.Development.json", true)
                .AddEnvironmentVariables () |> ignore
         builder.Build ()
     
@@ -57,11 +57,13 @@ module ServiceConfiguration =
     let configureKestrel (options : KestrelServerOptions) =
         for hosting in configuration.Hosting do
             match hosting.Protocol with
-            | "http"  -> options.Listen (
-                            IPEndPoint (
-                                IPAddress.Parse hosting.Address,
-                                hosting.Port
-                            )
+            | "http"  -> let addresses = Dns.GetHostAddresses hosting.Address
+                         for address in addresses do
+                            options.Listen (
+                                IPEndPoint (
+                                    address,
+                                    hosting.Port
+                                )
                         )
             | _       -> failwith "unsupported protocol"
         ()
