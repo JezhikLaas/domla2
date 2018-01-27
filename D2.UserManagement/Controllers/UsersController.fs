@@ -5,12 +5,14 @@ open D2.UserManagement
 open D2.UserManagement.Persistence
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
+open Microsoft.Extensions.Logging
 
 [<Route("[controller]")>]
-type UsersController () =
+type UsersController
+    (
+        logger : ILogger<UsersController>
+    ) =
     inherit Controller()
-
-    let logger = Logger.get "D2.UserManagement.Controllers.UsersController"
 
     [<HttpPut("register")>]
     member this.Put() =
@@ -22,9 +24,9 @@ type UsersController () =
                                :> ActionResult
         | Success Conflict  -> StatusCodeResult(StatusCodes.Status409Conflict)
                                :> ActionResult
-        | InternalFailure e -> logger.error e "register"
+        | InternalFailure e -> logger.LogError(e, "register")
                                StatusCodeResult(StatusCodes.Status500InternalServerError)
                                :> ActionResult
-        | ExternalFailure s -> logger.info s
+        | ExternalFailure s -> logger.LogInformation s
                                StatusCodeResult(StatusCodes.Status422UnprocessableEntity)
                                :> ActionResult

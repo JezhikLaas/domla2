@@ -2,6 +2,7 @@ namespace D2.UserManagement
 
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
+open NLog.Web
 
 module Program =
     let exitCode = 0
@@ -10,6 +11,7 @@ module Program =
         WebHost
             .CreateDefaultBuilder(args)
             .UseStartup<Startup>()
+            .UseNLog()
             .Build()
 
     [<EntryPoint>]

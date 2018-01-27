@@ -1,15 +1,8 @@
 ﻿namespace D2.Authentication
 
-open D2.Common
-open IdentityModel
-open IdentityServer4.Extensions
 open IdentityServer4.Services
 open IdentityServer4.Stores
-open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Http
-open System
-open System.Linq
-open System.Threading.Tasks
 
 type AccountService
      (
@@ -18,8 +11,6 @@ type AccountService
         httpContextAccessor : IHttpContextAccessor
      )
      =
-
-     let logger = Logger.get "D2.Authentication.Controllers.AccountService"
 
      member this.BuildLoginViewModel (returnUrl : string) =
          let context = interaction.GetAuthorizationContextAsync (returnUrl)

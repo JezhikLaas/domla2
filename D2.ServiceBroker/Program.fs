@@ -5,6 +5,7 @@ module Program =
     open D2.Common
     open Microsoft.AspNetCore
     open Microsoft.AspNetCore.Hosting
+    open NLog.Web
     
     let exitCode = 0
 
@@ -13,6 +14,7 @@ module Program =
             .CreateDefaultBuilder(args)
             .UseKestrel(fun options -> ServiceConfiguration.configureKestrel options)
             .UseStartup<Startup>()
+            .UseNLog()
             .Build()
 
     [<EntryPoint>]

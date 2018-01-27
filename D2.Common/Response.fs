@@ -1,26 +1,25 @@
 namespace D2.Common
 
-open NLog
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
 
 module Response =
-    let logger = LogManager.GetLogger ("D2.Common.Response")
+    open Microsoft.Extensions.Logging
 
-    let emit f = 
+    let emit f (logger : ILogger) = 
         match f with
         | Success x         -> ContentResult(
                                    Content = x,
                                    ContentType = "application/json"
                                )
                                :> ActionResult
-        | InternalFailure s -> logger.Error(s)
+        | InternalFailure e -> logger.LogError(e, "Internal error")
                                StatusCodeResult(StatusCodes.Status500InternalServerError) :> ActionResult
         | ExternalFailure s -> StatusCodeResult(StatusCodes.Status422UnprocessableEntity) :> ActionResult
 
-    let confirm f = 
+    let confirm f (logger : ILogger) = 
         match f with
         | Success _         -> StatusCodeResult(StatusCodes.Status200OK) :> ActionResult
-        | InternalFailure s -> logger.Error(s)
+        | InternalFailure e -> logger.LogError(e, "Internal error")
                                StatusCodeResult(StatusCodes.Status500InternalServerError) :> ActionResult
         | ExternalFailure s -> StatusCodeResult(StatusCodes.Status422UnprocessableEntity) :> ActionResult

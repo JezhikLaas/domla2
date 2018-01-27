@@ -5,6 +5,7 @@ module Program =
     open D2.Common
     open Microsoft.AspNetCore
     open Microsoft.AspNetCore.Hosting
+    open NLog.Web
     open System
 
     let exitCode = 0
@@ -16,6 +17,7 @@ module Program =
             .UseWebRoot("app")
             .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
             .UseStartup<Startup>()
+            .UseNLog()
             .Build()
 
     [<EntryPoint>]

@@ -2,6 +2,7 @@
 
 open D2.Common
 open Newtonsoft.Json
+open NLog
 open System
 open System.Net
 open System.Net.Http
@@ -9,7 +10,7 @@ open System.Net.Http.Headers
 open System.Text
 
 module ServiceRegistration =
-    let private logger = Logger.get "D2.UserManagement.ServiceRegistration"
+    let private logger = LogManager.GetLogger "D2.UserManagement.ServiceRegistration"
 
     type EndPoint() =
         member val Name = String.Empty with get, set
@@ -35,7 +36,7 @@ module ServiceRegistration =
                           configuration.Broker.Host
                           configuration.Broker.Port
         
-        logger.debug(sprintf "Trying to register with %s" url)
+        logger.Debug (sprintf "Trying to register with %s" url)
         
         client.BaseAddress <- Uri url
         client.DefaultRequestHeaders.Accept.Clear()
@@ -44,12 +45,12 @@ module ServiceRegistration =
         let textData = JsonConvert.SerializeObject(Service ())
         let content = new StringContent(textData, Encoding.UTF8, "application/json")
         
-        logger.trace(sprintf "Sending registration %s" textData)
+        logger.Trace (sprintf "Sending registration %s" textData)
         
         try
             let result = client.PutAsync("/apps/Domla2/01/register", content).Result
-            logger.info(sprintf "Registration yielded %s" result.ReasonPhrase)
+            logger.Info (sprintf "Registration yielded %s" result.ReasonPhrase)
             result.StatusCode = HttpStatusCode.OK
         with
-        | error -> logger.error error "Failed to contact service broker"
+        | error -> logger.Error (error, "Failed to contact service broker")
                    false
