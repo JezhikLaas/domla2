@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.0
--- Dumped by pg_dump version 10.0
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.1
 
--- Started on 2017-11-18 10:36:07
+-- Started on 2018-01-28 16:39:33
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -25,7 +25,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2201 (class 0 OID 0)
+-- TOC entry 2190 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
@@ -40,20 +40,20 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 196 (class 1259 OID 16497)
--- Name: authorization_codes; Type: TABLE; Schema: public; Owner: d2admin
+-- TOC entry 199 (class 1259 OID 19849)
+-- Name: api_resources; Type: TABLE; Schema: public; Owner: d2admin
 --
 
-CREATE TABLE authorization_codes (
-    id character varying(255) NOT NULL,
+CREATE TABLE api_resources (
+    name character varying(255) NOT NULL,
     data jsonb NOT NULL
 );
 
 
-ALTER TABLE authorization_codes OWNER TO d2admin;
+ALTER TABLE api_resources OWNER TO d2admin;
 
 --
--- TOC entry 197 (class 1259 OID 16503)
+-- TOC entry 201 (class 1259 OID 20065)
 -- Name: clients; Type: TABLE; Schema: public; Owner: d2admin
 --
 
@@ -66,34 +66,38 @@ CREATE TABLE clients (
 ALTER TABLE clients OWNER TO d2admin;
 
 --
--- TOC entry 198 (class 1259 OID 16509)
--- Name: consents; Type: TABLE; Schema: public; Owner: d2admin
+-- TOC entry 200 (class 1259 OID 19870)
+-- Name: identity_resources; Type: TABLE; Schema: public; Owner: d2admin
 --
 
-CREATE TABLE consents (
-    subjectid character varying(255) NOT NULL,
-    clientid character varying(255) NOT NULL,
+CREATE TABLE identity_resources (
+    name character varying(255) NOT NULL,
     data jsonb NOT NULL
 );
 
 
-ALTER TABLE consents OWNER TO d2admin;
+ALTER TABLE identity_resources OWNER TO d2admin;
 
 --
--- TOC entry 199 (class 1259 OID 16515)
--- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: d2admin
+-- TOC entry 198 (class 1259 OID 19623)
+-- Name: persisted_grants; Type: TABLE; Schema: public; Owner: d2admin
 --
 
-CREATE TABLE refresh_tokens (
-    id character varying(255) NOT NULL,
-    data jsonb NOT NULL
+CREATE TABLE persisted_grants (
+    key character varying(255) NOT NULL,
+    type character varying(255) NOT NULL,
+    subject_id character varying(255),
+    client_id character varying(255) NOT NULL,
+    creation_time timestamp without time zone NOT NULL,
+    expiration timestamp without time zone,
+    data text NOT NULL
 );
 
 
-ALTER TABLE refresh_tokens OWNER TO d2admin;
+ALTER TABLE persisted_grants OWNER TO d2admin;
 
 --
--- TOC entry 203 (class 1259 OID 16715)
+-- TOC entry 196 (class 1259 OID 16412)
 -- Name: registrations; Type: TABLE; Schema: public; Owner: d2admin
 --
 
@@ -111,33 +115,7 @@ CREATE TABLE registrations (
 ALTER TABLE registrations OWNER TO d2admin;
 
 --
--- TOC entry 200 (class 1259 OID 16521)
--- Name: scopes; Type: TABLE; Schema: public; Owner: d2admin
---
-
-CREATE TABLE scopes (
-    name character varying(255) NOT NULL,
-    data jsonb NOT NULL
-);
-
-
-ALTER TABLE scopes OWNER TO d2admin;
-
---
--- TOC entry 201 (class 1259 OID 16527)
--- Name: tokens; Type: TABLE; Schema: public; Owner: d2admin
---
-
-CREATE TABLE tokens (
-    id character varying(255) NOT NULL,
-    data jsonb NOT NULL
-);
-
-
-ALTER TABLE tokens OWNER TO d2admin;
-
---
--- TOC entry 202 (class 1259 OID 16533)
+-- TOC entry 197 (class 1259 OID 16430)
 -- Name: users; Type: TABLE; Schema: public; Owner: d2admin
 --
 
@@ -149,25 +127,25 @@ CREATE TABLE users (
     title character varying,
     salutation character varying,
     email character varying(255) NOT NULL,
-    logged_in time without time zone,
     claims jsonb,
-    password character varying(255) NOT NULL
+    password character varying(255) NOT NULL,
+    logged_in timestamp without time zone
 );
 
 
 ALTER TABLE users OWNER TO d2admin;
 
 --
--- TOC entry 2059 (class 2606 OID 16540)
--- Name: authorization_codes authorization_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
+-- TOC entry 2057 (class 2606 OID 19856)
+-- Name: api_resources api_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
 --
 
-ALTER TABLE ONLY authorization_codes
-    ADD CONSTRAINT authorization_codes_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY api_resources
+    ADD CONSTRAINT api_resources_pkey PRIMARY KEY (name);
 
 
 --
--- TOC entry 2061 (class 2606 OID 16542)
+-- TOC entry 2062 (class 2606 OID 20072)
 -- Name: clients clients_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
 --
 
@@ -176,25 +154,25 @@ ALTER TABLE ONLY clients
 
 
 --
--- TOC entry 2063 (class 2606 OID 16544)
--- Name: consents consents_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
+-- TOC entry 2060 (class 2606 OID 19877)
+-- Name: identity_resources identity_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
 --
 
-ALTER TABLE ONLY consents
-    ADD CONSTRAINT consents_pkey PRIMARY KEY (subjectid, clientid);
-
-
---
--- TOC entry 2065 (class 2606 OID 16546)
--- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
---
-
-ALTER TABLE ONLY refresh_tokens
-    ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY identity_resources
+    ADD CONSTRAINT identity_resources_pkey PRIMARY KEY (name);
 
 
 --
--- TOC entry 2073 (class 2606 OID 16722)
+-- TOC entry 2055 (class 2606 OID 19632)
+-- Name: persisted_grants persisted_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
+--
+
+ALTER TABLE ONLY persisted_grants
+    ADD CONSTRAINT persisted_grants_pkey PRIMARY KEY (key);
+
+
+--
+-- TOC entry 2049 (class 2606 OID 16445)
 -- Name: registrations registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
 --
 
@@ -203,25 +181,7 @@ ALTER TABLE ONLY registrations
 
 
 --
--- TOC entry 2067 (class 2606 OID 16548)
--- Name: scopes scopes_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
---
-
-ALTER TABLE ONLY scopes
-    ADD CONSTRAINT scopes_pkey PRIMARY KEY (name);
-
-
---
--- TOC entry 2069 (class 2606 OID 16550)
--- Name: tokens tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
---
-
-ALTER TABLE ONLY tokens
-    ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2071 (class 2606 OID 16552)
+-- TOC entry 2051 (class 2606 OID 16451)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: d2admin
 --
 
@@ -229,7 +189,31 @@ ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
--- Completed on 2017-11-18 10:36:10
+--
+-- TOC entry 2052 (class 1259 OID 19662)
+-- Name: idx_expiration; Type: INDEX; Schema: public; Owner: d2admin
+--
+
+CREATE INDEX idx_expiration ON persisted_grants USING btree (expiration);
+
+
+--
+-- TOC entry 2053 (class 1259 OID 40850)
+-- Name: idx_subject_client_type; Type: INDEX; Schema: public; Owner: d2admin
+--
+
+CREATE INDEX idx_subject_client_type ON persisted_grants USING btree (subject_id, client_id, type);
+
+
+--
+-- TOC entry 2058 (class 1259 OID 19878)
+-- Name: idxscopes; Type: INDEX; Schema: public; Owner: d2admin
+--
+
+CREATE INDEX idxscopes ON api_resources USING gin ((((data -> 'Scopes'::text) -> 'Name'::text)));
+
+
+-- Completed on 2018-01-28 16:39:33
 
 --
 -- PostgreSQL database dump complete
