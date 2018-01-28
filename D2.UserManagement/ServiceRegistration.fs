@@ -18,12 +18,13 @@ module ServiceRegistration =
 
     type Service() =
         member val Name = "UserManagement" with get
-        member val BaseUrl = sprintf "%s://%s:%d"
-                                     configuration.Hosting.Protocol
-                                     configuration.Hosting.Host
-                                     configuration.Hosting.Port with get
-        member val Version = configuration.Self.Version with get
-        member val Patch = configuration.Self.Patch with get
+        member val BaseUrl = (
+                              ServiceConfiguration.configuration.Hosting
+                              |> Seq.head
+                             ).FullAddress
+                             
+        member val Version = ServiceConfiguration.versionInfo().Version with get
+        member val Patch = ServiceConfiguration.versionInfo().Patch with get
         member val EndPoints = [|
                                    EndPoint(Name = "Frontend", Uri = "/");
                                    EndPoint(Name = "Register", Uri = "/users/register");
@@ -31,10 +32,7 @@ module ServiceRegistration =
 
     let registerSelf () =
         use client = new HttpClient()
-        let url = sprintf "%s://%s:%d"
-                          configuration.Broker.Protocol
-                          configuration.Broker.Host
-                          configuration.Broker.Port
+        let url = ServiceConfiguration.services().FullAddress
         
         logger.Debug (sprintf "Trying to register with %s" url)
         

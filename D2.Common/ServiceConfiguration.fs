@@ -12,21 +12,22 @@ module ServiceConfiguration =
         member val Protocol = String.Empty with get, set
         member val Address = String.Empty with get, set
         member val Port = 0 with get, set
+        member this.FullAddress
+            with get () =
+                sprintf "%s://%s:%d" this.Protocol this.Address this.Port
     
     type AuthorityProperties () =
         inherit ServiceAddress ()
-            member this.FullAddress
-                with get () =
-                    sprintf "%s://%s:%d" this.Protocol this.Address this.Port
     
     type BrokerProperties () =
         inherit ServiceAddress ()
-            member this.FullAddress
-                with get () =
-                    sprintf "%s://%s:%d" this.Protocol this.Address this.Port
     
     type Service () = 
         member val Hosting = List<ServiceAddress>() with get, set
+    
+    type SelfProperties () =
+        member val Version = 0 with get, set
+        member val Patch = 0 with get, set
 
     let configurationSources =
         let builder = ConfigurationBuilder()
@@ -51,6 +52,12 @@ module ServiceConfiguration =
     let services () =
         let config = BrokerProperties ()
         configurationSources.GetSection("ServiceBroker").Bind config
+
+        config
+    
+    let versionInfo () =
+        let config = SelfProperties ()
+        configurationSources.GetSection("Self").Bind config
 
         config
     

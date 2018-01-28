@@ -2,16 +2,12 @@
 
 open System
 open D2.Common
-open System.Collections.Generic
-open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open System.Collections.Generic
 open System.IdentityModel.Tokens.Jwt
-open System.Security.Claims
-open System.Threading.Tasks
-open IdentityServer4.AccessTokenValidation
 
 type Startup private () =
     
