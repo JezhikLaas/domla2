@@ -17,8 +17,13 @@ module Parameters
                      | StorageData.IntField       value -> (NpgsqlTypes.NpgsqlDbType.Integer,   value :> obj)
                      | StorageData.LongField      value -> (NpgsqlTypes.NpgsqlDbType.Bigint,    value :> obj)
                      | StorageData.GuidField      value -> (NpgsqlTypes.NpgsqlDbType.Uuid,      value :> obj)
-                     | StorageData.StringField    value -> (NpgsqlTypes.NpgsqlDbType.Varchar,   value :> obj)
+                     | StorageData.StringField    value -> match value with
+                                                           | null -> (NpgsqlTypes.NpgsqlDbType.Unknown,   DBNull.Value :> obj)
+                                                           | _    -> (NpgsqlTypes.NpgsqlDbType.Varchar,   value :> obj)
                      | StorageData.JsonField      value -> (NpgsqlTypes.NpgsqlDbType.Jsonb,     value :> obj)
                      | StorageData.TimeStampField value -> (NpgsqlTypes.NpgsqlDbType.Timestamp, value :> obj)
-        p.AddWithValue(fst v, fst dbInfo, snd dbInfo) |> ignore
+        match fst dbInfo with
+        | NpgsqlTypes.NpgsqlDbType.Unknown -> p.AddWithValue(fst v, snd dbInfo) |> ignore
+        | _                                -> p.AddWithValue(fst v, fst dbInfo, snd dbInfo) |> ignore
         p
+ 

@@ -21,6 +21,7 @@ module SetupData =
                 use command = connection.CreateCommand ()
                 let silicon = Client (
                                   ClientId = "service",
+                                  AccessTokenType = AccessTokenType.Reference,
                                   AllowedGrantTypes = GrantTypes.ClientCredentials,
                                   ClientSecrets = [| Secret ("1B0A7C32-1A60-4D5D-AE4C-4163F72E467D".Sha256 ()) |],
                                   AllowedScopes = [| "api" |]

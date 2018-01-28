@@ -12,7 +12,7 @@ module PersistedGrantData =
         PersistedGrant (
             Key = reader.GetString 0,
             Type = reader.GetString 1,
-            SubjectId = reader.GetString 2,
+            SubjectId = (if reader.IsDBNull 2 then null else reader.GetString 2),
             ClientId = reader.GetString 3,
             CreationTime = reader.GetDateTime 4,
             Expiration = (
@@ -185,6 +185,7 @@ module PersistedGrantData =
                                << ("client_id", StringField grant.ClientId)
                                << ("creation_time", TimeStampField grant.CreationTime)
                                << ("data", StringField grant.Data) |> ignore
+
             if grant.Expiration.HasValue then
                 command.Parameters << ("expiration", TimeStampField grant.Expiration.Value) |> ignore
 
