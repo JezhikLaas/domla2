@@ -1,0 +1,58 @@
+<um-loader></um-loader>
+<um-register-success></um-register-success>
+<form [formGroup]="registerForm" (ngSubmit)="register()" class="ui form">
+    <h4 class="ui dividing header">Angaben zur Person</h4>
+    <div class="equal width fields">
+      <div class="required field">
+        <label>Anrede:</label>
+        <select class="ui selection dropdown" formControlName="salutation">
+          <option value="">Auswahl</option>
+          <option value="Herr">Herr</option>
+          <option value="Frau">Frau</option>
+          <option value="Firma">Firma</option>
+        </select>
+        <div *ngIf="errors?.salutation" class="ui negative message">
+          {{ errors?.salutation }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Titel:</label>
+        <input formControlName="title" type="text">
+      </div>
+
+      <div class="field">
+        <label>Vorname:</label>
+        <input formControlName="firstname" type="text">
+      </div>
+
+      <div class="required field">
+        <label>Nachname:</label>
+        <input formControlName="lastname" type="text">
+        <div *ngIf="errors?.lastname" class="ui negative message">
+          {{ errors?.lastname }}
+        </div>
+      </div>
+    </div>
+
+    <h4 class="ui dividing header">Zugangsdaten</h4>
+    <div class="equal width fields">
+      <div class="required field">
+        <label>Gewünschter Benutzername:</label>
+        <input formControlName="username" type="text" um-restrict-input="username">
+        <div *ngIf="errors?.username" class="ui negative message">
+          {{ errors?.username }}
+        </div>
+      </div>
+
+      <div class="required field">
+        <label>EMail:</label>
+        <input formControlName="email" type="text">
+        <div *ngIf="errors?.email" class="ui negative message">
+          {{ errors?.email }}
+        </div>
+      </div>
+    </div>
+
+    <button type="submit">Zugang beantragen</button>
+</form>

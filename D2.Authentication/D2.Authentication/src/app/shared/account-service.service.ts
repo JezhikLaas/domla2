@@ -59,7 +59,6 @@ export class AccountServiceService {
         return Observable.throw(error);
       })
       .subscribe(data => {
-        console.log(data);
         if (!data.isError) {
           completed();
 
