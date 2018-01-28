@@ -23,7 +23,6 @@ type AppsController
         let service = this.Request.Body.AsUtf8String()
         Response.confirm (ResolveRoutes.register name version service) logger
 
-    [<Authorize>]
     [<HttpGet("{name}/{version:regex(^(\\d\\d)$)}")>]
     member this.Get(name : string, version : int) =
         Response.emit (ResolveRoutes.routes name version) logger

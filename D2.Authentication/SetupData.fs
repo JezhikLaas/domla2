@@ -2,6 +2,7 @@
 
 module SetupData =
 
+    open IdentityModel
     open BCrypt.Net
     open D2.Common
     open IdentityServer4
@@ -80,6 +81,9 @@ module SetupData =
                             claimTypes = [| "role" |]);
                         IdentityResources.OpenId() :> IdentityResource;
                         IdentityResources.Profile() :> IdentityResource;
+                        IdentityResources.Email() :> IdentityResource;
+                        IdentityResources.Phone() :> IdentityResource;
+                        IdentityResources.Address() :> IdentityResource;
                     |]
                     
                 for resource in resources do
@@ -101,6 +105,7 @@ module SetupData =
                 
                 let apiResource = ApiResource ("api", "REST Api")
                 apiResource.ApiSecrets <- [| Secret ("78C2A2A1-6167-45E4-A9D7-46C5D921F7D5".Sha256()) |]
+                apiResource.UserClaims <- [| "name"; "role"; "id" |]
 
                 let resources = 
                     [|
@@ -143,7 +148,12 @@ module SetupData =
                                              << ("password", StringField password)
                                              << ("last_name", StringField "<unknown>")
                                              << ("email", StringField "<unknown>")
-                                             << ("claims", json.serialize [| new Claim("role", "admin") |])
+                                             << ("claims", json.serialize [|
+                                                                              new Claim(JwtClaimTypes.Role, "admin");
+                                                                              new Claim(JwtClaimTypes.Name, "admin");
+                                                                              new Claim(JwtClaimTypes.Id, Guid.NewGuid().ToString("N"));
+                                                                          |]
+                                                )
                                              |> ignore
                            insert.ExecuteNonQuery() |> ignore
                 
