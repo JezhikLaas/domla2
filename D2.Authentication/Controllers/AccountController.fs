@@ -24,6 +24,7 @@ type AccountController
     inherit Controller()
 
     [<HttpGet("login")>]
+    [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
     member this.Get (returnUrl : string) =
         async {
             let request = sprintf "/app/login?returnUrl=%s" (returnUrl.Base64UrlEncode())

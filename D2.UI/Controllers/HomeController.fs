@@ -17,6 +17,7 @@ type HomeController
     inherit Controller()
 
     [<Authorize>]
+    [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
     member this.Index () =
         async {
             logger.LogDebug "starting authorized request for UI"
