@@ -45,7 +45,20 @@ type Startup private () =
         app
             .UseCors("default")
             .UseAuthentication()
-            .UseMvc()
+            .UseStaticFiles()
+            .UseMvc(
+                fun routes ->
+                    routes.MapRoute(
+                        name = "default", 
+                        template = "{controller=Home}/{action=Index}/{id?}"
+                    )
+                    |> ignore
+                    routes.MapSpaFallbackRoute(
+                        name = "spa-fallback", 
+                        defaults = { controller = "Home"; action = "Index" }
+                    )
+                    |> ignore
+            )
             |> ignore
 
     member val Configuration : IConfiguration = null with get, set

@@ -4,6 +4,7 @@ open D2.Common
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
 open NLog.Web
+open System
 
 module Program =
     let exitCode = 0
@@ -12,6 +13,8 @@ module Program =
         WebHost
             .CreateDefaultBuilder(args)
             .UseKestrel(fun options -> ServiceConfiguration.configureKestrel options)
+            .UseWebRoot("app")
+            .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
             .UseStartup<Startup>()
             .UseNLog()
             .Build()

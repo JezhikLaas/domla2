@@ -11,6 +11,7 @@
     <None Include="D2.UserManagement\tsconfig.json" />
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="Registration.fs" />
+    <Compile Include="Controllers/HomeController.fs" />
     <Compile Include="Controllers/UsersController.fs" />
     <Compile Include="ServiceRegistration.fs" />
     <Compile Include="Startup.fs" />
