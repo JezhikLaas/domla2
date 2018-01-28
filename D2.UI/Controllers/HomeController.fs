@@ -59,7 +59,7 @@ type HomeController
     member this.Services () =
         async {
             logger.LogDebug "Starting service services broker request"
-            let serviceBroker = ServiceConfiguration.services ()
+            let serviceBroker = ServiceConfiguration.services
             
             return ContentResult(
                        Content = sprintf """{"Broker": "%s"}""" serviceBroker.FullAddress,

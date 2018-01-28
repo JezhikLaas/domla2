@@ -43,23 +43,29 @@ module ServiceConfiguration =
 
         config
     
-    let authority () =
-        let config = AuthorityProperties ()
-        configurationSources.GetSection("Authority").Bind config
+    let authority =
+        let evaluate () =
+            let config = AuthorityProperties ()
+            configurationSources.GetSection("Authority").Bind config
 
-        config
+            config
+        evaluate ()
     
-    let services () =
-        let config = BrokerProperties ()
-        configurationSources.GetSection("ServiceBroker").Bind config
+    let services =
+        let evaluate () =
+            let config = BrokerProperties ()
+            configurationSources.GetSection("ServiceBroker").Bind config
 
-        config
+            config
+        evaluate ()
     
-    let versionInfo () =
-        let config = SelfProperties ()
-        configurationSources.GetSection("Self").Bind config
+    let versionInfo =
+        let evaluate () =
+            let config = SelfProperties ()
+            configurationSources.GetSection("Self").Bind config
 
-        config
+            config
+        evaluate ()
     
     let configureKestrel (options : KestrelServerOptions) =
         for hosting in configuration.Hosting do

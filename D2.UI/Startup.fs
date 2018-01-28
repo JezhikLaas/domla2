@@ -40,7 +40,7 @@ type Startup private () =
             .AddOpenIdConnect("oidc", fun options -> 
                 options.SignInScheme <- "Cookies"
 
-                options.Authority <- (ServiceConfiguration.authority().FullAddress)
+                options.Authority <- (ServiceConfiguration.authority.FullAddress)
                 options.RequireHttpsMetadata <- false
 
                 options.ClientId <- "interactive"

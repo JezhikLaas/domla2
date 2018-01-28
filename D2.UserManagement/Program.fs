@@ -1,5 +1,6 @@
 namespace D2.UserManagement
 
+open D2.Common
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
 open NLog.Web
@@ -10,6 +11,7 @@ module Program =
     let BuildWebHost args =
         WebHost
             .CreateDefaultBuilder(args)
+            .UseKestrel(fun options -> ServiceConfiguration.configureKestrel options)
             .UseStartup<Startup>()
             .UseNLog()
             .Build()
