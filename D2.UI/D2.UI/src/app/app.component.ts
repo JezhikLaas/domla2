@@ -5,6 +5,7 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
 import { StorageService } from './shared/storage.service';
 import { LoaderComponent } from './shared/loader/loader.component';
 import 'rxjs/add/operator/map';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'ui-root',
@@ -23,17 +24,22 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loader.show();
     const token = this.cookieService.get('access_token');
-    this.storage.set('access_token', token);
 
-    this.accounts.fetchServices(
-      () => this.loader.hide(),
-      message => {
-        this.loader.hide();
-        this.errorDialog.show('Fehler', message);
-      }
-    );
+    if (token) {
+      this.loader.show();
+      this.storage.set('access_token', token);
+
+      this.accounts.fetchServices(
+        () => this.loader.hide(),
+        message => {
+          this.loader.hide();
+          this.errorDialog.show('Fehler', message);
+        }
+      );
+    } else if (environment.production) {
+        this.errorDialog.show('Fehler', 'Es konnte kein Zugriffstoken ermittelt werden!');
+    }
   }
 
   logout() {
