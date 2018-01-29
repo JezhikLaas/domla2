@@ -15,7 +15,6 @@ module Program =
             .CreateDefaultBuilder(args)
             .UseKestrel(fun options -> ServiceConfiguration.configureKestrel options)
             .UseWebRoot("app")
-            .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
             .UseStartup<Startup>()
             .UseNLog()
             .Build()

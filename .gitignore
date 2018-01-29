@@ -287,3 +287,5 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /D2.Authentication/app
+/D2.UI/app
+/D2.UserManagement/app

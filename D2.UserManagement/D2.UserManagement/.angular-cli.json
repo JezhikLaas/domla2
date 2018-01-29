@@ -6,7 +6,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "../bin/Debug/netcoreapp2.0/app",
+      "outDir": "../app",
       "assets": [
         "assets",
         "favicon.ico"
