@@ -1,4 +1,4 @@
-﻿namespace D2.UI.Controllers
+﻿namespace D2.Administration.Controllers
 
 open D2.Common
 open Microsoft.AspNetCore.Authentication
@@ -49,18 +49,5 @@ type HomeController
             
             do! this.HttpContext.SignOutAsync("oidc")
                 |> Async.AwaitTask
-        }
-        |> Async.StartAsTask
-
-    [<Authorize>]
-    member this.Services () =
-        async {
-            logger.LogDebug "Starting service services broker request"
-            let serviceBroker = ServiceConfiguration.services
-            
-            return ContentResult(
-                       Content = sprintf """{"Broker": "%s"}""" serviceBroker.FullAddress,
-                       ContentType = "application/json"
-                   )
         }
         |> Async.StartAsTask

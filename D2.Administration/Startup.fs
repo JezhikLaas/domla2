@@ -1,14 +1,12 @@
-namespace D2.UI
+namespace D2.Administration
 
 open D2.Common
-open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open System
+open System.Collections.Generic
 open System.IdentityModel.Tokens.Jwt
 
 
