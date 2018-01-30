@@ -13,7 +13,7 @@ type HomeController
      ) =
     inherit Controller()
 
-    [<Authorize>]
+    [<Authorize(Roles = "admin")>]
     [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
     member this.Index () =
         async {
@@ -35,7 +35,7 @@ type HomeController
         }
         |> Async.StartAsTask
     
-    [<Authorize>]
+    [<Authorize(Roles = "admin")>]
     member this.Logout () =
         let user = this.HttpContext.User
         if user <> null then

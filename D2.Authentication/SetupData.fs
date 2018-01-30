@@ -32,8 +32,14 @@ module SetupData =
                                       AccessTokenType = AccessTokenType.Reference,
                                       AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                                       ClientSecrets = [| Secret ("0A0C7C53-1A60-4D5D-AE4C-4163F72E467D".Sha256 ()) |],
-                                      RedirectUris = [| "http://localhost:8130/signin-oidc" |],
-                                      PostLogoutRedirectUris = [| "http://localhost:8130/signout-callback-oidc" |],
+                                      RedirectUris = [|
+                                        "http://localhost:8130/signin-oidc";
+                                        "http://localhost:8133/signin-oidc";
+                                      |],
+                                      PostLogoutRedirectUris = [|
+                                        "http://localhost:8130/signout-callback-oidc";
+                                        "http://localhost:8133/signout-callback-oidc";
+                                      |],
                                       RequireConsent = false,
                                       AlwaysIncludeUserClaimsInIdToken = true,
                                       AllowOfflineAccess = true,
@@ -46,7 +52,10 @@ module SetupData =
                                               "role.profile";
                                               "api"
                                           |],
-                                      AllowedCorsOrigins = [| "http://localhost:8130" |]
+                                      AllowedCorsOrigins = [|
+                                        "http://localhost:8130";
+                                        "http://localhost:8133";
+                                      |]
                                   )
                     
                 command.CommandText <- """INSERT INTO
