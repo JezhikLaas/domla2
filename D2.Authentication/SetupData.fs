@@ -88,7 +88,7 @@ module SetupData =
                         IdentityResource(
                             name = "role.profile",
                             displayName = "Role profile",
-                            claimTypes = [| "role" |]);
+                            claimTypes = [| "role"; "id" |]);
                         IdentityResources.OpenId() :> IdentityResource;
                         IdentityResources.Profile() :> IdentityResource;
                         IdentityResources.Email() :> IdentityResource;
