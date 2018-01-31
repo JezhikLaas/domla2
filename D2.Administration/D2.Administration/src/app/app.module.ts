@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { BearerInterceptor } from './shared/bearer-interceptor';
+import { RegistrationsComponent } from './registrations/registrations.component';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { BearerInterceptor } from './shared/bearer-interceptor';
     AppComponent,
     ErrorDialogComponent,
     LoaderComponent,
+    RegistrationsComponent,
   ],
   imports: [
     BrowserModule,
