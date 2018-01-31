@@ -53,6 +53,8 @@ type Startup private () =
                 options.Scope.Add("profile")
                 options.Scope.Add("role.profile")
                 options.Scope.Add("api")
+                options.TokenValidationParameters.NameClaimType <- "name"
+                options.TokenValidationParameters.RoleClaimType <- "role"
             )   
             |> ignore
 

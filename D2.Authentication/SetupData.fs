@@ -43,8 +43,8 @@ module SetupData =
                                       RequireConsent = false,
                                       AlwaysIncludeUserClaimsInIdToken = true,
                                       AllowOfflineAccess = true,
-                                      AllowAccessTokensViaBrowser = true,
-                                      AlwaysSendClientClaims = true,
+                                      AllowAccessTokensViaBrowser = false,
+                                      AlwaysSendClientClaims = false,
                                       AllowedScopes =
                                           [|
                                               IdentityServerConstants.StandardScopes.OpenId;
