@@ -43,3 +43,7 @@ module ValidationTest =
     [<Test>]
     let ``Login with upper case chars is invalid``() =
         Registration.isValidLogin "Abc" |> should equal (false)
+    
+    [<Test>]
+    let ``A valid mail address may be used as login``() =
+        Registration.isValidLogin "user@example.com" |> should equal (true)

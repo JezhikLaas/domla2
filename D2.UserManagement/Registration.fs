@@ -35,7 +35,7 @@ module Registration =
         else
             false
     
-    let isValidLogin input = loginPattern.IsMatch(input)
+    let isValidLogin input = loginPattern.IsMatch input || isValidEmailAddress input
 
     let validateUser (user : UserRegistration) =
         if String.IsNullOrWhiteSpace(user.Login) then
