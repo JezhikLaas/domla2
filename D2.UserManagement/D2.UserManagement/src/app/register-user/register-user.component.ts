@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { ErrorMessages } from './register-user-error-messages';
 import { UserRegistration } from '../shared/user-registration';
 import { RegisterUserService } from '../shared/register-user.service';
@@ -58,7 +58,8 @@ export class RegisterUserComponent implements OnInit {
         null,
         [
           Validators.required,
-          Validators.minLength(8)
+          Validators.minLength(8),
+          this.usernameIsValid
         ]
       ),
       email: this.fb.control(
@@ -73,6 +74,25 @@ export class RegisterUserComponent implements OnInit {
     this.registerForm.statusChanges.subscribe(
       () => this.updateErrorMessages()
     );
+  }
+
+  emailChanged(value: string) {
+    if (this.registerForm.get('username').pristine) {
+      const newValue = value ? value.toLowerCase() : '';
+      this.registerForm.get('username').setValue(newValue);
+    }
+  }
+
+  usernameIsValid(control: FormControl) {
+    console.log('checking ...');
+    if (Validators.pattern('^[a-z_]+[0-9a-z_\\\\-]*$')(control) === null) {
+      return null;
+    }
+    if (Validators.email(control) === null) {
+      return null;
+    }
+
+    return { usernameIsValid: 'Ungültige Eingabe' };
   }
 
   register() {

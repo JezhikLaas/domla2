@@ -28,6 +28,10 @@ export const ErrorMessages = [
     'minlength',
     'Mindestens 8 Zeichen werden erwartet.'),
   new ErrorMessage(
+    'username',
+    'usernameIsValid',
+    'Eine Email Adresse oder ein Nutzername in Kleinbuchstaben mit "-" sind zulässig.'),
+  new ErrorMessage(
     'email',
     'required',
     'Geben Sie bitte eine Email Adresse an.'),

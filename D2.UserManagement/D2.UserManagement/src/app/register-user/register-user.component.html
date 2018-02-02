@@ -38,18 +38,18 @@
     <h4 class="ui dividing header">Zugangsdaten</h4>
     <div class="equal width fields">
       <div class="required field">
-        <label>Gewünschter Benutzername:</label>
-        <input formControlName="username" type="text" um-restrict-input="username">
-        <div *ngIf="errors?.username" class="ui negative message">
-          {{ errors?.username }}
+        <label>EMail:</label>
+        <input formControlName="email" type="text" (ngModelChange)="emailChanged($event)">
+        <div *ngIf="errors?.email" class="ui negative message">
+          {{ errors?.email }}
         </div>
       </div>
 
       <div class="required field">
-        <label>EMail:</label>
-        <input formControlName="email" type="text">
-        <div *ngIf="errors?.email" class="ui negative message">
-          {{ errors?.email }}
+        <label>Gewünschter Benutzername:</label>
+        <input formControlName="username" type="text">
+        <div *ngIf="errors?.username" class="ui negative message">
+          {{ errors?.username }}
         </div>
       </div>
     </div>
