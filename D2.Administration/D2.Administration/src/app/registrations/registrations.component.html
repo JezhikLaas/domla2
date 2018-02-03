@@ -1,3 +1,36 @@
-<p>
-  registrations works!
-</p>
+<div>
+  <mat-table #table [dataSource]="dataSource">
+    <ng-container matColumnDef="login">
+      <mat-header-cell *matHeaderCellDef> Login </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.login}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="salutation">
+      <mat-header-cell *matHeaderCellDef> Anrede </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.salutation}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Titel </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <mat-header-cell *matHeaderCellDef> Vorname </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef> EMail </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</div>

@@ -9,9 +9,83 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
 import { LoaderComponent } from './shared/loader/loader.component';
 import { BearerInterceptor } from './shared/bearer-interceptor';
 import { RegistrationsComponent } from './registrations/registrations.component';
-
+import { AdministrationService } from './shared/administration.service';
+import { CdkTableModule } from '@angular/cdk/table';
+import {
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
+  MatSortModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  MatStepperModule,
+} from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {StorageService} from './shared/storage.service';
 
 @NgModule({
+  exports: [
+    CdkTableModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatStepperModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+  ]
+})
+export class AdministrationMaterialModule {}
+
+  @NgModule({
   declarations: [
     AppComponent,
     ErrorDialogComponent,
@@ -20,18 +94,22 @@ import { RegistrationsComponent } from './registrations/registrations.component'
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    AdministrationMaterialModule
   ],
   providers: [
     ErrorDialogComponent,
+    StorageService,
     CookieService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BearerInterceptor,
       multi: true
-    }
+    },
+    AdministrationService
   ],
   bootstrap: [AppComponent]
 })

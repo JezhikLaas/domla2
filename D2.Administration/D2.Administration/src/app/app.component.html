@@ -1,40 +1,37 @@
 <am-loader></am-loader>
-<br>
-<div style="text-align: center" class="ui centered text container segment">
-  <h3>
-    {{ title }} Administration
-  </h3>
-</div>
-<div class="ui right fixed vertical menu">
-  <div class="item">
-    <div class="header">Anwender</div>
-    <div class="menu">
-      <a class="item">Registrierungen</a>
-      <a class="item">Nutzer</a>
+<mat-toolbar class="navigation-header">{{ title }} Administration</mat-toolbar>
+<mat-sidenav-container class="navigation-container">
+    <mat-sidenav position="end" #sidenav mode="side" opened="true" class="navigation-sidenav">
+    <div class="ui visible thin sidebar right vertical menu">
+      <div class="ui container">
+        <div class="item">
+          <div class="header">Anwender</div>
+          <div class="menu">
+            <a class="item" routerLink="/registrations" routerLinkActive="active">Registrierungen</a>
+            <a class="item">Nutzer</a>
+          </div>
+        </div>
+        <div class="item">
+          <div class="header">System</div>
+          <div class="menu">
+            <a class="item">Umleitungen</a>
+            <a class="item">Aktivitäten</a>
+            <a class="item">Dienstadressen</a>
+          </div>
+        </div>
+        <div class="item">
+          <div class="header">Konto</div>
+          <div class="menu">
+            <a class="item">Einstellungen</a>
+            <a class="active item" (click)="logout()">Abmelden</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="item">
-    <div class="header">System</div>
-    <div class="menu">
-      <a class="item">Umleitungen</a>
-      <a class="item">Aktivitäten</a>
-      <a class="item">Dienstadressen</a>
-    </div>
-  </div>
-  <div class="item">
-    <div class="header">Konto</div>
-    <div class="menu">
-      <a class="item">Einstellungen</a>
-      <a class="active item" (click)="logout()">Abmelden</a>
-    </div>
-  </div>
-</div>
-<div>
-  <br>
-  <div class="ui raised very padded text container segment">
-    <router-outlet></router-outlet>
-  </div>
-</div>
-<div class="ui menu">
-
-</div>
+    </mat-sidenav>
+    <mat-sidenav-content class="navigation-content">
+      <router-outlet>
+      </router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+<mat-toolbar class="navigation-footer">Footer</mat-toolbar>
