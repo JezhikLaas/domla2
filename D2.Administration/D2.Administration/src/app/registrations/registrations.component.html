@@ -1,5 +1,20 @@
 <div>
   <mat-table #table [dataSource]="dataSource">
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="login">
       <mat-header-cell *matHeaderCellDef> Login </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.login}} </mat-cell>
@@ -27,7 +42,7 @@
 
     <ng-container matColumnDef="email">
       <mat-header-cell *matHeaderCellDef> EMail </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.eMail}} </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

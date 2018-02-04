@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Controllers\AdminController.fs" />
+    <Compile Include="CompositionRoot.fs" />
+    <Compile Include="Controllers\RegistrationsController.fs" />
     <Compile Include="Controllers\HomeController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
@@ -19,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
+    <ProjectReference Include="..\D2.UserManagement.Persistence\D2.UserManagement.Persistence.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

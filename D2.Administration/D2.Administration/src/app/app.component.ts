@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { StorageService } from './shared/storage.service';
 import { environment } from '../environments/environment';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
+import { NavigationEnd, Router } from '@angular/router';
+import { MenuDisplayService } from './shared/menu-display.service';
+import { Subscription } from 'rxjs/Subscription';
+import {AdministrationService} from './shared/administration.service';
 
 @Component({
   selector: 'am-root',
@@ -40,14 +44,20 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
     padding: 50px;
   }`]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'Domla/2';
+  MenuButtons: Array<string>;
+  private subscription: Subscription;
 
   constructor(
     private cookieService: CookieService,
     private errorDialog: ErrorDialogComponent,
-    private storage: StorageService
-  ) { }
+    private storage: StorageService,
+    private menuDisplay: MenuDisplayService,
+    private service: AdministrationService
+  ) {
+    this.MenuButtons = [];
+  }
 
   ngOnInit() {
     const token = this.cookieService.get('access_token');
@@ -57,5 +67,28 @@ export class AppComponent implements OnInit {
     } else if (environment.production) {
       this.errorDialog.show('Fehler', 'Es konnte kein Zugriffstoken ermittelt werden!');
     }
+
+    this.subscription = this.menuDisplay.menuNeeded
+      .subscribe((data: Array<string>) => {
+        this.MenuButtons.length = 0;
+        let item: any;
+        for (item in data) {
+          this.MenuButtons.push(data[item]);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  handleMenuNeeded(data: Array<string>) {
+    this.MenuButtons = data;
+  }
+
+  logout() {
+    this.service.logout(
+      (message) => this.errorDialog.show('Fehler', message)
+    );
   }
 }

@@ -5,5 +5,5 @@ export interface Registration {
   title: string;
   firstName: string;
   lastName: string;
-  email: string;
+  eMail: string;
 }

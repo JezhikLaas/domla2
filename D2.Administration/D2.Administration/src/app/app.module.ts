@@ -44,8 +44,9 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {StorageService} from './shared/storage.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StorageService } from './shared/storage.service';
+import { MenuDisplayService } from './shared/menu-display.service';
 
 @NgModule({
   exports: [
@@ -109,7 +110,8 @@ export class AdministrationMaterialModule {}
       useClass: BearerInterceptor,
       multi: true
     },
-    AdministrationService
+    AdministrationService,
+    MenuDisplayService
   ],
   bootstrap: [AppComponent]
 })
