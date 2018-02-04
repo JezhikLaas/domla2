@@ -14,7 +14,7 @@ module Program =
         WebHost
             .CreateDefaultBuilder(args)
             .UseKestrel(fun options -> ServiceConfiguration.configureKestrel options)
-            .UseWebRoot("app")
+            .UseWebRoot("wwwroot")
             .UseStartup<Startup>()
             .UseNLog()
             .Build()

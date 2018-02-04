@@ -47,4 +47,12 @@
     <PackageReference Update="FSharp.Core" Version="4.2.3" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="cd $(ProjectDir)D2.UI&#xD;&#xA;npm install" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="cd $(ProjectDir)D2.UI&#xD;&#xA;ng build --prod --aot" />
+  </Target>
+
 </Project>
