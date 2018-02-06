@@ -15,10 +15,10 @@ module StorageTest =
         try
             let builder = new NpgsqlConnectionStringBuilder()
             builder.Database <- "D2.ServiceBroker"
-            builder.Host <- "localhost"
+            builder.Host <- "janeway"
             builder.Password <- "d2broker"
             builder.Username <- "d2broker"
-            builder.Port <- 5432
+            builder.Port <- 5433
             
             use connection = new NpgsqlConnection(builder.ConnectionString)
             connection.Open()

@@ -16,8 +16,8 @@ module StorageTest =
         try
             let builder = new NpgsqlConnectionStringBuilder()
             builder.Database <- "D2.Authentication";
-            builder.Port <- 5432
-            builder.Host <- "localhost"
+            builder.Port <- 5433
+            builder.Host <- "janeway"
             builder.Username <- "d2admin"
             builder.Password <- "d2admin" 
             

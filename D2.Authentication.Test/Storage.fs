@@ -12,10 +12,10 @@ module StorageTest =
     let fetchStorage () =
         let connectionOptions = {
             Database = "D2.Authentication";
-            Host = "localhost";
+            Host = "janeway";
             User = "d2admin";
             Password = "d2admin";
-            Port = 5432;
+            Port = 5433;
         }
         
         let setupStorage = Storage.storages.setupStorage connectionOptions;
