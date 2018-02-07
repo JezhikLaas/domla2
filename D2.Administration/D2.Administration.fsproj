@@ -32,12 +32,4 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="cd $(ProjectDir)D2.Administration&#xD;&#xA;npm install" />
-  </Target>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="cd $(ProjectDir)D2.Administration&#xD;&#xA;ng build --prod --aot" />
-  </Target>
-
 </Project>
