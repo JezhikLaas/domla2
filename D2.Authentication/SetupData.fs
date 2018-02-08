@@ -17,7 +17,21 @@ module SetupData =
         async {
             use connection = authentication options
 
-            let insertOrUpdateClients () =
+            let insertClientsIfMissing () =
+                let isClientKnown (id : string) =
+                    use command = connection.CreateCommand ()
+                    command.CommandText <- """SELECT
+                                                  CASE WHEN EXISTS (SELECT 1 FROM clients WHERE id = :id)
+                                                      THEN 1
+                                                      ELSE 0
+                                                  END"""
+                    command.Parameters << ("id", StringField id)
+                                       |> ignore
+                
+                    match command.ExecuteScalar () :?> int32 with
+                    | 1 -> true
+                    | _ -> false
+                
                 use command = connection.CreateCommand ()
                 let silicon = Client (
                                   ClientId = "service",
@@ -67,11 +81,12 @@ module SetupData =
                                               data = EXCLUDED.data"""
                     
                 for client in [| silicon; interactive |] do
-                    command.Parameters.Clear ()
-                    command.Parameters << ("id", StringField client.ClientId)
-                                       << ("data", json.serialize client)
-                                       |> ignore
-                    command.ExecuteNonQuery () |> ignore
+                    if isClientKnown client.ClientId = false then
+                        command.Parameters.Clear ()
+                        command.Parameters << ("id", StringField client.ClientId)
+                                           << ("data", json.serialize client)
+                                           |> ignore
+                        command.ExecuteNonQuery () |> ignore
 
             let insertOrUpdateIdentities () =
                 use command = connection.CreateCommand ()
@@ -170,7 +185,7 @@ module SetupData =
             insertAdmin ()
             insertOrUpdateIdentities ()
             insertOrUpdateApis ()
-            insertOrUpdateClients ()
+            insertClientsIfMissing ()
         }
 
     let access (options : ConnectionOptions) =
