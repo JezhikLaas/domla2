@@ -29,6 +29,14 @@ module ServiceConfiguration =
         member val Version = 0 with get, set
         member val Patch = 0 with get, set
 
+    type DatabaseProperties () =
+        member val Identifier = String.Empty with get, set
+        member val Name = String.Empty with get, set
+        member val Host = String.Empty with get, set
+        member val User = String.Empty with get, set
+        member val Password = String.Empty with get, set
+        member val Port = 0 with get, set
+    
     let configurationSources =
         let builder = ConfigurationBuilder()
         builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -63,6 +71,14 @@ module ServiceConfiguration =
         let evaluate () =
             let config = SelfProperties ()
             configurationSources.GetSection("Self").Bind config
+
+            config
+        evaluate ()
+    
+    let connectionInfo =
+        let evaluate () =
+            let config = DatabaseProperties ()
+            configurationSources.GetSection("Database").Bind config
 
             config
         evaluate ()

@@ -1,6 +1,7 @@
 ﻿namespace D2.ServiceBroker.Persistence
 
 open Npgsql
+open D2.Common
 
 type Postgres_Type = {
     Database : string
@@ -12,18 +13,20 @@ type Postgres_Type = {
 
 module Connection = 
 
+    let configurationFromFile = ServiceConfiguration.connectionInfo
+
     let mutable connectionInfo = {
-        Database = "D2.ServiceBroker";
-        Port = 5432;
-        Host = "localhost";
-        User = "d2broker";
-        Password = "d2broker" 
+        Database = configurationFromFile.Name;
+        Port = configurationFromFile.Port;
+        Host = configurationFromFile.Host;
+        User = configurationFromFile.User;
+        Password = configurationFromFile.Password 
     }
     
     let mutable connectionProvider =
         fun () -> 
             let builder = new NpgsqlConnectionStringBuilder()
-            builder.ApplicationName <- "Domla / 2 Service Broker"
+            builder.ApplicationName <- configurationFromFile.Identifier
             builder.Database <- connectionInfo.Database
             builder.Host <- connectionInfo.Host
             builder.Password <- connectionInfo.Password

@@ -1,5 +1,6 @@
 ﻿namespace D2.UserManagement.Persistence
 
+open D2.Common
 open Npgsql
 
 type Postgres_Type = {
@@ -12,18 +13,20 @@ type Postgres_Type = {
 
 module Connection = 
 
+    let configurationFromFile = ServiceConfiguration.connectionInfo
+
     let mutable connectionInfo = {
-        Database = "D2.Authentication";
-        Port = 5432;
-        Host = "localhost";
-        User = "d2admin";
-        Password = "d2admin" 
+        Database = configurationFromFile.Name;
+        Port = configurationFromFile.Port;
+        Host = configurationFromFile.Host;
+        User = configurationFromFile.User;
+        Password = configurationFromFile.Password 
     }
     
     let mutable connectionProvider =
         fun () -> 
             let builder = new NpgsqlConnectionStringBuilder()
-            builder.ApplicationName <- "Domla / 2 User Management"
+            builder.ApplicationName <- configurationFromFile.Identifier
             builder.Database <- connectionInfo.Database
             builder.Host <- connectionInfo.Host
             builder.Password <- connectionInfo.Password

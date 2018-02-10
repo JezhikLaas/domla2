@@ -21,12 +21,13 @@ type Startup private () =
         this.LoggerFactory <- loggerFactory
 
     member this.ConfigureServices(services: IServiceCollection) =
+        let connectionInfo = ServiceConfiguration.connectionInfo
         let connectionOptions = {
-            Database = this.Configuration.GetValue<string>("Database:Name");
-            Host = this.Configuration.GetValue<string>("Database:Host");
-            User = this.Configuration.GetValue<string>("Database:User");
-            Password = this.Configuration.GetValue<string>("Database:Password");
-            Port = this.Configuration.GetValue<int>("Database:Port");
+            Database = connectionInfo.Name;
+            Host = connectionInfo.Host;
+            User = connectionInfo.User;
+            Password = connectionInfo.Password;
+            Port = connectionInfo.Port;
         }
         
         let setupStorage = Storage.storages.setupStorage connectionOptions;

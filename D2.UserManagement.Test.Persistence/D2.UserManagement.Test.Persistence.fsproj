@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
     <ProjectReference Include="..\D2.UserManagement.Persistence\D2.UserManagement.Persistence.fsproj" />
   </ItemGroup>
