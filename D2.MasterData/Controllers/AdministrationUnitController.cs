@@ -2,43 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using D2.MasterData.Controllers.Validators;
+using D2.MasterData.Models;
+using D2.MasterData.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace D2.MasterData.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AdministrationUnitController : Controller
     {
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private AdministrationUnitRepository _repository;
+        private ModelValidator<AdministrationUnit> _validator;
+
+        public AdministrationUnitController(
+            AdministrationUnitRepository repository,
+            ModelValidator<AdministrationUnit> validator)
         {
-            return new string[] { "value1", "value2" };
+            _repository = repository;
+            _validator = validator;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]AdministrationUnit value)
         {
-        }
+            var validation = _validator.Validate(value, "Post");
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (validation.IsValid == false) return StatusCode(StatusCodes.Status422UnprocessableEntity); 
+            
+            _repository.Save(value);
+            return StatusCode(StatusCodes.Status201Created);
         }
     }
 }

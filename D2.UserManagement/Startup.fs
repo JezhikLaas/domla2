@@ -3,6 +3,7 @@ namespace D2.UserManagement
 open D2.Common
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open System
@@ -42,6 +43,17 @@ type Startup private () =
             |> ignore
 
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
+        
+        if env.EnvironmentName <> "Development" then
+            app.UseForwardedHeaders(
+                ForwardedHeadersOptions(
+                    ForwardedHeaders = (
+                        ForwardedHeaders.XForwardedFor ||| ForwardedHeaders.XForwardedProto
+                    )
+                )
+            )
+            |> ignore
+        
         app
             .UseCors("default")
             .UseAuthentication()

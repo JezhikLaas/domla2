@@ -1,20 +1,18 @@
 namespace D2.Authentication
 
 open D2.Common
-open IdentityServer4.Models
 open IdentityServer4.Services
 open IdentityServer4.Stores
 open Microsoft.AspNetCore.Antiforgery
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Logging
 open System
-open System.IO
 open System.Threading.Tasks
-open IdentityServer4.Configuration
 
 type Startup private () =
     new (configuration: IConfiguration, loggerFactory : ILoggerFactory) as this =
@@ -22,7 +20,6 @@ type Startup private () =
         this.Configuration <- configuration
         this.LoggerFactory <- loggerFactory
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
         let connectionOptions = {
             Database = this.Configuration.GetValue<string>("Database:Name");
@@ -80,7 +77,6 @@ type Startup private () =
             .AddResourceStore<ResourceStore>()
         |> ignore
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment, appLifetime : IApplicationLifetime, antiforgery : IAntiforgery) =
         let tokenMiddleware = fun (context : HttpContext) (next: Func<Task>) ->
                                   let path = context.Request.Path.Value
@@ -93,6 +89,17 @@ type Startup private () =
                                                                )
                                       )
                                   next.Invoke ()
+        
+        if env.EnvironmentName <> "Development" then
+            app.UseForwardedHeaders(
+                ForwardedHeadersOptions(
+                    ForwardedHeaders = (
+                        ForwardedHeaders.XForwardedFor ||| ForwardedHeaders.XForwardedProto
+                    )
+                )
+            )
+            |> ignore
+
         app
             .UseCors("default")
             .UseStaticFiles()

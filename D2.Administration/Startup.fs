@@ -3,9 +3,9 @@ namespace D2.Administration
 open D2.Common
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
-open System
 open System.Collections.Generic
 open System.IdentityModel.Tokens.Jwt
 
@@ -33,6 +33,17 @@ type Startup private () =
             |> ignore
 
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
+        
+        if env.EnvironmentName <> "Development" then
+            app.UseForwardedHeaders(
+                ForwardedHeadersOptions(
+                    ForwardedHeaders = (
+                        ForwardedHeaders.XForwardedFor ||| ForwardedHeaders.XForwardedProto
+                    )
+                )
+            )
+            |> ignore
+        
         app
             .UseCors("default")
             .UseAuthentication()
