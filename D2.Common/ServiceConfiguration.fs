@@ -42,6 +42,7 @@ module ServiceConfiguration =
         builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                .AddJsonFile("appsettings.json")
                .AddJsonFile("appsettings.Development.json", true)
+               .AddJsonFile("appsettings.qa.json", true)
                .AddEnvironmentVariables () |> ignore
         builder.Build ()
     
