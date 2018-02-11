@@ -27,8 +27,8 @@ interface AuthorizeResult {
 @Injectable()
 export class AccountServiceService {
 
-  private static readonly Login_Url = 'account/login';
-  private static readonly Logout_Url = 'account/logout';
+  private static readonly Login_Url = '/account/login';
+  private static readonly Logout_Url = '/account/logout';
 
   constructor(
     @Inject(API_URL) private api: string,
@@ -36,13 +36,6 @@ export class AccountServiceService {
     private http: HttpClient,
     private cookieService: CookieService
   ) { }
-
-  apiUrl(): string {
-    if (this.api.slice(-1) === '/') {
-      return this.api;
-    }
-    return this.api + '/';
-  }
 
   login(login: UserLogin, completed: () => void, failed: (message: string) => void) {
     const token = this.cookieService.get('XSRF-TOKEN');
@@ -53,7 +46,7 @@ export class AccountServiceService {
     loginData.append('Password', login.password);
     loginData.append('ReturnUrl', login.returnUrl);
 
-    this.http.post<AuthorizeResult>(this.apiUrl() + AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
+    this.http.post<AuthorizeResult>(`${this.api}${AccountServiceService.Login_Url}`, loginData, { headers: httpHeaders })
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
@@ -82,7 +75,7 @@ export class AccountServiceService {
 
     const loginData: FormData = new FormData();
     loginData.append('LogoutId', id);
-    this.http.post(this.apiUrl() + AccountServiceService.Logout_Url, loginData, { headers: httpHeaders })
+    this.http.post(`${this.api}${AccountServiceService.Logout_Url}`, loginData, { headers: httpHeaders })
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);

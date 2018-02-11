@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { UserRegistration } from './user-registration';
@@ -9,10 +9,13 @@ import 'rxjs/add/operator/retry';
 
 @Injectable()
 export class RegisterUserService {
-  private registerApi = 'http://localhost:8132/users/register';
+  private registerApi = '/users/register';
   private headers: HttpHeaders = new HttpHeaders();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    @Inject('API_URL') private api: string,
+  ) {
     this.headers.append('Content-Type', 'application/json');
   }
 
@@ -22,7 +25,7 @@ export class RegisterUserService {
     failed: (code: number, message: string) => void
   ) {
     const requestData = JSON.stringify(registration);
-    return this.http.put(`${this.registerApi}`, requestData, { headers: this.headers })
+    return this.http.put(`${this.api}${this.registerApi}`, requestData, { headers: this.headers })
       .catch(error => {
         failed(error.status, error.message);
         return Observable.throw(error);

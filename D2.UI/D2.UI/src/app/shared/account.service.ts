@@ -30,18 +30,19 @@ interface ServiceInfo {
 @Injectable()
 export class AccountService {
 
-  private static readonly Logout_Url = 'http://localhost:8130/home/logout';
-  private static readonly Services_Url = 'http://localhost:8130/home/services';
+  private static readonly Logout_Url = '/home/logout';
+  private static readonly Services_Url = '/home/services';
   private brokerUrl: string;
   private services: ServiceInfo[];
 
   constructor(
     private http: HttpClient,
+    @Inject('API_URL') private api: string,
     @Inject(DOCUMENT) private document: any
   ) { }
 
   fetchServices(succeeded: () => void, failed: (message: string) => void) {
-    this.http.get<BrokerUrl>(AccountService.Services_Url)
+    this.http.get<BrokerUrl>(`${this.api}${AccountService.Services_Url}`)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
@@ -64,7 +65,7 @@ export class AccountService {
   }
 
   logout(id: string, failed: (message: string) => void) {
-    this.http.get<LogoutUrl>(AccountService.Logout_Url)
+    this.http.get<LogoutUrl>(`${this.api}${AccountService.Logout_Url}`)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);

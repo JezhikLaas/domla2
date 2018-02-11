@@ -12,17 +12,18 @@ interface LogoutUrl {
 @Injectable()
 export class AdministrationService {
 
-  private static readonly List_Registrations_Url = 'http://localhost:8133/registrations/list';
-  private static readonly Logout_Url = 'http://localhost:8133/home/logout';
+  private static readonly List_Registrations_Url = '/registrations/list';
+  private static readonly Logout_Url = '/home/logout';
 
   constructor(
     private http: HttpClient,
     private storage: StorageService,
+    @Inject('API_URL') private api: string,
     @Inject(DOCUMENT) private document: any
   ) { }
 
   fetchRegistrations(succeeded: () => void, failed: (message: string) => void): Observable<Array<Registration>> {
-    return this.http.get<Registration[]>(AdministrationService.List_Registrations_Url)
+    return this.http.get<Registration[]>(`${this.api}${AdministrationService.List_Registrations_Url}`)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
@@ -30,7 +31,7 @@ export class AdministrationService {
   }
 
   logout(failed: (message: string) => void) {
-    this.http.get<LogoutUrl>(AdministrationService.Logout_Url)
+    this.http.get<LogoutUrl>(`${this.api}${AdministrationService.Logout_Url}`)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
