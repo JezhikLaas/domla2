@@ -64,6 +64,7 @@ type Authorizer
                            |> Async.RunSynchronously
                            
                            logger.LogDebug (sprintf "user %s authorized" (user.GetSubjectId ()))
+                           logger.LogDebug (sprintf "return url %s is used" responseData.RedirectUri)
                        else
                            logger.LogError (sprintf "response for user %s indicates an error" (user.GetSubjectId ()))
                            logger.LogError (sprintf "%s %s %s" response.Error Environment.NewLine response.ErrorDescription)
