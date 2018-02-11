@@ -1,15 +1,25 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AngularEnvironment Condition=" '$(AngularEnvironment)' == '' ">dev</AngularEnvironment>
+
+	<AuthPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">_auth/</AuthPrefix>
+	<AdminPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">admin/</AdminPrefix>
+	<UiPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">ui/</UiPrefix>
+	<UserManagementPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">register/</UserManagementPrefix>
+  </PropertyGroup>
+  
   <Target Name="Build">
+    <Message Text="Building angular projects for environment '$(AngularEnvironment)'" />
 	<Exec Command="npm install" WorkingDirectory="D2.Administration/D2.Administration" />
-	<Exec Command="ng build -prod --e=qa -aot --bh /admin/" WorkingDirectory="D2.Administration/D2.Administration" />
+	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(AdminPrefix)" WorkingDirectory="D2.Administration/D2.Administration" />
 	
 	<Exec Command="npm install" WorkingDirectory="D2.Authentication/D2.Authentication" />
-	<Exec Command="ng build -prod --e=qa -aot --bh /_auth/" WorkingDirectory="D2.Authentication/D2.Authentication" />
+	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(AuthPrefix)" WorkingDirectory="D2.Authentication/D2.Authentication" />
 	
 	<Exec Command="npm install" WorkingDirectory="D2.UI/D2.UI" />
-	<Exec Command="ng build -prod --e=qa -aot --bh /app/" WorkingDirectory="D2.UI/D2.UI" />
+	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(UiPrefix)" WorkingDirectory="D2.UI/D2.UI" />
 	
 	<Exec Command="npm install" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
-	<Exec Command="ng build -prod --e=qa -aot --bh /register/" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
+	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(UserManagementPrefix)" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
   </Target>
 </Project>
