@@ -1,38 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using D2.MasterData.Controllers.Validators;
-using D2.MasterData.Models;
-using D2.MasterData.Repositories;
+﻿using D2.MasterData.Facades;
+using D2.MasterData.Parameters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace D2.MasterData.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]")]
     public class AdministrationUnitController : Controller
+    /* Instanz dieser Klasse und alle Insatnzen darunterliegenden Klassen werden von Dependency Injection
+       automatisch  erzeugt */
     {
-        private AdministrationUnitRepository _repository;
-        private ModelValidator<AdministrationUnit> _validator;
+        IAdministrationUnitFacade _administrationUnitFacade;
 
+        // Konstruktor
         public AdministrationUnitController(
-            AdministrationUnitRepository repository,
-            ModelValidator<AdministrationUnit> validator)
+            IAdministrationUnitFacade administrationUnitFacade)
         {
-            _repository = repository;
-            _validator = validator;
+            _administrationUnitFacade = administrationUnitFacade;
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]AdministrationUnit value)
+        public IActionResult Post([FromBody]AdministrationUnitPostParameters value)
         {
-            var validation = _validator.Validate(value, "Post");
+            var result = _administrationUnitFacade.CreateNewAdministrationUnit(value);
 
-            if (validation.IsValid == false) return StatusCode(StatusCodes.Status422UnprocessableEntity); 
-            
-            _repository.Save(value);
-            return StatusCode(StatusCodes.Status201Created);
+            if (result.IsValid) return StatusCode(StatusCodes.Status201Created);
+
+            return StatusCode(StatusCodes.Status422UnprocessableEntity);
         }
     }
 }
