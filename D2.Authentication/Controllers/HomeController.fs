@@ -25,12 +25,12 @@ type HomeController
             let errorResult (error : string) (description : string) =
                 match description = null with
                 | true  -> RedirectResult (
-                               sprintf "/app/error?error=%s&description=%s"
+                               sprintf "/_auth/error?error=%s&description=%s"
                                        (error.Html())
                                        (description.Html())
                            )
                 | false -> RedirectResult (
-                               sprintf "/app/error?error=%s" (error.Html())
+                               sprintf "/_auth/error?error=%s" (error.Html())
                            )
             
             let message = interaction.GetErrorContextAsync(errorId)

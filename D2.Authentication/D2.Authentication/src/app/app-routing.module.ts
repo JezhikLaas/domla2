@@ -8,10 +8,14 @@ import { AuthenticationErrorComponent } from './authentication-error/authenticat
 
 const routes: Routes = [
   { path: '', component: AuthenticationWelcomeComponent, pathMatch: 'full' },
-  { path: 'app/login', component: LoginUserComponent },
-  { path: 'app/logout', component: LogoutUserComponent },
-  { path: 'app/goodbye', component: LoggedOutComponent },
-  { path: 'app/error', component: AuthenticationErrorComponent }
+  { path: 'login', component: LoginUserComponent },
+  { path: '_auth/login', component: LoginUserComponent },
+  { path: 'logout', component: LogoutUserComponent },
+  { path: '_auth/logout', component: LogoutUserComponent },
+  { path: 'goodbye', component: LoggedOutComponent },
+  { path: '_auth/goodbye', component: LoggedOutComponent },
+  { path: 'error', component: AuthenticationErrorComponent },
+  { path: '_auth/error', component: AuthenticationErrorComponent }
 ];
 
 @NgModule({

@@ -27,7 +27,7 @@ type AccountController
     [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
     member this.Get (returnUrl : string) =
         async {
-            let request = sprintf "/app/login?returnUrl=%s" (returnUrl.Base64UrlEncode())
+            let request = sprintf "/_auth/login?returnUrl=%s" (returnUrl.Base64UrlEncode())
             logger.LogDebug request
             return RedirectResult (request)
         }
@@ -89,7 +89,7 @@ type AccountController
                                         +
                                         this.HttpContext.Request.Host.ToUriComponent()
                                         +
-                                        "/app/goodbye"
+                                        "/_auth/goodbye"
                                     )
                        return JsonResult (result)
                               :> IActionResult
