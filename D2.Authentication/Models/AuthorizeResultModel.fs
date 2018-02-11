@@ -1,6 +1,8 @@
 ﻿namespace D2.Authentication
 
+open D2.Common
 open System
+open System.Linq
 open IdentityServer4.Models
 
 type AuthorizeResultModel () =
@@ -29,7 +31,14 @@ type AuthorizeResultModel () =
 
     new (data : IdentityServer4.ResponseHandling.AuthorizeResponse) as this =
         AuthorizeResultModel () then
-            this.RedirectUri <- data.RedirectUri
+            let rec applyMapping (mappings : ServiceConfiguration.MappingEntry list) (url : String) =
+                match mappings with
+                | [] -> url
+                | head::tail -> applyMapping tail (url.Replace(head.From, head.To))
+            
+            let redirectUri = applyMapping (ServiceConfiguration.clientMappings.Mappings |> Seq.toList) data.RedirectUri
+            
+            this.RedirectUri <- redirectUri
             this.State <- data.State
             this.Scope <- data.Scope
             this.IdentityToken <- data.IdentityToken
