@@ -48,25 +48,27 @@ module ServiceRegistration =
             | false -> authorityInformation.TokenEndpoint
         
         let accessToken endpoint =
-            use tokenClient = new TokenClient(
-                                  endpoint,
-                                  "service",
-                                  "1B0A7C32-1A60-4D5D-AE4C-4163F72E467D"
-                              )
+            match endpoint with
+            | null -> null
+            | _    -> use tokenClient = new TokenClient(
+                                                endpoint,
+                                                "service",
+                                                "1B0A7C32-1A60-4D5D-AE4C-4163F72E467D"
+                                            )
         
-            let tokenResponse = tokenClient.RequestClientCredentialsAsync("api")
-                                |> Async.AwaitTask
-                                |> Async.RunSynchronously
+                      let tokenResponse = tokenClient.RequestClientCredentialsAsync("api")
+                                         |> Async.AwaitTask
+                                         |> Async.RunSynchronously
 
-            match tokenResponse.IsError with
-            | true  -> logger.Fatal (
-                           "Failed to authorize: {0} {1}",
-                           tokenResponse.Error,
-                           tokenResponse.ErrorDescription
-                       )
-                       null
+                      match tokenResponse.IsError with
+                      | true  -> logger.Fatal (
+                                     "Failed to authorize: {0} {1}",
+                                     tokenResponse.Error,
+                                     tokenResponse.ErrorDescription
+                                 )
+                                 null
 
-            | false -> tokenResponse.AccessToken
+                      | false -> tokenResponse.AccessToken
          
         match tokenEndpoint |> accessToken with
         | null  -> false

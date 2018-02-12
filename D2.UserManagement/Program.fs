@@ -20,6 +20,9 @@ module Program =
 
     [<EntryPoint>]
     let main args =
+        let logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()
+        logger.Debug("init main")
+        
         if ServiceRegistration.registerSelf () then
             BuildWebHost(args).Run()
             0

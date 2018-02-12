@@ -19,6 +19,8 @@ module Program =
 
     [<EntryPoint>]
     let main args =
+        let logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()
+        logger.Debug("init main")
         BuildWebHost(args).Run()
 
         exitCode
