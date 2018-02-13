@@ -5,11 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="D2.Administration\tsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="Controllers\RegistrationsController.fs" />
     <Compile Include="Controllers\HomeController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D2.Administration\tsconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
