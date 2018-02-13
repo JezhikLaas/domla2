@@ -38,7 +38,7 @@ type Startup private () =
             app.UseForwardedHeaders(
                 ForwardedHeadersOptions(
                     ForwardedHeaders = (
-                        ForwardedHeaders.XForwardedHost ||| ForwardedHeaders.XForwardedProto
+                        ForwardedHeaders.All
                     )
                 )
             )
