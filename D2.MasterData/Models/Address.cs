@@ -1,6 +1,6 @@
 ﻿namespace D2.MasterData.Models
 {
-    public class Address
+    public struct Address
     {
         public string Street { get; set; }
         public string Number { get; set; }

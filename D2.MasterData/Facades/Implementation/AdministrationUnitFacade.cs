@@ -22,7 +22,13 @@ namespace D2.MasterData.Facades.Implementation
         public ValidationResult CreateNewAdministrationUnit(AdministrationUnitPostParameters value)
         {
             var result = value.Validate();
-            if (result.IsValid) _repository.Insert(new AdministrationUnit(value));
+            var administrationUnit = new AdministrationUnit(value);
+
+            //administrationUnit.Address.City = "Herford";
+
+            if (result.IsValid) _repository.Insert(administrationUnit);
+
+            //value.Address.City = "XXX";
 
             return result;
         }

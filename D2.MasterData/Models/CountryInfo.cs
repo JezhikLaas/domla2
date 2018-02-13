@@ -2,7 +2,7 @@
 
 namespace D2.MasterData.Models
 {
-    public class CountryInfo
+    public struct CountryInfo
     {
         private string _iso2;
         private string _iso3;

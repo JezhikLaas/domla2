@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace D2.MasterData.Controllers
 {
     /// <summary>
-    /// 
+    /// Instanz dieser Klasse und alle Insatnzen darunterliegenden Klassen werden
+    /// von Dependency Injection automatisch erzeugt
     /// </summary>
     [Route("[controller]")]
     public class AdministrationUnitController : Controller
-    /* Instanz dieser Klasse und alle Insatnzen darunterliegenden Klassen werden von Dependency Injection
-       automatisch  erzeugt */
     {
         IAdministrationUnitFacade _administrationUnitFacade;
 
-        // Konstruktor
+        /// <summary>
+        /// Konstruktor.
+        /// </summary>
+        /// <param name="administrationUnitFacade">Fassade für fachliche Aufgaben.</param>
         public AdministrationUnitController(
             IAdministrationUnitFacade administrationUnitFacade)
         {

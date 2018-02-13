@@ -1,4 +1,5 @@
 ﻿using D2.MasterData.Controllers.Validators;
+using D2.MasterData.Controllers.Validators.Implementation;
 using D2.MasterData.Models;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace D2.MasterData.Parameters
     {
         public override ValidationResult Validate()
         {
-            return null;
+            return new ValidationResultImpl(new FluentValidation.Results.ValidationResult());
         }
     }
 }
