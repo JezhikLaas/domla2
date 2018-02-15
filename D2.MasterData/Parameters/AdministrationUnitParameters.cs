@@ -1,28 +1,19 @@
-﻿using D2.MasterData.Controllers.Validators;
-using D2.MasterData.Controllers.Validators.Implementation;
+﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace D2.MasterData.Parameters
 {
-    public abstract class AdministrationUnitParameters
+    public class AdministrationUnitParameters : RequestParameters
     {
         public Guid Id { get; set; }
+
+        [NotNullOrEmpty(RequestType.Put, RequestType.Post, RequestType.Patch)]
         public string UserKey { get; set; }
+
+        [NotNullOrEmpty]
         public string Title { get; set; }
+
         public Address Address { get; set; }
-
-        public abstract ValidationResult Validate();
-    }
-
-    public class AdministrationUnitPostParameters : AdministrationUnitParameters
-    {
-        public override ValidationResult Validate()
-        {
-            return new ValidationResultImpl(new FluentValidation.Results.ValidationResult());
-        }
     }
 }

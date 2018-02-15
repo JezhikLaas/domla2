@@ -10,7 +10,7 @@ namespace D2.MasterData.Test
         [Fact]
         public void Serialize_And_Deserialize_AdministrationUnit()
         {
-            var test = new AdministrationUnitPostParameters
+            var test = new AdministrationUnitParameters
             {
                 Title = "ABC",
                 UserKey = "02",
@@ -18,7 +18,7 @@ namespace D2.MasterData.Test
             };
 
             var text = JsonConvert.SerializeObject(test);
-            var check = JsonConvert.DeserializeObject<AdministrationUnitPostParameters>(text);
+            var check = JsonConvert.DeserializeObject<AdministrationUnitParameters>(text);
 
             Assert.Equal(test.Title, check.Title);
             Assert.Equal(test.UserKey, check.UserKey);

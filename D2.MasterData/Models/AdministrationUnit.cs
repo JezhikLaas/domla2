@@ -8,9 +8,6 @@ namespace D2.MasterData.Models
     {
         public AdministrationUnit(AdministrationUnitParameters argument)
         {
-            var validation = argument.Validate();
-            if (validation.IsValid == false) throw new ArgumentException("parameters are invalid");
-
             Id = argument.Id;
             UserKey = argument.UserKey;
             Title = argument.Title;

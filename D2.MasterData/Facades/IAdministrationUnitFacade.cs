@@ -1,5 +1,5 @@
-﻿using D2.MasterData.Controllers.Validators;
-using D2.MasterData.Parameters;
+﻿using D2.MasterData.Parameters;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace D2.MasterData.Facades
 {
     public interface IAdministrationUnitFacade
     {
-        ValidationResult CreateNewAdministrationUnit(AdministrationUnitPostParameters value);
+        void CreateNewAdministrationUnit(AdministrationUnitParameters value);
     }
 }
