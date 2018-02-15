@@ -13,6 +13,7 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Logging
 open System
 open System.Threading.Tasks
+open IdentityServer4.Configuration
 
 type Startup private () =
     new (configuration: IConfiguration, loggerFactory : ILoggerFactory) as this =
@@ -70,7 +71,10 @@ type Startup private () =
             .AddScoped<Authorizer>()
             .AddScoped<IPersistedGrantStore, PersistedGrantStore>()
             .AddSingleton<TokenCleanup>()
-            .AddIdentityServer()
+            .AddIdentityServer(fun options -> options.UserInteraction.ErrorUrl <- "_auth/error"
+                                              options.UserInteraction.LoginUrl <- "_auth/login"
+                                              options.UserInteraction.LogoutUrl <- "_auth/logout"
+            )
             .AddInMemoryCaching()
             .AddDeveloperSigningCredential()
             .AddClientStore<ClientStore>()
