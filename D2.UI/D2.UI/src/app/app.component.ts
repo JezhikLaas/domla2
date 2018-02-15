@@ -1,13 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { AccountService } from './shared/account.service';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { StorageService } from './shared/storage.service';
 import { LoaderComponent } from './shared/loader/loader.component';
-import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { Subscription } from 'rxjs/Subscription';
 import { MenuDisplayService } from './shared/menu-display.service';
+import { Router, NavigationEnd } from '@angular/router';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'ui-root',
@@ -56,11 +58,14 @@ export class AppComponent implements OnInit, OnDestroy {
     private errorDialog: ErrorDialogComponent,
     private cookieService: CookieService,
     private storage: StorageService,
-    private menuDisplay: MenuDisplayService
-  ) { }
+    private menuDisplay: MenuDisplayService,
+    private changeDetection: ChangeDetectorRef,
+    private router: Router
+  ) {
+    this.MenuButtons = [];
+  }
 
   ngOnInit() {
-    this.MenuButtons = [];
     const token = this.cookieService.get('access_token');
 
     if (token) {
@@ -81,19 +86,22 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this.menuDisplay.menuNeeded
       .subscribe((data: Array<string>) => {
         this.MenuButtons.length = 0;
-        let item: any;
-        for (item in data) {
-          this.MenuButtons.push(data[item]);
+        for (const item of data) {
+          this.MenuButtons.push(item);
         }
+        this.changeDetection.detectChanges();
+      });
+
+    this.router.events
+      .filter((event) => event instanceof NavigationEnd)
+      .subscribe((event) => {
+        this.MenuButtons.length = 0;
+        this.changeDetection.detectChanges();
       });
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  handleMenuNeeded(data: Array<string>) {
-    this.MenuButtons = data;
   }
 
   logout() {

@@ -14,7 +14,7 @@ import { AdministrationUnit } from '../shared/administration-unit';
   `]
 })
 export class AdministrationUnitsComponent implements OnInit {
-  MenuButtons = ['Neu'];
+  MenuButtons = ['Neu', 'Bearbeiten'];
   displayedColumns = ['select', 'userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<AdministrationUnit>;
   initialSelection = [];

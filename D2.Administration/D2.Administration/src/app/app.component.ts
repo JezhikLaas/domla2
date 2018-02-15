@@ -60,6 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+	console.log('Init main');
     const token = this.cookieService.get('access_token');
 
     if (token) {
@@ -71,9 +72,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription = this.menuDisplay.menuNeeded
       .subscribe((data: Array<string>) => {
         this.MenuButtons.length = 0;
-        let item: any;
-        for (item in data) {
-          this.MenuButtons.push(data[item]);
+        for (const item of data) {
+          this.MenuButtons.push(item);
         }
       });
   }
