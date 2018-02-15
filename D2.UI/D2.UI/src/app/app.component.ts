@@ -60,6 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.MenuButtons = [];
     const token = this.cookieService.get('access_token');
 
     if (token) {
