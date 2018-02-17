@@ -6,7 +6,7 @@ import { AdministrationUnit } from '../shared/administration-unit';
 
 @Component({
   selector: 'ui-administration-units',
-  templateUrl: './administration-units.component.html',
+  templateUrl: './administration-units-list.component.html',
   styles: [`
     .mat-column-select {
       overflow: initial;

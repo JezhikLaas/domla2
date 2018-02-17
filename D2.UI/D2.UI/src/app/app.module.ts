@@ -46,7 +46,8 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AdministrationUnitsComponent } from './administration-units/administration-units.component';
+import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
+import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 
 @NgModule({
   exports: [
@@ -83,7 +84,7 @@ import { AdministrationUnitsComponent } from './administration-units/administrat
     MatToolbarModule,
     MatTooltipModule,
   ],
-  declarations: []
+  declarations: [AdministrationUnitEditComponent]
 })
 export class UiMaterialModule {}
 
@@ -92,7 +93,7 @@ export class UiMaterialModule {}
     AppComponent,
     ErrorDialogComponent,
     LoaderComponent,
-    AdministrationUnitsComponent
+    AdministrationUnitsListComponent
   ],
   imports: [
     BrowserModule,

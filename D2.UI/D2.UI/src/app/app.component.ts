@@ -95,8 +95,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.events
       .filter((event) => event instanceof NavigationEnd)
       .subscribe((event) => {
-        this.MenuButtons.length = 0;
-        this.changeDetection.detectChanges();
+        const navigationEnd = event as NavigationEnd;
+        if (navigationEnd.url === '/') {
+          this.MenuButtons.length = 0;
+          this.changeDetection.detectChanges();
+        }
       });
   }
 
