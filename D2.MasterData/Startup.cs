@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using D2.MasterData.Controllers.Validators;
 using D2.MasterData.Controllers.Validators.Implementation;
+using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +28,7 @@ namespace D2.MasterData
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ModelValidator<AdministrationUnit>>(new AdministrationUnitValidator());
+            services.AddScoped<IDbConnection>(provider => ConnectionFactory.CreateConnection());
             services.AddMvc();
         }
 
