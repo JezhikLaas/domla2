@@ -13,7 +13,7 @@ import { AdministrationUnit } from '../shared/administration-unit';
     }
   `]
 })
-export class AdministrationUnitsComponent implements OnInit {
+export class AdministrationUnitsListComponent implements OnInit {
   MenuButtons = ['Neu', 'Bearbeiten'];
   displayedColumns = ['select', 'userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<AdministrationUnit>;
