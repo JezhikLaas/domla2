@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   envName: 'qa',
-  apiUrl: 'http://qa.laas.local/admin'
+  apiUrl: 'https://admin.qa.laas.local'
 };
