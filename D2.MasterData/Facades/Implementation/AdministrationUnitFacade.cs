@@ -1,7 +1,7 @@
-﻿using D2.MasterData.Controllers.Validators;
-using D2.MasterData.Models;
+﻿using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,18 +19,10 @@ namespace D2.MasterData.Facades.Implementation
             _repository = repository;
         }
 
-        public ValidationResult CreateNewAdministrationUnit(AdministrationUnitPostParameters value)
+        public void CreateNewAdministrationUnit(AdministrationUnitParameters value)
         {
-            var result = value.Validate();
             var administrationUnit = new AdministrationUnit(value);
-
-            //administrationUnit.Address.City = "Herford";
-
-            if (result.IsValid) _repository.Insert(administrationUnit);
-
-            //value.Address.City = "XXX";
-
-            return result;
+            _repository.Insert(administrationUnit);
         }
     }
 }
