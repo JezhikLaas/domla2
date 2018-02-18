@@ -2,10 +2,10 @@
   <PropertyGroup>
     <AngularEnvironment Condition=" '$(AngularEnvironment)' == '' ">dev</AngularEnvironment>
 
-	<AuthPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">_auth/</AuthPrefix>
-	<AdminPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">admin/</AdminPrefix>
-	<UiPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">ui/</UiPrefix>
-	<UserManagementPrefix Condition=" '$(AngularEnvironment)' != 'dev' ">register/</UserManagementPrefix>
+	<AuthPrefix Condition=" '$(AngularEnvironment)' != 'dev' "></AuthPrefix>
+	<AdminPrefix Condition=" '$(AngularEnvironment)' != 'dev' "></AdminPrefix>
+	<UiPrefix Condition=" '$(AngularEnvironment)' != 'dev' "></UiPrefix>
+	<UserManagementPrefix Condition=" '$(AngularEnvironment)' != 'dev' "></UserManagementPrefix>
   </PropertyGroup>
   
   <Target Name="BuildUserManagement">
