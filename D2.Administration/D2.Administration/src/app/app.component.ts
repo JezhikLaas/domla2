@@ -60,7 +60,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-	console.log('Init main');
     const token = this.cookieService.get('access_token');
 
     if (token) {
