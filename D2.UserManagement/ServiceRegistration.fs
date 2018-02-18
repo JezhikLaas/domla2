@@ -35,6 +35,9 @@ module ServiceRegistration =
     let registerSelf () =
         let tokenEndpoint =
             use discovery = new DiscoveryClient (ServiceConfiguration.authority.FullAddress)
+            if ServiceConfiguration.authority.Protocol = "http" then
+                discovery.Policy.RequireHttps <- false
+
             let authorityInformation = discovery.GetAsync ()
                                        |> Async.AwaitTask
                                        |> Async.RunSynchronously
