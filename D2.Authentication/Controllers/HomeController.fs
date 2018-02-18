@@ -14,6 +14,7 @@ type HomeController
      ) =
     inherit Controller()
 
+    [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
     member this.Index () =
         async {
             return VirtualFileResult ("~/index.html", "text/html")
