@@ -52,13 +52,18 @@ type AccountController
                         |> Async.AwaitTask
                         |> Async.RunSynchronously
 
-                        match interaction.IsValidReturnUrl model.ReturnUrl with
+                        let isValidReturnUrl = interaction.IsValidReturnUrl model.ReturnUrl
+                                               ||
+                                               interaction.IsValidReturnUrl (model.ReturnUrl.HtmlDecode ())
+
+                        match isValidReturnUrl with
                         | true  -> this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
                                    |> Async.AwaitTask
                                    |> Async.RunSynchronously
                                    return authorizer.Authorize (this.HttpContext) (model.ReturnUrl.HtmlDecode ())
 
-                        | false -> return StatusCodeResult (StatusCodes.Status403Forbidden)
+                        | false -> logger.LogWarning (sprintf "checking return url %s (%s) failed" model.ReturnUrl (model.ReturnUrl.HtmlDecode ()))
+                                   return StatusCodeResult (StatusCodes.Status403Forbidden)
                                    :> IActionResult
         }
         |> Async.StartAsTask
