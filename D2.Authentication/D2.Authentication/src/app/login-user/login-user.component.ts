@@ -36,10 +36,13 @@ export class LoginUserComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.route
-      .queryParamMap
-      .map(params => params.get('returnUrl'))
-      .subscribe(value => {
-        this.returnUrl = base64url.decode(value);
+      .queryParams
+      .subscribe(params => {
+        if (params['returnUrl']) {
+          this.returnUrl = params['returnUrl'];
+        } else {
+          this.returnUrl = base64url.decode(params['encodedReturnUrl']);
+        }
       });
 
     this.errors = {'hasErrors': 'false'};

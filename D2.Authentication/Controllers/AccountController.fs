@@ -28,7 +28,7 @@ type AccountController
     member this.Get (returnUrl : string) =
         async {
             logger.LogDebug (sprintf "invoking login view with returnUrl %s" returnUrl)
-            let request = sprintf "/_auth/login?returnUrl=%s" (returnUrl.Base64UrlEncode())
+            let request = sprintf "/_auth/login?encodedReturnUrl=%s" (returnUrl.Base64UrlEncode())
             logger.LogDebug request
             return RedirectResult (request)
         }
