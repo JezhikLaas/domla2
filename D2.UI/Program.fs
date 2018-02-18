@@ -6,7 +6,7 @@ module Program =
     open Microsoft.AspNetCore
     open Microsoft.AspNetCore.Hosting
     open NLog.Web
-    open System
+    open System.IO
 
     let exitCode = 0
 
@@ -21,8 +21,11 @@ module Program =
 
     [<EntryPoint>]
     let main args =
-        let logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger()
-        logger.Debug "init main"
+        let logConfig = Path.Combine(Directory.GetCurrentDirectory(), "nlog.config")
+        if File.Exists logConfig then
+            let logger = NLogBuilder.ConfigureNLog(logConfig).GetCurrentClassLogger()
+            logger.Info "logging configured"
+        
         BuildWebHost(args).Run()
 
         exitCode
