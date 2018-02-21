@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { StorageService } from './shared/storage.service';
 import { environment } from '../environments/environment';
@@ -7,6 +7,8 @@ import { NavigationEnd, Router } from '@angular/router';
 import { MenuDisplayService } from './shared/menu-display.service';
 import { Subscription } from 'rxjs/Subscription';
 import {AdministrationService} from './shared/administration.service';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'am-root',
@@ -20,12 +22,12 @@ import {AdministrationService} from './shared/administration.service';
   }
   .navigation-sidenav {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     width: 200px;
-    background: #006699;
   }
   .navigation-header {
+    background: #006699;
     position: fixed;
     justify-content: center;
     top: 0;
@@ -54,7 +56,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private errorDialog: ErrorDialogComponent,
     private storage: StorageService,
     private menuDisplay: MenuDisplayService,
-    private service: AdministrationService
+    private service: AdministrationService,
+    private changeDetection: ChangeDetectorRef,
+    private router: Router
   ) {
     this.MenuButtons = [];
   }
@@ -73,6 +77,17 @@ export class AppComponent implements OnInit, OnDestroy {
         this.MenuButtons.length = 0;
         for (const item of data) {
           this.MenuButtons.push(item);
+        }
+        this.changeDetection.detectChanges();
+      });
+
+    this.router.events
+      .filter((event) => event instanceof NavigationEnd)
+      .subscribe((event) => {
+        const navigationEnd = event as NavigationEnd;
+        if (navigationEnd.url === '/') {
+          this.MenuButtons.length = 0;
+          this.changeDetection.detectChanges();
         }
       });
   }

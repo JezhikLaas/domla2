@@ -2,38 +2,36 @@
 <mat-toolbar class="navigation-header">{{ title }}</mat-toolbar>
 <mat-sidenav-container class="navigation-container">
   <mat-sidenav position="end" #sidenav mode="side" opened="true" class="navigation-sidenav">
-    <div class="ui visible thin sidebar right vertical menu">
-      <div class="ui container">
-        <div class="item">
-          <div class="header">Stammdaten</div>
-          <div class="menu">
-            <a class="item" routerLink="/administrationUnits" routerLinkActive="active">Objekte</a>
-            <a class="item">Wohnungen</a>
-            <a class="item">Lieferanten</a>
-          </div>
+    <div class="ui vertical menu">
+      <div class="item">
+        <div class="header">Stammdaten</div>
+        <div class="menu">
+          <a class="item" routerLink="/administrationUnits" routerLinkActive="active">Objekte</a>
+          <a class="item">Wohnungen</a>
+          <a class="item">Lieferanten</a>
         </div>
-        <div class="item">
-          <div class="header">Reparatur / Wartung</div>
-          <div class="menu">
-            <a class="item">Übersicht</a>
-            <a class="item">Neuanlage</a>
-            <a class="item">Einstellungen</a>
-          </div>
+      </div>
+      <div class="item">
+        <div class="header">Reparatur / Wartung</div>
+        <div class="menu">
+          <a class="item">Übersicht</a>
+          <a class="item">Neuanlage</a>
+          <a class="item">Einstellungen</a>
         </div>
-        <div class="item">
-          <div class="header">Konto</div>
-          <div class="menu">
-            <a class="item">Benutzer</a>
-            <a class="item">Abrechnungen</a>
-            <a class="active item" (click)="logout()">Abmelden</a>
-          </div>
+      </div>
+      <div class="item">
+        <div class="header">Konto</div>
+        <div class="menu">
+          <a class="item">Benutzer</a>
+          <a class="item">Abrechnungen</a>
+          <a class="active item" (click)="logout()">Abmelden</a>
         </div>
-        <div class="item">
-          <div class="header">Support</div>
-          <div class="menu">
-            <a class="item">E-mail Support</a>
-            <a class="item">FAQs</a>
-          </div>
+      </div>
+      <div class="item">
+        <div class="header">Support</div>
+        <div class="menu">
+          <a class="item">E-mail Support</a>
+          <a class="item">FAQs</a>
         </div>
       </div>
     </div>

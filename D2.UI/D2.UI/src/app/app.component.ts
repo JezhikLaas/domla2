@@ -23,12 +23,12 @@ import 'rxjs/add/operator/map';
   }
   .navigation-sidenav {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     width: 200px;
-    background: #006699;
   }
   .navigation-header {
+    background: #006699;
     position: fixed;
     justify-content: center;
     top: 0;

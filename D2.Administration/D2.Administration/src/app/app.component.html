@@ -2,8 +2,7 @@
 <mat-toolbar class="navigation-header">{{ title }} Administration</mat-toolbar>
 <mat-sidenav-container class="navigation-container">
   <mat-sidenav position="end" #sidenav mode="side" opened="true" class="navigation-sidenav">
-  <div class="ui visible thin sidebar right vertical menu">
-    <div class="ui container">
+    <div class="ui vertical menu">
       <div class="item">
         <div class="header">Anwender</div>
         <div class="menu">
@@ -27,7 +26,6 @@
         </div>
       </div>
     </div>
-  </div>
   </mat-sidenav>
   <mat-sidenav-content class="navigation-content">
     <router-outlet>
@@ -35,5 +33,5 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 <mat-toolbar class="navigation-footer">
-  <button *ngFor="let item of MenuButtons" mat-button>{{ item }}</button>
+  <button *ngFor="let item of MenuButtons" mat-raised-button>{{ item }}</button>
 </mat-toolbar>
