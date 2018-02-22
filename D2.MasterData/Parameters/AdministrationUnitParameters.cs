@@ -4,7 +4,7 @@ using System;
 
 namespace D2.MasterData.Parameters
 {
-    public class AdministrationUnitParameters : RequestParameters
+    public class AdministrationUnitParameters
     {
         public Guid Id { get; set; }
 
@@ -14,6 +14,6 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public string Title { get; set; }
 
-        public Address Address { get; set; }
+        public AddressParameters Address { get; set; }
     }
 }

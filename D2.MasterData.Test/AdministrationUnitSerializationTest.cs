@@ -5,7 +5,7 @@ using Xunit;
 
 namespace D2.MasterData.Test
 {
-    public class AdministrationUnitSerialization
+    public class AdministrationUnitSerializationTest
     {
         [Fact]
         public void Serialize_And_Deserialize_AdministrationUnit()
@@ -14,7 +14,14 @@ namespace D2.MasterData.Test
             {
                 Title = "ABC",
                 UserKey = "02",
-                Address = new Address { City = "H", Country = new CountryInfo { Iso2 = "DE", Name = "Deutschland", Iso3 = "DEU" } }
+                Address = new AddressParameters {
+                    City = "H",
+                    Country = new CountryInfoParameters {
+                        Iso2 = "DE",
+                        Name = "Deutschland",
+                        Iso3 = "DEU"
+                    }
+                }
             };
 
             var text = JsonConvert.SerializeObject(test);

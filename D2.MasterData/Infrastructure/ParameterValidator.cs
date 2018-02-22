@@ -4,7 +4,7 @@ namespace D2.MasterData.Infrastructure
 {
     public class ParameterValidator : IParameterValidator
     {
-        public ValidationResult Validate(RequestParameters requestParameters, RequestType requestType)
+        public ValidationResult Validate(object requestParameters, RequestType requestType)
         {
             var Result = new ValidationResult();
 

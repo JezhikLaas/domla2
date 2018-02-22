@@ -1,32 +1,35 @@
-﻿using System;
+﻿using D2.MasterData.Parameters;
+using System;
 
 namespace D2.MasterData.Models
 {
-    public struct CountryInfo
+    public class CountryInfo
     {
-        private string _iso2;
-        private string _iso3;
-        private string _name;
+        private CountryInfo()
+        { }
+
+        public CountryInfo(CountryInfoParameters argument)
+        {
+            Iso2 = argument.Iso2;
+            Iso3 = argument.Iso3;
+            Name = argument.Name;
+        }
 
         public string Iso2
         {
-            get => _iso2;
-            set {
-                if (value == null) throw new ArgumentException("Iso2 code must be a string of length 2");
-                if (value.Length != 2) throw new ArgumentException("Iso2 code must be a string of length 2");
-                _iso2 = value;
-            }
+            get;
+            private set;
         }
 
         public string Iso3
         {
-            get => _iso3;
-            set { _iso3 = value; }
+            get;
+            private set;
         }
         public string Name
         {
-            get => _name;
-            set { _name = value; }
+            get;
+            private set;
         }
     }
 }

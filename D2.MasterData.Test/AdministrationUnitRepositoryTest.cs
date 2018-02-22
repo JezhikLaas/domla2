@@ -1,0 +1,60 @@
+﻿using D2.MasterData.Models;
+using D2.MasterData.Parameters;
+using D2.MasterData.Repositories.Implementation;
+using D2.MasterData.Infrastructure;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Xunit;
+using Microsoft.EntityFrameworkCore;
+
+namespace D2.MasterData.Test
+{
+    public class AdministrationUnitRepositoryTest
+    {
+        DbContextOptions<MasterDataContext> _options;
+
+        public AdministrationUnitRepositoryTest()
+        {
+            _options = new DbContextOptionsBuilder<MasterDataContext>()
+                .UseInMemoryDatabase(databaseName: "RepositoryTest")
+                .Options;
+        }
+
+        MasterDataContext GetContext()
+        {
+            return new MasterDataContext(_options);
+        }
+
+        [Fact]
+        public void AdministrationUnit_Can_be_inserted()
+        {
+            var parameters = new AdministrationUnitParameters {
+                Title = "ABC",
+                UserKey = "02",
+                Address = new AddressParameters {
+                    City = "H",
+                    Country = new CountryInfoParameters {
+                        Iso2 = "DE",
+                        Name = "Deutschland",
+                        Iso3 = "DEU"
+                    }
+                }
+            };
+            var unit = new AdministrationUnit(parameters);
+
+            using (var context = GetContext()) {
+                var repository = new AdministrationUnitRepository(context);
+                repository.Insert(unit);
+            }
+
+            using (var context = GetContext()) {
+                var repository = new AdministrationUnitRepository(context);
+                var stored = repository.List();
+
+                Assert.Collection(stored, u => Assert.Equal("02", u.UserKey));
+            }
+
+        }
+    }
+}

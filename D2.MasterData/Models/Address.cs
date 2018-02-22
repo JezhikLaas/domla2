@@ -1,11 +1,49 @@
-﻿namespace D2.MasterData.Models
+﻿using D2.MasterData.Parameters;
+
+namespace D2.MasterData.Models
 {
-    public struct Address
+    public class Address
     {
-        public string Street { get; set; }
-        public string Number { get; set; }
-        public CountryInfo Country { get; set; }
-        public string PostalCode { get; set; }
-        public string City { get; set; }
+        private Address()
+        { }
+
+        public Address(AddressParameters argument)
+        {
+            Street = argument.Street;
+            Number = argument.Number;
+            PostalCode = argument.PostalCode;
+            City = argument.City;
+            Country = new CountryInfo(argument.Country);
+        }
+
+        public string Street
+        {
+            get;
+            private set;
+        }
+
+        public string Number
+        {
+            get;
+            private set;
+        }
+
+        public CountryInfo Country
+        {
+            get;
+            private set;
+        }
+
+        public string PostalCode
+        {
+            get;
+            private set;
+        }
+
+        public string City
+        {
+            get;
+            private set;
+        }
     }
 }

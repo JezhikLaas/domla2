@@ -2,6 +2,6 @@
 {
     public interface IParameterValidator
     {
-        ValidationResult Validate(RequestParameters requestParameters, RequestType requestType);
+        ValidationResult Validate(object requestParameters, RequestType requestType);
     }
 }

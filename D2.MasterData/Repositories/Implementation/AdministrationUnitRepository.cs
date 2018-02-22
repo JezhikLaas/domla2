@@ -1,26 +1,36 @@
-﻿using D2.MasterData.Models;
-using Dapper.FastCrud;
+﻿using D2.MasterData.Infrastructure;
+using D2.MasterData.Models;
+using D2.MasterData.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace D2.MasterData.Repositories.Implementation
 {
     public class AdministrationUnitRepository : IAdministrationUnitRepository
     {
-        IDbConnection _connection;
+        MasterDataContext _connection;
 
-        public AdministrationUnitRepository(IDbConnection connection)
+        public AdministrationUnitRepository(MasterDataContext context)
         {
-            OrmConfiguration.DefaultDialect = SqlDialect.PostgreSql;
-            _connection = connection;
+            _connection = context;
         }
 
         public void Insert(AdministrationUnit item)
         {
-            _connection.Insert(item);
+            item.Id = Guid.NewGuid();
+            _connection.Add(item);
+            _connection.SaveChanges();
+        }
+
+        public IEnumerable<AdministrationUnit> List()
+        {
+            var result = _connection
+                .AdministrationUnits
+                .OrderBy(unit => unit.UserKey)
+                .ToList();
+            return result;
         }
     }
 }
