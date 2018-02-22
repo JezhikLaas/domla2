@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace D2.MasterData.Infrastructure
+namespace D2.MasterData.Infrastructure.Validation
 {
     public abstract class ParameterValidationAttribute : Attribute
     {

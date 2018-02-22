@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using D2.MasterData.Infrastructure.Validation;
+using System.Linq;
 
 namespace D2.MasterData.Infrastructure
 {
@@ -15,7 +16,7 @@ namespace D2.MasterData.Infrastructure
                 {
                     if (attribute.RequestTypes.Any() == false || attribute.RequestTypes.Contains(requestType))
                     {
-                        var ValidationFailure = attribute.Error(this, property.GetValue(this), property.PropertyType);
+                        var ValidationFailure = attribute.Error(this, property.GetValue(requestParameters), property.PropertyType);
                         if (ValidationFailure != null)
                         {
                             Result.AddError(property.Name, ValidationFailure);

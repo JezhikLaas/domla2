@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace D2.MasterData.Infrastructure
+namespace D2.MasterData.Infrastructure.Validation
 {
     public class NotNullOrEmptyAttribute : ParameterValidationAttribute
     {
