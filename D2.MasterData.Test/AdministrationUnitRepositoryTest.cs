@@ -26,8 +26,8 @@ namespace D2.MasterData.Test
             return new MasterDataContext(_options);
         }
 
-        [Fact]
-        public void AdministrationUnit_Can_be_inserted()
+        [Fact(DisplayName = "AdministrationUnitRepository can insert AdministrationUnit")]
+        public void AdministrationUnitRepository_can_insert_AdministrationUnit()
         {
             var parameters = new AdministrationUnitParameters {
                 Title = "ABC",

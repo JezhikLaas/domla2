@@ -7,8 +7,8 @@ namespace D2.MasterData.Test
 {
     public class AdministrationUnitSerializationTest
     {
-        [Fact]
-        public void Serialize_And_Deserialize_AdministrationUnit()
+        [Fact(DisplayName = "Serialize and deserialize AdministrationUnitParameters")]
+        public void Serialize_and_deserialize_AdministrationUnitParameters()
         {
             var test = new AdministrationUnitParameters
             {

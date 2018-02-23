@@ -8,8 +8,8 @@ namespace D2.MasterData.Test
 {
     public class AdministrationUnitControllerTest
     {
-        [Fact]
-        public void When_calling_post_CreateNewAdministrationUnit_is_invoked()
+        [Fact(DisplayName = "AdministrationUnitController.Post calls CreateNewAdministrationUnit")]
+        public void AdministrationUnitController_Post_calls_CreateNewAdministrationUnit()
         {
             var facade = Substitute.For<IAdministrationUnitFacade>();
             var validator = Substitute.For<IParameterValidator>();
