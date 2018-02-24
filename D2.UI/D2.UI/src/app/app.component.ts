@@ -10,6 +10,7 @@ import { MenuDisplayService } from './shared/menu-display.service';
 import { Router, NavigationEnd } from '@angular/router';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
+import {ConfirmDialogComponent} from './shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'ui-root',
@@ -57,6 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private accounts: AccountService,
     private errorDialog: ErrorDialogComponent,
+    private confirmDialog: ConfirmDialogComponent,
     private cookieService: CookieService,
     private storage: StorageService,
     private menuDisplay: MenuDisplayService,
@@ -109,9 +111,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.accounts.logout(
-      '',
-      (message) => this.errorDialog.show('Fehler', message)
+    this.confirmDialog.show(
+      'Bestätigung',
+      'Möchten Sie sich wirklich abmelden?',
+      value => {
+        if (value) {
+          this.accounts.logout(
+            '',
+            (message) => this.errorDialog.show('Fehler', message)
+          );
+        }
+      }
     );
   }
 }

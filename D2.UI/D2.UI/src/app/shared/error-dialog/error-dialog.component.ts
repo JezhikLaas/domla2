@@ -6,7 +6,7 @@ declare var $: any;
 declare var vex: any;
 
 @Component({
-  selector: 'da-error-dialog',
+  selector: 'ui-error-dialog',
   template: ``,
   styles: []
 })

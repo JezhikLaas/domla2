@@ -48,6 +48,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   exports: [
@@ -84,7 +85,7 @@ import { AdministrationUnitEditComponent } from './administration-unit-edit/admi
     MatToolbarModule,
     MatTooltipModule,
   ],
-  declarations: [AdministrationUnitEditComponent]
+  declarations: [AdministrationUnitEditComponent, ConfirmDialogComponent]
 })
 export class UiMaterialModule {}
 
@@ -105,6 +106,7 @@ export class UiMaterialModule {}
   ],
   providers: [
     ErrorDialogComponent,
+    ConfirmDialogComponent,
     AccountService,
     StorageService,
     MenuDisplayService,

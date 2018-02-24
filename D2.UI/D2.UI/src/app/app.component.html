@@ -42,5 +42,5 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 <mat-toolbar class="navigation-footer">
-  <button *ngFor="let item of MenuButtons" mat-raised-button>{{ item }}</button>
+  <button *ngFor="let item of MenuButtons" mat-raised-button (click)="item.onClick()">{{ item.label }}</button>
 </mat-toolbar>

@@ -3,6 +3,8 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MenuDisplayService } from '../shared/menu-display.service';
 import { AdministrationUnit } from '../shared/administration-unit';
+import { MenuItem } from '../shared/menu-item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ui-administration-units',
@@ -14,7 +16,10 @@ import { AdministrationUnit } from '../shared/administration-unit';
   `]
 })
 export class AdministrationUnitsListComponent implements OnInit {
-  MenuButtons = ['Neu', 'Bearbeiten'];
+  MenuButtons = [
+    new MenuItem('Neu', () => this.router.navigate(['editAdministrationUnit/0'])),
+    new MenuItem('Bearbeiten', () => console.log('Edit'))
+  ];
   displayedColumns = ['select', 'userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<AdministrationUnit>;
   initialSelection = [];
@@ -22,7 +27,8 @@ export class AdministrationUnitsListComponent implements OnInit {
   selection = new SelectionModel<AdministrationUnit>(this.allowMultiSelect, this.initialSelection);
 
   constructor(
-    private menuDisplay: MenuDisplayService
+    private menuDisplay: MenuDisplayService,
+    private router: Router
   ) { }
 
   ngOnInit() {
