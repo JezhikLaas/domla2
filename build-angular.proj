@@ -9,22 +9,22 @@
   </PropertyGroup>
   
   <Target Name="BuildUserManagement">
-	<Exec Command="npm install" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
+	<Exec Command="npm install" WorkingDirectory="D2.UserManagement/D2.UserManagement" Condition=" '$(AngularEnvironment)' != 'dev' " />
 	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(UserManagementPrefix)" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
   </Target>
   
   <Target Name="BuildAdmin">
-	<Exec Command="npm install" WorkingDirectory="D2.Administration/D2.Administration" />
+	<Exec Command="npm install" WorkingDirectory="D2.Administration/D2.Administration" Condition=" '$(AngularEnvironment)' != 'dev' " />
 	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(AdminPrefix)" WorkingDirectory="D2.Administration/D2.Administration" />
   </Target>
   
   <Target Name="BuildAuth">
-	<Exec Command="npm install" WorkingDirectory="D2.Authentication/D2.Authentication" />
+	<Exec Command="npm install" WorkingDirectory="D2.Authentication/D2.Authentication" Condition=" '$(AngularEnvironment)' != 'dev' " />
 	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(AuthPrefix)" WorkingDirectory="D2.Authentication/D2.Authentication" />
   </Target>
   
   <Target Name="BuildUi">
-	<Exec Command="npm install" WorkingDirectory="D2.UI/D2.UI" />
+	<Exec Command="npm install" WorkingDirectory="D2.UI/D2.UI" Condition=" '$(AngularEnvironment)' != 'dev' " />
 	<Exec Command="ng build -prod --e=$(AngularEnvironment) -aot --bh /$(UiPrefix)" WorkingDirectory="D2.UI/D2.UI" />
   </Target>
   

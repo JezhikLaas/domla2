@@ -1,15 +1,17 @@
-import { Injectable, Injector } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import { Inject, Injectable, Injector } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { StorageService } from './storage.service';
+import { DOCUMENT } from '@angular/common';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
-import {StorageService} from './storage.service';
 
 
 @Injectable()
 export class BearerInterceptor implements HttpInterceptor {
   constructor(
-    private storage: StorageService
+    private storage: StorageService,
+    @Inject(DOCUMENT) private document: any
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -21,8 +23,15 @@ export class BearerInterceptor implements HttpInterceptor {
       }
     });
 
-    return next.handle(authReq)
+    return next
+      .handle(authReq)
       .catch((error, caught) => {
+        if (error instanceof HttpErrorResponse) {
+          const response = error as HttpErrorResponse;
+          if (response.status >= 300 && response.status <= 308) {
+            this.document.location.href = response.headers['Location'];
+          }
+        }
         return Observable.throw(error);
       }) as any;
   }

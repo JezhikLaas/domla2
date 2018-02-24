@@ -7,8 +7,8 @@ namespace D2.MasterData.Test
 {
     public class AdministrationUnitParameterValidationTest
     {
-        [Fact(DisplayName = "Validation of AdministrationUnitParameter succeeds for valid post")]
-        public void Validation_of_AdministrationUnitParameter_succeeds_for_valid_post()
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters succeeds for valid post")]
+        public void Validation_of_AdministrationUnitParameters_succeeds_for_valid_post()
         {
             var parameters = new AdministrationUnitParameters {
                 Title = "ABC",
@@ -29,8 +29,8 @@ namespace D2.MasterData.Test
             Assert.True(result.IsValid);
         }
 
-        [Fact(DisplayName = "Validation of AdministrationUnitParameter fails for invalid post")]
-        public void Validation_of_AdministrationUnitParameter_fails_for_invalid_post()
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters fails for invalid post")]
+        public void Validation_of_AdministrationUnitParameters_fails_for_invalid_post()
         {
             var parameters = new AdministrationUnitParameters {
                 Address = new AddressParameters {
