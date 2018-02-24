@@ -65,15 +65,6 @@ export class AccountService {
   }
 
   logout(id: string, failed: (message: string) => void) {
-    this.http.get<LogoutUrl>(`${this.api}${AccountService.Logout_Url}`)
-      .catch(error => {
-        failed(error.message);
-        return Observable.throw(error);
-      })
-      .subscribe(
-        data => {
-          this.document.location.href = data.url;
-        }
-      );
+    this.document.location.href = `${this.api}${AccountService.Logout_Url}`;
   }
 }

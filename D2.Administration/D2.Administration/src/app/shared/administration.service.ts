@@ -31,15 +31,6 @@ export class AdministrationService {
   }
 
   logout(failed: (message: string) => void) {
-    this.http.get<LogoutUrl>(`${this.api}${AdministrationService.Logout_Url}`)
-      .catch(error => {
-        failed(error.message);
-        return Observable.throw(error);
-      })
-      .subscribe(
-        data => {
-          this.document.location.href = data.url;
-        }
-      );
+    this.document.location.href = `${this.api}${AdministrationService.Logout_Url}`;
   }
 }

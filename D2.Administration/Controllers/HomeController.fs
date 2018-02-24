@@ -49,5 +49,7 @@ type HomeController
             
             do! this.HttpContext.SignOutAsync("oidc")
                 |> Async.AwaitTask
+            
+            logger.LogDebug "signed out, returning"
         }
         |> Async.StartAsTask

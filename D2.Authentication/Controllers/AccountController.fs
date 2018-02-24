@@ -67,19 +67,29 @@ type AccountController
                                    :> IActionResult
         }
         |> Async.StartAsTask
-
-    [<HttpGet("logout")>]
-    member this.Logout (logoutId : string) =
+    
+    member this.DetermineUser (logoutId : string) =
         async {
             let token = match this.HttpContext.Request.Headers.TryGetValue ("Authorization") with
                         | true, value -> value.[0].Substring(7)
                         | false, _    -> null
-            let! validation = requestValidator.ValidateRequestAsync token
-                              |> Async.AwaitTask
             
-            match validation.IsError with
-            | false -> let user = validation.Subject
-                       do! this.HttpContext.SignOutAsync()
+            match token with
+            | null -> return this.HttpContext.User
+            | _    -> let! validation = requestValidator.ValidateRequestAsync token |> Async.AwaitTask
+                      match validation = null || validation.IsError with
+                      | true  -> return null
+                      | false -> return validation.Subject
+        }
+
+    [<HttpGet("logout")>]
+    member this.Logout (logoutId : string) =
+        async {
+            logger.LogDebug(sprintf "logging out %s" logoutId)
+            let! user = this.DetermineUser logoutId
+            
+            match user = null with
+            | false -> do! this.HttpContext.SignOutAsync()
                            |> Async.AwaitTask
 
                        do! events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
@@ -88,16 +98,14 @@ type AccountController
                        do! users.updateActive (user.Identity.GetSubjectId()) false
                        do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
         
-                       let result = LogoutResponseModel (
-                                        url = this.HttpContext.Request.Scheme
-                                        +
-                                        "://"
-                                        +
-                                        this.HttpContext.Request.Host.ToUriComponent()
-                                        +
-                                        "/_auth/goodbye"
-                                    )
-                       return JsonResult (result)
+                       let result = this.HttpContext.Request.Scheme
+                                    +
+                                    "://"
+                                    +
+                                    this.HttpContext.Request.Host.ToUriComponent()
+                                    +
+                                    "/_auth/goodbye"
+                       return RedirectResult (result)
                               :> IActionResult
 
             
