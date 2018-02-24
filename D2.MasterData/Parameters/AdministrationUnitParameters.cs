@@ -15,6 +15,7 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public string Title { get; set; }
 
+        [NotNullOrEmpty(RequestType.Put)]
         public AddressParameters Address { get; set; }
     }
 }
