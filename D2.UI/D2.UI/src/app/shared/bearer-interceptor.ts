@@ -26,10 +26,14 @@ export class BearerInterceptor implements HttpInterceptor {
     return next
       .handle(authReq)
       .catch((error, caught) => {
+        console.log('Catching an error ...');
         if (error instanceof HttpErrorResponse) {
+          console.log('It is an HttpErrorResponse');
           const response = error as HttpErrorResponse;
           if (response.status >= 300 && response.status <= 308) {
+            console.log(`Trying to redirect to: ${response.headers['Location']}`);
             this.document.location.href = response.headers['Location'];
+            return;
           }
         }
         return Observable.throw(error);

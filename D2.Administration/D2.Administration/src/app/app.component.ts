@@ -33,6 +33,7 @@ import 'rxjs/add/operator/map';
     top: 0;
     left: 0;
     right: 0;
+    color: whitesmoke;
   }
   .navigation-footer {
     position: fixed;
