@@ -31,14 +31,7 @@ type AuthorizeResultModel () =
 
     new (data : IdentityServer4.ResponseHandling.AuthorizeResponse) as this =
         AuthorizeResultModel () then
-            let rec applyMapping (mappings : ServiceConfiguration.MappingEntry list) (url : String) =
-                match mappings with
-                | [] -> url
-                | head::tail -> applyMapping tail (url.Replace(head.From, head.To))
-            
-            let redirectUri = applyMapping (ServiceConfiguration.clientMappings.Mappings |> Seq.toList) data.RedirectUri
-            
-            this.RedirectUri <- redirectUri
+            this.RedirectUri <- data.RedirectUri
             this.State <- data.State
             this.Scope <- data.Scope
             this.IdentityToken <- data.IdentityToken

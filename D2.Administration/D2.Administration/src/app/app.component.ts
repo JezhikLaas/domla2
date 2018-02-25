@@ -65,10 +65,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const token = this.cookieService.get('access_token');
+    const access_token = this.cookieService.get('access_token');
+    const refresh_token = this.cookieService.get('refresh_token');
 
-    if (token) {
-      this.storage.set('access_token', token);
+    if (refresh_token) {
+      this.storage.set('refreh_token', refresh_token);
+    }
+
+    if (access_token) {
+      this.storage.set('access_token', access_token);
     } else if (environment.production) {
       this.errorDialog.show('Fehler', 'Es konnte kein Zugriffstoken ermittelt werden!');
     }

@@ -69,11 +69,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const token = this.cookieService.get('access_token');
+    const access_token = this.cookieService.get('access_token');
+    const refresh_token = this.cookieService.get('refresh_token');
 
-    if (token) {
+    if (refresh_token) {
+      this.storage.set('refreh_token', refresh_token);
+    }
+
+    if (access_token) {
       this.loader.show();
-      this.storage.set('access_token', token);
+      this.storage.set('access_token', access_token);
 
       this.accounts.fetchServices(
         () => this.loader.hide(),
