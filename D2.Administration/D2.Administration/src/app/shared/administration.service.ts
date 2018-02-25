@@ -31,6 +31,8 @@ export class AdministrationService {
   }
 
   logout(failed: (message: string) => void) {
+    this.storage.set('access_token', null);
+    this.storage.set('refresh_token', null);
     this.document.location.href = `${this.api}${AdministrationService.Logout_Url}`;
   }
 }

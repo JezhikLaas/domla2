@@ -5,6 +5,7 @@ import { DOCUMENT } from '@angular/common';
 import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import {StorageService} from './storage.service';
 
 interface LogoutUrl {
   url: string;
@@ -37,6 +38,7 @@ export class AccountService {
 
   constructor(
     private http: HttpClient,
+    private storage: StorageService,
     @Inject('API_URL') private api: string,
     @Inject(DOCUMENT) private document: any
   ) { }
@@ -65,6 +67,8 @@ export class AccountService {
   }
 
   logout(id: string, failed: (message: string) => void) {
+    this.storage.set('access_token', null);
+    this.storage.set('refresh_token', null);
     this.document.location.href = `${this.api}${AccountService.Logout_Url}`;
   }
 }
