@@ -3,6 +3,7 @@ namespace D2.UserManagement
 open D2.Common
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
+open Microsoft.Extensions.Logging
 open NLog.Web
 open System.IO
 
@@ -15,6 +16,13 @@ module Program =
             .UseKestrel(fun options -> ServiceConfiguration.configureKestrel options)
             .UseWebRoot("wwwroot")
             .UseStartup<Startup>()
+            .ConfigureLogging(
+                fun logging -> logging.ClearProviders()
+                               |> ignore
+                               
+                               logging.SetMinimumLevel(LogLevel.Trace)
+                               |> ignore
+            )
             .UseNLog()
             .Build()
 

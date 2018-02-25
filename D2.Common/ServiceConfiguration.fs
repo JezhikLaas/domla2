@@ -46,18 +46,10 @@ module ServiceConfiguration =
         member val Password = String.Empty with get, set
         member val Port = 0 with get, set
     
-    type MappingEntry () =
-        member val From = String.Empty with get, set
-        member val To = String.Empty with get, set
-    
-    type ClientRedirects () = 
-        member val Mappings = List<MappingEntry>() with get, set
-    
     let configurationSources =
         let builder = ConfigurationBuilder()
         builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                .AddJsonFile("appsettings.json")
-               .AddJsonFile("appsettings.Development.json", true)
                .AddJsonFile("appsettings.qa.json", true)
                .AddEnvironmentVariables () |> ignore
         builder.Build ()
@@ -96,14 +88,6 @@ module ServiceConfiguration =
         let evaluate () =
             let config = DatabaseProperties ()
             configurationSources.GetSection("Database").Bind config
-
-            config
-        evaluate ()
-    
-    let clientMappings =
-        let evaluate () =
-            let config = ClientRedirects ()
-            configurationSources.GetSection("ClientRedirects").Bind config
 
             config
         evaluate ()
