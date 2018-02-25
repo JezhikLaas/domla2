@@ -1,12 +1,11 @@
 ﻿namespace D2.UserManagement
 
 open D2.Common
+open Microsoft.Extensions.Logging
 open Newtonsoft.Json
-open NLog
 open System
 
 module ServiceRegistration =
-    let private logger = LogManager.GetLogger "D2.UserManagement.ServiceRegistration"
 
     type EndPoint() =
         member val Name = String.Empty with get, set
@@ -26,7 +25,7 @@ module ServiceRegistration =
                                    EndPoint(Name = "Register", Uri = "/users/register");
                                |] with get
 
-    let registerSelf () =
+    let registerSelf (logger : ILogger) =
         let textData = JsonConvert.SerializeObject(Service ())
 
-        ServiceRegistrator.registerSelf null textData
+        ServiceRegistrator.registerSelf logger textData

@@ -24,5 +24,10 @@ namespace D2.MasterData.Facades.Implementation
             var administrationUnit = new AdministrationUnit(value);
             _repository.Insert(administrationUnit);
         }
+
+        public IEnumerable<AdministrationUnit> ListAdministrationUnits()
+        {
+            return _repository.List();
+        }
     }
 }

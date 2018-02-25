@@ -1,14 +1,12 @@
-﻿using D2.MasterData.Parameters;
-using FluentValidation.Results;
-using System;
+﻿using D2.MasterData.Models;
+using D2.MasterData.Parameters;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace D2.MasterData.Facades
 {
     public interface IAdministrationUnitFacade
     {
         void CreateNewAdministrationUnit(AdministrationUnitParameters value);
+        IEnumerable<AdministrationUnit> ListAdministrationUnits();
     }
 }

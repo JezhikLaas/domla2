@@ -23,7 +23,7 @@ module ServiceConfiguration =
                     if this.Protocol = "https" && this.Port = 443 then
                         sprintf "%s://%s" this.Protocol this.Address
                     else
-                        sprintf "%s://%s" this.Protocol this.Address
+                        sprintf "%s://%s:%d" this.Protocol this.Address this.Port
     
     type AuthorityProperties () =
         inherit ServiceAddress ()

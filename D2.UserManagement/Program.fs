@@ -33,8 +33,8 @@ module Program =
             let logger = NLogBuilder.ConfigureNLog(logConfig).GetCurrentClassLogger()
             logger.Info "logging configured"
         
-        if ServiceRegistration.registerSelf () then
+        try
             BuildWebHost(args).Run()
             0
-        else
-            1
+        with
+        | _ -> 1

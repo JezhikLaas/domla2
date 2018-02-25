@@ -6,15 +6,18 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.HttpOverrides
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Logging
 open System
 open System.Collections.Generic
 open System.IdentityModel.Tokens.Jwt
 
-
 type Startup private () =
-    new (configuration: IConfiguration) as this =
+    new (configuration: IConfiguration, logger: ILogger<Startup>) as this =
         Startup() then
         this.Configuration <- configuration
+        if ServiceRegistration.registerSelf (logger) = false then
+            logger.LogCritical "unable to register self"
+            failwith "unable to register self"
 
     member this.ConfigureServices(services: IServiceCollection) =
         services.AddMvc() |> ignore

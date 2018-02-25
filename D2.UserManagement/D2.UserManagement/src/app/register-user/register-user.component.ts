@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ErrorMessages } from './register-user-error-messages';
 import { UserRegistration } from '../shared/user-registration';
 import { RegisterUserService } from '../shared/register-user.service';
