@@ -6,46 +6,45 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace D2.MasterData.Models
 {
-    public class Address
+    public class Entrance
     {
-        private Address()
+        Entrance()
         { }
 
-        public Address(AddressParameters argument)
+        public Entrance(EntranceParameters argument)
         {
-            Street = argument.Street;
-            Number = argument.Number;
-            PostalCode = argument.PostalCode;
-            City = argument.City;
-            Country = new CountryInfo(argument.Country);
+            Id = argument.Id;
+            Title = argument.Title;
+            Address = new Address(argument.Address);
         }
 
+        [Key]
+        public Guid Id
+        {
+            get;
+            internal set;
+        }
 
-        public string Street
+        [MaxLength(256)]
+        public string Title
         {
             get;
             private set;
         }
 
-        public string Number
+        public Address Address
         {
             get;
             private set;
         }
 
-        public CountryInfo Country
+        public Guid AdministrationId
         {
             get;
             private set;
         }
 
-        public string PostalCode
-        {
-            get;
-            private set;
-        }
-
-        public string City
+        public AdministrationUnit AdministrationUnit
         {
             get;
             private set;

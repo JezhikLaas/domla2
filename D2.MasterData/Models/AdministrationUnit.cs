@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace D2.MasterData.Models
@@ -16,7 +17,7 @@ namespace D2.MasterData.Models
             Id = argument.Id;
             UserKey = argument.UserKey;
             Title = argument.Title;
-            Address = new Address(argument.Address);
+            Entrances = new List<Entrance>(argument.Entrances.Select(etr => new Entrance(etr)));
         }
 
         [Key]
@@ -41,7 +42,13 @@ namespace D2.MasterData.Models
             private set;
         }
 
-        public Address Address
+        public Guid EntranceID 
+        {
+            get;
+            set;
+        }
+
+        public List<Entrance> Entrances
         {
             get;
             private set;

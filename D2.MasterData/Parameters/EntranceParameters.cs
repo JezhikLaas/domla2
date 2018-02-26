@@ -2,11 +2,10 @@
 using D2.MasterData.Infrastructure.Validation;
 using D2.MasterData.Models;
 using System;
-using System.Collections.Generic;
 
 namespace D2.MasterData.Parameters
 {
-    public class AdministrationUnitParameters
+    public class EntranceParameters
     {
         public Guid Id { get; set; }
 
@@ -17,7 +16,7 @@ namespace D2.MasterData.Parameters
         public string Title { get; set; }
 
         [NotNullOrEmpty(RequestType.Put)]
-        public List<EntranceParameters> Entrances { get; set; }
+        public AddressParameters Address { get; set; }
 
     }
 }

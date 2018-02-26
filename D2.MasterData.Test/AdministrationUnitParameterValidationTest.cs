@@ -1,5 +1,6 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Parameters;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -13,12 +14,21 @@ namespace D2.MasterData.Test
             var parameters = new AdministrationUnitParameters {
                 Title = "ABC",
                 UserKey = "02",
-                Address = new AddressParameters {
-                    City = "H",
-                    Country = new CountryInfoParameters {
-                        Iso2 = "DE",
-                        Name = "Deutschland",
-                        Iso3 = "DEU"
+                Entrances = new List<EntranceParameters> {
+                    new EntranceParameters {
+                        Title = "Seumestraße 49",
+                        Address = new AddressParameters{
+                            Street = "Seumestraße",
+                            Number = "49",
+                            PostalCode = "22222",
+                            City = "Hamburg",
+                            Country = new CountryInfoParameters
+                            {
+                                Iso2 = "DE",
+                                Name = "Deutschland",
+                                Iso3 = "DEU"
+                            }
+                        }
                     }
                 }
             };
@@ -33,12 +43,17 @@ namespace D2.MasterData.Test
         public void Validation_of_AdministrationUnitParameters_fails_for_invalid_post()
         {
             var parameters = new AdministrationUnitParameters {
-                Address = new AddressParameters {
-                    City = "H",
-                    Country = new CountryInfoParameters {
-                        Iso2 = "DE",
-                        Name = "Deutschland",
-                        Iso3 = "DEU"
+                Entrances = new List<EntranceParameters> {
+                    new EntranceParameters {
+                        Address = new AddressParameters {
+                            City = "H",
+                            Country = new CountryInfoParameters
+                            {
+                                Iso2 = "DE",
+                                Name = "Deutschland",
+                                Iso3 = "DEU"
+                            }
+                        }
                     }
                 }
             };
@@ -64,6 +79,7 @@ namespace D2.MasterData.Test
             Assert.True(result.IsValid);
         }
 
+        /*
         [Fact(DisplayName = "Validation of AdministrationUnitParameters for put fails w/o address")]
         public void Validation_of_AdministrationUnitParameters_for_put_fails_wo_address()
         {
@@ -78,29 +94,38 @@ namespace D2.MasterData.Test
             Assert.False(result.IsValid);
             Assert.Single(result.Errors);
         }
+        */
 
+        /*
         [Fact(DisplayName = "Validation of AdministrationUnitParameters for put fails with invalid address")]
         public void Validation_of_AdministrationUnitParameters_for_put_fails_with_invalid_address()
         {
             var parameters = new AdministrationUnitParameters {
                 Title = "ABC",
                 UserKey = "02",
-                Address = new AddressParameters {
-                    // Address w/o street is invalid
-                    City = "H",
-                    Country = new CountryInfoParameters {
-                        Iso2 = "DE",
-                        Name = "Deutschland",
-                        Iso3 = "DEU"
+                Entrances = new List<EntranceParameters> {
+                    new EntranceParameters {
+                        Address = new AddressParameters
+                        {
+                            // Address w/o street is invalid
+                            City = "H",
+                            Country = new CountryInfoParameters
+                            {
+                                Iso2 = "DE",
+                                Name = "Deutschland",
+                                Iso3 = "DEU"
+                            }
+                        }
                     }
                 }
             };
-
+            
             var validator = new ParameterValidator();
 
             var result = validator.Validate(parameters, RequestType.Put);
             Assert.False(result.IsValid);
-            Assert.Equal(3, result.Errors.Count());
+            Assert.Equal(5, result.Errors.Count());
         }
+        */
     }
 }

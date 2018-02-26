@@ -1,10 +1,13 @@
-﻿using D2.MasterData.Infrastructure.Validation;
+﻿using D2.MasterData.Infrastructure;
+using D2.MasterData.Infrastructure.Validation;
 using D2.MasterData.Models;
+using System;
 
 namespace D2.MasterData.Parameters
 {
     public class AddressParameters
     {
+
         [NotNullOrEmpty]
         public string Street { get; set; }
 

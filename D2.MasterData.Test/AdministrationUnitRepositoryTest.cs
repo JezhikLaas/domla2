@@ -30,14 +30,24 @@ namespace D2.MasterData.Test
         public void AdministrationUnitRepository_can_insert_AdministrationUnit()
         {
             var parameters = new AdministrationUnitParameters {
+                UserKey = "03",
                 Title = "ABC",
-                UserKey = "02",
-                Address = new AddressParameters {
-                    City = "H",
-                    Country = new CountryInfoParameters {
-                        Iso2 = "DE",
-                        Name = "Deutschland",
-                        Iso3 = "DEU"
+                Entrances = new List<EntranceParameters>
+                {
+                    new EntranceParameters {
+                        Title = "Eingang 49",
+                        Address = new AddressParameters
+                        {
+                            Street = "Seumestraße",
+                            Number = "49",
+                            PostalCode = "22222",
+                            Country = new CountryInfoParameters
+                            {
+                                Iso2 = "DE",
+                                Name = "Deutschland",
+                                Iso3 = "DEU"
+                            }
+                        }
                     }
                 }
             };
@@ -52,7 +62,7 @@ namespace D2.MasterData.Test
                 var repository = new AdministrationUnitRepository(context);
                 var stored = repository.List();
 
-                Assert.Collection(stored, u => Assert.Equal("02", u.UserKey));
+                Assert.Collection(stored, u => Assert.Equal("03", u.UserKey));
             }
 
         }

@@ -14,6 +14,9 @@ namespace D2.MasterData.Infrastructure
             : base(options)
         { }
 
+        public DbSet<AdministrationUnit> AdministrationUnits { get; set; }
+        public DbSet<Entrance> Entrances { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured == false) {
@@ -34,15 +37,13 @@ namespace D2.MasterData.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Entity<AdministrationUnit>()
-                .OwnsOne(
-                    unit => unit.Address,
-                    builder => builder.OwnsOne(address => address.Country)
-            );
+                .Entity<AdministrationUnit>();
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder
+                .Entity<Entrance>()
+                    .OwnsOne(
+                        entrance => entrance.Address)
+                        .OwnsOne(address => address.Country);
         }
-
-        public DbSet<AdministrationUnit> AdministrationUnits { get; set; }
     }
 }
