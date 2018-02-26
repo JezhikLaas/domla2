@@ -66,6 +66,14 @@ export class AccountService {
       );
   }
 
+  fetchService(topic: string): Observable<ServiceInfo> {
+    return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`)
+      .catch(error => {
+        return Observable.throw(error);
+      })
+      ;
+  }
+
   logout(id: string, failed: (message: string) => void) {
     this.storage.set('access_token', null);
     this.storage.set('refresh_token', null);

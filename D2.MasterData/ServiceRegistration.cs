@@ -23,8 +23,8 @@ namespace D2.MasterData
             public int Version => ServiceConfiguration.versionInfo.Version;
             public int Patch => ServiceConfiguration.versionInfo.Patch;
             public EndPoint[] EndPoints => new[] {
-                                   new EndPoint { Name = "list_aus", Uri = "/AdministrationUnit/list" },
-                                   new EndPoint { Name = "create_au", Uri = "/AdministrationUnit/create" }
+                                   new EndPoint { Name = "list_administrationunits", Uri = "/AdministrationUnit/list" },
+                                   new EndPoint { Name = "create_administrationunit", Uri = "/AdministrationUnit/create" }
                               };
         }
 

@@ -5,6 +5,7 @@ import { MenuDisplayService } from '../shared/menu-display.service';
 import { AdministrationUnit } from '../shared/administration-unit';
 import { MenuItem } from '../shared/menu-item';
 import { Router } from '@angular/router';
+import {AdministrationUnitService} from '../shared/administration-unit.service';
 
 @Component({
   selector: 'ui-administration-units',
@@ -28,11 +29,15 @@ export class AdministrationUnitsListComponent implements OnInit {
 
   constructor(
     private menuDisplay: MenuDisplayService,
-    private router: Router
+    private router: Router,
+    private units: AdministrationUnitService
   ) { }
 
   ngOnInit() {
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
+    this.units.listAdministrationUnits(result => {
+      this.dataSource = new MatTableDataSource<AdministrationUnit>(result);
+    });
   }
 
   isAllSelected() {

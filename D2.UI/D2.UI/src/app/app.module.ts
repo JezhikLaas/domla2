@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -85,7 +85,7 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
     MatToolbarModule,
     MatTooltipModule,
   ],
-  declarations: [AdministrationUnitEditComponent, ConfirmDialogComponent]
+  declarations: []
 })
 export class UiMaterialModule {}
 
@@ -94,7 +94,9 @@ export class UiMaterialModule {}
     AppComponent,
     ErrorDialogComponent,
     LoaderComponent,
-    AdministrationUnitsListComponent
+    ConfirmDialogComponent,
+    AdministrationUnitsListComponent,
+    AdministrationUnitEditComponent
   ],
   imports: [
     BrowserModule,
@@ -117,6 +119,9 @@ export class UiMaterialModule {}
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class AppModule { }
