@@ -1,6 +1,7 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Infrastructure.Validation;
 using NSubstitute;
+using System.Collections.Generic;
 using Xunit;
 
 namespace D2.MasterData.Test
@@ -52,6 +53,14 @@ namespace D2.MasterData.Test
             var target = new NotNullOrEmptyAttribute();
             var check = target.Error(_validator, new object(), typeof(object));
             Assert.Null(check);
+        }
+
+        [Fact(DisplayName = "NotNullOrEmptyAttribute detects empty enumerable")]
+        public void NotNullOrEmpty_detects_empty_enumerable()
+        {
+            var target = new NotNullOrEmptyAttribute();
+            var check = target.Error(_validator, new string[] { }, typeof(IEnumerable<string>));
+            Assert.Equal("must not be empty", check);
         }
     }
 }

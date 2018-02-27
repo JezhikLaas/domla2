@@ -79,7 +79,6 @@ namespace D2.MasterData.Test
             Assert.True(result.IsValid);
         }
 
-        /*
         [Fact(DisplayName = "Validation of AdministrationUnitParameters for put fails w/o address")]
         public void Validation_of_AdministrationUnitParameters_for_put_fails_wo_address()
         {
@@ -94,9 +93,7 @@ namespace D2.MasterData.Test
             Assert.False(result.IsValid);
             Assert.Single(result.Errors);
         }
-        */
 
-        /*
         [Fact(DisplayName = "Validation of AdministrationUnitParameters for put fails with invalid address")]
         public void Validation_of_AdministrationUnitParameters_for_put_fails_with_invalid_address()
         {
@@ -126,6 +123,5 @@ namespace D2.MasterData.Test
             Assert.False(result.IsValid);
             Assert.Equal(5, result.Errors.Count());
         }
-        */
     }
 }

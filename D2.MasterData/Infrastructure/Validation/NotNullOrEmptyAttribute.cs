@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 
 namespace D2.MasterData.Infrastructure.Validation
 {
@@ -17,6 +19,10 @@ namespace D2.MasterData.Infrastructure.Validation
 
             if (propertyType == typeof(string) && string.IsNullOrEmpty(value as string))
             {
+                return "must not be empty";
+            }
+
+            if (propertyType.GetInterfaces().Contains(typeof(IEnumerable)) && (((IEnumerable)value).GetEnumerator().MoveNext() == false)) {
                 return "must not be empty";
             }
 

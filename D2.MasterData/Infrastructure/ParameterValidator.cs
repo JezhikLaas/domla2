@@ -1,4 +1,5 @@
 ﻿using D2.MasterData.Infrastructure.Validation;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,9 +26,19 @@ namespace D2.MasterData.Infrastructure
                 var attributes = property.GetCustomAttributes(typeof(ParameterValidationAttribute), true).OfType<ParameterValidationAttribute>();
                 foreach (var attribute in attributes) {
                     if (attribute.RequestTypes.Any() == false || attribute.RequestTypes.Contains(requestType)) {
-                        InternalValidate(property.GetValue(requestParameters), requestType, result, processed);
+                        var value = property.GetValue(requestParameters);
+                        var collection = value as IEnumerable<object>;
 
-                        var ValidationFailure = attribute.Error(this, property.GetValue(requestParameters), property.PropertyType);
+                        if (collection != null) {
+                            foreach (var item in collection) {
+                                InternalValidate(item, requestType, result, processed);
+                            }
+                        }
+                        else {
+                            InternalValidate(value, requestType, result, processed);
+                        }
+
+                        var ValidationFailure = attribute.Error(this, value, property.PropertyType);
                         if (ValidationFailure != null) {
                             result.AddError(property.Name, ValidationFailure);
                         }
