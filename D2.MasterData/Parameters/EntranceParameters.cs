@@ -9,9 +9,6 @@ namespace D2.MasterData.Parameters
     {
         public Guid Id { get; set; }
 
-        [NotNullOrEmpty(RequestType.Put, RequestType.Post, RequestType.Patch)]
-        public string UserKey { get; set; }
-
         [NotNullOrEmpty]
         public string Title { get; set; }
 

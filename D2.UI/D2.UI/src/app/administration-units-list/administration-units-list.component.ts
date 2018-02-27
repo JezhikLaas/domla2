@@ -21,7 +21,7 @@ export class AdministrationUnitsListComponent implements OnInit {
     new MenuItem('Neu', () => this.router.navigate(['editAdministrationUnit/0'])),
     new MenuItem('Bearbeiten', () => console.log('Edit'))
   ];
-  displayedColumns = ['select', 'userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
+  displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<AdministrationUnit>;
   initialSelection = [];
   allowMultiSelect = true;
@@ -38,17 +38,5 @@ export class AdministrationUnitsListComponent implements OnInit {
     this.units.listAdministrationUnits(result => {
       this.dataSource = new MatTableDataSource<AdministrationUnit>(result);
     });
-  }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 }

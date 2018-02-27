@@ -49,6 +49,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import {AdministrationUnitService} from './shared/administration-unit.service';
 
 @NgModule({
   exports: [
@@ -110,6 +111,7 @@ export class UiMaterialModule {}
     ErrorDialogComponent,
     ConfirmDialogComponent,
     AccountService,
+    AdministrationUnitService,
     StorageService,
     MenuDisplayService,
     CookieService,

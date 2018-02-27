@@ -1,8 +1,8 @@
-import { Address } from './address';
+import {Entrance} from './entrance';
 
 export interface AdministrationUnit {
   id: string;
   userKey: string;
   title: string;
-  address: Address;
+  entrances: Entrance[];
 }
