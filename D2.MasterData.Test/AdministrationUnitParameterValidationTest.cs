@@ -121,7 +121,7 @@ namespace D2.MasterData.Test
 
             var result = validator.Validate(parameters, RequestType.Put);
             Assert.False(result.IsValid);
-            Assert.Equal(5, result.Errors.Count());
+            Assert.Equal(4, result.Errors.Count());
         }
     }
 }
