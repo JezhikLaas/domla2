@@ -14,7 +14,7 @@ namespace D2.MasterData
             try {
                 var logConfig = Path.Combine(Directory.GetCurrentDirectory(), "nlog.config");
                 if (File.Exists(logConfig)) {
-                    var logger = NLogBuilder.ConfigureNLog(logConfig).GetCurrentClassLogger();
+                    var logger = NLog.LogManager.LoadConfiguration(logConfig).GetCurrentClassLogger();
                     logger.Info("logging configured");
                 }
                 BuildWebHost(args).Run();

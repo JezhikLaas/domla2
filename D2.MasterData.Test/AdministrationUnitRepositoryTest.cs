@@ -4,26 +4,56 @@ using D2.MasterData.Repositories.Implementation;
 using D2.MasterData.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.Sqlite;
 
 namespace D2.MasterData.Test
 {
-    public class AdministrationUnitRepositoryTest
+    public class AdministrationUnitRepositoryTest : IDisposable
     {
-        DbContextOptions<MasterDataContext> _options;
+        DbContextOptions<TestContext> _options;
+        SqliteConnection _connection;
+
+        public class TestContext : MasterDataContext
+        {
+            public TestContext(DbContextOptions<TestContext> options)
+                : base(options)
+            { }
+
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                OnCommonModelCreating(modelBuilder);
+            }
+        }
 
         public AdministrationUnitRepositoryTest()
         {
-            _options = new DbContextOptionsBuilder<MasterDataContext>()
-                .UseInMemoryDatabase(databaseName: "RepositoryTest")
+            _connection = new SqliteConnection("Data Source=:memory:");
+            _connection.Open();
+
+            _options = new DbContextOptionsBuilder<TestContext>()
+                .UseSqlite(_connection)
                 .Options;
         }
 
-        MasterDataContext GetContext()
+        public void Dispose()
         {
-            return new MasterDataContext(_options);
+            Dispose(true);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (disposing) {
+                _connection.Dispose();
+            }
+        }
+
+        TestContext GetContext()
+        {
+            var result = new TestContext(_options);
+            result.Database.EnsureCreated();
+            return result;
         }
 
         [Fact(DisplayName = "AdministrationUnitRepository can insert AdministrationUnit")]
@@ -63,8 +93,8 @@ namespace D2.MasterData.Test
                 var stored = repository.List();
 
                 Assert.Collection(stored, u => Assert.Equal("03", u.UserKey));
+                Assert.Collection(stored, u => Assert.Collection(u.Entrances, e => Assert.Equal("Eingang 49", e.Title)));
             }
-
         }
     }
 }

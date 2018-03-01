@@ -10,12 +10,17 @@ namespace D2.MasterData.Infrastructure
         public MasterDataContext()
         { }
 
+        public MasterDataContext(DbContextOptions options)
+            : base(options)
+        { }
+
         public MasterDataContext(DbContextOptions<MasterDataContext> options)
             : base(options)
         { }
 
         public DbSet<AdministrationUnit> AdministrationUnits { get; set; }
         public DbSet<Entrance> Entrances { get; set; }
+        public DbSet<SubUnit> SubUnits { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,16 +39,44 @@ namespace D2.MasterData.Infrastructure
             }
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected virtual void OnCommonModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Entity<AdministrationUnit>();
+                .Entity<AdministrationUnit>()
+                .Property(unit => unit.Edit)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder
                 .Entity<Entrance>()
-                    .OwnsOne(
-                        entrance => entrance.Address)
-                        .OwnsOne(address => address.Country);
+                .OwnsOne(entrance => entrance.Address)
+                    .OwnsOne(address => address.Country);
+
+            modelBuilder
+                .Entity<Entrance>()
+                .Property(unit => unit.Edit)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder
+                .Entity<SubUnit>()
+                .Property(unit => unit.Edit)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            OnCommonModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<AdministrationUnit>()
+                .ForNpgsqlUseXminAsConcurrencyToken();
+
+            modelBuilder
+                .Entity<Entrance>()
+                .ForNpgsqlUseXminAsConcurrencyToken();
+
+            modelBuilder
+                .Entity<SubUnit>()
+                .ForNpgsqlUseXminAsConcurrencyToken();
         }
     }
 }

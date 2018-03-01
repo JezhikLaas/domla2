@@ -1,6 +1,7 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using D2.MasterData.Parameters;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,18 +20,16 @@ namespace D2.MasterData.Repositories.Implementation
 
         public void Insert(AdministrationUnit item)
         {
-            item.Id = Guid.NewGuid();
             _connection.Add(item);
             _connection.SaveChanges();
         }
 
         public IEnumerable<AdministrationUnit> List()
         {
-            var result = _connection
-                .AdministrationUnits
-                .OrderBy(unit => unit.UserKey)
-                .ToList();
-            return result;
+            var result = from unit in _connection.AdministrationUnits.Include(unit => unit.Entrances)
+                         orderby unit.UserKey
+                         select unit;
+            return result.ToList();
         }
     }
 }

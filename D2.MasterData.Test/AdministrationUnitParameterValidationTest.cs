@@ -55,7 +55,8 @@ namespace D2.MasterData.Test
                             }
                         }
                     }
-                }
+                },
+                Title = "Eingang1"
             };
 
             var validator = new ParameterValidator();
@@ -65,12 +66,27 @@ namespace D2.MasterData.Test
             Assert.Equal(2, result.Errors.Count());
         }
 
-        [Fact(DisplayName = "Validation of AdministrationUnitParameters for post succeeds w/o address")]
-        public void Validation_of_AdministrationUnitParameters_for_post_succeeds_wo_address()
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters for post succeeds w/o YearOfConstuction")]
+        public void Validation_of_AdministrationUnitParameters_for_post_succeeds_wo_YearOfConstuction()
         {
             var parameters = new AdministrationUnitParameters {
                 Title = "ABC",
-                UserKey = "02"
+                UserKey = "02",
+                Entrances = new List<EntranceParameters> {
+                    new EntranceParameters {
+                        Address = new AddressParameters {
+                            City = "H",
+                            Country = new CountryInfoParameters
+                            {
+                                Iso2 = "DE",
+                                Name = "Deutschland",
+                                Iso3 = "DEU"
+                            }
+                        },
+                        Title = "Eingang1"
+                    }
+                },
+
             };
 
             var validator = new ParameterValidator();

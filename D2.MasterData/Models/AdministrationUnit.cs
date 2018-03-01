@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace D2.MasterData.Models
 {
-    public class AdministrationUnit
+    public class AdministrationUnit : BaseModel
     {
         AdministrationUnit()
         { }
@@ -17,14 +16,10 @@ namespace D2.MasterData.Models
             Id = argument.Id;
             UserKey = argument.UserKey;
             Title = argument.Title;
-            Entrances = new List<Entrance>(argument.Entrances.Select(etr => new Entrance(etr)));
-        }
-
-        [Key]
-        public Guid Id
-        {
-            get;
-            internal set;
+            var items = from entranceParameter in argument.Entrances
+                        select new Entrance(entranceParameter, this);
+            Entrances = new List<Entrance>(items);
+            YearOfConstuction = argument.YearOfConstuction;
         }
 
         [Required]
@@ -42,13 +37,14 @@ namespace D2.MasterData.Models
             private set;
         }
 
-        public Guid EntranceID 
+        [Required]
+        public List<Entrance> Entrances
         {
             get;
-            set;
+            private set;
         }
 
-        public List<Entrance> Entrances
+        public DateTime? YearOfConstuction
         {
             get;
             private set;

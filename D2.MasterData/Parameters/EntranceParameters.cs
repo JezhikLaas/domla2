@@ -2,6 +2,7 @@
 using D2.MasterData.Infrastructure.Validation;
 using D2.MasterData.Models;
 using System;
+using System.Collections.Generic;
 
 namespace D2.MasterData.Parameters
 {
@@ -14,6 +15,8 @@ namespace D2.MasterData.Parameters
 
         [NotNullOrEmpty(RequestType.Put)]
         public AddressParameters Address { get; set; }
+
+        public List<SubUnitParameters> SubUnits { get; set; }
 
     }
 }

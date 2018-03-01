@@ -18,10 +18,12 @@ namespace D2.MasterData
         {
             Configuration = configuration;
 
-            if (ServiceRegistration.registerSelf(logger) == false) {
+          /*
+           *if (ServiceRegistration.registerSelf(logger) == false) {
                 logger.LogCritical("failed to register self");
                 throw new InvalidOperationException("failed to register self");
             }
+          */
         }
 
         public IConfiguration Configuration { get; }
