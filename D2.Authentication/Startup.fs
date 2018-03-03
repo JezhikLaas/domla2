@@ -31,10 +31,6 @@ type Startup private () =
             Port = connectionInfo.Port;
         }
         
-        let setupStorage = Storage.storages.setupStorage connectionOptions;
-
-        setupStorage.initialize () |> Async.RunSynchronously
-
         let persistedGrantStore = Storage.storages.persistedGrantStorage connectionOptions
         let resourceStore = Storage.storages.resourceStorage connectionOptions
         let clientStore = Storage.storages.clientStorage connectionOptions

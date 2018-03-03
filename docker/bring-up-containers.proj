@@ -1,0 +1,15 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="BuildImages">
+    <Exec Command="docker build -t postgres.dev -f postgresql.dev.dockerfile ." />
+  </Target>
+  
+  <Target Name="BringUpContainers" DependsOnTargets="BuildImages">
+    <Exec Command="docker run --name postgres --restart unless-stopped -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres.dev" />
+  </Target>
+  
+  <Target Name="Build" DependsOnTargets="BringUpContainers" />
+  <Target Name="TearDown">
+    <Exec Command="docker stop postgres" />
+    <Exec Command="docker rm postgres" />
+  </Target>
+</Project>

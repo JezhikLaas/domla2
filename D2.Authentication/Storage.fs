@@ -3,7 +3,6 @@
 module Storage =
 
     let storages = {
-        setupStorage = SetupData.access;
         persistedGrantStorage = PersistedGrantData.access;
         resourceStorage = ResourceData.access;
         clientStorage = ClientData.access;

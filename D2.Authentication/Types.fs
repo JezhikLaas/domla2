@@ -237,7 +237,6 @@ type UserStorage = {
 }
 
 type Storages = {
-    setupStorage : ConnectionOptions -> SetupStorage
     persistedGrantStorage : ConnectionOptions -> PersistedGrantStorage
     resourceStorage : ConnectionOptions -> ResourceStorage
     clientStorage : ConnectionOptions -> ClientStorage

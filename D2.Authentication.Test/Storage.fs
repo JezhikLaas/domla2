@@ -18,9 +18,6 @@ module StorageTest =
             Port = 5433;
         }
         
-        let setupStorage = Storage.storages.setupStorage connectionOptions;
-        setupStorage.initialize () |> Async.RunSynchronously
-        
         Storage.storages.userStorage connectionOptions
 
     [<Test>]

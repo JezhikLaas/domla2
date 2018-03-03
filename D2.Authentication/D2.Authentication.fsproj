@@ -30,7 +30,6 @@
     <Compile Include="ClientData.fs" />
     <Compile Include="PersistedGrantData.fs" />
     <Compile Include="ResourceData.fs" />
-    <Compile Include="SetupData.fs" />
     <Compile Include="UserData.fs" />
     <Compile Include="Storage.fs" />
     <Compile Include="Controllers\AccountService.fs" />
