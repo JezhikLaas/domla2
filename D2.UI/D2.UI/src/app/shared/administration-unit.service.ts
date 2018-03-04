@@ -12,10 +12,10 @@ export class AdministrationUnitService {
   ) { }
 
   listAdministrationUnits(result: (units: AdministrationUnit[]) => void) {
-    return this.accountService.fetchService('adminstrationunits')
+    this.accountService.fetchService('administrationunits')
       .subscribe(info => {
-        const endPoint = info.endPoints.find(ep => ep.name === 'list_administrationunits');
-        this.http.get<AdministrationUnit[]>(`${info.baseUrl}${endPoint.uri}`)
+        const endPoint = info.EndPoints.find(ep => ep.Name === 'list_administrationunits');
+        this.http.get<AdministrationUnit[]>(`${info.BaseUrl}${endPoint.Uri}`)
           .subscribe(list => result(list));
       });
   }

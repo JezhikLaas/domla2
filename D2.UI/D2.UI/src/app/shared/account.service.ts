@@ -16,16 +16,16 @@ interface BrokerUrl {
 }
 
 interface EndPointInfo {
-  name: string;
-  uri: string;
+  Name: string;
+  Uri: string;
 }
 
 interface ServiceInfo {
-  name: string;
-  baseUrl: string;
-  version: number;
-  patch: number;
-  endPoints: EndPointInfo[];
+  Name: string;
+  BaseUrl: string;
+  Version: number;
+  Patch: number;
+  EndPoints: EndPointInfo[];
 }
 
 @Injectable()

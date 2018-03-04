@@ -116,7 +116,7 @@ address	{"Name": "address", "Enabled": true, "Required": false, "Emphasize": tru
 \.
 
 COPY users (id, login, first_name, last_name, title, salutation, email, claims, password, logged_in) FROM stdin;
-0d7e5c06-6a16-4126-b854-ca29cf622044	admin	\N	<unknown>	\N	\N	<unknown>	[{"Type": "role", "Value": "admin", "Issuer": "LOCAL AUTHORITY", "Subject": null, "ValueType": "http://www.w3.org/2001/XMLSchema#string", "Properties": {}, "OriginalIssuer": "LOCAL AUTHORITY"}, {"Type": "name", "Value": "admin", "Issuer": "LOCAL AUTHORITY", "Subject": null, "ValueType": "http://www.w3.org/2001/XMLSchema#string", "Properties": {}, "OriginalIssuer": "LOCAL AUTHORITY"}, {"Type": "id", "Value": "a4ed96cf0a5e485fa57453f2b1b11454", "Issuer": "LOCAL AUTHORITY", "Subject": null, "ValueType": "http://www.w3.org/2001/XMLSchema#string", "Properties": {}, "OriginalIssuer": "LOCAL AUTHORITY"}]	$2a$10$0aNeUUZKGm4FHI2mUYRdIe0UNyhPMbbFtTs62kvw5kCE1363TqbK.	\N
+0d7e5c06-6a16-4126-b854-ca29cf622044	admin	\N	<unknown>	\N	\N	<unknown>	[{"Type": "role", "Value": "admin", "Issuer": "LOCAL AUTHORITY", "Subject": null, "ValueType": "http://www.w3.org/2001/XMLSchema#string", "Properties": {}, "OriginalIssuer": "LOCAL AUTHORITY"}, {"Type": "name", "Value": "admin", "Issuer": "LOCAL AUTHORITY", "Subject": null, "ValueType": "http://www.w3.org/2001/XMLSchema#string", "Properties": {}, "OriginalIssuer": "LOCAL AUTHORITY"}, {"Type": "id", "Value": "a4ed96cf0a5e485fa57453f2b1b11454", "Issuer": "LOCAL AUTHORITY", "Subject": null, "ValueType": "http://www.w3.org/2001/XMLSchema#string", "Properties": {}, "OriginalIssuer": "LOCAL AUTHORITY"}]	\$2a\$10\$0aNeUUZKGm4FHI2mUYRdIe0UNyhPMbbFtTs62kvw5kCE1363TqbK.	\N
 \.
 
 EOSQL

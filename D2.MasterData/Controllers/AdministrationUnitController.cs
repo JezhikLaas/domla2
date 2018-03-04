@@ -44,7 +44,7 @@ namespace D2.MasterData.Controllers
             return StatusCode(StatusCodes.Status422UnprocessableEntity);
         }
 
-        [HttpPost("list")]
+        [HttpGet("list")]
         public IActionResult Get()
         {
             return Json(_administrationUnitFacade.ListAdministrationUnits());

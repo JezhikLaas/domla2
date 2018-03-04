@@ -18,14 +18,13 @@ import {AdministrationUnitService} from '../shared/administration-unit.service';
 })
 export class AdministrationUnitsListComponent implements OnInit {
   MenuButtons = [
-    new MenuItem('Neu', () => this.router.navigate(['editAdministrationUnit/0'])),
-    new MenuItem('Bearbeiten', () => console.log('Edit'))
+    new MenuItem('Neu', () => this.router.navigate(['editAdministrationUnit/0']), () => true),
+    new MenuItem('Bearbeiten', () => console.log('Edit'), () => false)
   ];
   displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<AdministrationUnit>;
   initialSelection = [];
   allowMultiSelect = true;
-  selection = new SelectionModel<AdministrationUnit>(this.allowMultiSelect, this.initialSelection);
 
   constructor(
     private menuDisplay: MenuDisplayService,

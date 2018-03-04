@@ -9,6 +9,11 @@ using System;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Logging;
+using D2.MasterData.Facades;
+using D2.MasterData.Facades.Implementation;
+using D2.MasterData.Repositories;
+using D2.MasterData.Repositories.Implementation;
+using Newtonsoft.Json;
 
 namespace D2.MasterData
 {
@@ -18,21 +23,30 @@ namespace D2.MasterData
         {
             Configuration = configuration;
 
-          /*
-           *if (ServiceRegistration.registerSelf(logger) == false) {
+           if (ServiceRegistration.registerSelf(logger) == false) {
                 logger.LogCritical("failed to register self");
                 throw new InvalidOperationException("failed to register self");
             }
-          */
         }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IDbConnection>(provider => ConnectionFactory.CreateConnection());
-            services.AddMvc();
+            services
+                .AddSingleton<IParameterValidator, ParameterValidator>()
+                .AddScoped<IDbConnection>(provider => ConnectionFactory.CreateConnection())
+                .AddScoped<IAdministrationUnitFacade, AdministrationUnitFacade>()
+                .AddScoped<IAdministrationUnitRepository, AdministrationUnitRepository>()
+                .AddScoped<MasterDataContext>(provider => new MasterDataContext())
+                .AddMvc()
+                .AddJsonOptions(options => {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services
                 .AddCors(
                     options => options.AddPolicy(
@@ -72,9 +86,9 @@ namespace D2.MasterData
             }
 
             app
-                .UseMvc()
                 .UseCors("default")
-                .UseAuthentication();
+                .UseAuthentication()
+                .UseMvc();
         }
     }
 }

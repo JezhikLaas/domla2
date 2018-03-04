@@ -13,8 +13,8 @@ import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.co
 
 export class AdministrationUnitEditComponent implements OnInit {
   MenuButtons = [
-    new MenuItem('Speichern', () => console.log('Save')),
-    new MenuItem('Schließen', () => this.doCancel())
+    new MenuItem('Speichern', () => console.log('Save'), () => false),
+    new MenuItem('Schließen', () => this.doCancel(), () => true)
   ];
   editForm: FormGroup;
 
