@@ -1,10 +1,12 @@
 ﻿using D2.Common;
+using D2.MasterData.Infrastructure.IoC;
 using D2.MasterData.Models;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace D2.MasterData.Infrastructure
 {
+    [RequestScope]
     public class MasterDataContext : DbContext
     {
         public MasterDataContext()

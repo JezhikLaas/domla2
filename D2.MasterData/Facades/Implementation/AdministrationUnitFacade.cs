@@ -1,14 +1,12 @@
-﻿using D2.MasterData.Models;
+﻿using D2.MasterData.Infrastructure.IoC;
+using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
-using FluentValidation.Results;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace D2.MasterData.Facades.Implementation
 {
+    [RequestScope]
     public class AdministrationUnitFacade : IAdministrationUnitFacade
     {
         private IAdministrationUnitRepository _repository;

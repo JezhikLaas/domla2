@@ -1,19 +1,15 @@
 ﻿using D2.Common;
-using D2.MasterData.Infrastructure;
+using D2.MasterData.Infrastructure.IoC;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
-using System;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Logging;
-using D2.MasterData.Facades;
-using D2.MasterData.Facades.Implementation;
-using D2.MasterData.Repositories;
-using D2.MasterData.Repositories.Implementation;
 using Newtonsoft.Json;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace D2.MasterData
 {
@@ -34,20 +30,18 @@ namespace D2.MasterData
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddSingleton<IParameterValidator, ParameterValidator>()
-                .AddScoped<IDbConnection>(provider => ConnectionFactory.CreateConnection())
-                .AddScoped<IAdministrationUnitFacade, AdministrationUnitFacade>()
-                .AddScoped<IAdministrationUnitRepository, AdministrationUnitRepository>()
-                .AddScoped<MasterDataContext>(provider => new MasterDataContext())
                 .AddMvc()
                 .AddJsonOptions(options => {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+                .AddRequestScopingMiddleware(() => Scope.BeginScope())
+                .AddCustomControllerActivation(DependencyResolver.Resolve)
+                .AddCustomViewComponentActivation(DependencyResolver.Resolve)
                 .AddCors(
                     options => options.AddPolicy(
                                            "default",
@@ -67,7 +61,8 @@ namespace D2.MasterData
                         options.EnableCaching = true;
                         options.CacheDuration = TimeSpan.FromMinutes(10.0);
                     }
-                );
+                )
+                ;
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -86,6 +81,7 @@ namespace D2.MasterData
             }
 
             app
+                .RegisterApplicationComponents()
                 .UseCors("default")
                 .UseAuthentication()
                 .UseMvc();

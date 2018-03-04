@@ -1,14 +1,13 @@
 ﻿using D2.MasterData.Infrastructure;
+using D2.MasterData.Infrastructure.IoC;
 using D2.MasterData.Models;
-using D2.MasterData.Parameters;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace D2.MasterData.Repositories.Implementation
 {
+    [RequestScope]
     public class AdministrationUnitRepository : IAdministrationUnitRepository
     {
         MasterDataContext _connection;

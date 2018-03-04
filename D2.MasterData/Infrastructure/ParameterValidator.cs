@@ -1,10 +1,11 @@
-﻿using D2.MasterData.Infrastructure.Validation;
-using System.Collections;
+﻿using D2.MasterData.Infrastructure.IoC;
+using D2.MasterData.Infrastructure.Validation;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace D2.MasterData.Infrastructure
 {
+    [Singleton]
     public class ParameterValidator : IParameterValidator
     {
         public ValidationResult Validate(object requestParameters, RequestType requestType)
