@@ -3,6 +3,7 @@
 module ServiceConnection =
     open RabbitMQ.Client
     open System
+    open System.Text
 
     type ServiceConnector (queue : string) as this =
         
@@ -33,5 +34,11 @@ module ServiceConnection =
                 this.Dispose true
         
         member this.Post (message : string) =
-            ()
+            let data = Encoding.UTF8.GetBytes message
+            this.Channel.BasicPublish (
+                exchange = "",
+                routingKey = "hello",
+                basicProperties = null,
+                body = data
+            )
 

@@ -95,8 +95,8 @@ namespace D2.MasterData.Test
             Assert.True(result.IsValid);
         }
 
-        [Fact(DisplayName = "Validation of AdministrationUnitParameters for put fails w/o address")]
-        public void Validation_of_AdministrationUnitParameters_for_put_fails_wo_address()
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters for put fails w/o entrance")]
+        public void Validation_of_AdministrationUnitParameters_for_put_fails_wo_entrance()
         {
             var parameters = new AdministrationUnitParameters {
                 Title = "ABC",
@@ -106,6 +106,21 @@ namespace D2.MasterData.Test
             var validator = new ParameterValidator();
 
             var result = validator.Validate(parameters, RequestType.Put);
+            Assert.False(result.IsValid);
+            Assert.Single(result.Errors);
+        }
+
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters for post fails w/o entrance")]
+        public void Validation_of_AdministrationUnitParameters_for_post_fails_wo_entrance()
+        {
+            var parameters = new AdministrationUnitParameters {
+                Title = "ABC",
+                UserKey = "02"
+            };
+
+            var validator = new ParameterValidator();
+
+            var result = validator.Validate(parameters, RequestType.Post);
             Assert.False(result.IsValid);
             Assert.Single(result.Errors);
         }
