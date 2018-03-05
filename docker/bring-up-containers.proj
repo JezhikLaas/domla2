@@ -5,7 +5,7 @@
   
   <Target Name="BringUpContainers" DependsOnTargets="BuildImages">
     <Exec Command="docker run --name postgres --restart unless-stopped -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres.dev" />
-    <Exec Command="docker run -d --hostname rabbit -p 15672:15672 -p 5672:5672 --restart unless-stopped --name rabbit rabbitmq:3-management" />
+    <Exec Command="docker run -d --hostname rabbit -p 15672:15672 -p 5672:5672 --restart unless-stopped -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin --name rabbit rabbitmq:3-management" />
   </Target>
   
   <Target Name="Build" DependsOnTargets="BringUpContainers" />
