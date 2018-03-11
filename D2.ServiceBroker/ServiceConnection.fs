@@ -25,8 +25,9 @@ module ServiceConnection =
         member val Channel : IModel = null with get, set
 
         member this.Dispose (disposing : bool) =
-            if this.Connection <> null then this.Connection.Dispose ()
-            if this.Channel <> null then this.Channel.Dispose ()
+            if disposing then
+                if not (isNull this.Connection) then this.Connection.Dispose ()
+                if not (isNull this.Channel) then this.Channel.Dispose ()
             ()
 
         interface IDisposable with
@@ -41,4 +42,3 @@ module ServiceConnection =
                 basicProperties = null,
                 body = data
             )
-

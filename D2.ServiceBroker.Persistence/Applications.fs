@@ -38,7 +38,7 @@ module Applications =
             use connection = Connection.client ()
             use command = connection.CreateCommand()
             command.CommandText <- """SELECT
-                                          name, version, patch, route
+                                          name, version, patch, route, tag
                                       FROM
                                           services
                                       WHERE application_name = :name AND application_version = :version"""
@@ -47,7 +47,6 @@ module Applications =
             command.Parameters.AddWithValue("version", version) |> ignore
 
             use! services = command.ExecuteReaderAsync() |> Async.AwaitTask
-            let result = new List<Service>()
         
             return seq {
                 while services.Read() do
@@ -55,6 +54,7 @@ module Applications =
                         new ServiceI(
                             Name = services.GetString(0),
                             BaseUrl = services.GetString(3),
+                            Group = services.GetString(4),
                             Version = services.GetInt32(1),
                             Patch = services.GetInt32(2),
                             EndPoints = []
@@ -99,7 +99,7 @@ module Applications =
             use command = connection.CreateCommand()
 
             command.CommandText <- """SELECT
-                                          version, patch, route, endpoints
+                                          version, patch, route, endpoints, tag
                                       FROM
                                           services
                                       WHERE
@@ -121,6 +121,7 @@ module Applications =
                            new ServiceI(
                                Name = service,
                                BaseUrl = reader.GetString(2),
+                               Group = reader.GetString(4),
                                Version = reader.GetInt32(0),
                                Patch = reader.GetInt32(1),
                                EndPoints = JsonConvert.DeserializeObject<EndPointI list>(reader.GetString(3))
@@ -164,6 +165,7 @@ module Applications =
                                               application_name,
                                               application_version,
                                               name,
+                                              tag,
                                               version,
                                               patch,
                                               route,
@@ -173,13 +175,14 @@ module Applications =
                                           :application_name,
                                           :application_version,
                                           :name,
+                                          :tag,
                                           :version,
                                           :patch,
                                           :route,
                                           :endpoints
                                       )
                                       ON CONFLICT
-                                          (application_name, application_version, name, version)
+                                          (application_name, application_version, tag, name, version)
                                       DO UPDATE SET
                                           patch = EXCLUDED.patch, route = EXCLUDED.route, endpoints = EXCLUDED.endpoints"""
                
@@ -192,6 +195,7 @@ module Applications =
             command.Parameters.AddWithValue("application_name", fst target) |> ignore
             command.Parameters.AddWithValue("application_version", snd target) |> ignore
             command.Parameters.AddWithValue("name", service.Name.ToLowerInvariant()) |> ignore
+            command.Parameters.AddWithValue("tag", service.Group.ToLowerInvariant()) |> ignore
             command.Parameters.AddWithValue("version", service.Version) |> ignore
             command.Parameters.AddWithValue("patch", service.Patch) |> ignore
             command.Parameters.AddWithValue("route", service.BaseUrl) |> ignore

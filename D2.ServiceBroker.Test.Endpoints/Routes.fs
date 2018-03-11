@@ -10,9 +10,6 @@ open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.TestHost
 open System
 open System.Collections.Generic
-open System.Linq
-open Microsoft.Extensions.Configuration
-open System.Text
 open System.Net.Http
 
 [<TestFixture>]
@@ -27,6 +24,7 @@ module RoutesTest =
                         new Service with
                         member this.Name = "xxx"
                         member this.BaseUrl = "http://base"
+                        member this.Group = "test"
                         member this.Version = 1
                         member this.Patch = 0
                         member this.EndPoints = []
@@ -60,6 +58,7 @@ module RoutesTest =
     type ServiceI() =
         member val Name = String.Empty with get, set
         member val BaseUrl = String.Empty with get, set
+        member val Group = String.Empty with get, set
         member val Version = 0 with get, set
         member val Patch = 0 with get, set
         member val EndPoints = List.empty<EndPointI> with get, set
@@ -67,6 +66,7 @@ module RoutesTest =
         interface Service with
             member this.Name with get() = this.Name
             member this.BaseUrl with get() = this.BaseUrl
+            member this.Group with get() = this.BaseUrl
             member this.Version with get() = this.Version
             member this.Patch with get() = this.Patch
             member this.EndPoints with get() = this.EndPoints |> List.map(fun e -> e :> EndPoint)
@@ -140,6 +140,7 @@ module RoutesTest =
         let service = ServiceI(
                           Name = "Test",
                           BaseUrl = "http://localhost:2300",
+                          Group = "test",
                           Version = 1,
                           Patch = 0,
                           EndPoints = []
@@ -157,6 +158,7 @@ module RoutesTest =
         let service = ServiceI(
                           Name = "Test",
                           BaseUrl = "http://localhost:2300",
+                          Group = "test",
                           Version = 1,
                           Patch = 0,
                           EndPoints = [
@@ -177,6 +179,7 @@ module RoutesTest =
         let service = ServiceI(
                           Name = "Test",
                           BaseUrl = "http://localhost:2300",
+                          Group = "test",
                           Version = 1,
                           Patch = 0,
                           EndPoints = [
@@ -201,6 +204,7 @@ module RoutesTest =
                                                      text
                                                  )
         answer.BaseUrl |> should equal "http://localhost:2300"
+        answer.Group |> should equal "test"
         answer.EndPoints.Length |> should equal 1
         answer.EndPoints.[0].Name |> should equal endpoint.Name
         answer.EndPoints.[0].Uri |> should equal endpoint.Uri

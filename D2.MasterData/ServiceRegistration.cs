@@ -20,6 +20,7 @@ namespace D2.MasterData
         {
             public string Name => "administrationunits";
             public string BaseUrl => ServiceConfiguration.configuration.Hosting.First().FullAddress;
+            public string Group => "md";
             public int Version => ServiceConfiguration.versionInfo.Version;
             public int Patch => ServiceConfiguration.versionInfo.Patch;
             public EndPoint[] EndPoints => new[] {

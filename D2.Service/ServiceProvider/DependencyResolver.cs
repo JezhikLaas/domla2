@@ -1,20 +1,37 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using System;
 using System.Data;
+using System.Reflection;
 
-namespace D2.MasterData.Infrastructure.IoC
+namespace D2.Service
 {
     public static class DependencyResolver
     {
         static IKernel _kernel;
 
-        internal static IApplicationBuilder RegisterApplicationComponents(this IApplicationBuilder app)
+        static public void RegisterApplicationComponents(params Assembly[] bindingSources)
         {
             _kernel = new StandardKernel();
 
+            _kernel.Bind(
+                x => x.FromThisAssembly()
+                      .SelectAllClasses()
+                      .InheritedFrom(typeof(BaseController))
+                      .Join
+                      .From(bindingSources)
+                      .SelectAllClasses()
+                      .InheritedFrom(typeof(BaseController))
+                      .BindBase()
+                      .Configure((b, c) => {
+                          var name = c.Name;
+                          if (name.EndsWith("Controller")) name = name.Remove(name.Length - "Controller".Length);
+                          b.Named(name);
+                      })
+            );
+            
+
+            /*/
             // Register application services
             foreach (var ctrlType in app.GetControllerTypes()) {
                 _kernel.Bind(ctrlType).ToSelf().InScope(Scope.RequestScope);
@@ -54,11 +71,7 @@ namespace D2.MasterData.Infrastructure.IoC
             _kernel.BindToMethod<IDbConnection>(ConnectionFactory.CreateConnection);
 
             return app;
-        }
-
-        static internal object Resolve(Type type)
-        {
-            return _kernel.Get(type);
+            */
         }
 
         static internal T Resolve<T>()

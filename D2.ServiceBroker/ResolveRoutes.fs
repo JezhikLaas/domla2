@@ -41,6 +41,7 @@ module ResolveRoutes =
     type ServiceI() =
         member val Name = String.Empty with get, set
         member val BaseUrl = String.Empty with get, set
+        member val Group = String.Empty with get, set
         member val Version = 0 with get, set
         member val Patch = 0 with get, set
         member val EndPoints = List.empty<EndPointI> with get, set
@@ -48,6 +49,7 @@ module ResolveRoutes =
         interface Service with
             member this.Name with get() = this.Name
             member this.BaseUrl with get() = this.BaseUrl
+            member this.Group with get() = this.Group
             member this.Version with get() = this.Version
             member this.Patch with get() = this.Patch
             member this.EndPoints with get() = this.EndPoints |> List.map(fun e -> e :> EndPoint)
