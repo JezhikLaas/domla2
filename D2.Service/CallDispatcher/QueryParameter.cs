@@ -1,4 +1,4 @@
-namespace D2.Service
+namespace D2.Service.CallDispatcher
 {
     public class QueryParameter
     {

@@ -1,8 +1,8 @@
 using System;
 
-namespace D2.Service.ServiceProvider
+namespace D2.Service.Controller
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public sealed class RoutingAttribute : Attribute
     {
         readonly string _action;

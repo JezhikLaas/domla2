@@ -1,31 +1,43 @@
+using D2.Service.Controller;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using System;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 
-namespace D2.Service
+namespace D2.Service.ServiceProvider
 {
     public static class DependencyResolver
     {
         static IKernel _kernel;
 
-        static public void RegisterApplicationComponents(params Assembly[] bindingSources)
+        static public void RegisterApplicationComponents(Assembly bindingSource, params Assembly[] bindingSources)
         {
             _kernel = new StandardKernel();
+            var sources = new Assembly[] { bindingSource }.Concat(bindingSources);
 
             _kernel.Bind(
-                x => x.FromThisAssembly()
+                x => x.From(sources)
                       .SelectAllClasses()
                       .InheritedFrom(typeof(BaseController))
-                      .Join
-                      .From(bindingSources)
-                      .SelectAllClasses()
-                      .InheritedFrom(typeof(BaseController))
+                      .WithoutAttribute<TopicAttribute>()
                       .BindBase()
                       .Configure((b, c) => {
                           var name = c.Name;
                           if (name.EndsWith("Controller")) name = name.Remove(name.Length - "Controller".Length);
+                          b.Named(name);
+                      })
+            );
+
+            _kernel.Bind(
+                x => x.From(sources)
+                      .SelectAllClasses()
+                      .InheritedFrom(typeof(BaseController))
+                      .WithAttribute<TopicAttribute>()
+                      .BindBase()
+                      .Configure((b, c) => {
+                          var name = c.GetCustomAttribute<TopicAttribute>().Topic;
                           b.Named(name);
                       })
             );

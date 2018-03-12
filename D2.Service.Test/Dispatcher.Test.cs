@@ -1,4 +1,6 @@
 using D2.Service;
+using D2.Service.CallDispatcher;
+using D2.Service.Controller;
 using D2.Service.ServiceProvider;
 using Newtonsoft.Json;
 using System;
@@ -35,7 +37,17 @@ namespace D2.Service.Test
                 return $"{first} {second}!";
             }
         }
-    
+
+        [Topic("Test")]
+        public class AttributedController : BaseController
+        {
+            [Routing("method")]
+            public string CallReturnsString()
+            {
+                return "Hello world!";
+            }
+        }
+
         public DispatcherTest()
         {
             DependencyResolver.RegisterApplicationComponents(Assembly.GetExecutingAssembly());
@@ -88,6 +100,12 @@ namespace D2.Service.Test
 
             Assert.Equal("Hello world!", Dispatcher.Call("Simple", "CallTakingParameters", null, parametersOne));
             Assert.Equal("Goodbye Hamburg!", Dispatcher.Call("Simple", "CallTakingParameters", null, parametersTwo));
+        }
+        
+        [Fact(DisplayName = "Execute a simple call returning a string from attributes")]
+        public void Execute_a_simple_call_returning_a_string_from_attributes()
+        {
+            Assert.Equal("Hello world!", Dispatcher.Call("Test", "method", null, new QueryParameter[0]));
         }
     }
 }

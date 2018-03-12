@@ -1,3 +1,4 @@
+using D2.Service.Controller;
 using D2.Service.ServiceProvider;
 using Newtonsoft.Json;
 using Ninject;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace D2.Service
+namespace D2.Service.CallDispatcher
 {
     public static class Dispatcher
     {
