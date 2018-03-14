@@ -9,24 +9,26 @@ using System.Reflection;
 
 namespace D2.Service.CallDispatcher
 {
-    public static class Dispatcher
+    public class Dispatcher
     {
-        static Dictionary<string, Func<string, IEnumerable<QueryParameter>, object>> _callCache;
+        Dictionary<string, Func<string, IEnumerable<QueryParameter>, object>> _callCache;
+        DependencyResolver _dependencyResolver;
 
-        static Dispatcher()
+        public Dispatcher(DependencyResolver dependencyResolver)
         {
+            _dependencyResolver = dependencyResolver;
             _callCache = new Dictionary<string, Func<string, IEnumerable<QueryParameter>, object>>();
         }
 
-        static public object Call(string topic, string action, string body, IEnumerable<QueryParameter> arguments)
+        public object Call(string topic, string action, string body, IEnumerable<QueryParameter> arguments)
         {
-            var controller = DependencyResolver.ResolveNamed<BaseController>(topic);
+            var controller = _dependencyResolver.ResolveNamed<BaseController>(topic);
             var call = GetCall(controller, action, body, arguments);
 
             return call(body, arguments);
         }
 
-        static Func<string, IEnumerable<QueryParameter>, object> GetCall(BaseController controller, string action, string body, IEnumerable<QueryParameter> arguments)
+        Func<string, IEnumerable<QueryParameter>, object> GetCall(BaseController controller, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var key = $"{controller.GetType().FullName}_{action}_{string.Join("_", arguments.Select(arg => arg.Name))}";
             lock (_callCache) {

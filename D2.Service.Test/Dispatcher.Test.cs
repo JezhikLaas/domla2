@@ -48,21 +48,27 @@ namespace D2.Service.Test
             }
         }
 
+        DependencyResolver _dependencyResolver;
+        Dispatcher _dispatcher;
+
         public DispatcherTest()
         {
-            DependencyResolver.RegisterApplicationComponents(Assembly.GetExecutingAssembly());
+            _dependencyResolver = new DependencyResolver();
+            _dependencyResolver.RegisterApplicationComponents(Assembly.GetExecutingAssembly());
+
+            _dispatcher = new Dispatcher(_dependencyResolver);
         }
         
         [Fact(DisplayName = "Execute a simple call returning a string")]
         public void Execute_a_simple_call_returning_a_string()
         {
-            Assert.Equal("Hello world!", Dispatcher.Call("Simple", "CallReturnsString", null, new QueryParameter[0]));
+            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "CallReturnsString", null, new QueryParameter[0]));
         }
         
         [Fact(DisplayName = "Execute a simple call returning void")]
         public void Execute_a_simple_call_returning_void()
         {
-            Assert.Null(Dispatcher.Call("Simple", "CallReturnsVoid", null, new QueryParameter[0]));
+            Assert.Null(_dispatcher.Call("Simple", "CallReturnsVoid", null, new QueryParameter[0]));
         }
         
         [Fact(DisplayName = "Execute a call with a FromBody parameter")]
@@ -71,7 +77,7 @@ namespace D2.Service.Test
             var parameter = new TestParameter { ValueOne = 1, ValueTwo = "Eins" };
             var parameterString = JsonConvert.SerializeObject(parameter);
 
-            Assert.Equal("Eins", Dispatcher.Call("Simple", "CallTakingObject", parameterString, new QueryParameter[0]));
+            Assert.Equal("Eins", _dispatcher.Call("Simple", "CallTakingObject", parameterString, new QueryParameter[0]));
         }
         
         [Fact(DisplayName = "Execute a call with parameters")]
@@ -82,7 +88,7 @@ namespace D2.Service.Test
                 new QueryParameter { Name = "second", Value = "world" }
             };
 
-            Assert.Equal("Hello world!", Dispatcher.Call("Simple", "CallTakingParameters", null, parameters));
+            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "CallTakingParameters", null, parameters));
         }
         
         [Fact(DisplayName = "Execute a call with different parameters yields different results")]
@@ -98,14 +104,14 @@ namespace D2.Service.Test
                 new QueryParameter { Name = "second", Value = "Hamburg" }
             };
 
-            Assert.Equal("Hello world!", Dispatcher.Call("Simple", "CallTakingParameters", null, parametersOne));
-            Assert.Equal("Goodbye Hamburg!", Dispatcher.Call("Simple", "CallTakingParameters", null, parametersTwo));
+            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "CallTakingParameters", null, parametersOne));
+            Assert.Equal("Goodbye Hamburg!", _dispatcher.Call("Simple", "CallTakingParameters", null, parametersTwo));
         }
         
         [Fact(DisplayName = "Execute a simple call returning a string from attributes")]
         public void Execute_a_simple_call_returning_a_string_from_attributes()
         {
-            Assert.Equal("Hello world!", Dispatcher.Call("Test", "method", null, new QueryParameter[0]));
+            Assert.Equal("Hello world!", _dispatcher.Call("Test", "method", null, new QueryParameter[0]));
         }
     }
 }

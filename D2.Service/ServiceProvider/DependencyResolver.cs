@@ -8,16 +8,30 @@ using System.Reflection;
 
 namespace D2.Service.ServiceProvider
 {
-    public static class DependencyResolver
+    public interface IServices
     {
-        static IKernel _kernel;
+        IServices Add<TInterface, TImplementation>(TImplementation instance)
+                  where TImplementation : TInterface;
+        IServices Add<TInterface, TImplementation>()
+                  where TImplementation : TInterface;
+    }
 
-        static public void RegisterApplicationComponents(Assembly bindingSource, params Assembly[] bindingSources)
+    public class DependencyResolver : IServices
+    {
+        internal IKernel Kernel
         {
-            _kernel = new StandardKernel();
+            get;
+            private set;
+        }
+
+        public void RegisterApplicationComponents(Assembly bindingSource, params Assembly[] bindingSources)
+        {
+            if (Kernel != null) throw new InvalidOperationException("already initialized");
+
+            Kernel = new StandardKernel();
             var sources = new Assembly[] { bindingSource }.Concat(bindingSources);
 
-            _kernel.Bind(
+            Kernel.Bind(
                 x => x.From(sources)
                       .SelectAllClasses()
                       .InheritedFrom(typeof(BaseController))
@@ -30,7 +44,7 @@ namespace D2.Service.ServiceProvider
                       })
             );
 
-            _kernel.Bind(
+            Kernel.Bind(
                 x => x.From(sources)
                       .SelectAllClasses()
                       .InheritedFrom(typeof(BaseController))
@@ -86,14 +100,38 @@ namespace D2.Service.ServiceProvider
             */
         }
 
-        static internal T Resolve<T>()
+        internal T Resolve<T>()
         {
-            return _kernel.Get<T>();
+            return Kernel.Get<T>();
         }
 
-        static internal T ResolveNamed<T>(string name)
+        internal T ResolveNamed<T>(string name)
         {
-            return _kernel.Get<T>(name);
+            return Kernel.Get<T>(name);
+        }
+
+        internal object Resolve(Type clazz)
+        {
+            return Kernel.Get(clazz);
+        }
+
+        internal object ResolveNamed(Type clazz, string name)
+        {
+            return Kernel.Get(clazz, name);
+        }
+
+        public IServices Add<TInterface, TImplementation>(TImplementation instance)
+                         where TImplementation: TInterface
+        {
+            Kernel.Bind<TInterface>().ToConstant(instance);
+            return this;
+        }
+
+        public IServices Add<TInterface, TImplementation>()
+                         where TImplementation : TInterface
+        {
+            Kernel.Bind<TInterface>().To<TImplementation>();
+            return this;
         }
     }
 }
