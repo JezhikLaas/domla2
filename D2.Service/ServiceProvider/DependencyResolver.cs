@@ -10,10 +10,11 @@ namespace D2.Service.ServiceProvider
 {
     public interface IServices
     {
-        IServices Add<TInterface, TImplementation>(TImplementation instance)
+        IServices AddSingleton<TInterface, TImplementation>(TImplementation instance)
                   where TImplementation : TInterface;
         IServices Add<TInterface, TImplementation>()
                   where TImplementation : TInterface;
+        IServices AddControllers();
     }
 
     public class DependencyResolver : IServices
@@ -120,17 +121,32 @@ namespace D2.Service.ServiceProvider
             return Kernel.Get(clazz, name);
         }
 
-        public IServices Add<TInterface, TImplementation>(TImplementation instance)
-                         where TImplementation: TInterface
+        public IServices Add<TInterface, TImplementation>()
+                         where TImplementation : TInterface
+        {
+            Kernel.Bind<TInterface>().To<TImplementation>();
+            return this;
+        }
+
+        public IServices AddSingleton<TInterface, TImplementation>(TImplementation instance)
+                         where TImplementation : TInterface
         {
             Kernel.Bind<TInterface>().ToConstant(instance);
             return this;
         }
 
-        public IServices Add<TInterface, TImplementation>()
+        public IServices AddSingleton<TInterface, TImplementation>()
                          where TImplementation : TInterface
         {
-            Kernel.Bind<TInterface>().To<TImplementation>();
+            Kernel.Bind<TInterface>()
+                .To<TImplementation>()
+                .InSingletonScope();
+            return this;
+        }
+
+        public IServices AddControllers()
+        {
+            RegisterApplicationComponents(Assembly.GetCallingAssembly());
             return this;
         }
     }

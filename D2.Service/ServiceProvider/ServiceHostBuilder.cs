@@ -36,10 +36,10 @@ namespace D2.Service.ServiceProvider
 
             var startup = _dependencyResolver.Kernel.Get(_startupType);
 
-            var configureServices = _startupType.GetMethod("ConfigureServices", new[] { typeof(IKernel) });
-            if (configureServices == null) throw new MissingMethodException("Startup has to provide a ConfigureServices method, taking a Ninject.IKernel as parameter");
+            var configureServices = _startupType.GetMethod("ConfigureServices", new[] { typeof(IServices) });
+            if (configureServices == null) throw new MissingMethodException("Startup has to provide a ConfigureServices method, taking an IServices as parameter");
 
-            configureServices.Invoke(startup, new[] { _dependencyResolver.Kernel });
+            configureServices.Invoke(startup, new[] { _dependencyResolver });
 
             var configure = _startupType.GetMethod("Configure");
             if (configure == null) throw new MissingMethodException("Startup has to provide a Configure method");
