@@ -1,6 +1,6 @@
 ﻿module D2
 {
-    module ServiceBroker
+    module Service
     {
         module Contracts
         {

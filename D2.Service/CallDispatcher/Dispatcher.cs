@@ -28,6 +28,14 @@ namespace D2.Service.CallDispatcher
             return call(body, arguments);
         }
 
+        public object PreCallCheck(string topic, string action, string body, IEnumerable<QueryParameter> arguments)
+        {
+            var controller = _dependencyResolver.ResolveNamed<BaseController>(topic);
+            var call = GetCall(controller, action, body, arguments);
+
+            return call(body, arguments);
+        }
+
         Func<string, IEnumerable<QueryParameter>, object> GetCall(BaseController controller, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var key = $"{controller.GetType().FullName}_{action}_{string.Join("_", arguments.Select(arg => arg.Name))}";

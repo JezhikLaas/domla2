@@ -12,4 +12,7 @@
     <PackageReference Include="zeroc.ice.net" Version="3.7.1-beta1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\D2.Service.Contracts\D2.Service.Contracts.csproj" />
+  </ItemGroup>
 </Project>

@@ -5,17 +5,10 @@ using Ninject;
 using NLog.Extensions.Logging;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace D2.Service.ServiceProvider
 {
-    public class Service : Application
-    {
-        public override int run(string[] args)
-        {
-            //Service.communicator().
-            return 0;
-        }
-    }
 
     public class ServiceHost : IServiceHost
     {
@@ -60,8 +53,17 @@ namespace D2.Service.ServiceProvider
 
         public void Run()
         {
-            InitializationData initializationData = new InitializationData();
-            var service = new Service();
+            var initializationData = new InitializationData();
+            initializationData.logger = new IceLogger(_dependencyResolver.Resolve<ILogger<IceLogger>>());
+
+            var configuration = _dependencyResolver.Resolve<IConfiguration>();
+            var iceSection = configuration.GetSection("Ice");
+
+            foreach (var pair in iceSection.AsEnumerable().Where(kvp => kvp.Value != null)) {
+                initializationData.properties.setProperty(pair.Key.Substring(4).Replace(':', '.'), pair.Value);
+            }
+            
+            var service = new IceService(_dependencyResolver);
             service.main(Environment.GetCommandLineArgs(), initializationData);
         }
     }
