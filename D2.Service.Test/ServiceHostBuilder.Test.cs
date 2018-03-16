@@ -1,4 +1,5 @@
-﻿using D2.Service.ServiceProvider;
+﻿using D2.Service.Controller;
+using D2.Service.ServiceProvider;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,28 @@ namespace D2.Service.Test
 {
     public class ServiceHostBuilderTest
     {
+        public class WorkingController : BaseController
+        {
+            public string Add(string firstWord, string secondWord)
+            {
+                return $"{firstWord} {secondWord}";
+            }
+        }
+
+        public class Startup
+        {
+            public void ConfigureServices(IServices services)
+            {
+                services.AddControllers();
+            }
+
+            public void Configure(IServices services)
+            {
+                var controller = (WorkingController)services.ResolveNamed<BaseController>("Working");
+                if (controller.Add("hello", "world") != "hello world") throw new Exception("controller does not work");
+            }
+        }
+
         public class MinimalStartup
         {
             public void ConfigureServices(IServices services)
@@ -101,6 +124,27 @@ namespace D2.Service.Test
             var host = ServiceHost
                 .CreateDefaultBuilder()
                 .UseStartup<StartupWithConfigureParameters>()
+                .Build();
+            Assert.NotNull(host);
+        }
+        
+        [Fact(DisplayName = "Controllers can be registered automatically")]
+        public void Controllers_can_be_registered_automatically()
+        {
+            var host = ServiceHost
+                .CreateDefaultBuilder()
+                .UseStartup<Startup>()
+                .Build();
+            Assert.NotNull(host);
+        }
+        
+        [Fact(DisplayName = "Configuration can be modified")]
+        public void Configuration_can_be_modified()
+        {
+            var host = ServiceHost
+                .CreateDefaultBuilder()
+                .UseStartup<Startup>()
+                .UseConfiguration(builder => builder.AddInMemoryCollection(new[] { KeyValuePair.Create("one", "1") }))
                 .Build();
             Assert.NotNull(host);
         }

@@ -22,23 +22,13 @@ namespace D2.Service.ServiceProvider
         static public IServiceHostBuilder CreateDefaultBuilder()
         {
             var dependencyResolver = new DependencyResolver();
-            SetupConfiguration(dependencyResolver);
             SetupLogging(dependencyResolver);
 
             var result = new ServiceHostBuilder(dependencyResolver);
             dependencyResolver.Kernel.Bind<IServiceHostBuilder>().ToConstant(result);
+            dependencyResolver.Kernel.Bind<IServices>().ToConstant(dependencyResolver);
 
             return result;
-        }
-
-        static void SetupConfiguration(DependencyResolver dependencyResolver)
-        {
-            var builder = new ConfigurationBuilder()
-                            .SetBasePath(Directory.GetCurrentDirectory())
-                            .AddJsonFile("appsettings.json", true)
-                            .AddEnvironmentVariables();
-
-            dependencyResolver.Kernel.Bind<IConfiguration>().ToConstant(builder.Build());
         }
 
         static void SetupLogging(DependencyResolver dependencyResolver)

@@ -1,12 +1,15 @@
+using Microsoft.Extensions.Configuration;
 using Ninject;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace D2.Service.ServiceProvider
 {
     public interface IServiceHostBuilder
     {
         IServiceHostBuilder UseStartup<T>();
+        IServiceHostBuilder UseConfiguration(Action<IConfigurationBuilder> options);
         IServiceHost Build();
     }
 
@@ -14,6 +17,8 @@ namespace D2.Service.ServiceProvider
     {
         DependencyResolver _dependencyResolver;
         Type _startupType;
+
+        Action<IConfigurationBuilder> _configurationOptions;
 
         internal ServiceHostBuilder(DependencyResolver dependencyResolver)
         {
@@ -30,9 +35,29 @@ namespace D2.Service.ServiceProvider
             return this;
         }
 
+        public IServiceHostBuilder UseConfiguration(Action<IConfigurationBuilder> options)
+        {
+            _configurationOptions = options;
+            return this;
+        }
+
+        void SetupConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                            .SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("appsettings.json", true)
+                            .AddEnvironmentVariables();
+
+            if (_configurationOptions != null) _configurationOptions(builder);
+
+            _dependencyResolver.Kernel.Bind<IConfiguration>().ToConstant(builder.Build());
+        }
+
         public IServiceHost Build()
         {
             if (_startupType == null) throw new InvalidOperationException("startup type has not been set, invoke 'UseStartup'");
+
+            SetupConfiguration();
 
             var startup = _dependencyResolver.Kernel.Get(_startupType);
 

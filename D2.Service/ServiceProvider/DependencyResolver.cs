@@ -14,6 +14,10 @@ namespace D2.Service.ServiceProvider
         IServices Add<TInterface, TImplementation>()
                   where TImplementation : TInterface;
         IServices AddControllers();
+        T ResolveNamed<T>(string name);
+        object ResolveNamed(Type clazz, string name);
+        T Resolve<T>();
+        object Resolve(Type clazz);
     }
 
     public class DependencyResolver : IServices
@@ -102,22 +106,22 @@ namespace D2.Service.ServiceProvider
             */
         }
 
-        internal T Resolve<T>()
+        public T Resolve<T>()
         {
             return Kernel.Get<T>();
         }
 
-        internal T ResolveNamed<T>(string name)
+        public T ResolveNamed<T>(string name)
         {
             return Kernel.Get<T>(name);
         }
 
-        internal object Resolve(Type clazz)
+        public object Resolve(Type clazz)
         {
             return Kernel.Get(clazz);
         }
 
-        internal object ResolveNamed(Type clazz, string name)
+        public object ResolveNamed(Type clazz, string name)
         {
             return Kernel.Get(clazz, name);
         }
