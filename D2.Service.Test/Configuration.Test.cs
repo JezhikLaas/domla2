@@ -7,7 +7,7 @@ namespace D2.Service.Test
 {
     public class ConfigurationTest
     {
-        [Fact]
+        [Fact(DisplayName = "Enumerate nested configuration")]
         public void Enumerate_nested_configuration()
         {
             var dict = new Dictionary<string, string>

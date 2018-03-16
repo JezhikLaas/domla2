@@ -48,7 +48,8 @@ namespace D2.Service.ServiceProvider
 
             var factory = dependencyResolver.Kernel.Get<ILoggerFactory>();
             factory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
-            factory.ConfigureNLog("nlog.config");
+
+            if (File.Exists("nlog.config")) factory.ConfigureNLog("nlog.config");
         }
 
         public void Run()

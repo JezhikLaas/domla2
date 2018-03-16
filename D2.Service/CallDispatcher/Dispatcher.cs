@@ -31,7 +31,7 @@ namespace D2.Service.CallDispatcher
         public object PreCallCheck(string topic, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var controller = _dependencyResolver.ResolveNamed<BaseController>(topic);
-            var call = GetCall(controller, action, body, arguments);
+            var call = GetCall(controller, "Validate_" + action, body, arguments);
 
             return call(body, arguments);
         }

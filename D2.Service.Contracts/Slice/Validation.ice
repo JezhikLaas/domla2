@@ -12,22 +12,32 @@
                     string description;
                 };
 
+				struct Parameter
+				{
+					string name;
+					string value;
+				};
+
                 sequence<Error> Errors;
+                sequence<Parameter> Parameters;
             }
             
             module Validation
             {
+				enum State { NoError = 0, ExternalFailure, InternalFailure }
+
                 struct ValidationResponse
                 {
-                    bool isOk;
+                    State result;
                     Common::Errors errors;
                 };
 
                 struct ValidationRequest
                 {
-                    string verb;
-                    string endpoint;
+                    string topic;
+                    string action;
                     string json;
+					Common::Parameters parameters;
                 };
 
                 interface Validator

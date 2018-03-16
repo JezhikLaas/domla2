@@ -10,8 +10,7 @@ namespace D2.Service.ServiceProvider
 {
     public interface IServices
     {
-        IServices AddSingleton<TInterface, TImplementation>(TImplementation instance)
-                  where TImplementation : TInterface;
+        IServices AddSingleton<TInterface>(TInterface instance);
         IServices Add<TInterface, TImplementation>()
                   where TImplementation : TInterface;
         IServices AddControllers();
@@ -19,6 +18,11 @@ namespace D2.Service.ServiceProvider
 
     public class DependencyResolver : IServices
     {
+        public DependencyResolver()
+        {
+            Kernel = new StandardKernel();
+        }
+
         internal IKernel Kernel
         {
             get;
@@ -27,9 +31,6 @@ namespace D2.Service.ServiceProvider
 
         public void RegisterApplicationComponents(Assembly bindingSource, params Assembly[] bindingSources)
         {
-            if (Kernel != null) throw new InvalidOperationException("already initialized");
-
-            Kernel = new StandardKernel();
             var sources = new Assembly[] { bindingSource }.Concat(bindingSources);
 
             Kernel.Bind(
@@ -128,8 +129,7 @@ namespace D2.Service.ServiceProvider
             return this;
         }
 
-        public IServices AddSingleton<TInterface, TImplementation>(TImplementation instance)
-                         where TImplementation : TInterface
+        public IServices AddSingleton<TInterface>(TInterface instance)
         {
             Kernel.Bind<TInterface>().ToConstant(instance);
             return this;
