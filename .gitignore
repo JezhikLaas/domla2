@@ -295,3 +295,4 @@ __pycache__/
 /D2.UI/wwwroot
 /D2.UserManagement/wwwroot
 D2.ServiceBroker.Contracts/generated
+D2.Service.Contracts/generated/SliceCompile.Validation.d
