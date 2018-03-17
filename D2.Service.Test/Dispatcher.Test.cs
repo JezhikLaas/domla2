@@ -1,6 +1,7 @@
 using D2.Service;
 using D2.Service.CallDispatcher;
 using D2.Service.Controller;
+using D2.Service.IoC;
 using D2.Service.ServiceProvider;
 using Newtonsoft.Json;
 using System;

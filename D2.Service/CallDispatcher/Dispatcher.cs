@@ -1,7 +1,6 @@
 using D2.Service.Controller;
-using D2.Service.ServiceProvider;
+using D2.Service.IoC;
 using Newtonsoft.Json;
-using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;

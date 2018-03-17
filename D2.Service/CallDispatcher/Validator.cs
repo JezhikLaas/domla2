@@ -1,7 +1,9 @@
 using D2.Service.Contracts.Common;
 using D2.Service.Contracts.Validation;
+using D2.Service.IoC;
 using Ice;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Linq;
 
 namespace D2.Service.CallDispatcher
@@ -17,7 +19,22 @@ namespace D2.Service.CallDispatcher
             _dispatcher = dispatcher;
         }
 
-        public override ValidationResponse validate(ValidationRequest request, Current current = null)
+        public override ValidationResponse validate(Contracts.Common.Request request, Current current = null)
+        {
+            var clock = new Stopwatch();
+            ValidationResponse result = null;
+
+            clock.Start();
+            using (Scope.BeginScope()) {
+                result = InternalValidate(request, current);
+            }
+            clock.Stop();
+
+            _logger.LogDebug($"validated {request.topic}::{request.action} in {clock.ElapsedMilliseconds} msec");
+            return result;
+        }
+
+        ValidationResponse InternalValidate(Contracts.Common.Request request, Current current)
         {
             _logger.LogDebug($"start validation request for {request.topic}::{request.action}");
             _logger.LogTrace($"with body {request.json ?? "<NONE>"} and {request.parameters}");

@@ -1,4 +1,5 @@
 using D2.Service.CallDispatcher;
+using D2.Service.IoC;
 using Ice;
 using Microsoft.Extensions.Logging;
 using System;
@@ -32,12 +33,15 @@ namespace D2.Service.ServiceProvider
         public int Run(Action enterIdle)
         {
             try {
-                var validator = _communicator.createObjectAdapter("Validator");
-                validator.add(
+                var adapter = _communicator.createObjectAdapter("Dispatcher");
+                adapter.add(
                     new Validator(_dependencyResolver.Resolve<ILogger<Validator>>(), _dispatcher),
                     Util.stringToIdentity("Validator"));
+                adapter.add(
+                    new Executor(_dependencyResolver.Resolve<ILogger<Executor>>(), _dispatcher),
+                    Util.stringToIdentity("Executor"));
 
-                validator.activate();
+                adapter.activate();
 
                 enterIdle();
                 _communicator.waitForShutdown();

@@ -2,11 +2,10 @@ using D2.Service.Controller;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using System;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 
-namespace D2.Service.ServiceProvider
+namespace D2.Service.IoC
 {
     public interface IServices
     {
@@ -61,49 +60,33 @@ namespace D2.Service.ServiceProvider
                           b.Named(name);
                       })
             );
-            
 
-            /*/
-            // Register application services
-            foreach (var ctrlType in app.GetControllerTypes()) {
-                _kernel.Bind(ctrlType).ToSelf().InScope(Scope.RequestScope);
-            }
 
             // This is where our bindings are configurated
-            _kernel.Bind(
-                x => x.FromThisAssembly()
+            Kernel.Bind(
+                x => x.From(sources)
                       .SelectAllClasses()
-                      .WithAttribute<Singleton>()
+                      .WithAttribute<SingletonAttribute>()
                       .BindAllInterfaces()
                       .Configure(
                            b => b.InSingletonScope()
                        )
             );
-            _kernel.Bind(
-                x => x.FromThisAssembly()
+            Kernel.Bind(
+                x => x.From(sources)
                       .SelectAllClasses()
-                      .WithAttribute<RequestScope>()
+                      .WithAttribute<RequestScopeAttribute>()
                       .BindAllInterfaces()
                       .Configure(
                            b => b.InScope(Scope.RequestScope)
                        )
             );
-            _kernel.Bind(
-                x => x.FromThisAssembly()
+            Kernel.Bind(
+                x => x.From(sources)
                       .SelectAllClasses()
-                      .WithoutAttribute<RequestScope>()
-                      .WithoutAttribute<Singleton>()
+                      .WithoutAttribute<TransientAttribute>()
                       .BindAllInterfaces()
             );
-
-            // Cross-wire required framework services
-            _kernel.BindToMethod(app.GetRequestService<IViewBufferScope>);
-
-            // Use factory pattern for connections
-            _kernel.BindToMethod<IDbConnection>(ConnectionFactory.CreateConnection);
-
-            return app;
-            */
         }
 
         public T Resolve<T>()

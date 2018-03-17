@@ -1,4 +1,5 @@
 ﻿using D2.Service.Controller;
+using D2.Service.IoC;
 using D2.Service.ServiceProvider;
 using Microsoft.Extensions.Configuration;
 using System;

@@ -20,6 +20,14 @@
 
                 sequence<Error> Errors;
                 sequence<Parameter> Parameters;
+                
+				struct Request
+                {
+                    string topic;
+                    string action;
+                    string json;
+					Common::Parameters parameters;
+                };
             }
             
             module Validation
@@ -32,19 +40,26 @@
                     Common::Errors errors;
                 };
 
-                struct ValidationRequest
-                {
-                    string topic;
-                    string action;
-                    string json;
-					Common::Parameters parameters;
-                };
-
                 interface Validator
                 {
-                    ValidationResponse validate(ValidationRequest request);
+                    ValidationResponse validate(Common::Request request);
                 };
             }
+
+			module Execution
+			{
+				struct ExecutionResponse
+                {
+                    int code;
+					string json;
+                    Common::Errors errors;
+                };
+
+				interface Executor
+				{
+					ExecutionResponse execute(Common::Request request);
+				};
+			}
         }
     }
 }

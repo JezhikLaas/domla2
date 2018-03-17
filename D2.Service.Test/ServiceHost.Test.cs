@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using D2.Service.Contracts.Common;
+using D2.Service.Contracts.Execution;
 using D2.Service.Contracts.Validation;
 using D2.Service.Controller;
+using D2.Service.IoC;
 using D2.Service.ServiceProvider;
 using Microsoft.Extensions.Configuration;
 using Xunit;
@@ -32,9 +34,13 @@ namespace D2.Service.Test
                 );
             }
 
-            public string Add(string firstWord, string secondWord)
+            public ExecutionResponse Add(string firstWord, string secondWord)
             {
-                return $"{firstWord} {secondWord}";
+                return new ExecutionResponse(
+                    0,
+                    $"{firstWord} {secondWord}",
+                    null
+                );
             }
         }
 
@@ -61,17 +67,39 @@ namespace D2.Service.Test
                     if (validator == null) throw new ApplicationException("invalid proxy");
 
                     var result = validator.validate(
-                        new ValidationRequest(
+                        new Request(
                             "Add",
                             "Add",
                             null,
                             new[] {
                             new Parameter("firstWord", "Hello"),
                             new Parameter("secondWord", "world!")
-                            })
+                        })
                     );
 
                     return result.result == State.NoError;
+                }
+            }
+
+            public string RunExecution()
+            {
+                using (var communicator = Ice.Util.initialize()) {
+                    Ice.ObjectPrx obj = communicator.stringToProxy("Executor:default -h 127.0.0.1 -p 10000");
+                    ExecutorPrx executor = ExecutorPrxHelper.uncheckedCast(obj);
+                    if (executor == null) throw new ApplicationException("invalid proxy");
+
+                    var result = executor.execute(
+                        new Request(
+                            "Add",
+                            "Add",
+                            null,
+                            new[] {
+                            new Parameter("firstWord", "Hello"),
+                            new Parameter("secondWord", "world!")
+                        })
+                    );
+
+                    return result.json;
                 }
             }
         }
@@ -80,7 +108,7 @@ namespace D2.Service.Test
         public void Service_can_be_started_and_stopped()
         {
             var configuration = new Dictionary<string, string> {
-                { "Ice:Validator:Endpoints", "tcp -h 127.0.0.1 -p 9999" }
+                { "Ice:Dispatcher:Endpoints", "tcp -h 127.0.0.1 -p 9999" }
             };
             var host = ServiceHost
                 .CreateDefaultBuilder()
@@ -104,7 +132,7 @@ namespace D2.Service.Test
         public void Service_can_be_used()
         {
             var configuration = new Dictionary<string, string> {
-                { "Ice:Validator:Endpoints", "tcp -h 127.0.0.1 -p 10000" }
+                { "Ice:Dispatcher:Endpoints", "tcp -h 127.0.0.1 -p 10000" }
             };
             var host = ServiceHost
                 .CreateDefaultBuilder()
@@ -123,6 +151,7 @@ namespace D2.Service.Test
                 Thread.Sleep(100);
                 var client = new TestClient();
                 Assert.True(client.RunValidation());
+                Assert.Equal("Hello world!", client.RunExecution());
             }
             finally {
                 service.Shutdown();

@@ -19,6 +19,7 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.0-rc3" />
     <PackageReference Include="Npgsql" Version="3.2.6" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.1" />
+    <PackageReference Include="zeroc.ice.net" Version="3.7.1-beta1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
+    <ProjectReference Include="..\D2.Service.Contracts\D2.Service.Contracts.csproj" />
+    <ProjectReference Include="..\D2.Service\D2.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

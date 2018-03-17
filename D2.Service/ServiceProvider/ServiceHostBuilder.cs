@@ -1,3 +1,4 @@
+using D2.Service.IoC;
 using Microsoft.Extensions.Configuration;
 using Ninject;
 using System;

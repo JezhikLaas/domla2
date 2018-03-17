@@ -1,3 +1,4 @@
+using D2.Service.IoC;
 using Ice;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
