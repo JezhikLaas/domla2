@@ -14,6 +14,12 @@ namespace D2.Service.ServiceProvider
     {
         DependencyResolver _dependencyResolver;
 
+        public bool ServiceReady
+        {
+            get;
+            private set;
+        }
+
         internal ServiceHost(DependencyResolver dependencyResolver)
         {
             _dependencyResolver = dependencyResolver;
@@ -42,6 +48,11 @@ namespace D2.Service.ServiceProvider
             if (File.Exists("nlog.config")) factory.ConfigureNLog("nlog.config");
         }
 
+        public T Resolve<T>()
+        {
+            return _dependencyResolver.Resolve<T>();
+        }
+
         public void Run()
         {
             var initializationData = new InitializationData();
@@ -49,13 +60,15 @@ namespace D2.Service.ServiceProvider
 
             var configuration = _dependencyResolver.Resolve<IConfiguration>();
             var iceSection = configuration.GetSection("Ice");
+            initializationData.properties = Util.createProperties();
 
             foreach (var pair in iceSection.AsEnumerable().Where(kvp => kvp.Value != null)) {
                 initializationData.properties.setProperty(pair.Key.Substring(4).Replace(':', '.'), pair.Value);
             }
-            
-            var service = new IceService(_dependencyResolver);
-            service.main(Environment.GetCommandLineArgs(), initializationData);
+
+            using (var service = new IceService(_dependencyResolver, Environment.GetCommandLineArgs(), initializationData)) {
+                service.Run(() => ServiceReady = true);
+            }
         }
     }
 }

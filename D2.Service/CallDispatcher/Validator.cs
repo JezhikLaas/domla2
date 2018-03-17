@@ -30,6 +30,8 @@ namespace D2.Service.CallDispatcher
                         Name = parameter.name,
                         Value = parameter.value
                     }).ToList());
+
+                return (ValidationResponse)result;
             }
             catch (Exception error) {
                 _logger.LogError(error, $"validation of {request.topic}::{request.action} failed");
@@ -38,7 +40,6 @@ namespace D2.Service.CallDispatcher
                     errors = new[] { new Error { property = "Exception", description = error.Message } }
                 };
             }
-            throw new System.NotImplementedException();
         }
     }
 }
