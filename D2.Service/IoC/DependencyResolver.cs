@@ -12,6 +12,7 @@ namespace D2.Service.IoC
         IServices AddSingleton<TInterface>(TInterface instance);
         IServices Add<TInterface, TImplementation>()
                   where TImplementation : TInterface;
+        IServices AddMethod<TInterface>(Func<IServices, TInterface> factory);
         IServices AddControllers();
         T ResolveNamed<T>(string name);
         object ResolveNamed(Type clazz, string name);
@@ -128,6 +129,12 @@ namespace D2.Service.IoC
             Kernel.Bind<TInterface>()
                 .To<TImplementation>()
                 .InSingletonScope();
+            return this;
+        }
+
+        public IServices AddMethod<TInterface>(Func<IServices, TInterface> factory)
+        {
+            Kernel.Bind<TInterface>().ToMethod(context => factory(this));
             return this;
         }
 

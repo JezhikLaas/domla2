@@ -1,5 +1,5 @@
-﻿using D2.MasterData.Infrastructure.IoC;
-using D2.MasterData.Infrastructure.Validation;
+﻿using D2.MasterData.Infrastructure.Validation;
+using D2.Service.IoC;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,6 +1,6 @@
 ﻿using D2.MasterData.Infrastructure;
-using D2.MasterData.Infrastructure.IoC;
 using D2.MasterData.Models;
+using D2.Service.IoC;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
