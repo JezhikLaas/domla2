@@ -18,7 +18,7 @@ namespace D2.Service.Test
     {
         public class AddController : BaseController
         {
-            public ValidationResponse Validate_Add(string firstWord, string secondWord)
+            public ValidationResponse PostValidate_Add(string firstWord, string secondWord)
             {
                 var errors = new List<Error>();
                 if (firstWord == null) {
@@ -34,7 +34,7 @@ namespace D2.Service.Test
                 );
             }
 
-            public ExecutionResponse Add(string firstWord, string secondWord)
+            public ExecutionResponse PostAdd(string firstWord, string secondWord)
             {
                 return new ExecutionResponse(
                     0,
@@ -69,6 +69,7 @@ namespace D2.Service.Test
                     var result = validator.validate(
                         new Request(
                             "Add",
+                            "Post",
                             "Add",
                             null,
                             new[] {
@@ -91,6 +92,7 @@ namespace D2.Service.Test
                     var result = executor.execute(
                         new Request(
                             "Add",
+                            "Post",
                             "Add",
                             null,
                             new[] {

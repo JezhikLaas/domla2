@@ -1,6 +1,9 @@
 ﻿namespace D2.ServiceBroker
 
 module ServiceConnection =
+    open D2.Service.Contracts.Common
+    open D2.Service.Contracts.Execution
+    open D2.Service.Contracts.Validation
     open RabbitMQ.Client
     open System
     open System.Text

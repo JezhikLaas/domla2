@@ -19,23 +19,23 @@ namespace D2.Service.CallDispatcher
             _callCache = new Dictionary<string, Func<string, IEnumerable<QueryParameter>, object>>();
         }
 
-        public object Call(string topic, string action, string body, IEnumerable<QueryParameter> arguments)
+        public object Call(string topic, string verb, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var controller = _dependencyResolver.ResolveNamed<BaseController>(topic);
-            var call = GetCall(controller, action, body, arguments);
+            var call = GetCall(controller, verb, action, body, arguments);
 
             return call(body, arguments);
         }
 
-        public object PreCallCheck(string topic, string action, string body, IEnumerable<QueryParameter> arguments)
+        public object PreCallCheck(string topic, string verb, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var controller = _dependencyResolver.ResolveNamed<BaseController>(topic);
-            var call = GetCall(controller, "Validate_" + action, body, arguments);
+            var call = GetCall(controller, verb, "Validate_" + action, body, arguments);
 
             return call(body, arguments);
         }
 
-        Func<string, IEnumerable<QueryParameter>, object> GetCall(BaseController controller, string action, string body, IEnumerable<QueryParameter> arguments)
+        Func<string, IEnumerable<QueryParameter>, object> GetCall(BaseController controller, string verb, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var key = $"{controller.GetType().FullName}_{action}_{string.Join("_", arguments.Select(arg => arg.Name))}";
             lock (_callCache) {
@@ -43,7 +43,7 @@ namespace D2.Service.CallDispatcher
 
                 if (_callCache.TryGetValue(key, out result)) return result;
 
-                var target = FindCallTarget(controller.GetType(), action, body, arguments);
+                var target = FindCallTarget(controller.GetType(), verb, action, body, arguments);
                 if (target == null) throw new MissingMethodException($"Matching method for {action} not found");
 
                 result = (extra, parameters) => {
@@ -67,18 +67,20 @@ namespace D2.Service.CallDispatcher
             }
         }
 
-        static MethodInfo FindCallTarget(Type controller, string action, string body, IEnumerable<QueryParameter> arguments)
+        static MethodInfo FindCallTarget(Type controller, string verb, string action, string body, IEnumerable<QueryParameter> arguments)
         {
             var annotatedMethods = from info in controller.GetMethods()
                                    where info.GetCustomAttributes(false).OfType<RoutingAttribute>().Any()
                                          &&
                                          info.GetCustomAttributes(false).OfType<RoutingAttribute>().First().Action == action
+                                         &&
+                                         info.GetCustomAttributes(false).OfType<RoutingAttribute>().First().Verb == verb
                                    select info;
 
             var automaticMethods = from info in controller.GetMethods()
                                    where info.GetCustomAttributes(false).OfType<RoutingAttribute>().Any() == false
                                          &&
-                                         info.Name == action
+                                         info.Name == verb + action
                                    select info;
 
             var candidates = annotatedMethods.Concat(automaticMethods).ToList();

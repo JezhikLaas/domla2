@@ -20,20 +20,20 @@ namespace D2.Service.Test
 
         public class SimpleController : BaseController
         {
-            public string CallReturnsString()
+            public string PostCallReturnsString()
             {
                 return "Hello world!";
             }
 
-            public void CallReturnsVoid()
+            public void PostCallReturnsVoid()
             { }
 
-            public string CallTakingObject([FromBody]TestParameter param)
+            public string PostCallTakingObject([FromBody]TestParameter param)
             {
                 return param.ValueTwo;
             }
 
-            public string CallTakingParameters(string first, string second)
+            public string PostCallTakingParameters(string first, string second)
             {
                 return $"{first} {second}!";
             }
@@ -42,7 +42,7 @@ namespace D2.Service.Test
         [Topic("Test")]
         public class AttributedController : BaseController
         {
-            [Routing("method")]
+            [Routing("Post", "method")]
             public string CallReturnsString()
             {
                 return "Hello world!";
@@ -63,13 +63,13 @@ namespace D2.Service.Test
         [Fact(DisplayName = "Execute a simple call returning a string")]
         public void Execute_a_simple_call_returning_a_string()
         {
-            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "CallReturnsString", null, new QueryParameter[0]));
+            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "Post", "CallReturnsString", null, new QueryParameter[0]));
         }
         
         [Fact(DisplayName = "Execute a simple call returning void")]
         public void Execute_a_simple_call_returning_void()
         {
-            Assert.Null(_dispatcher.Call("Simple", "CallReturnsVoid", null, new QueryParameter[0]));
+            Assert.Null(_dispatcher.Call("Simple", "Post", "CallReturnsVoid", null, new QueryParameter[0]));
         }
         
         [Fact(DisplayName = "Execute a call with a FromBody parameter")]
@@ -78,7 +78,7 @@ namespace D2.Service.Test
             var parameter = new TestParameter { ValueOne = 1, ValueTwo = "Eins" };
             var parameterString = JsonConvert.SerializeObject(parameter);
 
-            Assert.Equal("Eins", _dispatcher.Call("Simple", "CallTakingObject", parameterString, new QueryParameter[0]));
+            Assert.Equal("Eins", _dispatcher.Call("Simple", "Post", "CallTakingObject", parameterString, new QueryParameter[0]));
         }
         
         [Fact(DisplayName = "Execute a call with parameters")]
@@ -89,7 +89,7 @@ namespace D2.Service.Test
                 new QueryParameter { Name = "second", Value = "world" }
             };
 
-            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "CallTakingParameters", null, parameters));
+            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "Post", "CallTakingParameters", null, parameters));
         }
         
         [Fact(DisplayName = "Execute a call with different parameters yields different results")]
@@ -105,14 +105,14 @@ namespace D2.Service.Test
                 new QueryParameter { Name = "second", Value = "Hamburg" }
             };
 
-            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "CallTakingParameters", null, parametersOne));
-            Assert.Equal("Goodbye Hamburg!", _dispatcher.Call("Simple", "CallTakingParameters", null, parametersTwo));
+            Assert.Equal("Hello world!", _dispatcher.Call("Simple", "Post", "CallTakingParameters", null, parametersOne));
+            Assert.Equal("Goodbye Hamburg!", _dispatcher.Call("Simple", "Post", "CallTakingParameters", null, parametersTwo));
         }
         
         [Fact(DisplayName = "Execute a simple call returning a string from attributes")]
         public void Execute_a_simple_call_returning_a_string_from_attributes()
         {
-            Assert.Equal("Hello world!", _dispatcher.Call("Test", "method", null, new QueryParameter[0]));
+            Assert.Equal("Hello world!", _dispatcher.Call("Test", "Post", "method", null, new QueryParameter[0]));
         }
     }
 }

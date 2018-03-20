@@ -24,6 +24,7 @@
 				struct Request
                 {
                     string topic;
+					string verb;
                     string action;
                     string json;
 					Common::Parameters parameters;

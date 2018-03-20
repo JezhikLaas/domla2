@@ -41,6 +41,7 @@ namespace D2.Service.CallDispatcher
             try {
                 var result = _dispatcher.Call(
                     request.topic,
+                    request.verb,
                     request.action,
                     request.json,
                     request.parameters.Select(parameter => new QueryParameter {
