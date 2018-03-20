@@ -4,44 +4,56 @@ module ServiceConnection =
     open D2.Service.Contracts.Common
     open D2.Service.Contracts.Execution
     open D2.Service.Contracts.Validation
-    open RabbitMQ.Client
+    open D2.ServiceBroker.Persistence.Mapper
     open System
-    open System.Text
 
-    type ServiceConnector (queue : string) as this =
-        
-        let factory = new ConnectionFactory(HostName = "localhost")
+    type ServiceConnector (service : ServiceI) as this =
+        let communicator = Ice.Util.initialize()
+
+        let makeRequest (topic: string) (action : string) (body : string) (parameters : (string * string) seq) =
+            let arguments = parameters
+                            |> Seq.map(fun parameter -> new Parameter(fst parameter, snd parameter))
+                            |> Seq.toArray
+            Request(
+                topic,
+                "Post",
+                action,
+                body,
+                arguments
+            )
 
         do
-            this.Connection <- factory.CreateConnection ()
-            this.Channel <- this.Connection.CreateModel ()
-            let queueOk = this.Channel.QueueDeclare(
-                              queue = queue,
-                              durable = false,
-                              exclusive = false,
-                              autoDelete = false
-                          )
+            let parts = service.BaseUrl.Split(':')
             
-            ()
+            let obj = communicator.stringToProxy(sprintf "Validator:default -h %s -p %s" parts.[0] parts.[1])
+            this.Validator <- ValidatorPrxHelper.uncheckedCast(obj)
+
+            let obj = communicator.stringToProxy(sprintf "Executor:default -h %s -p %s" parts.[0] parts.[1])
+            this.Executor <- ExecutorPrxHelper.uncheckedCast(obj)
         
-        member val Connection : IConnection = null with get, set
-        member val Channel : IModel = null with get, set
+        member val Executor : ExecutorPrx = null with get, set
+        member val Validator : ValidatorPrx = null with get, set
 
         member this.Dispose (disposing : bool) =
             if disposing then
-                if not (isNull this.Connection) then this.Connection.Dispose ()
-                if not (isNull this.Channel) then this.Channel.Dispose ()
+                if not (isNull communicator) then communicator.Dispose ()
             ()
 
         interface IDisposable with
             member this.Dispose () =
                 this.Dispose true
-        
-        member this.Post (message : string) =
-            let data = Encoding.UTF8.GetBytes message
-            this.Channel.BasicPublish (
-                exchange = "",
-                routingKey = "hello",
-                basicProperties = null,
-                body = data
-            )
+
+        member this.Post (topic: string) (action : string) (body : string) (parameters : (string * string) seq) =
+            let request = makeRequest topic action body parameters
+
+            this.Executor.executeAsync request
+                          |> Async.AwaitTask
+                          |> Async.RunSynchronously
+
+        member this.ValidatePost (topic: string) (action : string) (body : string) (parameters : (string * string) seq) =
+            let request = makeRequest topic action body parameters
+
+            this.Validator.validateAsync request
+                           |> Async.AwaitTask
+                           |> Async.RunSynchronously
+
