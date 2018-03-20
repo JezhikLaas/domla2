@@ -34,7 +34,7 @@ export class AdministrationUnitsListComponent implements OnInit {
 
   ngOnInit() {
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
-    this.units.listAdministrationUnits(result => {
+    this.units.listAdministrationUnits().subscribe(result => {
       this.dataSource = new MatTableDataSource<AdministrationUnit>(result);
     });
   }

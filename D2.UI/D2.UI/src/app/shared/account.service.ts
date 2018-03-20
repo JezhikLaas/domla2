@@ -20,7 +20,7 @@ interface EndPointInfo {
   Uri: string;
 }
 
-interface ServiceInfo {
+export interface ServiceInfo {
   Name: string;
   BaseUrl: string;
   Version: number;
