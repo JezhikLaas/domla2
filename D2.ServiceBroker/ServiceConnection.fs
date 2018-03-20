@@ -6,6 +6,7 @@ module ServiceConnection =
     open D2.Service.Contracts.Validation
     open D2.ServiceBroker.Persistence.Mapper
     open System
+    open System.Collections.Generic
 
     type ServiceConnector (service : ServiceI) as this =
         let communicator = Ice.Util.initialize()
@@ -57,3 +58,13 @@ module ServiceConnection =
                            |> Async.AwaitTask
                            |> Async.RunSynchronously
 
+    let connectors = List<ServiceConnector>()
+
+    let initializeConnectors (services : ServiceI seq) =
+        for connector in connectors do
+            (connector :> IDisposable).Dispose()
+        
+        connectors.Clear()
+
+        for service in services do
+            connectors.Add (new ServiceConnector (service))
