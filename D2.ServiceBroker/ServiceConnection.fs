@@ -11,19 +11,8 @@ module ServiceConnection =
     type ServiceConnector (service : ServiceI) as this =
         let communicator = Ice.Util.initialize()
 
-        let makeRequest (topic: string) (action : string) (body : string) (parameters : (string * string) seq) =
-            let arguments = parameters
-                            |> Seq.map(fun parameter -> new Parameter(fst parameter, snd parameter))
-                            |> Seq.toArray
-            Request(
-                topic,
-                "Post",
-                action,
-                body,
-                arguments
-            )
-
         do
+            this.Group <- service.Group
             let parts = service.BaseUrl.Split(':')
             
             let obj = communicator.stringToProxy(sprintf "Validator:default -h %s -p %s" parts.[0] parts.[1])
@@ -32,8 +21,9 @@ module ServiceConnection =
             let obj = communicator.stringToProxy(sprintf "Executor:default -h %s -p %s" parts.[0] parts.[1])
             this.Executor <- ExecutorPrxHelper.uncheckedCast(obj)
         
-        member val Executor : ExecutorPrx = null with get, set
-        member val Validator : ValidatorPrx = null with get, set
+        member val private Executor : ExecutorPrx = null with get, set
+        member val private Validator : ValidatorPrx = null with get, set
+        member val Group = String.Empty with get, set
 
         member this.Dispose (disposing : bool) =
             if disposing then
@@ -43,28 +33,48 @@ module ServiceConnection =
         interface IDisposable with
             member this.Dispose () =
                 this.Dispose true
-
-        member this.Post (topic: string) (action : string) (body : string) (parameters : (string * string) seq) =
-            let request = makeRequest topic action body parameters
-
-            this.Executor.executeAsync request
-                          |> Async.AwaitTask
-                          |> Async.RunSynchronously
-
-        member this.ValidatePost (topic: string) (action : string) (body : string) (parameters : (string * string) seq) =
-            let request = makeRequest topic action body parameters
-
+        
+        member this.ValidateRequest (request : Request) =
             this.Validator.validateAsync request
                            |> Async.AwaitTask
                            |> Async.RunSynchronously
+        
+        member this.ExecuteRequest (request : Request) =
+            this.Executor.executeAsync request
+                          |> Async.AwaitTask
+                          |> Async.RunSynchronously
+            
 
-    let connectors = List<ServiceConnector>()
+    let private connectors = List<ServiceConnector>()
 
     let initializeConnectors (services : ServiceI seq) =
-        for connector in connectors do
-            (connector :> IDisposable).Dispose()
+        lock connectors (fun () -> 
+            for connector in connectors do
+                (connector :> IDisposable).Dispose()
         
-        connectors.Clear()
+            connectors.Clear()
 
-        for service in services do
-            connectors.Add (new ServiceConnector (service))
+            for service in services do
+                connectors.Add (new ServiceConnector (service))
+        )
+    
+    let execute (groups : string seq) (request : Request) =
+        lock connectors (fun () ->
+            let matches = connectors |> Seq.where (fun connector -> groups |> Seq.contains connector.Group)
+            for item in matches do
+                item.ExecuteRequest request |> ignore
+        )
+    
+    let validateAndExecute (groups : string seq) (request : Request) =
+        lock connectors (fun () ->
+            let matches = connectors
+                          |> Seq.where (fun connector -> groups |> Seq.contains connector.Group)
+                          |> Seq.toList
+
+            let validations = seq {
+                for item in matches do
+                    yield item.ValidateRequest request
+            }
+            let failures = validations |> Seq.where (fun validation -> validation.result <> State.NoError)
+            ()
+        )
