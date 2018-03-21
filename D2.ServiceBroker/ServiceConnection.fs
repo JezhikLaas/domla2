@@ -12,7 +12,6 @@ module ServiceConnection =
         let communicator = Ice.Util.initialize()
 
         do
-            this.Group <- service.Group
             let parts = service.BaseUrl.Split(':')
             
             let obj = communicator.stringToProxy(sprintf "Validator:default -h %s -p %s" parts.[0] parts.[1])
@@ -23,7 +22,7 @@ module ServiceConnection =
         
         member val private Executor : ExecutorPrx = null with get, set
         member val private Validator : ValidatorPrx = null with get, set
-        member val Group = String.Empty with get, set
+        member this.Group = service.Group
 
         member this.Dispose (disposing : bool) =
             if disposing then
@@ -75,6 +74,16 @@ module ServiceConnection =
                 for item in matches do
                     yield item.ValidateRequest request
             }
-            let failures = validations |> Seq.where (fun validation -> validation.result <> State.NoError)
+            let failures = validations
+                           |> Seq.where (fun validation -> validation.result <> State.NoError)
+                           |> Seq.toList
+
+            match failures with
+            | []   -> let executions = seq {
+                          for item in matches do
+                              yield item.ExecuteRequest request
+                      }
+                      ()
+            | list -> ()
             ()
         )
