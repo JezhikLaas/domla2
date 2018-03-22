@@ -1,11 +1,13 @@
 ﻿namespace D2.ServiceBroker
 
+open Newtonsoft.Json.Linq
 module ServiceConnection =
     open D2.Common
     open D2.Service.Contracts.Common
     open D2.Service.Contracts.Execution
     open D2.Service.Contracts.Validation
     open D2.ServiceBroker.Persistence.Mapper
+    open Newtonsoft.Json
     open System
     open System.Collections.Generic
 
@@ -77,9 +79,29 @@ module ServiceConnection =
         let body = results |> Seq.tail
         body |> Seq.fold(joinValidation) head
     
-    
-    let consolidateExecutions (results : ExecutionResponse seq) =
-        ()
+    let consolidateExecutions (validation : ValidationResponse) (results : ExecutionResponse seq) =
+        let grouped = results |> Seq.groupBy(fun result -> result.code)
+        
+        if grouped |> Seq.length > 1 then
+            let errors = Array.concat(results |> Seq.map(fun result -> result.errors))
+                         |>
+                         Array.append([| (Error("", "inconsistent execution result")) |])
+            
+            let validationResult = new ValidationResponse(State.InternalFailure, errors)
+            ExececutionResult (validationResult, null)
+        else
+            let notEmpty = String.IsNullOrWhiteSpace >> not
+            let mergeJson left right =
+                let first = JObject.Parse(left)
+                let second = JObject.Parse(right)
+                first.Merge(second)
+                first.ToString()
+            
+            let json = results
+                       |> Seq.filter(fun result -> result.json |> notEmpty)
+                       |> Seq.fold(fun current result -> mergeJson current result.json) ""
+            
+            ExececutionResult (validation, ExecutionResponse(grouped |> Seq.head |> fst, json, [||]))
         
     let execute (groups : string seq) (request : Request) =
         lock connectors (fun () ->
