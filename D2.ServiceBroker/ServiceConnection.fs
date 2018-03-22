@@ -1,12 +1,17 @@
 ﻿namespace D2.ServiceBroker
 
 module ServiceConnection =
+    open D2.Common
     open D2.Service.Contracts.Common
     open D2.Service.Contracts.Execution
     open D2.Service.Contracts.Validation
     open D2.ServiceBroker.Persistence.Mapper
     open System
     open System.Collections.Generic
+
+    type ExececutionResult (validation : ValidationResponse, execution : ExecutionResponse) =
+        member this.Validation = validation
+        member this.Execution = execution
 
     type ServiceConnector (service : ServiceI) as this =
         let communicator = Ice.Util.initialize()
@@ -58,6 +63,24 @@ module ServiceConnection =
                 connectors.Add (new ServiceConnector (service))
         )
     
+    let consolidateValidations (results : ValidationResponse seq) =
+        let moreSeriousState left right =
+            if left > right then left else right
+        
+        let joinValidation (left : ValidationResponse) (right : ValidationResponse) =
+            new ValidationResponse(
+                    (moreSeriousState left.result right.result),
+                    Array.concat([left.errors; right.errors])
+                )
+        
+        let head = results |> Seq.head
+        let body = results |> Seq.tail
+        body |> Seq.fold(joinValidation) head
+    
+    
+    let consolidateExecutions (results : ExecutionResponse seq) =
+        ()
+        
     let execute (groups : string seq) (request : Request) =
         lock connectors (fun () ->
             let matches = connectors |> Seq.where (fun connector -> groups |> Seq.contains connector.Group)
@@ -75,6 +98,12 @@ module ServiceConnection =
                 for item in matches do
                     yield item.ValidateRequest request
             }
-            let failures = validations |> Seq.where (fun validation -> validation.result <> State.NoError)
-            ()
+            let validation = consolidateValidations validations
+
+            if validation.result = State.NoError then
+                for item in matches do
+                    item.ExecuteRequest request |> ignore
+                ExececutionResult (validation, null)
+            else
+                ExececutionResult (validation, null)
         )
