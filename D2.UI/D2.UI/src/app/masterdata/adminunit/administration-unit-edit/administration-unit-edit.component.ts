@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {MenuItem} from '../shared/menu-item';
-import {MenuDisplayService} from '../shared/menu-display.service';
-import {Router} from '@angular/router';
-import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
+import { MenuItem } from '../../../shared/menu-item';
+import { MenuDisplayService } from '../../../shared/menu-display.service';
+import { Router } from '@angular/router';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'ui-administration-unit-edit',

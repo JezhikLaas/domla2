@@ -77,28 +77,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     if (access_token) {
-      this.loader.show();
       this.storage.set('access_token', access_token);
-
-      this.accounts.fetchServices(
-        () => this.loader.hide(),
-        message => {
-          this.loader.hide();
-          this.errorDialog.show('Fehler', message);
-        }
-      );
     } else if (environment.production) {
         this.errorDialog.show('Fehler', 'Es konnte kein Zugriffstoken ermittelt werden!');
-    } else {
-      this.loader.show();
-
-      this.accounts.fetchServices(
-        () => this.loader.hide(),
-        message => {
-          this.loader.hide();
-          this.errorDialog.show('Fehler', message);
-        }
-      );
     }
 
     this.subscription = this.menuDisplay.menuNeeded

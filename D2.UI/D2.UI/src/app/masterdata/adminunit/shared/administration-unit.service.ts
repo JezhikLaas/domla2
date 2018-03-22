@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AccountService } from './account.service';
+import { AccountService } from '../../../shared/account.service';
 import {AdministrationUnit} from './administration-unit';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
-import { ServiceInfo } from './account.service';
+import { ServiceInfo } from '../../../shared/account.service';
 
 @Injectable()
 export class AdministrationUnitService {

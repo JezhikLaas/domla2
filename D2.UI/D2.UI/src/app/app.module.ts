@@ -2,102 +2,29 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
-import { LoaderComponent } from './shared/loader/loader.component';
-import { AccountService } from './shared/account.service';
-import { StorageService } from './shared/storage.service';
-import { BearerInterceptor } from './shared/bearer-interceptor';
-import { MenuDisplayService } from './shared/menu-display.service';
 import { CdkTableModule } from '@angular/cdk/table';
-import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatSnackBarModule,
-  MatSortModule,
-  MatTableModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-  MatStepperModule,
-} from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
-import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
-import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
-import {AdministrationUnitService} from './shared/administration-unit.service';
+import { SharedModule } from './shared/shared.module';
 
-@NgModule({
-  exports: [
-    CdkTableModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatStepperModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatMenuModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatRippleModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatSortModule,
-    MatTableModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-  ],
-  declarations: []
-})
-export class UiMaterialModule {}
+
+import { HomeComponent } from './home/home.component';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { BearerInterceptor } from './shared/bearer-interceptor';
+import { StorageService } from './shared/storage.service';
+import { MenuDisplayService } from './shared/menu-display.service';
+import { AccountService } from './shared/account.service';
+import { CookieService } from 'ngx-cookie-service';
+import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
+import { AdministrationUnitService } from './masterdata/adminunit/shared/administration-unit.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DomlaResolver} from './shared/domla-resolver.service';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorDialogComponent,
-    LoaderComponent,
-    ConfirmDialogComponent,
-    AdministrationUnitsListComponent,
-    AdministrationUnitEditComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -105,16 +32,17 @@ export class UiMaterialModule {}
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    UiMaterialModule
+    SharedModule
   ],
   providers: [
     ErrorDialogComponent,
     ConfirmDialogComponent,
     AccountService,
-    AdministrationUnitService,
     StorageService,
     MenuDisplayService,
     CookieService,
+    AdministrationUnitService,
+    DomlaResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BearerInterceptor,

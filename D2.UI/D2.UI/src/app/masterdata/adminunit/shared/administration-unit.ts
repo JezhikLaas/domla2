@@ -1,4 +1,4 @@
-import {Entrance} from './entrance';
+import {Entrance} from './../../../shared/entrance';
 
 export interface AdministrationUnit {
   id: string;

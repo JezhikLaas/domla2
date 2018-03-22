@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MenuDisplayService } from '../shared/menu-display.service';
+import { MenuDisplayService } from '../../../shared/menu-display.service';
 import { AdministrationUnit } from '../shared/administration-unit';
-import { MenuItem } from '../shared/menu-item';
-import { Router } from '@angular/router';
-import {AdministrationUnitService} from '../shared/administration-unit.service';
+import { MenuItem } from '../../../shared/menu-item';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AdministrationUnitService } from '../shared/administration-unit.service';
 
 @Component({
   selector: 'ui-administration-units',
@@ -18,7 +18,7 @@ import {AdministrationUnitService} from '../shared/administration-unit.service';
 })
 export class AdministrationUnitsListComponent implements OnInit {
   MenuButtons = [
-    new MenuItem('Neu', () => this.router.navigate(['editAdministrationUnit/0']), () => true),
+    new MenuItem('Neu', () => this.router.navigate(['administrationUnits/0']), () => true),
     new MenuItem('Bearbeiten', () => console.log('Edit'), () => false)
   ];
   displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
@@ -29,13 +29,12 @@ export class AdministrationUnitsListComponent implements OnInit {
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,
-    private units: AdministrationUnitService
+    private units: AdministrationUnitService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
-    this.units.listAdministrationUnits().subscribe(result => {
-      this.dataSource = new MatTableDataSource<AdministrationUnit>(result);
-    });
+    this.dataSource = new MatTableDataSource<AdministrationUnit>(this.route.snapshot.data['AdminUnit']);
   }
 }

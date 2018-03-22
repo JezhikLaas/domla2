@@ -6,6 +6,8 @@ import 'rxjs/add/operator/retry';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {StorageService} from './storage.service';
+import {environment} from '../../environments/environment';
+import 'rxjs/add/operator/switchMap';
 
 interface LogoutUrl {
   url: string;
@@ -43,35 +45,23 @@ export class AccountService {
     @Inject(DOCUMENT) private document: any
   ) { }
 
-  fetchServices(succeeded: () => void, failed: (message: string) => void) {
-    this.http.get<BrokerUrl>(`${this.api}${AccountService.Services_Url}`)
+  fetchServices(): Observable<BrokerUrl> {
+    return this.http.get<BrokerUrl>(`${this.api}${AccountService.Services_Url}`)
       .catch(error => {
-        failed(error.message);
         return Observable.throw(error);
-      })
-      .subscribe(
-        data => {
-          console.log('received: ' + data);
-          this.brokerUrl = data.Broker;
-          this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/`)
-            .catch(error => {
-              failed(error.message);
-              return Observable.throw(error);
-            })
-            .subscribe(answer => {
-              this.services = answer;
-              succeeded();
-            });
-        }
-      );
+      });
   }
 
   fetchService(topic: string): Observable<ServiceInfo> {
-    return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`)
-      .catch(error => {
-        return Observable.throw(error);
-      })
-      ;
+    if (this.brokerUrl) {
+      return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`);
+    } else {
+      return this.fetchServices()
+        .switchMap(data => {
+          this.brokerUrl = data.Broker;
+          return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`);
+        }).catch(error => Observable.throw(error));
+    }
   }
 
   logout(id: string, failed: (message: string) => void) {
