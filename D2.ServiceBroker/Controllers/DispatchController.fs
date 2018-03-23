@@ -2,6 +2,7 @@
 
 open D2.Common
 open D2.Service.Contracts.Common
+open D2.Service.Contracts.Validation
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
@@ -35,5 +36,10 @@ type DispatchController
                           parameters |> Seq.toArray
                       )
 
-        ServiceConnection.validateAndExecute (groups.Split(',')) request
-        ()
+        let result = ServiceConnection.validateAndExecute (groups.Split(',')) request
+        if result.Execution = null then
+            match result.Validation.result with
+            | State.ExternalFailure -> this.StatusCode(StatusCodes.Status422UnprocessableEntity)
+            | _                     -> this.StatusCode(StatusCodes.Status500InternalServerError)
+        else
+            this.StatusCode(StatusCodes.Status422UnprocessableEntity)

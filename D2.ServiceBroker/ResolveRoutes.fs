@@ -57,7 +57,16 @@ module ResolveRoutes =
     let register (name : string) (version : int) (service : string) =
         let result = handle {
             let serviceItem = JsonConvert.DeserializeObject<ServiceI>(service)
-            return CompositionRoot.Storage.register name version serviceItem |> Async.RunSynchronously
+            let result = CompositionRoot.Storage.register name version serviceItem |> Async.RunSynchronously
+            let services = CompositionRoot.Storage.routes "Domla2" 1
+                           |>
+                           Async.RunSynchronously
+                           |>
+                           Seq.map(Persistence.Mapper.ServiceI.fromService)
+        
+            ServiceConnection.initializeConnectors services
+            
+            return result
         }
         
         result()

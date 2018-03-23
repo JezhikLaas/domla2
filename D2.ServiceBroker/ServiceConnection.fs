@@ -1,13 +1,11 @@
 ﻿namespace D2.ServiceBroker
 
-open Newtonsoft.Json.Linq
 module ServiceConnection =
-    open D2.Common
     open D2.Service.Contracts.Common
     open D2.Service.Contracts.Execution
     open D2.Service.Contracts.Validation
     open D2.ServiceBroker.Persistence.Mapper
-    open Newtonsoft.Json
+    open Newtonsoft.Json.Linq
     open System
     open System.Collections.Generic
 
@@ -53,17 +51,6 @@ module ServiceConnection =
             
 
     let private connectors = List<ServiceConnector>()
-
-    let initializeConnectors (services : ServiceI seq) =
-        lock connectors (fun () -> 
-            for connector in connectors do
-                (connector :> IDisposable).Dispose()
-        
-            connectors.Clear()
-
-            for service in services do
-                connectors.Add (new ServiceConnector (service))
-        )
     
     let consolidateValidations (results : ValidationResponse seq) =
         let moreSeriousState left right =
@@ -123,9 +110,22 @@ module ServiceConnection =
             let validation = consolidateValidations validations
 
             if validation.result = State.NoError then
-                for item in matches do
-                    item.ExecuteRequest request |> ignore
-                ExececutionResult (validation, null)
+                let executions = seq {
+                    for item in matches do
+                        yield item.ExecuteRequest request
+                    }
+                consolidateExecutions validation executions
             else
                 ExececutionResult (validation, null)
+        )
+
+    let initializeConnectors (services : ServiceI seq) =
+        lock connectors (fun () -> 
+            for connector in connectors do
+                (connector :> IDisposable).Dispose()
+        
+            connectors.Clear()
+
+            for service in services do
+                connectors.Add (new ServiceConnector (service))
         )

@@ -34,6 +34,14 @@ type Startup private () =
             |> ignore
 
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
+
+        let services = CompositionRoot.Storage.routes "Domla2" 1
+                       |>
+                       Async.RunSynchronously
+                       |>
+                       Seq.map(Persistence.Mapper.ServiceI.fromService)
+        
+        ServiceConnection.initializeConnectors services
         
         if env.EnvironmentName <> "Development" then
             app.UseForwardedHeaders(

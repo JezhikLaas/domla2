@@ -9,8 +9,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionRoot.fs" />
-    <Compile Include="ResolveRoutes.fs" />
     <Compile Include="ServiceConnection.fs" />
+    <Compile Include="ResolveRoutes.fs" />
     <Compile Include="Controllers/AppsController.fs" />
     <Compile Include="Controllers/DispatchController.fs" />
     <Compile Include="StartupTesting.fs" />
