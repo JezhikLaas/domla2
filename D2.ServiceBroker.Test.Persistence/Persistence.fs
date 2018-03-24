@@ -87,6 +87,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = []
@@ -103,6 +104,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = []
@@ -121,6 +123,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = []
@@ -140,6 +143,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = []
@@ -149,6 +153,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2301"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 1
             member this.EndPoints = []
@@ -169,6 +174,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 1
             member this.EndPoints = []
@@ -178,6 +184,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2301"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = []
@@ -198,6 +205,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = []
@@ -207,6 +215,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2301"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 1
             member this.EndPoints = []
@@ -235,6 +244,7 @@ module StorageTest =
             new Service with
             member this.Name = "Test"
             member this.BaseUrl = "http://localhost:2300"
+            member this.Group = "test"
             member this.Version = 1
             member this.Patch = 0
             member this.EndPoints = [endpoint]

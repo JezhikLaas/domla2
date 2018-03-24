@@ -15,6 +15,8 @@ type Service =
 
     abstract member BaseUrl : string
 
+    abstract member Group : string
+
     abstract member Version : int
 
     abstract member Patch : int

@@ -1,0 +1,8 @@
+﻿using System;
+
+namespace D2.Service.IoC
+{
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class RequestScopeAttribute : Attribute
+    { }
+}

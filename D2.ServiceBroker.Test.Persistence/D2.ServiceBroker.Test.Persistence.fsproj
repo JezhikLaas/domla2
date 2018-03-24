@@ -4,11 +4,11 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.9.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="Npgsql" Version="3.2.6" />
-    <PackageReference Include="FsUnit" Version="3.0.0" />
+    <PackageReference Include="nunit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.1" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
+    <PackageReference Include="FsUnit" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Persistence.fs" />
@@ -21,5 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\D2.ServiceBroker.Persistence\D2.ServiceBroker.Persistence.fsproj" />
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.3.4" />
   </ItemGroup>
 </Project>

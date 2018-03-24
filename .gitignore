@@ -294,3 +294,6 @@ __pycache__/
 /D2.Authentication/wwwroot
 /D2.UI/wwwroot
 /D2.UserManagement/wwwroot
+D2.ServiceBroker.Contracts/generated
+D2.Service.Contracts/generated
+/D2.MasterData/Migrations

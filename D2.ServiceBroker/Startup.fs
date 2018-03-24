@@ -9,12 +9,14 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open System.Collections.Generic
 open System.IdentityModel.Tokens.Jwt
+open Microsoft.Extensions.Logging
 
 type Startup private () =
     
-    new (configuration: IConfiguration) as this =
+    new (configuration : IConfiguration, logger : ILogger<Startup>) as this =
         Startup() then
         this.Configuration <- configuration
+        this.Logger <- logger
 
     member this.ConfigureServices(services: IServiceCollection) =
         services.AddMvc() |> ignore
@@ -34,6 +36,14 @@ type Startup private () =
             |> ignore
 
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
+
+        let services = CompositionRoot.Storage.routes "Domla2" 1
+                       |>
+                       Async.RunSynchronously
+                       |>
+                       Seq.map(Persistence.Mapper.ServiceI.fromService)
+        
+        ServiceConnection.initializeConnectors services this.Logger
         
         if env.EnvironmentName <> "Development" then
             app.UseForwardedHeaders(
@@ -52,3 +62,4 @@ type Startup private () =
             |> ignore
 
     member val Configuration : IConfiguration = null with get, set
+    member val Logger : ILogger<Startup> = null with get, set

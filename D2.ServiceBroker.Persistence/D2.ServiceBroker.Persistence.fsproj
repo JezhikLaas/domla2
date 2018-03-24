@@ -10,10 +10,13 @@
     <Compile Include="Applications.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="3.2.6" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.3.4" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using Ninject.Infrastructure.Disposal;
 using System;
 using System.Threading;
 
-namespace D2.MasterData.Infrastructure.IoC
+namespace D2.Service.IoC
 {
     sealed class Scope : DisposableObject
     {

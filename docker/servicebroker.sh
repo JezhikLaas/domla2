@@ -19,6 +19,7 @@ CREATE TABLE services (
     application_name character varying(255) NOT NULL,
     application_version integer NOT NULL,
     name character varying(255) NOT NULL,
+    tag character varying(255) NOT NULL,
     version integer NOT NULL,
     patch integer NOT NULL,
     route character varying(512) NOT NULL,
@@ -33,7 +34,7 @@ ALTER TABLE ONLY applications
 
 
 ALTER TABLE ONLY services
-    ADD CONSTRAINT services_pkey PRIMARY KEY (application_name, application_version, name, version);
+    ADD CONSTRAINT services_pkey PRIMARY KEY (application_name, application_version, tag, name, version);
 
 ALTER TABLE ONLY services
     ADD CONSTRAINT applications_services FOREIGN KEY (application_name, application_version) REFERENCES applications(name, version) DEFERRABLE INITIALLY DEFERRED;
