@@ -21,7 +21,7 @@ type AppsController
     [<HttpPut("{name}/{version:regex(^(\\d\\d)$)}/register")>]
     member this.Put(name : string, version : int) =
         let service = this.Request.Body.AsUtf8String()
-        Response.confirm (ResolveRoutes.register name version service) logger
+        Response.confirm (ResolveRoutes.register name version service logger) logger
 
     [<HttpGet("{name}/{version:regex(^(\\d\\d)$)}")>]
     member this.Get(name : string, version : int) =

@@ -53,9 +53,15 @@ namespace D2.Service.CallDispatcher
             }
             catch (System.Exception error) {
                 _logger.LogError(error, $"execution of {request.topic}::{request.action} failed");
+                var rootError = error.InnerException ?? error;
                 return new ExecutionResponse {
                     code = 500,
-                    errors = new[] { new Error { property = "Exception", description = error.Message } }
+                    errors = new[] {
+                        new Error {
+                            property = "Exception",
+                            description = rootError.Message
+                        }
+                    }
                 };
             }
         }

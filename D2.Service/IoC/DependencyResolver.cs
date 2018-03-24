@@ -85,7 +85,7 @@ namespace D2.Service.IoC
             Kernel.Bind(
                 x => x.From(sources)
                       .SelectAllClasses()
-                      .WithoutAttribute<TransientAttribute>()
+                      .WithAttribute<TransientAttribute>()
                       .BindAllInterfaces()
             );
         }

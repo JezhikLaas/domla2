@@ -6,6 +6,7 @@ open Newtonsoft.Json
 open System
 
 module ResolveRoutes =
+    open Microsoft.Extensions.Logging
 
     let toJson items =
         handle {
@@ -54,7 +55,7 @@ module ResolveRoutes =
             member this.Patch with get() = this.Patch
             member this.EndPoints with get() = this.EndPoints |> List.map(fun e -> e :> EndPoint)
     
-    let register (name : string) (version : int) (service : string) =
+    let register (name : string) (version : int) (service : string) (logger : ILogger) =
         let result = handle {
             let serviceItem = JsonConvert.DeserializeObject<ServiceI>(service)
             let result = CompositionRoot.Storage.register name version serviceItem |> Async.RunSynchronously
@@ -64,7 +65,7 @@ module ResolveRoutes =
                            |>
                            Seq.map(Persistence.Mapper.ServiceI.fromService)
         
-            ServiceConnection.initializeConnectors services
+            ServiceConnection.initializeConnectors services logger
             
             return result
         }

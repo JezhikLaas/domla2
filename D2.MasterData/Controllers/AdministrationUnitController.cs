@@ -1,9 +1,14 @@
 ﻿using D2.MasterData.Facades;
 using D2.MasterData.Infrastructure;
 using D2.MasterData.Parameters;
-using Microsoft.AspNetCore.Authorization;
+using D2.Service.Contracts.Common;
+using D2.Service.Contracts.Execution;
+using D2.Service.Contracts.Validation;
+using D2.Service.Controller;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
 
 namespace D2.MasterData.Controllers
 {
@@ -11,8 +16,7 @@ namespace D2.MasterData.Controllers
     /// Instanz dieser Klasse und alle Instanzen darunterliegender Klassen werden
     /// von Dependency Injection automatisch erzeugt
     /// </summary>
-    [Route("[controller]")]
-    public class AdministrationUnitController : Controller
+    public class AdministrationUnitController : BaseController
     {
         IAdministrationUnitFacade _administrationUnitFacade;
         IParameterValidator _parameterValidator;
@@ -30,24 +34,36 @@ namespace D2.MasterData.Controllers
             _parameterValidator = parameterValidator;
         }
 
-        [HttpPost("create")]
-        public IActionResult Post([FromBody]AdministrationUnitParameters value)
+        [Routing("Post", "Validate_Create")]
+        public ValidationResponse ValidateCreate([FromBody]AdministrationUnitParameters value)
         {
             var result = _parameterValidator.Validate(value, RequestType.Post);
 
             if (result.IsValid)
             {
-                _administrationUnitFacade.CreateNewAdministrationUnit(value);
-                return StatusCode(StatusCodes.Status201Created);
+                return new ValidationResponse(State.NoError, new Error[0]);
             }
 
-            return StatusCode(StatusCodes.Status422UnprocessableEntity);
+            var errors = result
+                            .Errors
+                            .Select(error => new Error(error.Property, error.Error))
+                            .ToArray();
+
+            return new ValidationResponse(State.ExternalFailure, errors);
         }
 
-        [HttpGet("list")]
-        public IActionResult Get()
+        [Routing("Post", "Create")]
+        public ExecutionResponse Create([FromBody]AdministrationUnitParameters value)
         {
-            return Json(_administrationUnitFacade.ListAdministrationUnits());
+            _administrationUnitFacade.CreateNewAdministrationUnit(value);
+            return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
+        }
+
+        [Routing("Get", "List")]
+        public ExecutionResponse List()
+        {
+            var result = Json.Serialize(_administrationUnitFacade.ListAdministrationUnits());
+            return new ExecutionResponse(StatusCodes.Status200OK, result, new Error[0]);
         }
     }
 }

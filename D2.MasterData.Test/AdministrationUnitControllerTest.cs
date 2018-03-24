@@ -17,7 +17,7 @@ namespace D2.MasterData.Test
 
             var controller = new AdministrationUnitController(facade, validator);
 
-            controller.Post(null);
+            controller.Create(null);
             facade.Received(1).CreateNewAdministrationUnit(null);
         }
     }
