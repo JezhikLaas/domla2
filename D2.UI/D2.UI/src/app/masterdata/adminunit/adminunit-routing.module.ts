@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: AdministrationUnitsListComponent,
     resolve: {
-      AdminUnit: DomlaResolver
+      AdministrationUnit: DomlaResolver
     }
   },
   { path: ':id', component: AdministrationUnitEditComponent }

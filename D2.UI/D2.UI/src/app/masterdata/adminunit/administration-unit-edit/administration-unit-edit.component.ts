@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from '../../../shared/menu-item';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import { AdministrationUnitService } from '../shared/administration-unit.service';
+import { IAdministrationUnit } from '../shared/iadministration-unit';
+import {AdminUnitFactory} from '../shared/admin-unit-factory';
 
 @Component({
   selector: 'ui-administration-unit-edit',
@@ -17,24 +20,36 @@ export class AdministrationUnitEditComponent implements OnInit {
     new MenuItem('Schließen', () => this.doCancel(), () => true)
   ];
   editForm: FormGroup;
+  isUpdatingAdminUnit = false;
+  AdminUnit = AdminUnitFactory.empty();
 
-  constructor(
-    private fb: FormBuilder,
-    private menuDisplay: MenuDisplayService,
-    private confirmDialog: ConfirmDialogComponent,
-    private router: Router
-  ) { }
+  constructor(private fb: FormBuilder,
+              private menuDisplay: MenuDisplayService,
+              private confirmDialog: ConfirmDialogComponent,
+              private router: Router,
+              private route: ActivatedRoute,
+              private AUdata: AdministrationUnitService) {
+  }
 
   ngOnInit() {
+    const id = this.route.snapshot.params ['id'];
+    if (id !== '0') {
+      this.isUpdatingAdminUnit = true;
+      this.AdminUnit = this.AUdata.getSingle(id);
+    }
+    this.initAdminUnit();
+  }
+
+  initAdminUnit() {
     this.editForm = this.fb.group({
       userKey: this.fb.control(
-        null,
+        this.AdminUnit.userKey,
         [
           Validators.required
         ]
       ),
       title: this.fb.control(
-        null,
+        this.AdminUnit.title,
         [
           Validators.required
         ]
@@ -43,12 +58,15 @@ export class AdministrationUnitEditComponent implements OnInit {
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
   }
 
+
   doCancel() {
     this.confirmDialog.show(
       'Bestätigung',
       'Möchten Sie wirklich abbrechen?',
       value => {
-        if (value) { this.router.navigate(['administrationUnits']); }
+        if (value) {
+          this.router.navigate(['administrationUnits']);
+        }
       }
     );
   }

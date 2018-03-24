@@ -25,7 +25,10 @@ namespace D2.MasterData.Repositories.Implementation
 
         public IEnumerable<AdministrationUnit> List()
         {
-            var result = from unit in _connection.AdministrationUnits.Include(unit => unit.Entrances)
+            var result = from unit in _connection.AdministrationUnits
+                                                 .Include(unit => unit.Entrances)
+                                                 .Include("Entrances.Address")
+                                                 .Include("Entrances.Address.Country")
                          orderby unit.UserKey
                          select unit;
             return result.ToList();
