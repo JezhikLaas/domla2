@@ -51,7 +51,7 @@ namespace D2.MasterData.Test
 
         MasterDataContext GetContext()
         {
-            var result = new MasterDataContext();// new TestContext(_options);
+            var result = new TestContext(_options);
             result.Database.EnsureCreated();
             return result;
         }
