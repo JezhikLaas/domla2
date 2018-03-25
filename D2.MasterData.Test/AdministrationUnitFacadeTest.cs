@@ -1,7 +1,9 @@
 ﻿using D2.MasterData.Facades.Implementation;
 using D2.MasterData.Infrastructure;
+using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
 using D2.MasterData.Test.Helper;
+using D2.Service.Contracts.Validation;
 using NSubstitute;
 using System;
 using Xunit;
@@ -46,6 +48,38 @@ namespace D2.MasterData.Test
 
             Assert.Equal(200, result.code);
             Assert.False(string.IsNullOrWhiteSpace(result.json));
+        }
+
+        [Fact(DisplayName = "ValidateCreate with invalid object yields ExternalFailure")]
+        public void ValidateCreate_with_invalid_object_yields_ExternalFailure()
+        {
+            var validator = Substitute.For<IParameterValidator>();
+            validator
+                .Validate(Arg.Any<AdministrationUnitParameters>(), RequestType.Post)
+                .Returns(info => {
+                    var validation = new ValidationResult();
+                    validation.AddError("test", "Fehler");
+                    return validation;
+                });
+            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var facade = new AdministrationUnitFacade(repository, validator);
+
+            var result = facade.ValidateCreate(new AdministrationUnitParameters());
+            Assert.Equal(State.ExternalFailure, result.result);
+        }
+
+        [Fact(DisplayName = "ValidateCreate with valid object yields NoError")]
+        public void ValidateCreate_with_valid_object_yields_NoError()
+        {
+            var validator = Substitute.For<IParameterValidator>();
+            validator
+                .Validate(Arg.Any<AdministrationUnitParameters>(), RequestType.Post)
+                .Returns(new ValidationResult());
+            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var facade = new AdministrationUnitFacade(repository, validator);
+
+            var result = facade.ValidateCreate(new AdministrationUnitParameters());
+            Assert.Equal(State.NoError, result.result);
         }
     }
 }

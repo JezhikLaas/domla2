@@ -22,7 +22,7 @@ namespace D2.MasterData.Infrastructure
             get { return _errors; }
         }
 
-        internal void AddError(string name, string error)
+        public void AddError(string name, string error)
         {
             _errors.Add(new ValidationError(name, error));
         }
