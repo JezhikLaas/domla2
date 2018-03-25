@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using D2.MasterData.Test.Helper;
 
 namespace D2.MasterData.Test
 {
@@ -56,37 +57,22 @@ namespace D2.MasterData.Test
             return result;
         }
 
-        [Fact(DisplayName = "AdministrationUnitRepository can insert AdministrationUnit")]
-        public void AdministrationUnitRepository_can_insert_AdministrationUnit()
+        Guid InsertAdministrationUnit()
         {
-            var parameters = new AdministrationUnitParameters {
-                UserKey = "03",
-                Title = "ABC",
-                Entrances = new List<EntranceParameters>
-                {
-                    new EntranceParameters {
-                        Title = "Eingang 49",
-                        Address = new AddressParameters
-                        {
-                            Street = "Seumestraße",
-                            Number = "49",
-                            PostalCode = "22222",
-                            Country = new CountryInfoParameters
-                            {
-                                Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
-                            }
-                        }
-                    }
-                }
-            };
-            var unit = new AdministrationUnit(parameters);
+            var unit = AdministrationUnitBuilder.New.Build();
 
             using (var context = GetContext()) {
                 var repository = new AdministrationUnitRepository(context);
                 repository.Insert(unit);
             }
+
+            return unit.Id;
+        }
+
+        [Fact(DisplayName = "AdministrationUnitRepository can insert AdministrationUnit")]
+        public void AdministrationUnitRepository_can_insert_AdministrationUnit()
+        {
+            InsertAdministrationUnit();
 
             using (var context = GetContext()) {
                 var repository = new AdministrationUnitRepository(context);
@@ -94,6 +80,17 @@ namespace D2.MasterData.Test
 
                 Assert.Collection(stored, u => Assert.Equal("03", u.UserKey));
                 Assert.Collection(stored, u => Assert.Collection(u.Entrances, e => Assert.Equal("Eingang 49", e.Title)));
+            }
+        }
+
+        [Fact(DisplayName = "AdministrationUnitRepository yields null for unknown id")]
+        public void AdministrationUnitRepository_yields_null_for_unknown_id()
+        {
+            InsertAdministrationUnit();
+
+            using (var context = GetContext()) {
+                var repository = new AdministrationUnitRepository(context);
+                Assert.Null(repository.Load(Guid.NewGuid()));
             }
         }
     }

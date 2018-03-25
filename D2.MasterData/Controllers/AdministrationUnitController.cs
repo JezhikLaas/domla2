@@ -6,9 +6,6 @@ using D2.Service.Contracts.Execution;
 using D2.Service.Contracts.Validation;
 using D2.Service.Controller;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System;
-using System.Linq;
 
 namespace D2.MasterData.Controllers
 {
@@ -19,7 +16,6 @@ namespace D2.MasterData.Controllers
     public class AdministrationUnitController : BaseController
     {
         IAdministrationUnitFacade _administrationUnitFacade;
-        IParameterValidator _parameterValidator;
 
         /// <summary>
         /// Konstruktor.
@@ -27,29 +23,15 @@ namespace D2.MasterData.Controllers
         /// <param name="administrationUnitFacade">Fassade für fachliche Aufgaben.</param>
         /// <param name="parameterValidator">Validator für Parameter, die an Endpunkte gesendet werden.</param>
         public AdministrationUnitController(
-            IAdministrationUnitFacade administrationUnitFacade,
-            IParameterValidator parameterValidator)
+            IAdministrationUnitFacade administrationUnitFacade)
         {
             _administrationUnitFacade = administrationUnitFacade;
-            _parameterValidator = parameterValidator;
         }
 
         [Routing("Post", "Validate_Create")]
         public ValidationResponse ValidateCreate([FromBody]AdministrationUnitParameters value)
         {
-            var result = _parameterValidator.Validate(value, RequestType.Post);
-
-            if (result.IsValid)
-            {
-                return new ValidationResponse(State.NoError, new Error[0]);
-            }
-
-            var errors = result
-                            .Errors
-                            .Select(error => new Error(error.Property, error.Error))
-                            .ToArray();
-
-            return new ValidationResponse(State.ExternalFailure, errors);
+            return _administrationUnitFacade.ValidateCreate(value);
         }
 
         [Routing("Post", "Create")]
@@ -64,6 +46,12 @@ namespace D2.MasterData.Controllers
         {
             var result = Json.Serialize(_administrationUnitFacade.ListAdministrationUnits());
             return new ExecutionResponse(StatusCodes.Status200OK, result, new Error[0]);
+        }
+
+        [Routing("Get", "Load")]
+        public ExecutionResponse Load(string id)
+        {
+            return _administrationUnitFacade.LoadAdministrationUnit(id);
         }
     }
 }
