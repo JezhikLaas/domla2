@@ -1,7 +1,10 @@
 import {Address} from './address';
 
 export class Entrance {
-  id: string;
-  title: string;
-  address: Address;
+  Id: string;
+  Title: string;
+  Address: Address;
+  Edit: string;
+  SubUnits?: string;
+  AdministrationUnitId: string;
 }

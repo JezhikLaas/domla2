@@ -1,9 +1,9 @@
 import { CountryInfo } from './country-info';
 
-export interface Address {
-  country: CountryInfo;
-  city: string;
-  street: string;
-  number: string;
-  postalCode: string;
+export class Address {
+  Country: CountryInfo;
+  City: string;
+  Street: string;
+  Number: string;
+  PostalCode: string;
 }

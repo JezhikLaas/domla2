@@ -1,5 +1,5 @@
 export interface CountryInfo {
-  iso2: string;
-  iso3: string;
-  name: string;
+  Iso2: string;
+  Iso3: string;
+  Name: string;
 }

@@ -4,9 +4,11 @@ import {IAdministrationUnit} from './iadministration-unit';
 
 export class AdministrationUnit implements IAdministrationUnit {
   constructor(
-    public id: string,
-    public userKey: string,
-    public title: string,
-    entrances?: Entrance[]
+    public Id: string,
+    public UserKey: string,
+    public Title: string,
+    public Edit: Date,
+    public Entrances: Entrance[],
+    public YearOfConstruction?: Date,
   ) { }
 }

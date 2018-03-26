@@ -43,13 +43,13 @@ export class AdministrationUnitEditComponent implements OnInit {
   initAdminUnit() {
     this.editForm = this.fb.group({
       userKey: this.fb.control(
-        this.AdminUnit.userKey,
+        this.AdminUnit.UserKey,
         [
           Validators.required
         ]
       ),
       title: this.fb.control(
-        this.AdminUnit.title,
+        this.AdminUnit.Title,
         [
           Validators.required
         ]

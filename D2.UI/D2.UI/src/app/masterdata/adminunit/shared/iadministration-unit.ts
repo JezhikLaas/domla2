@@ -1,8 +1,10 @@
 import {Entrance} from './../../../shared/entrance';
 
 export interface IAdministrationUnit {
-  id: string;
-  userKey: string;
-  title: string;
-  entrances?: Entrance[];
+  Id: string;
+  UserKey: string;
+  Title: string;
+  Entrances: Entrance[];
+  YearOfConstruction?: Date;
+  Edit: Date;
 }
