@@ -11,6 +11,12 @@ namespace D2.MasterData.Infrastructure
         public ValidationResult Validate(object requestParameters, RequestType requestType)
         {
             var Result = new ValidationResult();
+
+            if (requestParameters == null) {
+                Result.AddError("instance", "must not be null");
+                return Result;
+            }
+
             var processed = new HashSet<object>();
 
             InternalValidate(requestParameters, requestType, Result, processed);

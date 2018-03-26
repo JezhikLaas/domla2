@@ -9,6 +9,7 @@ open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Http
 open System
 open System.Linq
+open Microsoft.AspNetCore.Mvc.ModelBinding
 
 [<Route("[controller]")>]
 type DispatchController
@@ -23,10 +24,11 @@ type DispatchController
         let descriptions = errors |> Array.map(fun error -> error.description)
         String.Join(Environment.NewLine, descriptions)
     
-    [<Authorize>]
+    //[<Authorize>]
     [<HttpPost>]
-    member this.Post(groups : string, topic : string, call : string, [<FromBody>]body : string) =
+    member this.Post(groups : string, topic : string, call : string) =
         logger.LogDebug "starting log request"
+        let body = if this.Request.Body <> null then this.Request.Body.AsUtf8String () else null
         let parameterKeys = this.HttpContext.Request.Query.Keys.Where(argumentNames.Contains >> not)
 
         let parameters = seq {

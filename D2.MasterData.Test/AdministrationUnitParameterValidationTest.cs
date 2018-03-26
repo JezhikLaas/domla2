@@ -154,5 +154,15 @@ namespace D2.MasterData.Test
             Assert.False(result.IsValid);
             Assert.Equal(4, result.Errors.Count());
         }
+
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters for post fails with null")]
+        public void Validation_of_AdministrationUnitParameters_for_post_fails_with_null()
+        {
+            var validator = new ParameterValidator();
+
+            var result = validator.Validate(null, RequestType.Post);
+            Assert.False(result.IsValid);
+            Assert.Single(result.Errors);
+        }
     }
 }

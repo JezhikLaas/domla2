@@ -137,7 +137,7 @@ module ServiceConnection =
                 let executions = (
                         seq {
                             for item in matches do
-                                item.ExecuteRequest request |> ignore
+                                yield item.ExecuteRequest request
                         } |> Seq.toList
                     )
                 consolidateExecutions validation executions
