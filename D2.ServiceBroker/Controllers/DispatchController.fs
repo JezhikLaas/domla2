@@ -24,7 +24,7 @@ type DispatchController
         let descriptions = errors |> Array.map(fun error -> error.description)
         String.Join(Environment.NewLine, descriptions)
     
-    //[<Authorize>]
+    [<Authorize>]
     [<HttpPost>]
     member this.Post(groups : string, topic : string, call : string) =
         logger.LogDebug "starting log request"
@@ -67,7 +67,7 @@ type DispatchController
                      this.StatusCode(StatusCodes.Status422UnprocessableEntity)
                      :> IActionResult
 
-    //[<Authorize>]
+    [<Authorize>]
     [<HttpGet>]
     member this.Get(groups : string, topic : string, call : string) =
         logger.LogDebug "starting log request"
