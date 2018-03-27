@@ -33,9 +33,9 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.params ['id'];
-    if (id !== '0') {
+    if (id !== 0) {
       this.isUpdatingAdminUnit = true;
-      this.AdminUnit = this.AUdata.getSingle(id);
+      this.AdminUnit = this.route.snapshot.data['AdministrationUnit'];
     }
     this.initAdminUnit();
   }

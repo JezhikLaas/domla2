@@ -18,7 +18,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { AdministrationUnitService } from './masterdata/adminunit/shared/administration-unit.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DomlaResolver} from './shared/domla-resolver.service';
+import { AdministrationUnitResolver} from './masterdata/adminunit/shared/administration-unit-resolver.service';
+import {AdministrationUnitsResolver} from './masterdata/adminunit/shared/administration-units-resolver.service';
 
 
 @NgModule({
@@ -41,8 +42,9 @@ import { DomlaResolver} from './shared/domla-resolver.service';
     StorageService,
     MenuDisplayService,
     CookieService,
+    AdministrationUnitsResolver,
+    AdministrationUnitResolver,
     AdministrationUnitService,
-    DomlaResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BearerInterceptor,

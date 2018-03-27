@@ -5,7 +5,7 @@ import { Entrance } from '../../../shared/entrance';
 
 export class AdminUnitFactory {
   static empty(): AdministrationUnit {
-    return new AdministrationUnit('', '', '', new Date(), new Entrance ()[0]);
+    return new AdministrationUnit('', '', '', new Date(), <Entrance[]>[] );
   }
 
   static fromObject (rawAdministrationUnit: AdministrationUnitRaws | any): AdministrationUnit {

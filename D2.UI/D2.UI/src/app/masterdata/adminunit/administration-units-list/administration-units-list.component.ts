@@ -14,18 +14,22 @@ import { AdministrationUnitService } from '../shared/administration-unit.service
     .mat-column-select {
       overflow: initial;
     }
+    .mat-row.selected {
+        background-color: lightblue;
+        cursor: pointer;
+    }
   `]
 })
 export class AdministrationUnitsListComponent implements OnInit {
   MenuButtons = [
-    new MenuItem('Neu', () => this.router.navigate(['administrationUnits/0']), () => true),
-    new MenuItem('Bearbeiten', () => this.router.navigate(['administrationUnits/123']), () => true),
+    new MenuItem('New', () => this.router.navigate([`administrationUnits/${this.id}`]), () => true),
   ];
   displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<IAdministrationUnit>;
   initialSelection = [];
-  allowMultiSelect = true;
-
+  allowMultiSelect = false;
+  selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
+  id = 0;
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,
@@ -35,6 +39,11 @@ export class AdministrationUnitsListComponent implements OnInit {
 
   ngOnInit() {
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
-    this.dataSource = new MatTableDataSource<IAdministrationUnit>(this.route.snapshot.data['AdministrationUnit']);
+    this.dataSource = new MatTableDataSource<IAdministrationUnit>(this.route.snapshot.data['AdministrationUnits']);
   }
+
+  selectRow (AdminUnit) {
+    this.router.navigate([`administrationUnits/${AdminUnit.Id}`]);
+  }
+
 }

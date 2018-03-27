@@ -30,20 +30,36 @@ export class AdministrationUnitService {
         );
     } else {
       return this.accountService.fetchServices()
-      .switchMap(data => {
-        this.brokerUrl = data.Broker;
-        return this.http
-          .get<AdministrationUnitRaws []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`)
-          .pipe(
-            map(rawAdministrationUnits => rawAdministrationUnits
-              .map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit)))
-          );
-      }).catch(error => Observable.throw(error));
+        .switchMap(data => {
+          this.brokerUrl = data.Broker;
+          return this.http
+            .get<AdministrationUnitRaws []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`)
+            .pipe(
+              map(rawAdministrationUnits => rawAdministrationUnits
+                .map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit)))
+            );
+        }).catch(error => Observable.throw(error));
     }
   }
 
-  getSingle(id: string) {
-    return new AdministrationUnit ('123', '123', 'Ramker Weg', new Date(), new Entrance ()[0]);
+  getSingle(id: string): Observable<AdministrationUnit> {
+    if (this.brokerUrl) {
+      return this.http
+        .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
+        .pipe(
+          map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
+        );
+    } else {
+      return this.accountService.fetchServices()
+        .switchMap(data => {
+          this.brokerUrl = data.Broker;
+          return this.http
+            .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
+            .pipe(
+              map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
+            );
+        }).catch(error => Observable.throw(error));
+    }
   }
 }
 
