@@ -6,6 +6,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
 import { environment } from '../../environments/environment';
 import { MenuDisplayService } from '../shared/menu-display.service';
+import {MenuItem} from '../shared/menu-item';
 
 @Component({
   selector: 'am-registrations',
@@ -17,7 +18,10 @@ import { MenuDisplayService } from '../shared/menu-display.service';
   `]
 })
 export class RegistrationsComponent implements OnInit {
-  MenuButtons = ['Akzeptieren', 'Ablehnen'];
+  MenuButtons = [
+    new MenuItem('Akzeptieren', () => console.log('Akzeptieren'), () => true),
+    new MenuItem('Ablehnen', () => console.log('Ablehnen'), () => true)
+  ];
 
   displayedColumns = ['select', 'login', 'salutation', 'title', 'firstName', 'lastName', 'email'];
   dataSource: MatTableDataSource<Registration>;

@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import {AdministrationService} from './shared/administration.service';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
+import {MenuItem} from './shared/menu-item';
 
 @Component({
   selector: 'am-root',
@@ -49,7 +50,7 @@ import 'rxjs/add/operator/map';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Domla/2';
-  MenuButtons: Array<string>;
+  MenuButtons: Array<MenuItem>;
   private subscription: Subscription;
 
   constructor(
@@ -79,7 +80,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     this.subscription = this.menuDisplay.menuNeeded
-      .subscribe((data: Array<string>) => {
+      .subscribe((data: Array<MenuItem>) => {
         this.MenuButtons.length = 0;
         for (const item of data) {
           this.MenuButtons.push(item);
@@ -102,7 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  handleMenuNeeded(data: Array<string>) {
+  handleMenuNeeded(data: Array<MenuItem>) {
     this.MenuButtons = data;
   }
 
