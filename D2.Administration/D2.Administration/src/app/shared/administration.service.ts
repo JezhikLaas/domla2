@@ -13,6 +13,7 @@ interface LogoutUrl {
 export class AdministrationService {
 
   private static readonly List_Registrations_Url = '/registrations/list';
+  private static readonly Confirm_Registrations_Url = '/registrations/confirm';
   private static readonly Logout_Url = '/home/logout';
 
   constructor(
@@ -22,8 +23,16 @@ export class AdministrationService {
     @Inject(DOCUMENT) private document: any
   ) { }
 
-  fetchRegistrations(succeeded: () => void, failed: (message: string) => void): Observable<Array<Registration>> {
+  fetchRegistrations(failed: (message: string) => void): Observable<Array<Registration>> {
     return this.http.get<Registration[]>(`${this.api}${AdministrationService.List_Registrations_Url}`)
+      .catch(error => {
+        failed(error.message);
+        return Observable.throw(error);
+      });
+  }
+
+  confirmRegistrations(registrationIds: Array<string>, failed: (message: string) => void): Observable<Array<Registration>> {
+    return this.http.post(`${this.api}${AdministrationService.Confirm_Registrations_Url}`, registrationIds)
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);

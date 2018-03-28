@@ -19,7 +19,7 @@ import {MenuItem} from '../shared/menu-item';
 })
 export class RegistrationsComponent implements OnInit {
   MenuButtons = [
-    new MenuItem('Akzeptieren', () => console.log('Akzeptieren'), () => true),
+    new MenuItem('Akzeptieren', () => this.acceptRegistrations(), () => true),
     new MenuItem('Ablehnen', () => console.log('Ablehnen'), () => true)
   ];
 
@@ -37,7 +37,6 @@ export class RegistrationsComponent implements OnInit {
 
   ngOnInit() {
     this.service.fetchRegistrations(
-      () => {},
       (message: string) => {
         if (environment.production) {
           this.errorDialog.show('Fehler', message);
@@ -61,5 +60,10 @@ export class RegistrationsComponent implements OnInit {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  acceptRegistrations() {
+    const registrationIds = this.selection.selected.map((value, index, values) => value.id);
+    console.log(registrationIds);
   }
 }
