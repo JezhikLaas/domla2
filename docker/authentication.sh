@@ -51,6 +51,7 @@ CREATE TABLE registrations (
     email character varying(255) NOT NULL,
     salutation character varying(50),
     title character varying(50),
+	mail_sent timestamp without time zone,
     id uuid NOT NULL
 );
 
@@ -67,7 +68,8 @@ CREATE TABLE users (
     email character varying(255) NOT NULL,
     claims jsonb,
     password character varying(255) NOT NULL,
-    logged_in timestamp without time zone
+    logged_in timestamp without time zone,
+	privacy_accepted timestamp without time zone
 );
 
 
