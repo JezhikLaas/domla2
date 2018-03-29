@@ -9,7 +9,6 @@ open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Http
 open System
 open System.Linq
-open Microsoft.AspNetCore.Mvc.ModelBinding
 
 [<Route("[controller]")>]
 type DispatchController
@@ -21,8 +20,8 @@ type DispatchController
     let argumentNames = [|"groups"; "topic"; "call"|]
     
     let concatErrorMessages (errors : Error []) =
-        let descriptions = errors |> Array.map(fun error -> error.description)
-        String.Join(Environment.NewLine, descriptions)
+        let descriptions = errors |> Array.map(fun error -> error.property + ": " + error.description)
+        String.Join(" ; ", descriptions)
     
     [<Authorize>]
     [<HttpPost>]
