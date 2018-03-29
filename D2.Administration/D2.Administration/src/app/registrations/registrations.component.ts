@@ -65,5 +65,8 @@ export class RegistrationsComponent implements OnInit {
   acceptRegistrations() {
     const registrationIds = this.selection.selected.map((value, index, values) => value.id);
     console.log(registrationIds);
+    this.service.confirmRegistrations(registrationIds, (message: string) => {
+      this.errorDialog.show('Fehler', message);
+    });
   }
 }
