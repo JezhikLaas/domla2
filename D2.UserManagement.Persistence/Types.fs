@@ -23,9 +23,12 @@ type UserRegistration =
 
     abstract member Login : string
 
+    abstract member MailSent : DateTime option
+
 type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)
     listPending : Async<UserRegistration list>
+    markRegistrations : (Guid seq -> Async<unit>)
 }
 
 

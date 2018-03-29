@@ -33,6 +33,11 @@ module RegistrationTest =
             return List.empty
         }
     
+    let private markRegistrationsTest (ids : Guid seq) =
+        async {
+            ()
+        }
+    
     type UserRegistrationI() =
         member val Id = Guid.Empty with get, set
         member val FirstName = String.Empty with get, set
@@ -41,6 +46,7 @@ module RegistrationTest =
         member val Title = String.Empty with get, set
         member val EMail = String.Empty with get, set
         member val Login = String.Empty with get, set
+        member val MailSent = None with get, set
         
         interface UserRegistration with
             member this.Id with get() = this.Id
@@ -50,10 +56,12 @@ module RegistrationTest =
             member this.Title with get() = this.Title
             member this.EMail with get() = this.EMail
             member this.Login with get() = this.Login
+            member this.MailSent with get() = this.MailSent
 
     let testStorage = {
         register = registerUser
         listPending = listPendingUsers
+        markRegistrations = markRegistrationsTest
     }
     
     let mutable browser = null
