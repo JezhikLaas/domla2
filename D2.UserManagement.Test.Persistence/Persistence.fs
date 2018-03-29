@@ -101,6 +101,7 @@ module StorageTest =
             member this.Title = String.Empty
             member this.EMail = "foo@example.com"
             member this.Login = "foo"
+            member this.MailSent = None
         }
         
         let target = Users.Storage.register user |> Async.RunSynchronously
@@ -117,6 +118,7 @@ module StorageTest =
             member this.Title = String.Empty
             member this.EMail = "foo@example.com"
             member this.Login = "foo"
+            member this.MailSent = None
         }
         
         Users.Storage.register user |> Async.RunSynchronously |>ignore
@@ -135,6 +137,7 @@ module StorageTest =
             member this.Title = String.Empty
             member this.EMail = "foo@example.com"
             member this.Login = "foo"
+            member this.MailSent = None
         }
         
         Users.Storage.register user  |> Async.RunSynchronously |> ignore

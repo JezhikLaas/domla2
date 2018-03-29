@@ -13,10 +13,11 @@ module Mapper =
         member val Salutation = String.Empty with get, set
         member val Title = String.Empty with get, set
         member val EMail = String.Empty with get, set
+        member val MailSent = None with get, set
         member this.Login
             with get() = login
             and set(value : String) =
-                login <- if value <> null then value.ToLower() else null
+                login <- if not(value |> isNull) then value.ToLower() else null
         
         interface UserRegistration with
             member this.Id with get() = this.Id
@@ -26,3 +27,4 @@ module Mapper =
             member this.Title with get() = this.Title
             member this.EMail with get() = this.EMail
             member this.Login with get() = this.Login
+            member this.MailSent with get() = this.MailSent

@@ -114,7 +114,9 @@ module Users =
                                           login,
                                           salutation
                                       FROM
-                                          registrations"""
+                                          registrations
+                                      WHERE
+                                          mail_sent IS NULL"""
         
             use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
 
@@ -135,7 +137,26 @@ module Users =
             |> Seq.toList
         }
     
+    let private markRegistrationsWorker (ids : Guid seq) =
+        async {
+            use connection = Connection.client ()
+            use command = connection.CreateCommand()
+            let idValues = ids |> Seq.toArray
+
+            command.CommandText <- """UPDATE
+                                          registrations
+                                      SET
+                                          mail_sent = :mail_sent
+                                      WHERE
+                                          id IN (:ids)"""
+            command.Parameters.AddWithValue("mail_sent", NpgsqlTypes.NpgsqlDbType.Timestamp, DateTime.UtcNow) |> ignore
+            command.Parameters.AddWithValue("ids", NpgsqlTypes.NpgsqlDbType.Array ||| NpgsqlTypes.NpgsqlDbType.Uuid, idValues) |> ignore
+            let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
+            ()
+        }
+    
     let Storage = {
         register = registerUserWorker;
         listPending = listPendingUsersWorker;
+        markRegistrations = markRegistrationsWorker;
     }
