@@ -13,7 +13,7 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public string Title { get; set; }
 
-        [NotNullOrEmpty(RequestType.Put)]
+        [NotNullOrEmpty]
         public AddressParameters Address { get; set; }
 
         public List<SubUnitParameters> SubUnits { get; set; }

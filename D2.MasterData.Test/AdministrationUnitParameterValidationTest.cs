@@ -63,7 +63,7 @@ namespace D2.MasterData.Test
 
             var result = validator.Validate(parameters, RequestType.Post);
             Assert.False(result.IsValid);
-            Assert.Equal(2, result.Errors.Count());
+            Assert.Equal(5, result.Errors.Count());
         }
 
         [Fact(DisplayName = "Validation of AdministrationUnitParameters for post succeeds w/o YearOfConstuction")]
@@ -81,7 +81,10 @@ namespace D2.MasterData.Test
                                 Iso2 = "DE",
                                 Name = "Deutschland",
                                 Iso3 = "DEU"
-                            }
+                            },
+                            Number = "1",
+                            PostalCode = "12345",
+                            Street = "Testweg"
                         },
                         Title = "Eingang1"
                     }
@@ -161,6 +164,27 @@ namespace D2.MasterData.Test
             var validator = new ParameterValidator();
 
             var result = validator.Validate(null, RequestType.Post);
+            Assert.False(result.IsValid);
+            Assert.Single(result.Errors);
+        }
+
+        [Fact(DisplayName = "Validation of AdministrationUnitParameters with Entrance w/o Address for post fails")]
+        public void Validation_of_AdministrationUnitParameters_with_Entrance_wo_Address_for_post_fails()
+        {
+            var parameters = new AdministrationUnitParameters {
+                Title = "ABC",
+                UserKey = "02",
+                Entrances = new List<EntranceParameters> {
+                    new EntranceParameters {
+                        Address = null,
+                        Title = "XXX"
+                    }
+                }
+            };
+
+            var validator = new ParameterValidator();
+
+            var result = validator.Validate(parameters, RequestType.Post);
             Assert.False(result.IsValid);
             Assert.Single(result.Errors);
         }

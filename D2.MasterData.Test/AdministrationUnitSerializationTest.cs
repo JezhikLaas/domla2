@@ -45,7 +45,6 @@ namespace D2.MasterData.Test
             Assert.Equal(test.Entrances.First().Address.Country.Iso2, check.Entrances.First().Address.Country.Iso2);
             Assert.Equal(test.Entrances.First().Address.Country.Iso3, check.Entrances.First().Address.Country.Iso3);
             Assert.Equal(test.Entrances.First().Address.Country.Name, check.Entrances.First().Address.Country.Name);
-
         }
     }
 }
