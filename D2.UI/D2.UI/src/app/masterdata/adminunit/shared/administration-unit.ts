@@ -8,7 +8,7 @@ export class AdministrationUnit implements IAdministrationUnit {
     public UserKey: string,
     public Title: string,
     public Edit: Date,
-    public Entrances: Entrance[],
+    public Entrances?: Entrance[],
     public YearOfConstruction?: Date,
   ) { }
 }

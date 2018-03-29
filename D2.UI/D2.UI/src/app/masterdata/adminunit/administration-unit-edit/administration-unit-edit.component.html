@@ -3,11 +3,54 @@
   <div class="fields">
   <div class="required field">
     <label>Schlüssel:</label>
-    <input formControlName="userKey" type="text">
+    <input formControlName="UserKey" type="text">
   </div>
   <div class="required fifteen wide field">
     <label>Bezeichnung:</label>
-    <input formControlName="title" type="text">
+    <input formControlName="Title" type="text">
+  </div>
+  </div>
+  <div class="field">
+    <div class="required fifteen wide field">
+      <label>Eingänge:</label>
+      <div formArrayName="Entrances">
+        <div class="fields"
+           *ngFor="let control of entrances.controls; index as i; last as l"
+           [formGroupName]="i">
+          <div class="three wide field">
+            <input formControlName="Title" placeholder="Titel {{i+1}} Eingang">
+          </div>
+          <div formGroupName="Address" class="fields">
+            <div formGroupName="Country" class="fields">
+              <div class="three wide field">
+                <input formControlName="Iso2" placeholder="Land Iso2">
+              </div>
+              <div class="three wide field">
+                <input formControlName="Iso3" placeholder="Land Iso3">
+              </div>
+              <div class="three wide field">
+                <input formControlName="Name" placeholder="Land Name">
+              </div>
+            </div>
+            <div class="three wide field">
+              <input formControlName="PostalCode" placeholder="PLZ">
+            </div>
+            <div class="three wide field">
+              <input formControlName="City" placeholder="Stadt">
+            </div>
+            <div class="three wide field">
+              <input formControlName="Street" placeholder="Strasse">
+            </div>
+            <div class="three wide field">
+              <input formControlName="Number" placeholder="Nummer">
+            </div>
+
+          </div>
+        <div class="one wide field" *ngIf="l">
+          <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
+        </div>
+     </div>
+    </div>
   </div>
   </div>
 </form>

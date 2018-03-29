@@ -43,23 +43,33 @@ export class AdministrationUnitService {
   }
 
   getSingle(id: string): Observable<AdministrationUnit> {
-    if (this.brokerUrl) {
-      return this.http
-        .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
-        .pipe(
-          map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
-        );
-    } else {
-      return this.accountService.fetchServices()
-        .switchMap(data => {
-          this.brokerUrl = data.Broker;
-          return this.http
-            .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
-            .pipe(
-              map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
-            );
-        }).catch(error => Observable.throw(error));
+    if (id !== '0') {
+      if (this.brokerUrl) {
+        return this.http
+          .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
+          .pipe(
+            map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
+          );
+      } else {
+        return this.accountService.fetchServices()
+          .switchMap(data => {
+            this.brokerUrl = data.Broker;
+            return this.http
+              .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
+              .pipe(
+                map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
+              );
+          }).catch(error => Observable.throw(error));
+      }
     }
+  }
+  create(AdminUnit: IAdministrationUnit): Observable<any> {
+    return this.accountService.fetchServices()
+      .switchMap(data => {
+        this.brokerUrl = data.Broker;
+        return this.http
+          .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
+      }).catch(error => Observable.throw(error));
   }
 }
 

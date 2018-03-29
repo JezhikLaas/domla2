@@ -22,14 +22,13 @@ import { AdministrationUnitService } from '../shared/administration-unit.service
 })
 export class AdministrationUnitsListComponent implements OnInit {
   MenuButtons = [
-    new MenuItem('New', () => this.router.navigate([`administrationUnits/${this.id}`]), () => true),
+    new MenuItem('New', () => this.router.navigate([`administrationUnits/0`]), () => true),
   ];
   displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<IAdministrationUnit>;
   initialSelection = [];
   allowMultiSelect = false;
   selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
-  id = 0;
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,

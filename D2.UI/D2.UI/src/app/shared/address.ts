@@ -1,9 +1,9 @@
 import { CountryInfo } from './country-info';
 
 export class Address {
-  Country: CountryInfo;
-  City: string;
-  Street: string;
-  Number: string;
-  PostalCode: string;
+  public Country?: CountryInfo;
+  public City: string;
+  public Street: string;
+  public Number: string;
+  public PostalCode: string;
 }

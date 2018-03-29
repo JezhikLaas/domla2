@@ -1,5 +1,5 @@
-export interface CountryInfo {
-  Iso2: string;
-  Iso3: string;
-  Name: string;
+export class CountryInfo {
+ public Iso2: string;
+ public Iso3: string;
+ public Name: string;
 }

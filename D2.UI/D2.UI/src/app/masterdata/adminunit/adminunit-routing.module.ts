@@ -18,7 +18,8 @@ const routes: Routes = [
     component: AdministrationUnitEditComponent,
     resolve: {
     AdministrationUnit: AdministrationUnitResolver
-  }}
+    }
+  }
 ];
 
 @NgModule({

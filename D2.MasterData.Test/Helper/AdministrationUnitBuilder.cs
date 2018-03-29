@@ -15,6 +15,7 @@ namespace D2.MasterData.Test.Helper
             _administrationUnitParameters = new AdministrationUnitParameters {
                 UserKey = "03",
                 Title = "ABC",
+                YearOfConstuction = new DateTime(2001, 10, 20),
                 Entrances = new List<EntranceParameters>
                 {
                     new EntranceParameters {
@@ -24,6 +25,7 @@ namespace D2.MasterData.Test.Helper
                             Street = "Seumestraße",
                             Number = "49",
                             PostalCode = "22222",
+                            City = "Herford",
                             Country = new CountryInfoParameters
                             {
                                 Iso2 = "DE",

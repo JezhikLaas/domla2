@@ -8,5 +8,22 @@ export interface AdministrationUnitRaws {
   Title: string;
   Edit: string;
   YearOfConstruction?: string;
-  Entrances: Entrance[];
+  Entrances?: {
+    Id: string;
+    Title: string;
+    Address: {
+      Country?: {
+        Iso2: string;
+        Iso3: string;
+        Name: string;
+      };
+      City: string;
+      Street: string;
+      Number: string;
+      PostalCode: string;
+    }
+    Edit: string;
+    SubUnits?: string;
+    AdministrationUnitId: string;
+  }[];
 }
