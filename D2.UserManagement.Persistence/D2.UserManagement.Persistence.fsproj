@@ -9,6 +9,10 @@
     <Compile Include="Users.fs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Mappings\UserRegistration.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NHibernate" Version="5.1.0" />
     <PackageReference Include="Npgsql" Version="3.2.7" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
