@@ -8,6 +8,7 @@ type RegistrationResult =
     | Known
     | Conflict
 
+[<AllowNullLiteral>]
 type UserRegistration =
     abstract member Id : Guid
     
@@ -22,8 +23,32 @@ type UserRegistration =
     abstract member EMail : string
 
     abstract member Login : string
+    
+    abstract member Version : int
 
     abstract member MailSent : DateTime option
+
+[<AllowNullLiteral>]
+type User =
+    abstract member Id : Guid
+    
+    abstract member FirstName : string
+
+    abstract member LastName : string
+
+    abstract member Salutation : string
+
+    abstract member Title : string
+
+    abstract member EMail : string
+
+    abstract member Login : string
+    
+    abstract member Version : int
+
+    abstract member LoggedIn : DateTime option
+    
+    abstract member PrivacyAccepted : DateTime option
 
 type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)

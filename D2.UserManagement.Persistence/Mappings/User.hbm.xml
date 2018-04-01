@@ -2,14 +2,14 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
     namespace="D2.UserManagement.Persistence" assembly="D2.UserManagement.Persistence">
 
-  <class name="UserRegistrationI" table="registrations">
+  <class name="UserI" table="users">
     <id name="Id" type="Guid">
       <column name="id" not-null="true"/>
       <generator class="guid.comb" />
     </id>
-    
+
     <version column="xmin" name="Version" generated="always" />
-    
+
     <property name="FirstName">
       <column name="first_name" length="255" />
     </property>
@@ -28,8 +28,11 @@
     <property name="Login">
       <column name="login" length="255" not-null="true" />
     </property>
-    <property name="MailSent" type="UtcDateTime">
-      <column name="mail_sent" />
+    <property name="LoggedIn" type="UtcDateTime">
+      <column name="logged_in" />
+    </property>
+    <property name="PrivacyAccepted" type="UtcDateTime">
+      <column name="provacy_accepted" />
     </property>
   </class>
 </hibernate-mapping>

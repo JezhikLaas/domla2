@@ -47,6 +47,7 @@ module RegistrationTest =
         member val EMail = String.Empty with get, set
         member val Login = String.Empty with get, set
         member val MailSent = None with get, set
+        member val Version = 0 with get, set
         
         interface UserRegistration with
             member this.Id with get() = this.Id
@@ -57,6 +58,7 @@ module RegistrationTest =
             member this.EMail with get() = this.EMail
             member this.Login with get() = this.Login
             member this.MailSent with get() = this.MailSent
+            member this.Version with get() = this.Version
 
     let testStorage = {
         register = registerUser

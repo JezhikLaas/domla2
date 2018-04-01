@@ -3,6 +3,7 @@ using Ice;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Ninject;
+using NLog;
 using NLog.Extensions.Logging;
 using System;
 using System.IO;
@@ -46,7 +47,7 @@ namespace D2.Service.ServiceProvider
             var factory = dependencyResolver.Kernel.Get<ILoggerFactory>();
             factory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
 
-            if (File.Exists("nlog.config")) factory.ConfigureNLog("nlog.config");
+            if (File.Exists("nlog.config")) LogManager.LoadConfiguration("nlog.config");
         }
 
         public T Resolve<T>()

@@ -53,7 +53,7 @@ module Registration =
     
     let register (user : string) =
         let result = handle {
-            let entry = JsonConvert.DeserializeObject<Mapper.UserRegistrationI>(user)
+            let entry = JsonConvert.DeserializeObject<UserRegistrationI>(user)
              
             match validateUser entry with
             | "" -> return CompositionRoot.Storage.register entry |> Async.RunSynchronously

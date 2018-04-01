@@ -1,100 +1,71 @@
 ﻿namespace D2.UserManagement.Persistence
 
 open D2.Common
-open Mapper
 open System
 open System.Collections.Generic
 
 module Users =
+    open NHibernate
+    open NHibernate.Criterion
+    open NHibernate.Linq
+    open System.Linq
     
     let private isAccepted (user : UserRegistration) =
         async {
-            use connection = Connection.client ()
-            use command = connection.CreateCommand()
-    
-            command.CommandText <- """SELECT
-                                          login, email
-                                      FROM
-                                          users
-                                      WHERE
-                                          email = :email
-                                          OR
-                                          login = :login"""
-    
-            command.Parameters.AddWithValue("email", user.EMail.ToLowerInvariant()) |> ignore
-            command.Parameters.AddWithValue("login", user.Login.ToLowerInvariant()) |> ignore
-    
-            use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
-    
-            match reader.Read() with
-            | false -> return RegistrationResult.Ok
-            | true  -> if reader.GetString(1) = user.EMail.ToLower() then
-                              return RegistrationResult.Known
-                          else
-                              return RegistrationResult.Conflict
+            use session = Connection.readOnlySession ()
+            use transaction = session.BeginTransaction()
+
+            let email = user.EMail.ToLowerInvariant()
+            let login = user.Login.ToLowerInvariant()
+
+            let! existing = session
+                                .Query<UserI>()
+                                .Where(fun reg -> reg.EMail = email || reg.Login = login)
+                                .SingleOrDefaultAsync()
+                                |> Async.AwaitTask
+            
+            do! transaction.CommitAsync() |> Async.AwaitTask
+            
+            match existing = null with
+            | true  -> return RegistrationResult.Ok
+            | false -> if existing.EMail = email then
+                           return RegistrationResult.Known
+                        else
+                           return RegistrationResult.Conflict
         }
         
     let private registerUserWorker (user : UserRegistration) =
-        let knownRegistration (client : Npgsql.NpgsqlConnection) =
+        let knownRegistration (session : ISession) =
             async {
-                use command = client.CreateCommand()
+                let email = user.EMail.ToLowerInvariant()
+                let login = user.Login.ToLowerInvariant()
 
-                command.CommandText <- """SELECT
-                                              login, email
-                                          FROM
-                                              registrations
-                                          WHERE
-                                              email = :email
-                                              OR
-                                              login = :login"""
+                let! existing = session
+                                    .Query<UserRegistrationI>()
+                                    .Where(fun reg -> reg.EMail = email || reg.Login = login)
+                                    .SingleOrDefaultAsync()
+                                    |> Async.AwaitTask
 
-                command.Parameters.AddWithValue("email", user.EMail.ToLowerInvariant()) |> ignore
-                command.Parameters.AddWithValue("login", user.Login.ToLowerInvariant()) |> ignore
-        
-                use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
-
-                match reader.Read() with
-                | true  -> return Some (reader.GetString(0), reader.GetString(1))
-                | false -> return None
+                match existing = null with
+                | false -> return Some (existing.Login, existing.EMail)
+                | true  -> return None
             }
-        async {
-            use connection = Connection.client ()
 
-            let! known = knownRegistration connection
+        async {
+            use session = Connection.readOnlySession ()
+            use transaction = session.BeginTransaction()
+
+            let! known = knownRegistration session
 
             match known with
             | None   -> match isAccepted user |> Async.RunSynchronously with
-                        | RegistrationResult.Ok -> use command = connection.CreateCommand()
-                                                   command.CommandText <- """INSERT INTO
-                                                                                 registrations(
-                                                                                     id,
-                                                                                     first_name,
-                                                                                     last_name,
-                                                                                     email,
-                                                                                     title,
-                                                                                     login,
-                                                                                     salutation
-                                                                                 )
-                                                                             VALUES(
-                                                                                 :id,
-                                                                                 :first_name,
-                                                                                 :last_name,
-                                                                                 :email,
-                                                                                 :title,
-                                                                                 :login,
-                                                                                 :salutation
-                                                                             )"""
-                                                   command.Parameters.AddWithValue("id", Guid.NewGuid()) |> ignore
-                                                   command.Parameters.AddWithValue("first_name", user.FirstName) |> ignore
-                                                   command.Parameters.AddWithValue("last_name", user.LastName) |> ignore
-                                                   command.Parameters.AddWithValue("email", user.EMail.ToLowerInvariant()) |> ignore
-                                                   command.Parameters.AddWithValue("title", user.Title) |> ignore
-                                                   command.Parameters.AddWithValue("login", user.Login) |> ignore
-                                                   command.Parameters.AddWithValue("salutation", user.Salutation) |> ignore
-                                                   let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
+                        | RegistrationResult.Ok -> session.Save user |> ignore
+                                                   transaction.Commit ()
                                                    return RegistrationResult.Ok
-                        | result -> return result
-            | Some u -> if snd u = user.EMail.ToLower() then
+                        
+                        | result                -> return result
+            
+            | Some u -> if snd u = user.EMail.ToLowerInvariant() then
                             return RegistrationResult.Known
                         else
                             return RegistrationResult.Conflict
@@ -102,57 +73,36 @@ module Users =
     
     let private listPendingUsersWorker = 
         async {
-            use connection = Connection.client ()
-            use command = connection.CreateCommand()
-
-            command.CommandText <- """SELECT
-                                          id,
-                                          first_name,
-                                          last_name,
-                                          email,
-                                          title,
-                                          login,
-                                          salutation
-                                      FROM
-                                          registrations
-                                      WHERE
-                                          mail_sent IS NULL"""
-        
-            use! reader = command.ExecuteReaderAsync() |> Async.AwaitTask
-
-            return seq {
-            while reader.Read() do
-                yield
-                    new UserRegistrationI(
-                        Id = reader.GetGuid(0),
-                        FirstName = reader.GetString(1),
-                        LastName = reader.GetString(2),
-                        EMail = reader.GetString(3),
-                        Title = reader.GetString(4),
-                        Login = reader.GetString(5),
-                        Salutation = reader.GetString(6)
-                    )
-                    :> UserRegistration
-            }
-            |> Seq.toList
+            use session = Connection.readOnlySession ()
+            use transaction = session.BeginTransaction()
+            let! pendings = session
+                             .Query<UserRegistrationI>()
+                             .Where(fun reg -> reg.MailSent = Nullable())
+                             .ToListAsync()
+                             |> Async.AwaitTask
+            transaction.Commit()
+            return pendings |> Seq.map(fun reg -> reg :> UserRegistration) |> Seq.toList
         }
     
     let private markRegistrationsWorker (ids : Guid seq) =
         async {
-            use connection = Connection.client ()
-            use command = connection.CreateCommand()
-            let idValues = ids |> Seq.toArray
-
-            command.CommandText <- """UPDATE
-                                          registrations
-                                      SET
-                                          mail_sent = :mail_sent
-                                      WHERE
-                                          id IN (:ids)"""
-            command.Parameters.AddWithValue("mail_sent", NpgsqlTypes.NpgsqlDbType.Timestamp, DateTime.UtcNow) |> ignore
-            command.Parameters.AddWithValue("ids", NpgsqlTypes.NpgsqlDbType.Array ||| NpgsqlTypes.NpgsqlDbType.Uuid, idValues) |> ignore
-            let! _ = command.ExecuteNonQueryAsync() |> Async.AwaitTask
-            ()
+            use session = Connection.session ()
+            use transaction = session.BeginTransaction()
+            let hql =  """UPDATE
+                              UserRegistrationI
+                          SET
+                              MailSent = :MailSent
+                          WHERE
+                              Id IN (:ids)"""
+            let task = session
+                        .CreateQuery(hql)
+                        .SetDateTime("MailSent", DateTime.UtcNow)
+                        .SetParameterList("ids", ids)
+                        .ExecuteUpdateAsync()
+            let! _ = task |> Async.AwaitTask
+            transaction.CommitAsync()
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
         }
     
     let Storage = {

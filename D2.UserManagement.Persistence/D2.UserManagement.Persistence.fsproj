@@ -9,6 +9,9 @@
     <Compile Include="Users.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Mappings\User.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Mappings\UserRegistration.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -18,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
+    <ProjectReference Include="..\NHibernate.NpgSql\NHibernate.NpgSql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="4.3.4" />
