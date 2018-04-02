@@ -30,10 +30,13 @@ module Program =
 
     [<EntryPoint>]
     let main args =
-        let logConfig = Path.Combine(Directory.GetCurrentDirectory(), "nlog.config")
-        if File.Exists logConfig then
-            let logger = LogManager.LoadConfiguration(logConfig).GetCurrentClassLogger()
-            logger.Info "logging configured"
-        BuildWebHost(args).Run()
-        
-        exitCode
+        try
+            let logConfig = Path.Combine(Directory.GetCurrentDirectory(), "nlog.config")
+            if File.Exists logConfig then
+                let logger = LogManager.LoadConfiguration(logConfig).GetCurrentClassLogger()
+                logger.Info "logging configured"
+            BuildWebHost(args).Run()
+            0
+        with
+        | error -> printf "error %s" (error.ToString())
+                   1
