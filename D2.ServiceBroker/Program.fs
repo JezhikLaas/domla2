@@ -8,6 +8,7 @@ module Program =
     open Microsoft.Extensions.Logging
     open NLog.Web
     open System.IO
+    open NLog
     
     let exitCode = 0
 
@@ -20,7 +21,7 @@ module Program =
                 fun logging -> logging.ClearProviders()
                                |> ignore
                                
-                               logging.SetMinimumLevel(LogLevel.Trace)
+                               logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace)
                                |> ignore
             )
             .UseNLog()
@@ -30,7 +31,7 @@ module Program =
     let main args =
         let logConfig = Path.Combine(Directory.GetCurrentDirectory(), "nlog.config")
         if File.Exists logConfig then
-            let logger = NLogBuilder.ConfigureNLog(logConfig).GetCurrentClassLogger()
+            let logger = LogManager.LoadConfiguration(logConfig).GetCurrentClassLogger()
             logger.Info "logging configured"
         
         BuildWebHost(args).Run()

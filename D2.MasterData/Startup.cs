@@ -31,8 +31,11 @@ namespace D2.MasterData
             _logger.LogDebug("finished 'ConfigureServices'");
         }
 
-        public void Configure()
+        public void Configure(IServices services)
         {
+            using (var context = services.Resolve<MasterDataContext>()) {
+                context.Database.EnsureCreated();
+            }
         }
     }
 }
