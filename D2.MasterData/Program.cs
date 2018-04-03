@@ -1,4 +1,5 @@
 ﻿using D2.Service.ServiceProvider;
+using System;
 
 namespace D2.MasterData
 {
@@ -15,7 +16,8 @@ namespace D2.MasterData
 
                 return 0;
             }
-            catch {
+            catch (Exception error) {
+                Console.WriteLine($"Error exit: {error.ToString()}");
                 return 1;
             }
         }
