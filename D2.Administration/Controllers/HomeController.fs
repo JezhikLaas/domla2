@@ -19,7 +19,7 @@ type HomeController
         async {
             logger.LogDebug "starting authorized request for Administration"
             let user = this.HttpContext.User
-            if user <> null then
+            if user |> isNull |> not then
                 logger.LogDebug (sprintf "user identified as %s" user.Identity.Name)
                 let! accessToken = this.HttpContext.GetTokenAsync "access_token"
                                    |> Async.AwaitTask
@@ -49,7 +49,7 @@ type HomeController
     [<Authorize(Roles = "admin")>]
     member this.Logout () =
         let user = this.HttpContext.User
-        if user <> null then
+        if user |> isNull |> not then
             logger.LogInformation (sprintf "user %s attempts to sign off" user.Identity.Name)
         else
             logger.LogWarning "anonymous user attempts to sign off"

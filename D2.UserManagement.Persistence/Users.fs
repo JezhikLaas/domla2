@@ -84,29 +84,31 @@ module Users =
             return pendings |> Seq.map(fun reg -> reg :> UserRegistration) |> Seq.toList
         }
     
-    let private markRegistrationsWorker (ids : Guid seq) =
+    let private acceptRegistrationWorker (id : Guid) (prerequisite : (UserRegistration -> Async<bool>)) =
         async {
             use session = Connection.session ()
             use transaction = session.BeginTransaction()
-            let hql =  """UPDATE
-                              UserRegistrationI
-                          SET
-                              MailSent = :MailSent
-                          WHERE
-                              Id IN (:ids)"""
-            let task = session
-                        .CreateQuery(hql)
-                        .SetDateTime("MailSent", DateTime.UtcNow)
-                        .SetParameterList("ids", ids)
-                        .ExecuteUpdateAsync()
-            let! _ = task |> Async.AwaitTask
-            transaction.CommitAsync()
-            |> Async.AwaitTask
-            |> Async.RunSynchronously
+            
+            let! registration = session.GetAsync<UserRegistrationI>(id) |> Async.AwaitTask
+            if registration |> isNull then
+                return false
+            else
+                let! canContinue = prerequisite (registration) 
+                if canContinue then
+                    try
+                        registration.MailSent <- Nullable<DateTime>(DateTime.UtcNow)
+                        session.Update(registration)
+                        do! transaction.CommitAsync () |> Async.AwaitTask
+                        return true
+                    with
+                    | error -> printfn "%s" (error.ToString ())
+                               return false
+                else
+                    return canContinue
         }
     
     let Storage = {
         register = registerUserWorker;
         listPending = listPendingUsersWorker;
-        markRegistrations = markRegistrationsWorker;
+        acceptRegistration = acceptRegistrationWorker;
     }

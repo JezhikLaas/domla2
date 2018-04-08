@@ -46,6 +46,16 @@ module ServiceConfiguration =
         member val Password = String.Empty with get, set
         member val Port = 0 with get, set
     
+    type MailGunProperties () =
+        member val Url = String.Empty with get, set
+        member val Api = String.Empty with get, set
+    
+    type EMailProperties () =
+        member val MailGun = MailGunProperties () with get, set
+        member val Directory = String.Empty with get, set
+        member val AcceptRegistration = String.Empty with get, set
+        member val RejectRegistration = String.Empty with get, set
+    
     let configurationSources =
         let builder = ConfigurationBuilder()
         builder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -89,6 +99,14 @@ module ServiceConfiguration =
             let config = DatabaseProperties ()
             configurationSources.GetSection("Database").Bind config
 
+            config
+        evaluate ()
+    
+    let emailsInfo =
+        let evaluate () =
+            let config = EMailProperties ()
+            configurationSources.GetSection("EMails").Bind config
+            
             config
         evaluate ()
     

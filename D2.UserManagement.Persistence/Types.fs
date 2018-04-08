@@ -53,7 +53,7 @@ type User =
 type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)
     listPending : Async<UserRegistration list>
-    markRegistrations : (Guid seq -> Async<unit>)
+    acceptRegistration : (Guid -> (UserRegistration -> Async<bool>) -> Async<bool>)
 }
 
 

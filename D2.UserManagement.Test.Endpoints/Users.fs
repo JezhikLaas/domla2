@@ -33,9 +33,9 @@ module RegistrationTest =
             return List.empty
         }
     
-    let private markRegistrationsTest (ids : Guid seq) =
+    let private acceptRegistrationTest (item : Guid) (prerequisite : (UserRegistration -> Async<bool>)) =
         async {
-            ()
+            return true
         }
     
     type UserRegistrationI() =
@@ -63,7 +63,7 @@ module RegistrationTest =
     let testStorage = {
         register = registerUser
         listPending = listPendingUsers
-        markRegistrations = markRegistrationsTest
+        acceptRegistration = acceptRegistrationTest
     }
     
     let mutable browser = null

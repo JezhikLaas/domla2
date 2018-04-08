@@ -4,9 +4,16 @@ open D2.Administration
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Mvc
 open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.Configuration
+open Microsoft.Extensions.Logging
+open System
 
 [<Route("[controller]")>]
-type RegistrationsController () =
+type RegistrationsController
+     (
+        logger : ILogger<RegistrationsController>,
+        configuration : IConfiguration
+     ) =
     inherit Controller()
 
     [<HttpGet("list")>]
@@ -19,7 +26,8 @@ type RegistrationsController () =
 
     [<HttpPost("confirm")>]
     [<Authorize>]
-    member this.Confirm () =
+    member this.Confirm (ids : Guid[]) =
         async {
-            return this.StatusCode(StatusCodes.Status202Accepted);
+            let response = Registration.acceptRegistrations ids logger
+            return this.StatusCode(response)
         }
