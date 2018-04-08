@@ -7,6 +7,7 @@ open FsUnit
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.TestHost
+open Microsoft.Extensions.Logging
 open NUnit.Framework
 open System
 open System.Collections.Generic
@@ -33,7 +34,7 @@ module RegistrationTest =
             return List.empty
         }
     
-    let private acceptRegistrationTest (item : Guid) (prerequisite : (UserRegistration -> Async<bool>)) =
+    let private acceptRegistrationTest (item : Guid) (logger : ILogger) (prerequisite : (UserRegistration -> Async<bool>)) =
         async {
             return true
         }

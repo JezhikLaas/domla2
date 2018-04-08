@@ -1,6 +1,7 @@
 ﻿namespace D2.Administration
 
 open D2.UserManagement.Persistence
+open Microsoft.Extensions.Logging
 open System
 
 module CompositionRoot =
@@ -22,8 +23,8 @@ module CompositionRoot =
         let listPending () =
             pendingFunc
         
-        let acceptRegistration (id : Guid) (prerequisite : (UserRegistration -> Async<bool>)) =
-            acceptRegistrationFunc id prerequisite
+        let acceptRegistration (id : Guid) (logger : ILogger) (prerequisite : (UserRegistration -> Async<bool>)) =
+            acceptRegistrationFunc id logger prerequisite
 
     let setStorage (service : StorageService) =
         registerFunc <- service.register

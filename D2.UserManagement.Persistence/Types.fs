@@ -1,6 +1,7 @@
 ﻿namespace D2.UserManagement.Persistence
 
 open D2.Common
+open Microsoft.Extensions.Logging
 open System
 
 type RegistrationResult =
@@ -53,7 +54,7 @@ type User =
 type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)
     listPending : Async<UserRegistration list>
-    acceptRegistration : (Guid -> (UserRegistration -> Async<bool>) -> Async<bool>)
+    acceptRegistration : (Guid -> ILogger -> (UserRegistration -> Async<bool>) -> Async<bool>)
 }
 
 

@@ -1,6 +1,7 @@
 ﻿namespace D2.UserManagement.Persistence
 
 open D2.Common
+open Microsoft.Extensions.Logging
 open System
 open System.Collections.Generic
 
@@ -84,7 +85,7 @@ module Users =
             return pendings |> Seq.map(fun reg -> reg :> UserRegistration) |> Seq.toList
         }
     
-    let private acceptRegistrationWorker (id : Guid) (prerequisite : (UserRegistration -> Async<bool>)) =
+    let private acceptRegistrationWorker (id : Guid) (logger : ILogger) (prerequisite : (UserRegistration -> Async<bool>)) =
         async {
             use session = Connection.session ()
             use transaction = session.BeginTransaction()
@@ -101,7 +102,7 @@ module Users =
                         do! transaction.CommitAsync () |> Async.AwaitTask
                         return true
                     with
-                    | error -> printfn "%s" (error.ToString ())
+                    | error -> logger.LogError (error, "acceptRegistrationWorker failed")
                                return false
                 else
                     return canContinue
