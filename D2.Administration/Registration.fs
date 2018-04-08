@@ -9,38 +9,47 @@ module Registration =
     open RestSharp
     open RestSharp.Authenticators
     open System
+    open System.IO
     
-    let generateWelcomeMailText (item : UserRegistration) =
-        ""
+    let generateWelcomeMailText (configuration : ServiceConfiguration.EMailProperties) (item : UserRegistration) =
+        File.ReadAllText(Path.Combine(configuration.Directory, configuration.AcceptRegistration.File) + ".txt")
+            .Replace("{link}", configuration.AcceptRegistration.Link)
+            .Replace("{id}", item.Id.ToString("N")) 
 
-    let generateWelcomeMailHtml (item : UserRegistration) =
-        "<html></html>"
+    let generateWelcomeMailHtml (configuration : ServiceConfiguration.EMailProperties) (item : UserRegistration) =
+        File.ReadAllText(Path.Combine(configuration.Directory, configuration.AcceptRegistration.File) + ".html")
+            .Replace("{link}", configuration.AcceptRegistration.Link)
+            .Replace("{id}", item.Id.ToString("N")) 
 
     let sendSingleMail (configuration : ServiceConfiguration.EMailProperties) (logger : ILogger) (item : UserRegistration) =
         async {
-            let client = RestClient ()
-            client.BaseUrl <- Uri (configuration.MailGun.Url)
-            client.Authenticator <- HttpBasicAuthenticator ("api", configuration.MailGun.Api)
-
-            let request = RestRequest ()
-            request
-                .AddParameter("domain", "domla.de", ParameterType.UrlSegment)
-                .AddParameter("from", "Registrierung <noreply@domla.de>")
-                .AddParameter("to", item.EMail)
-                .AddParameter("subject", "Willkomen zu Domla/2")
-                .AddParameter("text", generateWelcomeMailText item)
-                .AddParameter("html", generateWelcomeMailHtml item)
-                .Method <- Method.POST
-        
-            let! result = client.ExecuteTaskAsync request
-                          |> Async.AwaitTask
-                
-            match result.IsSuccessful with
-            | false -> if result.ErrorException |> isNull |> not then logger.LogError (result.ErrorException, "failed with exception")
-                       logger.LogError result.ErrorMessage
+            try
+                let client = RestClient ()
+                client.BaseUrl <- Uri (configuration.MailGun.Url)
+                client.Authenticator <- HttpBasicAuthenticator ("api", configuration.MailGun.Api)
+    
+                let request = RestRequest ()
+                request
+                    .AddParameter("domain", "domla.de", ParameterType.UrlSegment)
+                    .AddParameter("from", "Registrierung <noreply@domla.de>")
+                    .AddParameter("to", item.EMail)
+                    .AddParameter("subject", "Willkomen zu Domla/2")
+                    .AddParameter("text", generateWelcomeMailText configuration item)
+                    .AddParameter("html", generateWelcomeMailHtml configuration item)
+                    .Method <- Method.POST
+            
+                let! result = client.ExecuteTaskAsync request
+                              |> Async.AwaitTask
+                    
+                match result.IsSuccessful with
+                | false -> if result.ErrorException |> isNull |> not then logger.LogError (result.ErrorException, "failed with exception")
+                           logger.LogError result.ErrorMessage
+                           return false
+                | true  -> logger.LogDebug (sprintf "successfully sent acceptance mail to %s" item.EMail)
+                           return true
+            with
+            | error -> logger.LogError (error, "failed with exception")
                        return false
-            | true  -> logger.LogDebug (sprintf "successfully sent acceptance mail to %s" item.EMail)
-                       return true
         }
 
     let acceptRegistrationsWorker (ids : Guid seq) (logger : ILogger) (configuration : ServiceConfiguration.EMailProperties) =

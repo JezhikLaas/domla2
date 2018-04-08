@@ -50,11 +50,15 @@ module ServiceConfiguration =
         member val Url = String.Empty with get, set
         member val Api = String.Empty with get, set
     
+    type MailLinkProperties () =
+        member val File = String.Empty with get, set
+        member val Link = String.Empty with get, set
+    
     type EMailProperties () =
         member val MailGun = MailGunProperties () with get, set
         member val Directory = String.Empty with get, set
-        member val AcceptRegistration = String.Empty with get, set
-        member val RejectRegistration = String.Empty with get, set
+        member val AcceptRegistration = MailLinkProperties () with get, set
+        member val RejectRegistration = MailLinkProperties () with get, set
     
     let configurationSources =
         let builder = ConfigurationBuilder()
