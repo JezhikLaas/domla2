@@ -59,7 +59,8 @@ module Users =
             let! known = knownRegistration session
 
             match known with
-            | None   -> match isAccepted user |> Async.RunSynchronously with
+            | None   -> let! accepted = isAccepted user 
+                        match accepted with
                         | RegistrationResult.Ok -> session.Save user |> ignore
                                                    transaction.Commit ()
                                                    return RegistrationResult.Ok
