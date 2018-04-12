@@ -8,6 +8,8 @@ using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using D2.MasterData.Test.Helper;
+using System.Linq;
+using System.Reflection;
 
 namespace D2.MasterData.Test
 {
@@ -91,6 +93,25 @@ namespace D2.MasterData.Test
             using (var context = GetContext()) {
                 var repository = new AdministrationUnitRepository(context);
                 Assert.Null(repository.Load(Guid.NewGuid()));
+            }
+        }
+
+        [Fact(DisplayName = "AdministrationUnitRepository can update AdministrationUnit")]
+        public void AdministrationUnitRepository_can_update_AdministrationUnit()
+        {
+            var id = InsertAdministrationUnit();
+            var unit = AdministrationUnitBuilder.New.WithId(id).WithTitle("Drachenhöhle").Build();
+
+            using (var context = GetContext())
+            {
+                var repository = new AdministrationUnitRepository(context);
+                repository.Update(unit);
+            }
+            using (var context = GetContext())
+            {
+                var repository = new AdministrationUnitRepository(context);
+                var modified = repository.Load(id);
+                Assert.Equal("Drachenhöhle", modified.Title);
             }
         }
     }

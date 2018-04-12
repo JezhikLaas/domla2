@@ -8,6 +8,7 @@ import { AdministrationUnitService } from '../shared/administration-unit.service
 import { IAdministrationUnit } from '../shared/iadministration-unit';
 import { AdminUnitFactory} from '../shared/admin-unit-factory';
 import {Entrance} from '../../../shared/entrance';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'ui-administration-unit-edit',
@@ -91,10 +92,22 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   submitForm() {
     const AdminUnit: IAdministrationUnit = AdminUnitFactory.fromObject(this.editForm.value);
-    this.AUdata.create(AdminUnit).subscribe(res => {
-      this.AdminUnit = AdminUnitFactory.empty();
-      this.editForm.reset(AdminUnitFactory.empty());
-    });
+    if (this.isUpdatingAdminUnit) {
+      AdminUnit.Id = this.AdminUnit.Id;
+      AdminUnit.Edit = this.AdminUnit.Edit;
+      for ( let i = 0; i < this.AdminUnit.Entrances.length; i++ ) {
+        AdminUnit.Entrances[i].Id = this.AdminUnit.Entrances[i].Id;
+        AdminUnit.Entrances[i].Edit = this.AdminUnit.Entrances[i].Edit;
+      }
+      this.AUdata.edit(AdminUnit).subscribe(res => {
+        this.router.navigate(['../../administrationUnits', AdminUnit.Id], { relativeTo: this.route});
+      });
+    } else {
+      this.AUdata.create(AdminUnit).subscribe(res => {
+        this.AdminUnit = AdminUnitFactory.empty();
+        this.editForm.reset(AdminUnitFactory.empty());
+      });
+    }
   }
 
   doCancel() {

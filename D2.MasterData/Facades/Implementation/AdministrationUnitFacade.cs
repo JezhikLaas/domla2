@@ -33,6 +33,12 @@ namespace D2.MasterData.Facades.Implementation
             _repository.Insert(administrationUnit);
         }
 
+        public void EditAdministrationUnit(AdministrationUnitParameters value)
+        {
+            var administrationUnit = new AdministrationUnit(value);
+            _repository.Update(administrationUnit);
+        }
+
         public IEnumerable<AdministrationUnit> ListAdministrationUnits()
         {
             return _repository.List();
@@ -62,6 +68,23 @@ namespace D2.MasterData.Facades.Implementation
             var result = _parameterValidator.Validate(value, RequestType.Post);
 
             if (result.IsValid) {
+                return new ValidationResponse(State.NoError, new Error[0]);
+            }
+
+            var errors = result
+                            .Errors
+                            .Select(error => new Error(error.Property, error.Error))
+                            .ToArray();
+
+            return new ValidationResponse(State.ExternalFailure, errors);
+        }
+
+        public ValidationResponse ValidateEdit(AdministrationUnitParameters value)
+        {
+            var result = _parameterValidator.Validate(value, RequestType.Put);
+
+            if (result.IsValid)
+            {
                 return new ValidationResponse(State.NoError, new Error[0]);
             }
 

@@ -9,8 +9,10 @@ namespace D2.MasterData.Facades
     public interface IAdministrationUnitFacade
     {
         void CreateNewAdministrationUnit(AdministrationUnitParameters value);
+        void EditAdministrationUnit(AdministrationUnitParameters value);
         IEnumerable<AdministrationUnit> ListAdministrationUnits();
         ExecutionResponse LoadAdministrationUnit(string id);
         ValidationResponse ValidateCreate(AdministrationUnitParameters value);
+        ValidationResponse ValidateEdit(AdministrationUnitParameters value);
     }
 }

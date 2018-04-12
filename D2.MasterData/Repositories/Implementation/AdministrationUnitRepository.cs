@@ -47,5 +47,11 @@ namespace D2.MasterData.Repositories.Implementation
 
             return result.SingleOrDefault();
         }
+
+        public void Update(AdministrationUnit administrationUnit)
+        {
+            _connection.(administrationUnit);
+            _connection.SaveChanges();
+        }
     }
 }

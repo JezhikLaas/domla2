@@ -41,6 +41,19 @@ namespace D2.MasterData.Controllers
             return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
 
+        [Routing("Put", "Validate_Edit")]
+        public ValidationResponse ValidateEdit([FromBody]AdministrationUnitParameters value)
+        {
+            return _administrationUnitFacade.ValidateEdit(value);
+        }
+
+        [Routing("Put", "Edit")]
+        public ExecutionResponse Edit([FromBody]AdministrationUnitParameters value)
+        {
+            _administrationUnitFacade.EditAdministrationUnit(value);
+            return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
+        }
+
         [Routing("Get", "List")]
         public ExecutionResponse List()
         {

@@ -10,46 +10,46 @@
     <input formControlName="Title" type="text">
   </div>
   </div>
-  <div class="field">
-    <div class="required fifteen wide field">
+  <div class="fields">
+    <div class="required field">
       <label>Eingänge:</label>
-      <div formArrayName="Entrances">
-        <div class="fields"
-           *ngFor="let control of entrances.controls; index as i; last as l"
-           [formGroupName]="i">
-          <div class="three wide field">
-            <input formControlName="Title" placeholder="Titel {{i+1}} Eingang">
-          </div>
+      <div formArrayName="Entrances" >
+        <div *ngFor="let control of entrances.controls; index as i; last as l"
+             [formGroupName]="i"
+             class = "fields">
+            <div class="field">
+              <input formControlName="Title" placeholder="{{i+1}} Eingang">
+            </div>
           <div formGroupName="Address" class="fields">
             <div formGroupName="Country" class="fields">
-              <div class="three wide field">
+              <div class="field">
                 <input formControlName="Iso2" placeholder="Land Iso2">
               </div>
-              <div class="three wide field">
+              <div class="field">
                 <input formControlName="Iso3" placeholder="Land Iso3">
               </div>
-              <div class="three wide field">
+              <div class="field">
                 <input formControlName="Name" placeholder="Land Name">
               </div>
             </div>
-            <div class="three wide field">
+            <div class="field th">
               <input formControlName="PostalCode" placeholder="PLZ">
             </div>
-            <div class="three wide field">
+            <div class="field">
               <input formControlName="City" placeholder="Stadt">
             </div>
-            <div class="three wide field">
+            <div class="field">
               <input formControlName="Street" placeholder="Strasse">
             </div>
-            <div class="three wide field">
+            <div class="field">
               <input formControlName="Number" placeholder="Nummer">
             </div>
 
           </div>
-        <div class="one wide field" *ngIf="l">
+        <div class="one wide field">
           <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
         </div>
-     </div>
+      </div>
     </div>
   </div>
   </div>

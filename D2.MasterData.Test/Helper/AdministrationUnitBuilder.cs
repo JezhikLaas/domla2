@@ -38,7 +38,22 @@ namespace D2.MasterData.Test.Helper
             };
         }
 
-        static public AdministrationUnitBuilder New => new AdministrationUnitBuilder();
+        static public AdministrationUnitBuilder New
+        {
+            get { return new AdministrationUnitBuilder(); }
+        }
+
+        public AdministrationUnitBuilder WithId(Guid id)
+        {
+            _administrationUnitParameters.Id = id;
+            return this;
+        }
+
+        public AdministrationUnitBuilder WithTitle(string title)
+        {
+            _administrationUnitParameters.Title = title;
+            return this;
+        }
 
         public AdministrationUnit Build()
         {

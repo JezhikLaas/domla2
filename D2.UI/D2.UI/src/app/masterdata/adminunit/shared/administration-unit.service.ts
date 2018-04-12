@@ -64,12 +64,31 @@ export class AdministrationUnitService {
     }
   }
   create(AdminUnit: IAdministrationUnit): Observable<any> {
-    return this.accountService.fetchServices()
-      .switchMap(data => {
-        this.brokerUrl = data.Broker;
-        return this.http
-          .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
-      }).catch(error => Observable.throw(error));
+    if (this.brokerUrl) {
+      return this.http
+        .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
+    } else {
+      return this.accountService.fetchServices()
+        .switchMap(data => {
+          this.brokerUrl = data.Broker;
+          return this.http
+            .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
+        }).catch(error => Observable.throw(error));
+    }
+  }
+
+  edit (AdminUnit: IAdministrationUnit): Observable<any> {
+    if (this.brokerUrl) {
+      return this.http
+        .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
+    } else {
+      return this.accountService.fetchServices()
+        .switchMap(data => {
+          this.brokerUrl = data.Broker;
+          return this.http
+            .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
+        }).catch(error => Observable.throw(error));
+    }
   }
 }
 
