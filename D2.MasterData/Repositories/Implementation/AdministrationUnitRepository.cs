@@ -50,7 +50,7 @@ namespace D2.MasterData.Repositories.Implementation
 
         public void Update(AdministrationUnit administrationUnit)
         {
-            _connection.(administrationUnit);
+            _connection.Update(administrationUnit);
             _connection.SaveChanges();
         }
     }
