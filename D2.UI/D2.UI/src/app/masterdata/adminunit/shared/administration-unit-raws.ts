@@ -7,6 +7,7 @@ export interface AdministrationUnitRaws {
   UserKey: string;
   Title: string;
   Edit: string;
+  Version: number;
   YearOfConstruction?: string;
   Entrances?: {
     Id: string;

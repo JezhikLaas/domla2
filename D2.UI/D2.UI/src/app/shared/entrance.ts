@@ -5,6 +5,7 @@ export class Entrance {
   Title: string;
   Address: Address;
   Edit: string;
+  Version: number;
   SubUnits?: string;
   AdministrationUnitId: string;
 }

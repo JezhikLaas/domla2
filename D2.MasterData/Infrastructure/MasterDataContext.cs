@@ -70,15 +70,24 @@ namespace D2.MasterData.Infrastructure
 
             modelBuilder
                 .Entity<AdministrationUnit>()
-                .ForNpgsqlUseXminAsConcurrencyToken();
+                .Property(item => item.Version)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasColumnName("xmin")
+                .HasColumnType("xid");
 
             modelBuilder
                 .Entity<Entrance>()
-                .ForNpgsqlUseXminAsConcurrencyToken();
+                .Property(item => item.Version)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasColumnName("xmin")
+                .HasColumnType("xid");
 
             modelBuilder
                 .Entity<SubUnit>()
-                .ForNpgsqlUseXminAsConcurrencyToken();
+                .Property(item => item.Version)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasColumnName("xmin")
+                .HasColumnType("xid");
         }
     }
 }

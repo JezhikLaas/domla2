@@ -95,9 +95,11 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (this.isUpdatingAdminUnit) {
       AdminUnit.Id = this.AdminUnit.Id;
       AdminUnit.Edit = this.AdminUnit.Edit;
+      AdminUnit.Version = this.AdminUnit.Version;
       for ( let i = 0; i < this.AdminUnit.Entrances.length; i++ ) {
         AdminUnit.Entrances[i].Id = this.AdminUnit.Entrances[i].Id;
         AdminUnit.Entrances[i].Edit = this.AdminUnit.Entrances[i].Edit;
+        AdminUnit.Entrances[i].Version = this.AdminUnit.Entrances[i].Version;
       }
       this.AUdata.edit(AdminUnit).subscribe(res => {
         this.router.navigate(['../../administrationUnits', AdminUnit.Id], { relativeTo: this.route});

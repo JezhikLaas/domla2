@@ -11,7 +11,7 @@ namespace D2.MasterData.Models
         Entrance()
         { }
 
-        public Entrance(EntranceParameters argument, AdministrationUnit adm)
+        public Entrance(EntranceParameters argument, AdministrationUnit unit)
         {
             Id = argument.Id;
             Title = argument.Title;
@@ -22,8 +22,9 @@ namespace D2.MasterData.Models
 
                 SubUnits = new List<SubUnit>(items);
             }
-            AdministrationUnit = adm;
-            AdministrationUnitId = adm.Id;
+            Version = argument.Version;
+            AdministrationUnit = unit;
+            AdministrationUnitId = unit.Id;
         }
 
         [MaxLength(256)]
@@ -52,6 +53,13 @@ namespace D2.MasterData.Models
         }
 
         public List<SubUnit> SubUnits
+        {
+            get;
+            private set;
+        }
+
+        [ConcurrencyCheck]
+        public uint Version
         {
             get;
             private set;

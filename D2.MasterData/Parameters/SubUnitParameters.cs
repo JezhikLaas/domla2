@@ -1,8 +1,6 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Infrastructure.Validation;
-using D2.MasterData.Models;
 using System;
-using System.Collections.Generic;
 
 namespace D2.MasterData.Parameters
 {
@@ -20,5 +18,6 @@ namespace D2.MasterData.Parameters
 
         public string Usage { get; set; }
 
+        public uint Version { get; set; }
     }
 }

@@ -18,5 +18,6 @@ namespace D2.MasterData.Parameters
 
         public List<SubUnitParameters> SubUnits { get; set; }
 
+        public uint Version { get; set; }
     }
 }

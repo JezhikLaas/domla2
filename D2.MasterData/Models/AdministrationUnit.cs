@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace D2.MasterData.Models
@@ -20,6 +21,13 @@ namespace D2.MasterData.Models
                         select new Entrance(entranceParameter, this);
             Entrances = new List<Entrance>(items);
             YearOfConstuction = argument.YearOfConstuction;
+            Version = argument.Version;
+        }
+
+        public void Update(AdministrationUnit other)
+        {
+            UserKey = other.UserKey;
+            Title = other.Title;
         }
 
         [Required]
@@ -45,6 +53,13 @@ namespace D2.MasterData.Models
         }
 
         public DateTime? YearOfConstuction
+        {
+            get;
+            private set;
+        }
+
+        [ConcurrencyCheck]
+        public uint Version
         {
             get;
             private set;

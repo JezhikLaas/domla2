@@ -9,15 +9,16 @@ namespace D2.MasterData.Models
         private SubUnit()
         { }
 
-        public SubUnit(SubUnitParameters argument, Entrance entr)
+        public SubUnit(SubUnitParameters argument, Entrance entrance)
         {
             Id = argument.Id;
             Title = argument.Title;
             Floor = argument.Floor;
             Number = argument.Number;
             Usage = argument.Usage;
-            Entrance = entr;
-            EntranceId = entr.Id;
+            Version = argument.Version;
+            Entrance = entrance;
+            EntranceId = entrance.Id;
         }
 
 
@@ -61,5 +62,11 @@ namespace D2.MasterData.Models
             private set;
         }
 
+        [ConcurrencyCheck]
+        public uint Version
+        {
+            get;
+            private set;
+        }
     }
 }
