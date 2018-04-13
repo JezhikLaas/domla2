@@ -24,6 +24,7 @@ module ServiceConnection =
         
             this.Group <- service.Group
             let parts = service.BaseUrl.Split(':')
+            if parts.Length <> 3 then failwith "expected to find url including portnumber"
             
             let validator = sprintf "Validator:default -h %s -p %s" (parts.[1].TrimStart('/')) parts.[2]
             logger.LogDebug (sprintf "creating Validator %s" validator)

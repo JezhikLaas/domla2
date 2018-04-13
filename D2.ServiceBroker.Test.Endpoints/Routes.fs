@@ -23,7 +23,7 @@ module RoutesTest =
                     yield {
                         new Service with
                         member this.Name = "xxx"
-                        member this.BaseUrl = "http://base"
+                        member this.BaseUrl = "http://base:123"
                         member this.Group = "test"
                         member this.Version = 1
                         member this.Patch = 0
