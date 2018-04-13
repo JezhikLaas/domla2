@@ -26,50 +26,15 @@ type DispatchController
     [<Authorize>]
     [<HttpPost>]
     member this.Post(groups : string, topic : string, call : string) =
-        logger.LogDebug "starting post request"
-        let body = if this.Request.Body <> null then this.Request.Body.AsUtf8String () else null
-        let parameterKeys = this.HttpContext.Request.Query.Keys.Where(argumentNames.Contains >> not)
-
-        let parameters = seq {
-            for key in parameterKeys do
-                yield new Parameter(key, this.HttpContext.Request.Query.[key].ToString())
-        }
-
-        let request = Request(
-                          topic,
-                          "Post",
-                          call,
-                          body,
-                          parameters |> Seq.toArray
-                      )
-
-        try
-            let result = ServiceConnection.validateAndExecute (groups.Split(',')) request
-            match result.Execution with
-            | null ->   match result.Validation.result with
-                        | State.ExternalFailure -> result.Validation.errors |> concatErrorMessages |> logger.LogWarning
-                                                   this.StatusCode(StatusCodes.Status422UnprocessableEntity)
-                                                   :> IActionResult
-                        | _                     -> result.Validation.errors |> concatErrorMessages |> logger.LogError
-                                                   this.StatusCode(StatusCodes.Status500InternalServerError)
-                                                   :> IActionResult
-        
-            | result -> match String.IsNullOrWhiteSpace result.json with
-                        | true  -> logger.LogDebug (sprintf "succeeded with %d" result.code)
-                                   this.StatusCode result.code
-                                   :> IActionResult
-                        | false -> logger.LogDebug (sprintf "succeeded with %d and result %s" result.code result.json)
-                                   this.Content(result.json, "application/json")
-                                   :> IActionResult
-        with
-            error -> logger.LogError("POST: ", error)
-                     this.StatusCode(StatusCodes.Status422UnprocessableEntity)
-                     :> IActionResult
+        this.Modify("Post", groups, topic, call)
     
     [<Authorize>]
     [<HttpPut>]
     member this.Put(groups : string, topic : string, call : string) =
-        logger.LogDebug "starting log request"
+        this.Modify("Put", groups, topic, call)
+
+    member this.Modify(verb : string, groups : string, topic : string, call : string) =
+        logger.LogDebug (sprintf "starting %s request" verb)
         let body = if this.Request.Body <> null then this.Request.Body.AsUtf8String () else null
         let parameterKeys = this.HttpContext.Request.Query.Keys.Where(argumentNames.Contains >> not)
 
@@ -80,7 +45,7 @@ type DispatchController
 
         let request = Request(
                           topic,
-                          "Put",
+                          verb,
                           call,
                           body,
                           parameters |> Seq.toArray
@@ -105,7 +70,7 @@ type DispatchController
                                    this.Content(result.json, "application/json")
                                    :> IActionResult
         with
-            error -> logger.LogError("PUT: ", error)
+            error -> logger.LogError(verb + ": ", error)
                      this.StatusCode(StatusCodes.Status422UnprocessableEntity)
                      :> IActionResult
 
