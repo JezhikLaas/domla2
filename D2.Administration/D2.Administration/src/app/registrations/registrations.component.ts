@@ -67,6 +67,18 @@ export class RegistrationsComponent implements OnInit {
     console.log(registrationIds);
     this.service.confirmRegistrations(registrationIds, (message: string) => {
       this.errorDialog.show('Fehler', message);
-    });
+    })
+      .subscribe(() => {
+        this.service.fetchRegistrations(
+          (message: string) => {
+            if (environment.production) {
+              this.errorDialog.show('Fehler', message);
+            }
+          }
+        )
+          .subscribe(data => {
+            this.dataSource = new MatTableDataSource<Registration>(data);
+          });
+      });
   }
 }
