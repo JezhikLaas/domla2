@@ -26,8 +26,10 @@ type RegistrationsController
 
     [<HttpPost("confirm")>]
     [<Authorize>]
-    member this.Confirm (ids : Guid[]) =
+    member this.Confirm ([<FromBody>]ids : Guid[]) =
         async {
-            let response = Registration.acceptRegistrations ids logger
+            let confirmIds = ids |> Seq.toList
+            logger.LogInformation (sprintf "Confirming ids: %A" confirmIds)
+            let response = Registration.acceptRegistrations confirmIds logger
             return this.StatusCode(response)
         }
