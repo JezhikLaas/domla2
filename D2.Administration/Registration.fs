@@ -29,8 +29,9 @@ module Registration =
                 client.Authenticator <- HttpBasicAuthenticator ("api", configuration.MailGun.Api)
     
                 let request = RestRequest ()
+                request.Resource <- "{domain}/messages"
                 request
-                    .AddParameter("domain", "domla.de", ParameterType.UrlSegment)
+                    .AddParameter("domain", "mail.domla.de", ParameterType.UrlSegment)
                     .AddParameter("from", "Registrierung <noreply@domla.de>")
                     .AddParameter("to", item.EMail)
                     .AddParameter("subject", "Willkomen zu Domla/2")
@@ -42,7 +43,7 @@ module Registration =
                               |> Async.AwaitTask
                     
                 match result.IsSuccessful with
-                | false -> if result.ErrorException |> isNull |> not then logger.LogError (result.ErrorException, "failed with exception")
+                | false -> if result.ErrorException |> isNotNull then logger.LogError (result.ErrorException, "failed with exception")
                            logger.LogError result.ErrorMessage
                            return false
                 | true  -> logger.LogInformation (sprintf "successfully sent acceptance mail to %s, response %s" item.EMail result.Content)

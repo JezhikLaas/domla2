@@ -5,3 +5,5 @@ module Cast
     let inline (!?) (x:^a) (y:^a) : ^a = if x |> isNull then y else x
 
     let inline (!?>) (x:^a) (y:^a) : ^a = if x > y then y else x
+    
+    let isNotNull x = x |> isNull |> not 
