@@ -45,7 +45,7 @@ module Registration =
                 | false -> if result.ErrorException |> isNull |> not then logger.LogError (result.ErrorException, "failed with exception")
                            logger.LogError result.ErrorMessage
                            return false
-                | true  -> logger.LogDebug (sprintf "successfully sent acceptance mail to %s" item.EMail)
+                | true  -> logger.LogInformation (sprintf "successfully sent acceptance mail to %s" item.EMail)
                            return true
             with
             | error -> logger.LogError (error, "failed with exception")
@@ -61,9 +61,9 @@ module Registration =
                 | []           -> return succeeded
                 | head :: tail -> let! result = CompositionRoot.Storage.acceptRegistration head logger processor
                                   match result with
-                                  | true  -> logger.LogInformation (sprintf "registration with id %A accepted" id)
+                                  | true  -> logger.LogInformation (sprintf "registration with id %A accepted" head)
                                              return! countingProcessor tail (succeeded + 1)
-                                  | false -> logger.LogWarning (sprintf "accept registration with id %A failed" id)
+                                  | false -> logger.LogWarning (sprintf "accept registration with id %A failed" head)
                                              return! countingProcessor tail succeeded
             }
         countingProcessor (ids |> Seq.toList) 0
