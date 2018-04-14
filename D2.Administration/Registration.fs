@@ -53,19 +53,31 @@ module Registration =
         }
 
     let acceptRegistrationsWorker (ids : Guid seq) (logger : ILogger) (configuration : ServiceConfiguration.EMailProperties) =
-        async {
-            let processor = sendSingleMail configuration logger 
-            for id in ids do
-                let! result = CompositionRoot.Storage.acceptRegistration id logger processor
-                match result with
-                | true  -> logger.LogInformation (sprintf "registration with id %A accepted" id)
-                | false -> logger.LogWarning (sprintf "accept registration with id %A failed" id)
-        }
+        let processor = sendSingleMail configuration logger
+        
+        let rec countingProcessor (ids : Guid list) (succeeded : int) =
+            async {
+                match ids with
+                | []           -> return succeeded
+                | head :: tail -> let! result = CompositionRoot.Storage.acceptRegistration head logger processor
+                                  match result with
+                                  | true  -> logger.LogInformation (sprintf "registration with id %A accepted" id)
+                                             return! countingProcessor tail (succeeded + 1)
+                                  | false -> logger.LogWarning (sprintf "accept registration with id %A failed" id)
+                                             return! countingProcessor tail succeeded
+            }
+        countingProcessor (ids |> Seq.toList) 0
     
     let acceptRegistrations (ids : Guid seq) (logger : ILogger) =
         let result = handle {
-            acceptRegistrationsWorker ids logger ServiceConfiguration.emailsInfo |> Async.RunSynchronously
-            return! succeed StatusCodes.Status202Accepted
+            let succeeded = acceptRegistrationsWorker ids logger ServiceConfiguration.emailsInfo
+                            |> Async.RunSynchronously
+            
+            match (ids |> Seq.length) > succeeded with 
+            | false -> return! succeed StatusCodes.Status202Accepted
+            | true  -> match succeeded with
+                       | 0 -> return! succeed StatusCodes.Status500InternalServerError
+                       | _ -> return! succeed StatusCodes.Status416RangeNotSatisfiable
         }
         
         match result () with
