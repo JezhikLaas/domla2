@@ -45,7 +45,7 @@ module Registration =
                 | false -> if result.ErrorException |> isNull |> not then logger.LogError (result.ErrorException, "failed with exception")
                            logger.LogError result.ErrorMessage
                            return false
-                | true  -> logger.LogInformation (sprintf "successfully sent acceptance mail to %s" item.EMail)
+                | true  -> logger.LogInformation (sprintf "successfully sent acceptance mail to %s, response %s" item.EMail result.Content)
                            return true
             with
             | error -> logger.LogError (error, "failed with exception")
