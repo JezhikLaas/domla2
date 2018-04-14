@@ -7,13 +7,13 @@ namespace D2.Service.IoC
 {
     sealed class Scope : DisposableObject
     {
-        static readonly AsyncLocal<Scope> scopeProvider = new AsyncLocal<Scope>();
+        static readonly AsyncLocal<Scope> ScopeProvider = new AsyncLocal<Scope>();
 
-        static internal Scope RequestScope(IContext context) => scopeProvider.Value;
-        static internal IDisposable BeginScope()
+        internal static Scope RequestScope(IContext context) => ScopeProvider.Value;
+        internal static IDisposable BeginScope()
         {
-            scopeProvider.Value = new Scope();
-            return scopeProvider.Value;
+            ScopeProvider.Value = new Scope();
+            return ScopeProvider.Value;
         }
     }
 }
