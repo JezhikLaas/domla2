@@ -60,7 +60,8 @@ export class RegistrationsComponent implements OnInit {
     const registrationIds = this.selection.selected.map((value, index, values) => value.id);
     this.service.confirmRegistrations(registrationIds)
       .subscribe(() => {
-        this.service.fetchRegistrations()
+          this.selection.clear();
+          this.service.fetchRegistrations()
           .subscribe(
             data => this.dataSource = new MatTableDataSource<Registration>(data),
             error => this.errorDialog.show('Fehler', error.message)
