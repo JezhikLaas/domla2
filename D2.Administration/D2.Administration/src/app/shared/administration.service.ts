@@ -23,18 +23,13 @@ export class AdministrationService {
     @Inject(DOCUMENT) private document: any
   ) { }
 
-  fetchRegistrations(failed: (message: string) => void): Observable<Array<Registration>> {
-    return this.http.get<Registration[]>(`${this.api}${AdministrationService.List_Registrations_Url}`)
-      .catch(error => {
-        failed(error.message);
-        return Observable.throw(error);
-      });
+  fetchRegistrations(): Observable<Array<Registration>> {
+    return this.http.get<Registration[]>(`${this.api}${AdministrationService.List_Registrations_Url}`);
   }
 
-  confirmRegistrations(registrationIds: Array<string>, failed: (message: string) => void): Observable<Array<Registration>> {
+  confirmRegistrations(registrationIds: Array<string>): Observable<Array<Registration>> {
     return this.http.post(`${this.api}${AdministrationService.Confirm_Registrations_Url}`, registrationIds)
       .catch(error => {
-        failed(error.message);
         return Observable.throw(error);
       });
   }

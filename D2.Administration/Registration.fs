@@ -29,11 +29,9 @@ module Registration =
                 client.Authenticator <- HttpBasicAuthenticator ("api", configuration.MailGun.Api)
     
                 let request = RestRequest ()
-                request
-                    .AddParameter("domain", "mail.domla.de", ParameterType.UrlSegment)
-                    |> ignore
                 request.Resource <- "{domain}/messages"
                 request
+                    .AddParameter("domain", "mail.domla.de", ParameterType.UrlSegment)
                     .AddParameter("from", "Registrierung <noreply@domla.de>")
                     .AddParameter("to", item.EMail)
                     .AddParameter("subject", "Willkomen zu Domla/2")
@@ -49,7 +47,7 @@ module Registration =
                            logger.LogError result.ErrorMessage
                            if result.Content |> isNotNull then logger.LogError (sprintf "Mailgun reply: %s" result.Content)
                            return false
-                | true  -> logger.LogInformation (sprintf "successfully sent acceptance mail to %s, response %s" item.EMail result.Content)
+                | true  -> logger.LogDebug (sprintf "successfully sent acceptance mail to %s, response %s" item.EMail result.Content)
                            return true
             with
             | error -> logger.LogError (error, "failed with exception")
@@ -65,7 +63,7 @@ module Registration =
                 | []           -> return succeeded
                 | head :: tail -> let! result = CompositionRoot.Storage.acceptRegistration head logger processor
                                   match result with
-                                  | true  -> logger.LogInformation (sprintf "registration with id %A accepted" head)
+                                  | true  -> logger.LogDebug (sprintf "registration with id %A accepted" head)
                                              return! countingProcessor tail (succeeded + 1)
                                   | false -> logger.LogWarning (sprintf "accept registration with id %A failed" head)
                                              return! countingProcessor tail succeeded

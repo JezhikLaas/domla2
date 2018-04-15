@@ -1,12 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { Registration } from '../shared/registration';
 import { AdministrationService } from '../shared/administration.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
-import { environment } from '../../environments/environment';
 import { MenuDisplayService } from '../shared/menu-display.service';
-import {MenuItem} from '../shared/menu-item';
+import { MenuItem } from '../shared/menu-item';
 
 @Component({
   selector: 'am-registrations',
@@ -36,16 +35,11 @@ export class RegistrationsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.service.fetchRegistrations(
-      (message: string) => {
-        if (environment.production) {
-          this.errorDialog.show('Fehler', message);
-        }
-      }
-    )
-    .subscribe(data => {
-      this.dataSource = new MatTableDataSource<Registration>(data);
-    });
+    this.service.fetchRegistrations()
+    .subscribe(
+      data => this.dataSource = new MatTableDataSource<Registration>(data),
+      error => this.errorDialog.show('Fehler', error.message)
+    );
 
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
   }
@@ -64,21 +58,14 @@ export class RegistrationsComponent implements OnInit {
 
   acceptRegistrations() {
     const registrationIds = this.selection.selected.map((value, index, values) => value.id);
-    console.log(registrationIds);
-    this.service.confirmRegistrations(registrationIds, (message: string) => {
-      this.errorDialog.show('Fehler', message);
-    })
+    this.service.confirmRegistrations(registrationIds)
       .subscribe(() => {
-        this.service.fetchRegistrations(
-          (message: string) => {
-            if (environment.production) {
-              this.errorDialog.show('Fehler', message);
-            }
-          }
-        )
-          .subscribe(data => {
-            this.dataSource = new MatTableDataSource<Registration>(data);
-          });
-      });
+        this.service.fetchRegistrations()
+          .subscribe(
+            data => this.dataSource = new MatTableDataSource<Registration>(data),
+            error => this.errorDialog.show('Fehler', error.message)
+          );
+      },
+     error => this.errorDialog.show('Fehler', error.message));
   }
 }
