@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { StorageService } from './shared/storage.service';
 import { environment } from '../environments/environment';
@@ -6,10 +6,10 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuDisplayService } from './shared/menu-display.service';
 import { Subscription } from 'rxjs/Subscription';
-import {AdministrationService} from './shared/administration.service';
+import { AdministrationService } from './shared/administration.service';
+import { MenuItem } from './shared/menu-item';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import {MenuItem} from './shared/menu-item';
 
 @Component({
   selector: 'am-root',
