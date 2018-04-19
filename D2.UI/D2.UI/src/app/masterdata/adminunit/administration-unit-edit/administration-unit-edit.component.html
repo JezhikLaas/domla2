@@ -4,15 +4,15 @@
   <div class="required field">
     <label>Schlüssel:</label>
     <input formControlName="UserKey" type="text">
-    <div *ngIf="errors.UserKey" class="ui negative message">
-      {{ errors.UserKey }}
+    <div *ngIf="errors.AdminUnitUserKey" class="ui negative message">
+      {{ errors.AdminUnitUserKey }}
     </div>
   </div>
   <div class="required fifteen wide field">
     <label>Bezeichnung:</label>
     <input formControlName="Title" type="text">
-    <div *ngIf="errors.Title" class="ui negative message">
-      {{ errors.Title }}
+    <div *ngIf="errors.AdminUnitTitle" class="ui negative message">
+      {{ errors.AdminUnitTitle }}
     </div>
   </div>
   </div>
@@ -58,20 +58,20 @@
             <button (click)="removeEntrancesControl(i)" class="ui large button" type="button"> - </button>
           </div>
       </div>
-        <div *ngIf="errors.Entrances" class="ui negative message">
-          {{ errors.Entrances }}
+        <div *ngIf="errors.EntranceTitle" class="ui negative message">
+          {{ errors.EntranceTitle }}
         </div>
-        <div *ngIf="errors.PostalCode" class="ui negative message">
-          {{ errors.PostalCode }}
+        <div *ngIf="errors.AddressPostalCode" class="ui negative message">
+          {{ errors.AddressPostalCode }}
         </div>
-        <div *ngIf="errors.City" class="ui negative message">
-          {{ errors.City }}
+        <div *ngIf="errors.AddressCity" class="ui negative message">
+          {{ errors.AddressCity }}
         </div>
-        <div *ngIf="errors.Street" class="ui negative message">
-          {{ errors.Street }}
+        <div *ngIf="errors.AddressStreet" class="ui negative message">
+          {{ errors.AddressStreet }}
         </div>
-        <div *ngIf="errors.Number" class="ui negative message">
-          {{ errors.Number }}
+        <div *ngIf="errors.AddressNumber" class="ui negative message">
+          {{ errors.AddressNumber }}
         </div>
     </div>
    </div>

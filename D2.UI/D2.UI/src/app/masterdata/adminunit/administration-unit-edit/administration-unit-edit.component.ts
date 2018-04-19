@@ -10,7 +10,7 @@ import { AdminUnitFactory} from '../shared/admin-unit-factory';
 import { Entrance } from '../../../shared/entrance';
 import { forEach } from '@angular/router/src/utils/collection';
 import { AdministrationUnitValidators} from '../shared/administration-unit.validators';
-import {AdministrationUnitFormErrorMessages, EntranceErrorMessages} from './administration-form-error-messages';
+import {AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages} from './administration-form-error-messages';
 
 @Component({
   selector: 'ui-administration-unit-edit',
@@ -135,11 +135,31 @@ export class AdministrationUnitEditComponent implements OnInit {
         control.invalid &&
         control.errors &&
         control.errors[message.forValidator] &&
-        !this.errors[message.forControl]) {
-        this.errors[message.forControl] = message.text;
+        !this.errors['AdminUnit' + message.forControl]) {
+        this.errors['AdminUnit' + message.forControl] = message.text;
       }
     }
+    this.updateErrorMessagesEntrance();
     this.updateErrorMessagesAddress();
+  }
+
+  updateErrorMessagesEntrance() {
+    const formArray = this.editForm.get('Entrances') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      const entrance = formArray.controls[i] as FormGroup;
+      const address = entrance.controls.Address as FormGroup;
+      for (const message of EntranceErrorMessages) {
+        const control = this.editForm.get(['Entrances', i, message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.errors['Entrance' + message.forControl]) {
+          this.errors['Entrance' + message.forControl] = message.text;
+        }
+      }
+    }
   }
 
   updateErrorMessagesAddress() {
@@ -147,15 +167,15 @@ export class AdministrationUnitEditComponent implements OnInit {
     for (let i = 0; i < formArray.length; i++) {
       const entrance = formArray.controls[i] as FormGroup;
       const address = entrance.controls.Address as FormGroup;
-      for (const message of EntranceErrorMessages) {
+      for (const message of AddressErrorMessages) {
         const control = this.editForm.get(['Entrances', i, 'Address', message.forControl]);
         if (control &&
           control.dirty &&
           control.invalid &&
           control.errors &&
           control.errors[message.forValidator] &&
-          !this.errors[message.forControl]) {
-          this.errors[message.forControl] = message.text;
+          !this.errors['Address' + message.forControl]) {
+          this.errors['Address' + message.forControl] = message.text;
         }
       }
     }
