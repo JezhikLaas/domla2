@@ -18,7 +18,7 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty(RequestType.Put, RequestType.Post)]
         public List<EntranceParameters> Entrances { get; set; }
 
-        public DateTime? YearOfConstuction { get; set; }
+        public DateTime? YearOfConstruction { get; set; }
 
         public uint Version { get; set; }
     }

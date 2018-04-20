@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   namespace="D2.MasterData.Models" assembly="D2.MasterData">
+
+    <class name="AdministrationUnit" table="administrationunit">
+        <id name="Id" type="Guid">
+            <column name="id" not-null="true"/>
+            <generator class="guid.comb" />
+        </id>
+
+        <version column="xmin" name="Version" generated="always" />
+
+        <property name="Edit" type="UtcDateTime">
+            <column name="edit" />
+        </property>
+        <property name="UserKey">
+            <column name="userkey" length="10" not-null="true" />
+        </property>
+        <property name="Title">
+            <column name="title" length="256" />
+        </property>
+        <property name="YearOfConstuction" type="UtcDateTime">
+            <column name="yearofconstuction" />
+        </property>
+    </class>
+</hibernate-mapping>

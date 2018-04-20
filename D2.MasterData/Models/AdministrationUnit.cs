@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace D2.MasterData.Models
 {
     public class AdministrationUnit : BaseModel
     {
-        AdministrationUnit()
+        protected AdministrationUnit()
         { }
 
         public AdministrationUnit(AdministrationUnitParameters argument)
@@ -19,47 +18,41 @@ namespace D2.MasterData.Models
             Title = argument.Title;
             var items = from entranceParameter in argument.Entrances
                         select new Entrance(entranceParameter, this);
-            Entrances = new List<Entrance>(items);
-            YearOfConstuction = argument.YearOfConstuction;
+            _entrances = new List<Entrance>(items);
+            YearOfConstruction = argument.YearOfConstruction;
             Version = argument.Version;
-        }
-
-        public void Update(AdministrationUnit other)
-        {
-            UserKey = other.UserKey;
-            Title = other.Title;
         }
 
         [Required]
         [MaxLength(10)]
-        public string UserKey
+        public virtual string UserKey
         {
             get;
             private set;
         }
 
         [MaxLength(256)]
-        public string Title
+        public virtual string Title
         {
             get;
             private set;
         }
 
+        private List<Entrance> _entrances;
         [Required]
-        public List<Entrance> Entrances
+        public virtual IReadOnlyList<Entrance> Entrances
         {
-            get;
-            private set;
+            get { return _entrances; }
         }
 
-        public DateTime? YearOfConstuction
+        public virtual DateTime? YearOfConstruction
         {
             get;
             private set;
         }
 
         [ConcurrencyCheck]
-        public uint Version
+        public virtual uint Version
         {
             get;
             private set;
