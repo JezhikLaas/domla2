@@ -4,10 +4,16 @@
   <div class="required field">
     <label>Schlüssel:</label>
     <input formControlName="UserKey" type="text">
+    <div *ngIf="errors.AdminUnitUserKey" class="ui negative message">
+      {{ errors.AdminUnitUserKey }}
+    </div>
   </div>
   <div class="required fifteen wide field">
     <label>Bezeichnung:</label>
     <input formControlName="Title" type="text">
+    <div *ngIf="errors.AdminUnitTitle" class="ui negative message">
+      {{ errors.AdminUnitTitle }}
+    </div>
   </div>
   </div>
   <div class="fields">
@@ -16,41 +22,58 @@
       <div formArrayName="Entrances" >
         <div *ngFor="let control of entrances.controls; index as i; last as l"
              [formGroupName]="i"
-             class = "fields">
-            <div class="field">
+             class = "twenty-one fields">
+            <div class="one wide field">
               <input formControlName="Title" placeholder="{{i+1}} Eingang">
             </div>
-          <div formGroupName="Address" class="fields">
-            <div formGroupName="Country" class="fields">
-              <div class="field">
-                <input formControlName="Iso2" placeholder="Land Iso2">
-              </div>
-              <div class="field">
-                <input formControlName="Iso3" placeholder="Land Iso3">
-              </div>
-              <div class="field">
-                <input formControlName="Name" placeholder="Land Name">
-              </div>
+          <div formGroupName="Address" class="equal width fields">
+            <div formGroupName="Country" class="equal width fields">
+                <div class="three wide field">
+                  <input formControlName="Iso2" placeholder="Land Iso2">
+               </div>
+                <div class="three wide field">
+                  <input formControlName="Iso3" placeholder="Land Iso3">
+                </div>
+                <div class="five wide field">
+                  <input formControlName="Name" placeholder="Land Name">
+                </div>
             </div>
-            <div class="field th">
+            <div class="two wide field">
               <input formControlName="PostalCode" placeholder="PLZ">
             </div>
-            <div class="field">
+            <div class="three wide field">
               <input formControlName="City" placeholder="Stadt">
             </div>
-            <div class="field">
+            <div class="three wide field">
               <input formControlName="Street" placeholder="Strasse">
             </div>
-            <div class="field">
+            <div class="one wide field">
               <input formControlName="Number" placeholder="Nummer">
             </div>
-
           </div>
-        <div class="one wide field">
-          <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
+        <div class="one wide field" *ngIf="l">
+            <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
         </div>
+          <div class="one wide field" *ngIf="l && i!==0">
+            <button (click)="removeEntrancesControl(i)" class="ui large button" type="button"> - </button>
+          </div>
       </div>
+        <div *ngIf="errors.EntranceTitle" class="ui negative message">
+          {{ errors.EntranceTitle }}
+        </div>
+        <div *ngIf="errors.AddressPostalCode" class="ui negative message">
+          {{ errors.AddressPostalCode }}
+        </div>
+        <div *ngIf="errors.AddressCity" class="ui negative message">
+          {{ errors.AddressCity }}
+        </div>
+        <div *ngIf="errors.AddressStreet" class="ui negative message">
+          {{ errors.AddressStreet }}
+        </div>
+        <div *ngIf="errors.AddressNumber" class="ui negative message">
+          {{ errors.AddressNumber }}
+        </div>
     </div>
-  </div>
+   </div>
   </div>
 </form>
