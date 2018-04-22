@@ -5,31 +5,32 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHibernate;
 
 namespace D2.MasterData.Repositories.Implementation
 {
     [RequestScope]
     public class AdministrationUnitRepository : IAdministrationUnitRepository
     {
-        MasterDataContext _connection;
+        readonly ISession _connection;
 
-        public AdministrationUnitRepository(MasterDataContext context)
+        public AdministrationUnitRepository(ISession context)
         {
             _connection = context;
         }
 
         public void Insert(AdministrationUnit item)
         {
-            _connection.Add(item);
-            _connection.SaveChanges();
+            using (var transaction = _connection.BeginTransaction())
+            {
+                _connection.Save(item);
+                transaction.Commit();
+            }
         }
 
         public IEnumerable<AdministrationUnit> List()
         {
-            var result = from unit in _connection.AdministrationUnits
-                                                 .Include(unit => unit.Entrances)
-                                                 .Include("Entrances.Address")
-                                                 .Include("Entrances.Address.Country")
+            var result = from unit in _connection.Query<AdministrationUnit>()
                          orderby unit.UserKey
                          select unit;
 
@@ -38,20 +39,16 @@ namespace D2.MasterData.Repositories.Implementation
 
         public AdministrationUnit Load(Guid id)
         {
-            var result = from unit in _connection.AdministrationUnits
-                                                 .Include(unit => unit.Entrances)
-                                                 .Include("Entrances.Address")
-                                                 .Include("Entrances.Address.Country")
-                         where unit.Id == id
-                         select unit;
-
-            return result.SingleOrDefault();
+            return _connection.Get<AdministrationUnit>(id);
         }
 
         public void Update(AdministrationUnit administrationUnit)
         {
-            _connection.Update(administrationUnit);
-            _connection.SaveChanges();
+            using (var transaction = _connection.BeginTransaction())
+            {
+                _connection.Update(administrationUnit);
+                transaction.Commit();
+            }
         }
     }
 }

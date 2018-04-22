@@ -9,7 +9,9 @@ namespace D2.MasterData.Models
     public class AdministrationUnit : BaseModel
     {
         protected AdministrationUnit()
-        { }
+        {
+            _entrances = new List<Entrance>();
+        }
 
         public AdministrationUnit(AdministrationUnitParameters argument)
         {
@@ -38,9 +40,9 @@ namespace D2.MasterData.Models
             private set;
         }
 
-        private List<Entrance> _entrances;
+        private IList<Entrance> _entrances;
         [Required]
-        public virtual IReadOnlyList<Entrance> Entrances
+        public virtual IEnumerable<Entrance> Entrances
         {
             get { return _entrances; }
         }
@@ -52,7 +54,7 @@ namespace D2.MasterData.Models
         }
 
         [ConcurrencyCheck]
-        public virtual uint Version
+        public virtual int Version
         {
             get;
             private set;

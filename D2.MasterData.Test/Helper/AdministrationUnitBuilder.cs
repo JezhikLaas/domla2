@@ -55,6 +55,12 @@ namespace D2.MasterData.Test.Helper
             return this;
         }
 
+        public AdministrationUnitBuilder WithVersion(int version)
+        {
+            _administrationUnitParameters.Version = version;
+            return this;
+        }
+
         public AdministrationUnit Build()
         {
             return new AdministrationUnit(_administrationUnitParameters);

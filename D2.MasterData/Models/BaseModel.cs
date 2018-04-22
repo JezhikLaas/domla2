@@ -6,20 +6,18 @@ namespace D2.MasterData.Models
 {
     public class BaseModel
     {
-        protected Guid _id;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id
         {
-            get { return _id; }
-            internal set { _id = value; }
+            get;
+            internal set;
         }
 
-        protected DateTime _edit;
         public DateTime Edit
         {
-            get { return _edit; }
-            private set { _edit = value; }
+            get;
+            private set;
         }
     }
 }
