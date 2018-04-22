@@ -3,6 +3,7 @@ using D2.MasterData.Infrastructure;
 using System;
 using System.IO;
 using System.Linq;
+using D2.MasterData.Mappings;
 using D2.MasterData.Models;
 using Xunit;
 using Microsoft.EntityFrameworkCore;

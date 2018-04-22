@@ -40,7 +40,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Mappings\AdministrationUnit.hbm.xml" />
-  </ItemGroup>
 </Project>
