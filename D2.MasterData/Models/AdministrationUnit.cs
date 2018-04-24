@@ -20,7 +20,7 @@ namespace D2.MasterData.Models
             var items = from entranceParameter in argument.Entrances
                         select new Entrance(entranceParameter, this);
             Entrances = new List<Entrance>(items);
-            YearOfConstuction = argument.YearOfConstuction;
+            YearOfConstruction = argument.YearOfConstruction;
             Version = argument.Version;
         }
 
@@ -28,6 +28,7 @@ namespace D2.MasterData.Models
         {
             UserKey = other.UserKey;
             Title = other.Title;
+            YearOfConstruction = other.YearOfConstruction;
         }
 
         [Required]
@@ -52,7 +53,7 @@ namespace D2.MasterData.Models
             private set;
         }
 
-        public DateTime? YearOfConstuction
+        public DateTime? YearOfConstruction
         {
             get;
             private set;

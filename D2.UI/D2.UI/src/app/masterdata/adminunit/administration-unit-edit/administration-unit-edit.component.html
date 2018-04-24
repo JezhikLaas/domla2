@@ -8,13 +8,17 @@
       {{ errors.AdminUnitUserKey }}
     </div>
   </div>
-  <div class="required fifteen wide field">
-    <label>Bezeichnung:</label>
-    <input formControlName="Title" type="text">
-    <div *ngIf="errors.AdminUnitTitle" class="ui negative message">
-      {{ errors.AdminUnitTitle }}
+    <div class="required fifteen wide field">
+      <label>Bezeichnung:</label>
+      <input formControlName="Title" type="text">
+      <div *ngIf="errors.AdminUnitTitle" class="ui negative message">
+        {{ errors.AdminUnitTitle }}
+      </div>
     </div>
-  </div>
+    <div class="fifteen wide field">
+      <label>Baujahr:</label>
+      <input formControlName="YearOfConstruction" type="date" useValueAsDate>
+    </div>
   </div>
   <div class="fields">
     <div class="required field">
@@ -29,14 +33,10 @@
           <div formGroupName="Address" class="equal width fields">
             <div formGroupName="Country" class="equal width fields">
                 <div class="three wide field">
-                  <input formControlName="Iso2" placeholder="Land Iso2">
+                  <select [(ngModel)] = "CountryDefaultIso2" id = "Iso2" formControlName="Iso2" (ngModelChange)="onCountrySelected($event, i)">
+                    <option *ngFor="let country of Countries" [ngValue]="country.Iso2" > {{country.Iso2}} {{ country.Name }}</option>
+                  </select>
                </div>
-                <div class="three wide field">
-                  <input formControlName="Iso3" placeholder="Land Iso3">
-                </div>
-                <div class="five wide field">
-                  <input formControlName="Name" placeholder="Land Name">
-                </div>
             </div>
             <div class="two wide field">
               <input formControlName="PostalCode" placeholder="PLZ">

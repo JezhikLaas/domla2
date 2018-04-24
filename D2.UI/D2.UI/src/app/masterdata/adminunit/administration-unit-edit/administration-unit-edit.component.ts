@@ -11,6 +11,7 @@ import { Entrance } from '../../../shared/entrance';
 import { forEach } from '@angular/router/src/utils/collection';
 import { AdministrationUnitValidators} from '../shared/administration-unit.validators';
 import {AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages} from './administration-form-error-messages';
+import {CountryInfo} from '../../../shared/country-info';
 
 @Component({
   selector: 'ui-administration-unit-edit',
@@ -21,9 +22,9 @@ import {AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceError
 export class AdministrationUnitEditComponent implements OnInit {
   MenuButtons = [
     new MenuItem('Speichern', () => this.submitForm(), () => {
-        if (this.editForm.valid && this.editForm.touched ) {
-          return true;
-        } else { return false; }
+      if (this.editForm.valid && (this.editForm.touched || this.editForm.dirty) ) {
+        return true;
+      } else { return false; }
     }),
     new MenuItem('Schließen', () => this.doCancel(), () => true)
   ];
@@ -34,6 +35,12 @@ export class AdministrationUnitEditComponent implements OnInit {
   entrances: FormArray;
   Address: FormGroup;
   Country: FormGroup;
+  Countries: CountryInfo[] = [
+    { Iso2: 'US', Iso3:  'USA',  Name: 'United States' },
+    { Iso2: 'DE', Iso3:  'DEU',  Name: 'Deutschland' },
+    { Iso2: 'UK', Iso3:  'UKA',  Name: 'United Kingdom' }];
+  CountryDefaultIso2: string;
+  CountryDefaultName: string;
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
@@ -48,30 +55,36 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (id !== '0') {
       this.isUpdatingAdminUnit = true;
       this.AdminUnit = this.route.snapshot.data['AdministrationUnit'];
-    }
+      for (let i = 0; i < this.AdminUnit.Entrances.length; i++) {
+        this.CountryDefaultIso2 = this.AdminUnit.Entrances[i].Address.Country.Iso2;
+      }
+    } else { this.CountryDefaultIso2 = 'DE'; this.CountryDefaultName = 'Deutschland'; }
     this.initAdminUnit();
   }
 
   initAdminUnit () {
     this.buildEntrancesArray();
     this.editForm = this.fb.group({
-       UserKey: this.fb.control(
-         this.AdminUnit.UserKey,
-         [
-           Validators.required
-         ]
-       ),
-       Title: this.fb.control(
-         this.AdminUnit.Title,
-         [
-           Validators.required
-         ]
-       ),
+      UserKey: this.fb.control(
+        this.AdminUnit.UserKey,
+        [
+          Validators.required
+        ]
+      ),
+      Title: this.fb.control(
+        this.AdminUnit.Title,
+        [
+          Validators.required
+        ]
+      ),
+      YearOfConstruction: this.fb.control(
+        this.AdminUnit.YearOfConstruction
+      ),
       Entrances: this.entrances
     });
     this.editForm.statusChanges.subscribe(() => this.updateErrorMessages());
     this.MenuButtons[0].isActive = () => {
-      if (this.editForm.valid && this.editForm.touched ) {
+      if (this.editForm.valid && (this.editForm.touched || this.editForm.dirty)) {
         return true;
       } else { return false; }
     };
@@ -90,9 +103,7 @@ export class AdministrationUnitEditComponent implements OnInit {
               Number: this.fb.control(t.Address.Number, [Validators.required]),
               Country: this.Country = this.fb.group(
                 {
-                  Iso2: this.fb.control(t.Address.Country.Iso2),
-                  Iso3: this.fb.control(t.Address.Country.Iso3),
-                  Name: this.fb.control(t.Address.Country.Name)
+                  Iso2: this.fb.control(t.Address.Country.Iso2), Name: this.fb.control(t.Address.Country.Name)
                 }, { validator: Validators.required}
               ),
               PostalCode: this.fb.control(t.Address.PostalCode, [Validators.required])
@@ -107,11 +118,12 @@ export class AdministrationUnitEditComponent implements OnInit {
   submitForm() {
     this.editForm.value.Entrances = this.editForm.value.Entrances.filter(entrance => entrance);
     const AdminUnit: IAdministrationUnit = AdminUnitFactory.fromObject(this.editForm.value);
+    const formArray = this.editForm.get('Entrances') as FormArray;
     if (this.isUpdatingAdminUnit) {
       AdminUnit.Id = this.AdminUnit.Id;
       AdminUnit.Edit = this.AdminUnit.Edit;
       AdminUnit.Version = this.AdminUnit.Version;
-      for ( let i = 0; i < this.AdminUnit.Entrances.length; i++ ) {
+      for ( let i = 0; i < formArray.length && i < this.AdminUnit.Entrances.length; i++ ) {
         AdminUnit.Entrances[i].Id = this.AdminUnit.Entrances[i].Id;
         AdminUnit.Entrances[i].Edit = this.AdminUnit.Entrances[i].Edit;
         AdminUnit.Entrances[i].Version = this.AdminUnit.Entrances[i].Version;
@@ -203,7 +215,7 @@ export class AdministrationUnitEditComponent implements OnInit {
         Street: this.fb.control (null, [Validators.required]),
         Number: this.fb.control (null, [Validators.required]),
         Country:
-          this.fb.group({Iso2: null, Iso3: null, Name: null}, { validator: Validators.required}),
+          this.fb.group({Iso2: null, Name: null}, { validator: Validators.required}),
         PostalCode: this.fb.control (null, [Validators.required])
       })
     }));
@@ -213,4 +225,16 @@ export class AdministrationUnitEditComponent implements OnInit {
   removeEntrancesControl(index: number) {
     this.entrances.removeAt(index);
   }
+
+  onCountrySelected(val: any, i: number) {
+    this.CountryRefresh(val, i);
+  }
+
+  CountryRefresh(val: any, i: number) {
+    const countryGroup = this.editForm.get(['Entrances', i, 'Address', 'Country']) as FormGroup;
+    const countryName = this.Countries.find(country => country.Iso2 === val ).Name;
+    countryGroup.patchValue( {Name: countryName});
+  }
 }
+
+

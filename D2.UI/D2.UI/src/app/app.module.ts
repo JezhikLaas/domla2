@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, LOCALE_ID } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,7 +19,8 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
 import { AdministrationUnitService } from './masterdata/adminunit/shared/administration-unit.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministrationUnitResolver} from './masterdata/adminunit/shared/administration-unit-resolver.service';
-import {AdministrationUnitsResolver} from './masterdata/adminunit/shared/administration-units-resolver.service';
+import { AdministrationUnitsResolver } from './masterdata/adminunit/shared/administration-units-resolver.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
@@ -33,7 +34,9 @@ import {AdministrationUnitsResolver} from './masterdata/adminunit/shared/adminis
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    FormsModule,
+    NgSelectModule
   ],
   providers: [
     ErrorDialogComponent,
@@ -49,6 +52,10 @@ import {AdministrationUnitsResolver} from './masterdata/adminunit/shared/adminis
       provide: HTTP_INTERCEPTORS,
       useClass: BearerInterceptor,
       multi: true
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'de'
     }
   ],
   bootstrap: [AppComponent],
