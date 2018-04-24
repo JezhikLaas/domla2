@@ -3,6 +3,7 @@ using System.Reflection;
 using D2.Common;
 using FluentNHibernate.Cfg;
 using NHibernate;
+using NHibernate.Tool.hbm2ddl;
 using Npgsql;
 
 namespace D2.MasterData.Mappings
@@ -31,7 +32,7 @@ namespace D2.MasterData.Mappings
             
                     var connectionProperties = new Dictionary<string, string>
                     {
-                        {"connection.connection_string", builder.ConnectionString },
+                        { "connection.connection_string", builder.ConnectionString },
                         { "connection.driver_class", "Beginor.NHibernate.NpgSql.NpgSqlDriver,NHibernate.NpgSql" },
                         { "dialect", "NHibernate.Dialect.PostgreSQL83Dialect" },
                         { "use_proxy_validator", "false" }
@@ -40,9 +41,17 @@ namespace D2.MasterData.Mappings
                     var configuration = new NHibernate.Cfg.Configuration()
                         .SetProperties(connectionProperties);
                     
-                    Initialize(Fluently.Configure(configuration));
+                    var fluentConfiguration = Fluently.Configure()
+                        .ExposeConfiguration(BuildSchema);
+                    
+                    Initialize(fluentConfiguration);
                 }
             }
+        }
+        
+        private static void BuildSchema(NHibernate.Cfg.Configuration config)
+        {
+            new SchemaExport(config).Create(false, true);
         }
         
         static ConnectionFactory()
