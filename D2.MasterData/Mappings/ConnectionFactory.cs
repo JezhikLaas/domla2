@@ -41,7 +41,7 @@ namespace D2.MasterData.Mappings
                     var configuration = new NHibernate.Cfg.Configuration()
                         .SetProperties(connectionProperties);
                     
-                    var fluentConfiguration = Fluently.Configure()
+                    var fluentConfiguration = Fluently.Configure(configuration)
                         .ExposeConfiguration(BuildSchema);
                     
                     Initialize(fluentConfiguration);
