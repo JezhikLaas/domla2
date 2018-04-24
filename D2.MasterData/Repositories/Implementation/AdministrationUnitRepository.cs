@@ -1,7 +1,6 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using D2.Service.IoC;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,25 +11,25 @@ namespace D2.MasterData.Repositories.Implementation
     [RequestScope]
     public class AdministrationUnitRepository : IAdministrationUnitRepository
     {
-        readonly ISession _connection;
+        readonly IDataContext _context;
 
-        public AdministrationUnitRepository(ISession context)
+        public AdministrationUnitRepository(IDataContext context)
         {
-            _connection = context;
+            _context = context;
         }
 
         public void Insert(AdministrationUnit item)
         {
-            using (var transaction = _connection.BeginTransaction())
+            using (var transaction = _context.Session.BeginTransaction())
             {
-                _connection.Save(item);
+                _context.Session.Save(item);
                 transaction.Commit();
             }
         }
 
         public IEnumerable<AdministrationUnit> List()
         {
-            var result = from unit in _connection.Query<AdministrationUnit>()
+            var result = from unit in _context.Session.Query<AdministrationUnit>()
                          orderby unit.UserKey
                          select unit;
 
@@ -39,14 +38,14 @@ namespace D2.MasterData.Repositories.Implementation
 
         public AdministrationUnit Load(Guid id)
         {
-            return _connection.Get<AdministrationUnit>(id);
+            return _context.Session.Get<AdministrationUnit>(id);
         }
 
         public void Update(AdministrationUnit administrationUnit)
         {
-            using (var transaction = _connection.BeginTransaction())
+            using (var transaction = _context.Session.BeginTransaction())
             {
-                _connection.Update(administrationUnit);
+                _context.Session.Update(administrationUnit);
                 transaction.Commit();
             }
         }

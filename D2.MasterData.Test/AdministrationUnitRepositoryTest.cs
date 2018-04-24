@@ -70,9 +70,9 @@ namespace D2.MasterData.Test
             }
         }
 
-        ISession GetContext()
+        IDataContext GetContext()
         {
-            return ConnectionFactory.Open();
+            return new DataContext();
         }
 
         (Guid, int) InsertAdministrationUnit()

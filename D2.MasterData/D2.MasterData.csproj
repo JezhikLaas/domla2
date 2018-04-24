@@ -28,6 +28,7 @@
     <ProjectReference Include="..\D2.Common\D2.Common.fsproj" />
     <ProjectReference Include="..\D2.Service.Contracts\D2.Service.Contracts.csproj" />
     <ProjectReference Include="..\D2.Service\D2.Service.csproj" />
+    <ProjectReference Include="..\NHibernate.NpgSql\NHibernate.NpgSql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">

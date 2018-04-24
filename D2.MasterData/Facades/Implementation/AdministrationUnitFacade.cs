@@ -16,8 +16,8 @@ namespace D2.MasterData.Facades.Implementation
     [RequestScope]
     public class AdministrationUnitFacade : IAdministrationUnitFacade
     {
-        IAdministrationUnitRepository _repository;
-        IParameterValidator _parameterValidator;
+        readonly IAdministrationUnitRepository _repository;
+        readonly IParameterValidator _parameterValidator;
 
         public AdministrationUnitFacade(
             IAdministrationUnitRepository repository,
