@@ -3,15 +3,12 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class AdministrationUnitMap : ClassMap<AdministrationUnit>
+    public class AdministrationUnitCreateMap : ClassMap<AdministrationUnit>
     {
-        public AdministrationUnitMap()
+        public AdministrationUnitCreateMap()
         {
             Table("administrationunits");
             Id(x => x.Id);
-            Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
             Map(x => x.UserKey)
                 .Access.BackingField()
                 .Length(10)
@@ -31,6 +28,17 @@ namespace D2.MasterData.Mappings
                 .Cascade
                 .AllDeleteOrphan()
                 .Inverse();
+        }
+    }
+
+    public class AdministrationUnitMap : AdministrationUnitCreateMap
+    {
+        public AdministrationUnitMap()
+            : base()
+        {
+            Version(x => x.Version)
+                .Column("xmin")
+                .Generated.Always();
         }
     }
 }

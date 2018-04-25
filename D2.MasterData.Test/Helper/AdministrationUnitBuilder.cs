@@ -29,8 +29,7 @@ namespace D2.MasterData.Test.Helper
                             Country = new CountryInfoParameters
                             {
                                 Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
+                                Name = "Deutschland"
                             }
                         }
                     }

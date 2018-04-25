@@ -24,9 +24,6 @@ namespace D2.MasterData.Mappings
                 b.Map(x => x.Iso2)
                     .Access.BackingField()
                     .Length(3);
-                b.Map(x => x.Iso3)
-                    .Access.BackingField()
-                    .Length(4);
                 b.Map(x => x.Name)
                     .Access.BackingField()
                     .Length(100);

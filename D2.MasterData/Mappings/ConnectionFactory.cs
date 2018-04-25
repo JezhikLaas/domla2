@@ -42,9 +42,18 @@ namespace D2.MasterData.Mappings
                     var configuration = new NHibernate.Cfg.Configuration()
                         .SetProperties(connectionProperties);
                     
-                    var fluentConfiguration = Fluently.Configure(configuration)
-                        .ExposeConfiguration(BuildSchema);
+                    Fluently.Configure(configuration)
+                        .Mappings(m =>
+                            m.FluentMappings
+                                .Add<AdministrationUnitCreateMap>()
+                                .Add<EntranceCreateMap>()
+                                .Add<SubUnitCreateMap>()
+                                .Add<AddressMap>()
+                        )
+                        .ExposeConfiguration(BuildSchema)
+                        .BuildConfiguration();
                     
+                    var fluentConfiguration = Fluently.Configure(configuration);
                     Initialize(fluentConfiguration);
                 }
             }
@@ -66,7 +75,13 @@ namespace D2.MasterData.Mappings
             _sessionFactory?.Dispose();
 
             _sessionFactory = configuration
-                .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
+                .Mappings(m =>
+                    m.FluentMappings
+                        .Add<AdministrationUnitMap>()
+                        .Add<EntranceMap>()
+                        .Add<SubUnitMap>()
+                        .Add<AddressMap>()
+                )
                 .BuildConfiguration()
                 .BuildSessionFactory();
         }
