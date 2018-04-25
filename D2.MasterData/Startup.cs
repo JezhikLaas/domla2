@@ -2,6 +2,7 @@
 using D2.Service.IoC;
 using Microsoft.Extensions.Logging;
 using System;
+using D2.MasterData.Mappings;
 
 namespace D2.MasterData
 {
@@ -32,8 +33,13 @@ namespace D2.MasterData
 
         public void Configure(IServices services)
         {
-            using (var context = services.Resolve<MasterDataContext>()) {
-                context.Database.EnsureCreated();
+            try {
+                ConnectionFactory.Initialize();
+                _logger.LogInformation("Database initialized");
+            }
+            catch (Exception error) {
+                _logger.LogCritical(error, "DB initialization failed");
+                throw;
             }
         }
     }

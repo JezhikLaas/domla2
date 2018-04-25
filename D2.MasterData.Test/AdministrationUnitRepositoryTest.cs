@@ -19,19 +19,7 @@ namespace D2.MasterData.Test
 {
     public class AdministrationUnitRepositoryTest : IDisposable
     {
-        private string _testFile;
-
-        public class TestContext : MasterDataContext
-        {
-            public TestContext(DbContextOptions<TestContext> options)
-                : base(options)
-            { }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                OnCommonModelCreating(modelBuilder);
-            }
-        }
+        private readonly string _testFile;
 
         public AdministrationUnitRepositoryTest()
         {

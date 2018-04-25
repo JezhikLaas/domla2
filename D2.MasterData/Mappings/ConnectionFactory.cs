@@ -2,6 +2,7 @@
 using System.Reflection;
 using D2.Common;
 using FluentNHibernate.Cfg;
+using FluentNHibernate.Conventions.Inspections;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Npgsql;
@@ -14,7 +15,7 @@ namespace D2.MasterData.Mappings
 
         private static readonly object SyncRoot;
 
-        private static void Initialize()
+        public static void Initialize()
         {
             lock (SyncRoot)
             {
@@ -52,6 +53,7 @@ namespace D2.MasterData.Mappings
         private static void BuildSchema(NHibernate.Cfg.Configuration config)
         {
             new SchemaExport(config).Create(false, true);
+            new SchemaUpdate(config).Execute(false, true);
         }
         
         static ConnectionFactory()
