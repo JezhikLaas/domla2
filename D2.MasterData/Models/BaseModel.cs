@@ -8,16 +8,16 @@ namespace D2.MasterData.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id
+        public virtual Guid Id
         {
             get;
-            internal set;
+            protected set;
         }
 
-        public DateTime Edit
+        public virtual DateTime Edit
         {
             get;
-            private set;
+            protected set;
         }
     }
 }

@@ -30,14 +30,14 @@ namespace D2.MasterData.Models
         public virtual string UserKey
         {
             get;
-            private set;
+            protected set;
         }
 
         [MaxLength(256)]
         public virtual string Title
         {
             get;
-            private set;
+            protected set;
         }
 
         private IList<Entrance> _entrances;
@@ -50,14 +50,14 @@ namespace D2.MasterData.Models
         public virtual DateTime? YearOfConstruction
         {
             get;
-            private set;
+            protected set;
         }
 
         [ConcurrencyCheck]
         public virtual int Version
         {
             get;
-            private set;
+            protected set;
         }
     }
 }

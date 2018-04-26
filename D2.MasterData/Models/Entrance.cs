@@ -30,41 +30,41 @@ namespace D2.MasterData.Models
         }
 
         [MaxLength(256)]
-        public string Title
+        public virtual string Title
         {
             get;
-            private set;
+            protected set;
         }
 
-        public Address Address
+        public virtual Address Address
         {
             get;
-            private set;
+            protected set;
         }
 
-        public Guid AdministrationUnitId
+        public virtual Guid AdministrationUnitId
         {
             get;
-            private set;
+            protected set;
         }
 
-        public AdministrationUnit AdministrationUnit
+        public virtual AdministrationUnit AdministrationUnit
         {
             get;
-            private set;
+            protected set;
         }
 
         private IList<SubUnit> _subUnits;
-        public IEnumerable<SubUnit> SubUnits
+        public virtual IEnumerable<SubUnit> SubUnits
         {
             get { return _subUnits; }
         }
 
         [ConcurrencyCheck]
-        public int Version
+        public virtual int Version
         {
             get;
-            private set;
+            protected set;
         }
     }
 }

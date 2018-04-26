@@ -35,8 +35,7 @@ namespace D2.MasterData.Mappings
                     {
                         { "connection.connection_string", builder.ConnectionString },
                         { "connection.driver_class", "Beginor.NHibernate.NpgSql.NpgSqlDriver,NHibernate.NpgSql" },
-                        { "dialect", "NHibernate.Dialect.PostgreSQL83Dialect" },
-                        { "use_proxy_validator", "false" }
+                        { "dialect", "NHibernate.Dialect.PostgreSQL83Dialect" }
                     };
 
                     var configuration = new NHibernate.Cfg.Configuration()
