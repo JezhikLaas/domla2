@@ -8,8 +8,10 @@ namespace D2.MasterData.Models
 {
     public class Entrance : BaseModel
     {
-        Entrance()
-        { }
+        protected Entrance()
+        {
+            _subUnits = new List<SubUnit>();
+        }
 
         public Entrance(EntranceParameters argument, AdministrationUnit unit)
         {
@@ -17,10 +19,10 @@ namespace D2.MasterData.Models
             Title = argument.Title;
             Address = new Address(argument.Address);
             if (argument.SubUnits != null) {
-                var items = from SubUnitParameter in argument.SubUnits
-                            select new SubUnit(SubUnitParameter, this);
+                var items = from subUnitParameter in argument.SubUnits
+                            select new SubUnit(subUnitParameter, this);
 
-                SubUnits = new List<SubUnit>(items);
+                _subUnits = new List<SubUnit>(items);
             }
             Version = argument.Version;
             AdministrationUnit = unit;
@@ -28,41 +30,41 @@ namespace D2.MasterData.Models
         }
 
         [MaxLength(256)]
-        public string Title
+        public virtual string Title
         {
             get;
-            private set;
+            protected set;
         }
 
-        public Address Address
+        public virtual Address Address
         {
             get;
-            private set;
+            protected set;
         }
 
-        public Guid AdministrationUnitId
+        public virtual Guid AdministrationUnitId
         {
             get;
-            private set;
+            protected set;
         }
 
-        public AdministrationUnit AdministrationUnit
+        public virtual AdministrationUnit AdministrationUnit
         {
             get;
-            private set;
+            protected set;
         }
 
-        public List<SubUnit> SubUnits
+        private IList<SubUnit> _subUnits;
+        public virtual IEnumerable<SubUnit> SubUnits
         {
-            get;
-            private set;
+            get { return _subUnits; }
         }
 
         [ConcurrencyCheck]
-        public uint Version
+        public virtual int Version
         {
             get;
-            private set;
+            protected set;
         }
     }
 }

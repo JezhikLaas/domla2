@@ -25,8 +25,7 @@ namespace D2.MasterData.Test
                             PostalCode = "22222",
                             Country = new CountryInfoParameters{
                                 Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
+                                Name = "Deutschland"
                             }
                         }
                     }
@@ -43,7 +42,6 @@ namespace D2.MasterData.Test
             Assert.Equal(test.Entrances.First().Address.Number, check.Entrances.First().Address.Number);
             Assert.Equal(test.Entrances.First().Address.PostalCode, check.Entrances.First().Address.PostalCode);
             Assert.Equal(test.Entrances.First().Address.Country.Iso2, check.Entrances.First().Address.Country.Iso2);
-            Assert.Equal(test.Entrances.First().Address.Country.Iso3, check.Entrances.First().Address.Country.Iso3);
             Assert.Equal(test.Entrances.First().Address.Country.Name, check.Entrances.First().Address.Country.Name);
         }
     }

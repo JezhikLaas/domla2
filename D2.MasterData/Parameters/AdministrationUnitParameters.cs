@@ -20,6 +20,6 @@ namespace D2.MasterData.Parameters
 
         public DateTime? YearOfConstruction { get; set; }
 
-        public uint Version { get; set; }
+        public int Version { get; set; }
     }
 }

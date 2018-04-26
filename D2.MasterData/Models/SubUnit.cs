@@ -6,7 +6,7 @@ namespace D2.MasterData.Models
 {
     public class SubUnit : BaseModel
     {
-        private SubUnit()
+        protected SubUnit()
         { }
 
         public SubUnit(SubUnitParameters argument, Entrance entrance)
@@ -23,50 +23,50 @@ namespace D2.MasterData.Models
 
 
         [MaxLength(256)]
-        public string Title
+        public virtual string Title
         {
             get;
-            private set;
+            protected set;
         }
 
-        public Guid EntranceId
+        public virtual Guid EntranceId
         {
             get;
-            private set;
-        }
-
-        [Required]
-        public Entrance Entrance
-        {
-            get;
-            private set;
-        }
-
-        public int? Floor
-        {
-            get;
-            private set;
+            protected set;
         }
 
         [Required]
-        public int? Number
+        public virtual Entrance Entrance
         {
             get;
-            private set;
+            protected set;
+        }
+
+        public virtual int? Floor
+        {
+            get;
+            protected set;
+        }
+
+        [Required]
+        public virtual int? Number
+        {
+            get;
+            protected set;
         }
 
         [MaxLength(256)]
-        public string Usage
+        public virtual string Usage
         {
             get;
-            private set;
+            protected set;
         }
 
         [ConcurrencyCheck]
-        public uint Version
+        public virtual int Version
         {
             get;
-            private set;
+            protected set;
         }
     }
 }

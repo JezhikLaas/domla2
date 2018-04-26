@@ -1,35 +1,35 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using D2.Service.IoC;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHibernate;
 
 namespace D2.MasterData.Repositories.Implementation
 {
     [RequestScope]
     public class AdministrationUnitRepository : IAdministrationUnitRepository
     {
-        MasterDataContext _connection;
+        readonly IDataContext _context;
 
-        public AdministrationUnitRepository(MasterDataContext context)
+        public AdministrationUnitRepository(IDataContext context)
         {
-            _connection = context;
+            _context = context;
         }
 
         public void Insert(AdministrationUnit item)
         {
-            _connection.Add(item);
-            _connection.SaveChanges();
+            using (var transaction = _context.Session.BeginTransaction())
+            {
+                _context.Session.Save(item);
+                transaction.Commit();
+            }
         }
 
         public IEnumerable<AdministrationUnit> List()
         {
-            var result = from unit in _connection.AdministrationUnits
-                                                 .Include(unit => unit.Entrances)
-                                                 .Include("Entrances.Address")
-                                                 .Include("Entrances.Address.Country")
+            var result = from unit in _context.Session.Query<AdministrationUnit>()
                          orderby unit.UserKey
                          select unit;
 
@@ -38,20 +38,16 @@ namespace D2.MasterData.Repositories.Implementation
 
         public AdministrationUnit Load(Guid id)
         {
-            var result = from unit in _connection.AdministrationUnits
-                                                 .Include(unit => unit.Entrances)
-                                                 .Include("Entrances.Address")
-                                                 .Include("Entrances.Address.Country")
-                         where unit.Id == id
-                         select unit;
-
-            return result.SingleOrDefault();
+            return _context.Session.Get<AdministrationUnit>(id);
         }
 
         public void Update(AdministrationUnit administrationUnit)
         {
-            _connection.Update(administrationUnit);
-            _connection.SaveChanges();
+            using (var transaction = _context.Session.BeginTransaction())
+            {
+                _context.Session.Update(administrationUnit);
+                transaction.Commit();
+            }
         }
     }
 }
