@@ -61,7 +61,6 @@ namespace D2.MasterData.Mappings
         
         private static void BuildSchema(NHibernate.Cfg.Configuration config)
         {
-            new SchemaExport(config).Create(false, true);
             new SchemaUpdate(config).Execute(false, true);
         }
         
