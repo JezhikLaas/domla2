@@ -56,7 +56,7 @@ namespace D2.MasterData.Facades.Implementation
             }
 
             var unit = _repository.Load(unitId);
-            if (unit == null) {
+            if (unit == null || unit.Id != unitId) {
                 return new ExecutionResponse(StatusCodes.Status404NotFound, null, new Error[0]);
             }
 
