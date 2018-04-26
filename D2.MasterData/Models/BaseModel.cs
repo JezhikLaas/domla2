@@ -14,11 +14,10 @@ namespace D2.MasterData.Models
             internal set;
         }
 
-        //[Timestamp]
         public DateTime Edit
         {
             get;
-            protected set;
+            private set;
         }
     }
 }

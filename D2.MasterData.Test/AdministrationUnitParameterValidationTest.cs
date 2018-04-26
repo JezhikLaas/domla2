@@ -25,8 +25,7 @@ namespace D2.MasterData.Test
                             Country = new CountryInfoParameters
                             {
                                 Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
+                                Name = "Deutschland"
                             }
                         }
                     }
@@ -50,8 +49,7 @@ namespace D2.MasterData.Test
                             Country = new CountryInfoParameters
                             {
                                 Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
+                                Name = "Deutschland"
                             }
                         }
                     }
@@ -79,8 +77,7 @@ namespace D2.MasterData.Test
                             Country = new CountryInfoParameters
                             {
                                 Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
+                                Name = "Deutschland"
                             },
                             Number = "1",
                             PostalCode = "12345",
@@ -143,8 +140,7 @@ namespace D2.MasterData.Test
                             Country = new CountryInfoParameters
                             {
                                 Iso2 = "DE",
-                                Name = "Deutschland",
-                                Iso3 = "DEU"
+                                Name = "Deutschland"
                             }
                         }
                     }

@@ -63,7 +63,7 @@ namespace D2.MasterData.Models
         }
 
         [ConcurrencyCheck]
-        public uint Version
+        public int Version
         {
             get;
             private set;

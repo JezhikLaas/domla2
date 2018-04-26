@@ -1,43 +1,48 @@
-﻿using D2.MasterData.Models;
-using D2.MasterData.Parameters;
-using D2.MasterData.Repositories.Implementation;
+﻿using D2.MasterData.Repositories.Implementation;
 using D2.MasterData.Infrastructure;
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using D2.MasterData.Mappings;
+using D2.MasterData.Models;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 using D2.MasterData.Test.Helper;
-using System.Linq;
-using System.Reflection;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
+using NHibernate;
+using NHibernate.Mapping;
+using NHibernate.Tool.hbm2ddl;
 
 namespace D2.MasterData.Test
 {
     public class AdministrationUnitRepositoryTest : IDisposable
     {
-        DbContextOptions<TestContext> _options;
-        SqliteConnection _connection;
-
-        public class TestContext : MasterDataContext
-        {
-            public TestContext(DbContextOptions<TestContext> options)
-                : base(options)
-            { }
-
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
-            {
-                OnCommonModelCreating(modelBuilder);
-            }
-        }
+        private readonly string _testFile;
 
         public AdministrationUnitRepositoryTest()
         {
-            _connection = new SqliteConnection("Data Source=:memory:");
-            _connection.Open();
+            _testFile = Path.GetTempFileName();
+            var configuration = Fluently.Configure()
+                .Database(SqliteConfiguration.Standard.UsingFile(_testFile))
+                .ExposeConfiguration(BuildSchema);
+            ConnectionFactory.Initialize(configuration);
+        }
+        
+        private static void BuildSchema(NHibernate.Cfg.Configuration config)
+        {
+            var versioned = from mapping in config.ClassMappings
+                            where mapping.Version != null
+                            select mapping;
+            
+            foreach (var mapping in versioned) {
+                mapping.Version.Generation = PropertyGeneration.Never;
+                mapping.Version.IsInsertable = true;
+                mapping.Version.IsUpdateable = true;
+            }
 
-            _options = new DbContextOptionsBuilder<TestContext>()
-                .UseSqlite(_connection)
-                .Options;
+            new SchemaExport(config).Create(false, true);
         }
 
         public void Dispose()
@@ -48,18 +53,17 @@ namespace D2.MasterData.Test
         protected void Dispose(bool disposing)
         {
             if (disposing) {
-                _connection.Dispose();
+                ConnectionFactory.Shutdown();
+                File.Delete(_testFile);
             }
         }
 
-        MasterDataContext GetContext()
+        IDataContext GetContext()
         {
-            var result = new TestContext(_options);
-            result.Database.EnsureCreated();
-            return result;
+            return new DataContext();
         }
 
-        Guid InsertAdministrationUnit()
+        (Guid, int) InsertAdministrationUnit()
         {
             var unit = AdministrationUnitBuilder.New.Build();
 
@@ -68,7 +72,7 @@ namespace D2.MasterData.Test
                 repository.Insert(unit);
             }
 
-            return unit.Id;
+            return (unit.Id, unit.Version);
         }
 
         [Fact(DisplayName = "AdministrationUnitRepository can insert AdministrationUnit")]
@@ -81,7 +85,8 @@ namespace D2.MasterData.Test
                 var stored = repository.List();
 
                 Assert.Collection(stored, u => Assert.Equal("03", u.UserKey));
-                Assert.Collection(stored, u => Assert.Collection(u.Entrances, e => Assert.Equal("Eingang 49", e.Title)));
+                Assert.Collection(stored,
+                    u => Assert.Collection(u.Entrances, e => Assert.Equal("Eingang 49", e.Title)));
             }
         }
 
@@ -99,8 +104,12 @@ namespace D2.MasterData.Test
         [Fact(DisplayName = "AdministrationUnitRepository can update AdministrationUnit")]
         public void AdministrationUnitRepository_can_update_AdministrationUnit()
         {
-            var id = InsertAdministrationUnit();
-            var unit = AdministrationUnitBuilder.New.WithId(id).WithTitle("Drachenhöhle").Build();
+            var info = InsertAdministrationUnit();
+            var unit = AdministrationUnitBuilder.New
+                .WithId(info.Item1)
+                .WithTitle("Drachenhöhle")
+                .WithVersion(info.Item2)
+                .Build();
 
             using (var context = GetContext())
             {
@@ -110,7 +119,7 @@ namespace D2.MasterData.Test
             using (var context = GetContext())
             {
                 var repository = new AdministrationUnitRepository(context);
-                var modified = repository.Load(id);
+                var modified = repository.Load(info.Item1);
                 Assert.Equal("Drachenhöhle", modified.Title);
             }
         }
