@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from '../../../shared/menu-item';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
@@ -9,14 +9,22 @@ import { IAdministrationUnit } from '../shared/iadministration-unit';
 import { AdminUnitFactory} from '../shared/admin-unit-factory';
 import { Entrance } from '../../../shared/entrance';
 import { forEach } from '@angular/router/src/utils/collection';
-import { AdministrationUnitValidators} from '../shared/administration-unit.validators';
-import {AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages} from './administration-form-error-messages';
-import {CountryInfo} from '../../../shared/country-info';
+import { AdministrationUnitValidators } from '../shared/administration-unit.validators';
+import { AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages } from './administration-form-error-messages';
+import { CountryInfo } from '../../../shared/country-info';
+import {DatePipe} from '@angular/common';
+
+export enum KEY_CODE {
+  RIGHT_ARROW = 39,
+  LEFT_ARROW = 37
+}
+
 
 @Component({
   selector: 'ui-administration-unit-edit',
   templateUrl: './administration-unit-edit.component.html',
-  styles: []
+  styles: [],
+  providers: [DatePipe],
 })
 
 export class AdministrationUnitEditComponent implements OnInit {
@@ -35,32 +43,46 @@ export class AdministrationUnitEditComponent implements OnInit {
   entrances: FormArray;
   Address: FormGroup;
   Country: FormGroup;
-  Countries: CountryInfo[] = [
-    { Iso2: 'US', Iso3:  'USA',  Name: 'United States' },
-    { Iso2: 'DE', Iso3:  'DEU',  Name: 'Deutschland' },
-    { Iso2: 'UK', Iso3:  'UKA',  Name: 'United Kingdom' }];
+  Countries: CountryInfo[];
   CountryDefaultIso2: string;
-  CountryDefaultName: string;
+  YearOfConstruction: string;
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
               private confirmDialog: ConfirmDialogComponent,
               private router: Router,
               private route: ActivatedRoute,
+              private datepipe: DatePipe,
               private AUdata: AdministrationUnitService) {
+  }
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    console.log(event);
+
+    if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
+      this.addEntrancesControl();
+    }
+
+    if (event.keyCode === KEY_CODE.LEFT_ARROW) {
+      this.removeEntrancesControl(this.entrances.length - 1);
+    }
   }
 
   ngOnInit() {
+    this.AUdata.getCountries().subscribe(res =>
+      this.Countries = res);
     const id = this.route.snapshot.params ['id'];
     if (id !== '0') {
       this.isUpdatingAdminUnit = true;
       this.AdminUnit = this.route.snapshot.data['AdministrationUnit'];
+      this.YearOfConstruction = this.AdminUnit.YearOfConstruction.toISOString().substring(0, 10)
       for (let i = 0; i < this.AdminUnit.Entrances.length; i++) {
         this.CountryDefaultIso2 = this.AdminUnit.Entrances[i].Address.Country.Iso2;
       }
-    } else { this.CountryDefaultIso2 = 'DE'; this.CountryDefaultName = 'Deutschland'; }
+    } else { this.CountryDefaultIso2 = 'DE'; }
     this.initAdminUnit();
   }
+
 
   initAdminUnit () {
     this.buildEntrancesArray();
@@ -78,6 +100,7 @@ export class AdministrationUnitEditComponent implements OnInit {
         ]
       ),
       YearOfConstruction: this.fb.control(
+        // this.datepipe.transform( this.AdminUnit.YearOfConstruction, 'MM/dd/yyyy')
         this.AdminUnit.YearOfConstruction
       ),
       Entrances: this.entrances
@@ -232,8 +255,10 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   CountryRefresh(val: any, i: number) {
     const countryGroup = this.editForm.get(['Entrances', i, 'Address', 'Country']) as FormGroup;
-    const countryName = this.Countries.find(country => country.Iso2 === val ).Name;
-    countryGroup.patchValue( {Name: countryName});
+    if (this.Countries) {
+      const countryName = this.Countries.find(country => country.Iso2 === val ).Name;
+      countryGroup.patchValue( {Name: countryName});
+    }
   }
 }
 

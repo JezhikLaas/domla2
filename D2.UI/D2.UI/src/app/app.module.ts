@@ -21,6 +21,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdministrationUnitResolver} from './masterdata/adminunit/shared/administration-unit-resolver.service';
 import { AdministrationUnitsResolver } from './masterdata/adminunit/shared/administration-units-resolver.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 
 
 @NgModule({
@@ -63,4 +65,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     CUSTOM_ELEMENTS_SCHEMA
   ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    registerLocaleData(localeDe);
+  }
+}
