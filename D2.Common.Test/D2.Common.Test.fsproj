@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -10,6 +10,7 @@
     <PackageReference Include="FsUnit" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Date.fs" />
     <Compile Include="Request.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
