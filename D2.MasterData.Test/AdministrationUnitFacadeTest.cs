@@ -41,10 +41,12 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IAdministrationUnitRepository>();
-            repository.Load(Arg.Any<Guid>()).Returns(AdministrationUnitBuilder.New.Build());
+            var unitId = Guid.NewGuid();
+            
+            repository.Load(Arg.Any<Guid>()).Returns(AdministrationUnitBuilder.New.WithId(unitId).Build());
 
             var facade = new AdministrationUnitFacade(repository, validator);
-            var result = facade.LoadAdministrationUnit(Guid.NewGuid().ToString());
+            var result = facade.LoadAdministrationUnit(unitId.ToString());
 
             Assert.Equal(200, result.code);
             Assert.False(string.IsNullOrWhiteSpace(result.json));
