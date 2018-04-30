@@ -21,7 +21,6 @@ namespace D2.MasterData.Controllers
         /// Konstruktor.
         /// </summary>
         /// <param name="administrationUnitFacade">Fassade für fachliche Aufgaben.</param>
-        /// <param name="parameterValidator">Validator für Parameter, die an Endpunkte gesendet werden.</param>
         public AdministrationUnitController(
             IAdministrationUnitFacade administrationUnitFacade)
         {

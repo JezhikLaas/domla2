@@ -10,18 +10,18 @@ namespace D2.MasterData.Infrastructure
     {
         public ValidationResult Validate(object requestParameters, RequestType requestType)
         {
-            var Result = new ValidationResult();
+            var result = new ValidationResult();
 
             if (requestParameters == null) {
-                Result.AddError("instance", "must not be null");
-                return Result;
+                result.AddError("instance", "must not be null");
+                return result;
             }
 
             var processed = new HashSet<object>();
 
-            InternalValidate(requestParameters, requestType, Result, processed);
+            InternalValidate(requestParameters, requestType, result, processed);
 
-            return Result;
+            return result;
         }
 
         private void InternalValidate(object requestParameters, RequestType requestType, ValidationResult result, HashSet<object> processed)
@@ -45,9 +45,9 @@ namespace D2.MasterData.Infrastructure
                             InternalValidate(value, requestType, result, processed);
                         }
 
-                        var ValidationFailure = attribute.Error(this, value, property.PropertyType);
-                        if (ValidationFailure != null) {
-                            result.AddError(property.Name, ValidationFailure);
+                        var validationFailure = attribute.Error(this, value, property.PropertyType);
+                        if (validationFailure != null) {
+                            result.AddError(property.Name, validationFailure);
                         }
                     }
                 }

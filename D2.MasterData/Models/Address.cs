@@ -1,14 +1,10 @@
 ﻿using D2.MasterData.Parameters;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace D2.MasterData.Models
 {
     public class Address
     {
-        private Address()
+        protected Address()
         { }
 
         public Address(AddressParameters argument)

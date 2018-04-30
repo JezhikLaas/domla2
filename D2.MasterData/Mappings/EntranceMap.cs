@@ -19,6 +19,8 @@ namespace D2.MasterData.Mappings
             References(x => x.AdministrationUnit)
                 .Access.BackingField()
                 .Not.Nullable();
+            // ReSharper disable once VirtualMemberCallInConstructor
+            // member is not overwritten in descendents
             Component(x => x.Address);
             HasMany(x => x.SubUnits)
                 .Cascade.AllDeleteOrphan()
@@ -29,7 +31,6 @@ namespace D2.MasterData.Mappings
     public class EntranceMap : EntranceCreateMap
     {
         public EntranceMap()
-            : base()
         {
             Version(x => x.Version)
                 .Column("xmin")

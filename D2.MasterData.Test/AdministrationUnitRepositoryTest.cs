@@ -4,14 +4,9 @@ using System;
 using System.IO;
 using System.Linq;
 using D2.MasterData.Mappings;
-using D2.MasterData.Models;
 using Xunit;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.Sqlite;
 using D2.MasterData.Test.Helper;
 using FluentNHibernate.Cfg;
-using FluentNHibernate.Cfg.Db;
-using NHibernate;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
 
@@ -82,7 +77,7 @@ namespace D2.MasterData.Test
 
             using (var context = GetContext()) {
                 var repository = new AdministrationUnitRepository(context);
-                var stored = repository.List();
+                var stored = repository.List().ToList();
 
                 Assert.Collection(stored, u => Assert.Equal("03", u.UserKey));
                 Assert.Collection(stored,

@@ -1,11 +1,10 @@
 ﻿using D2.MasterData.Parameters;
-using System;
 
 namespace D2.MasterData.Models
 {
     public class CountryInfo
     {
-        private CountryInfo()
+        protected CountryInfo()
         { }
 
         public CountryInfo(CountryInfoParameters argument)

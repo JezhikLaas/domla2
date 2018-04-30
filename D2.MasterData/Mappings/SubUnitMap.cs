@@ -34,7 +34,6 @@ namespace D2.MasterData.Mappings
     public class SubUnitMap : SubUnitCreateMap
     {
         public SubUnitMap()
-            : base()
         {
             Version(x => x.Version)
                 .Column("xmin")

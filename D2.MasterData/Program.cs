@@ -17,7 +17,7 @@ namespace D2.MasterData
                 return 0;
             }
             catch (Exception error) {
-                Console.WriteLine($"Error exit: {error.ToString()}");
+                Console.WriteLine($"Error exit: {error}");
                 return 1;
             }
         }

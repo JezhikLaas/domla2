@@ -55,7 +55,7 @@ module private DateStatics =
         if month < 1 || month > 12 then raise (ArgumentOutOfRangeException(sprintf "%d is not a valid month" month))
         let days = if isLeapYear(year) then daysToMonth366 else daysToMonth365
         days.[month] - days.[month - 1]
-
+    
 [<CustomEquality>]
 [<CustomComparison>]
 type Date =
@@ -139,6 +139,10 @@ type Date =
     override this.GetHashCode () =
         this.dayNumber.GetHashCode ()
     
+    member this.Days
+        with get () =
+             this.dayNumber
+    
     member this.Day
         with get () =
              this.getDatePart DateStatics.datePartDay
@@ -170,6 +174,13 @@ type Date =
     
     static member (-) (left : Date, right : int) =
         Date (left.dayNumber - right)
+    
+    static member fromObject (instance : obj) =
+        match instance with 
+        | :? string   as value -> Date(DateTime.Parse(value))
+        | :? int      as value -> Date(value)
+        | :? DateTime as value -> Date(value)
+        | _                    -> failwith "could not convert to Date"
     
     member this.AddMonths (months : int) =
         let mutable year, month, day = this.getDatePart()

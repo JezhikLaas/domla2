@@ -1,6 +1,4 @@
-﻿using D2.MasterData.Infrastructure;
-using D2.MasterData.Infrastructure.Validation;
-using D2.MasterData.Models;
+﻿using D2.MasterData.Infrastructure.Validation;
 using System;
 using System.Collections.Generic;
 
