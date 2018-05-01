@@ -4,7 +4,6 @@ using D2.Service.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHibernate;
 
 namespace D2.MasterData.Repositories.Implementation
 {

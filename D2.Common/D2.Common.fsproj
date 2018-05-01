@@ -16,6 +16,7 @@
     <Compile Include="InteractiveAuthentication.fs" />
     <Compile Include="ServiceAuthentication.fs" />
     <Compile Include="ServiceRegistrator.fs" />
+    <Compile Include="YearMonth.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.4.0" />

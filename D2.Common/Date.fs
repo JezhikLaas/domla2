@@ -60,7 +60,7 @@ module private DateStatics =
 [<CustomComparison>]
 type Date =
     struct
-        val dayNumber : int
+        val private dayNumber : int
         
         new (days : int) =
             { dayNumber = days }
@@ -181,6 +181,10 @@ type Date =
         | :? int      as value -> Date(value)
         | :? DateTime as value -> Date(value)
         | _                    -> failwith "could not convert to Date"
+    
+    static member Today
+        with get() =
+            Date(DateTime.Today)
     
     member this.AddMonths (months : int) =
         let mutable year, month, day = this.getDatePart()

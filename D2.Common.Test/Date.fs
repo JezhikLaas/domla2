@@ -84,3 +84,11 @@ module DateTest =
         (target + 4).DayOfWeek |> should equal DayOfWeek.Thursday
         (target + 5).DayOfWeek |> should equal DayOfWeek.Friday
         (target + 6).DayOfWeek |> should equal DayOfWeek.Saturday
+
+    [<Test>]
+    let ``Today for date yields the same result as the DateTime calculation``() =
+        let target = Date.Today
+        let comparison = DateTime.Today
+        target.Year |> should equal (comparison.Year)
+        target.Month |> should equal (comparison.Month)
+        target.Day |> should equal (comparison.Day)

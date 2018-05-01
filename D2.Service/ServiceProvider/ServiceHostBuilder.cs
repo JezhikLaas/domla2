@@ -16,8 +16,8 @@ namespace D2.Service.ServiceProvider
 
     public class ServiceHostBuilder : IServiceHostBuilder
     {
-        DependencyResolver _dependencyResolver;
-        Type _startupType;
+        private readonly DependencyResolver _dependencyResolver;
+        private Type _startupType;
 
         Action<IConfigurationBuilder> _configurationOptions;
 
@@ -49,7 +49,7 @@ namespace D2.Service.ServiceProvider
                             .AddJsonFile("appsettings.json", true)
                             .AddEnvironmentVariables();
 
-            if (_configurationOptions != null) _configurationOptions(builder);
+            _configurationOptions?.Invoke(builder);
 
             _dependencyResolver.Kernel.Bind<IConfiguration>().ToConstant(builder.Build());
         }
@@ -65,7 +65,7 @@ namespace D2.Service.ServiceProvider
             var configureServices = _startupType.GetMethod("ConfigureServices", new[] { typeof(IServices) });
             if (configureServices == null) throw new MissingMethodException("Startup has to provide a ConfigureServices method, taking an IServices as parameter");
 
-            configureServices.Invoke(startup, new[] { _dependencyResolver });
+            configureServices.Invoke(startup, new object[] { _dependencyResolver });
 
             var configure = _startupType.GetMethod("Configure");
             if (configure == null) throw new MissingMethodException("Startup has to provide a Configure method");
