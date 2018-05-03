@@ -84,6 +84,7 @@ module DateTest =
         (target + 4).DayOfWeek |> should equal DayOfWeek.Thursday
         (target + 5).DayOfWeek |> should equal DayOfWeek.Friday
         (target + 6).DayOfWeek |> should equal DayOfWeek.Saturday
+        (target + 7).DayOfWeek |> should equal DayOfWeek.Sunday
 
     [<Test>]
     let ``Today for date yields the same result as the DateTime calculation``() =
@@ -92,3 +93,27 @@ module DateTest =
         target.Year |> should equal (comparison.Year)
         target.Month |> should equal (comparison.Month)
         target.Day |> should equal (comparison.Day)
+
+    [<Test>]
+    let ``Equal sign yields true for equal values``() =
+        let left = Date (1978, 6, 9)
+        let right = Date (1978, 6, 9)
+        left = right |> should equal true
+
+    [<Test>]
+    let ``Equal sign yields false for values which are not equal``() =
+        let left = Date (1978, 5, 9)
+        let right = Date (1978, 6, 9)
+        left = right |> should equal false
+
+    [<Test>]
+    let ``Inequal test yields true for values which are not equal``() =
+        let left = Date (1978, 5, 9)
+        let right = Date (1978, 6, 9)
+        left <> right |> should equal true
+
+    [<Test>]
+    let ``Inequal test yields false for values which are equal``() =
+        let left = Date (1978, 6, 9)
+        let right = Date (1978, 6, 9)
+        left <> right |> should equal false

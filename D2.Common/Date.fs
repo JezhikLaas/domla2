@@ -56,8 +56,6 @@ module private DateStatics =
         let days = if isLeapYear(year) then daysToMonth366 else daysToMonth365
         days.[month] - days.[month - 1]
     
-[<CustomEquality>]
-[<CustomComparison>]
 type Date =
     struct
         val private dayNumber : int
@@ -116,28 +114,10 @@ type Date =
         let mutable m = (n >>> 5) + 1
         while n >= days.[m] do m <- m + 1
         (y400 * 400 + y100 * 100 + y4 * 4 + y1 + 1, m, n - days.[m - 1] + 1)
-    
-    interface IComparable<Date> with
-        member this.CompareTo other =
-            this.dayNumber - other.dayNumber
-
-    interface IComparable with
-        member this.CompareTo other =
-            match other with 
-            | :? Date as date -> this.dayNumber - date.dayNumber
-            | _               -> failwith "cannot compare date to given type"
 
     override this.ToString() =
         let year, month, day = this.getDatePart ()
         sprintf "%04d-%02d-%02d" year month day
-    
-    override this.Equals (other : obj) =
-        match other with 
-        | :? Date as date -> date.dayNumber = this.dayNumber
-        | _               -> false
-     
-    override this.GetHashCode () =
-        this.dayNumber.GetHashCode ()
     
     member this.Days
         with get () =

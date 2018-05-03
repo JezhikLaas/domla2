@@ -1,9 +1,9 @@
 namespace D2.Common
 
 open System
+open System
+open System.Runtime.InteropServices
 
-[<CustomEquality>]
-[<CustomComparison>]
 type YearMonth =
     struct
         val private monthNumber : int
@@ -15,29 +15,7 @@ type YearMonth =
         new (dateTime : DateTime) =
             { yearNumber = dateTime.Year;  monthNumber = dateTime.Month }
     end
-    
-    interface IComparable<YearMonth> with
-        member this.CompareTo other =
-            (this.yearNumber * 12 + this.monthNumber) - (other.yearNumber * 12 + other.monthNumber)
 
-    interface IComparable with
-        member this.CompareTo other =
-            match other with 
-            | :? YearMonth as yearMonth -> (this.yearNumber * 12 + this.monthNumber)
-                                           -
-                                           (yearMonth.yearNumber * 12 + yearMonth.monthNumber)
-            | _                         -> failwith "cannot compare this with given type"
-    
-    override this.Equals (other : obj) =
-        match other with 
-            | :? YearMonth as yearMonth -> this.yearNumber = yearMonth.yearNumber
-                                           &&
-                                           this.monthNumber = yearMonth.monthNumber
-            | _                         -> false
-     
-    override this.GetHashCode () =
-        this.yearNumber.GetHashCode() ^^^ this.yearNumber.GetHashCode()
-    
     override this.ToString () =
         sprintf "%04d-%02d" this.yearNumber this.monthNumber
 
