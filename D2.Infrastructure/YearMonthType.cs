@@ -10,28 +10,19 @@ using NHibernate.UserTypes;
 
 namespace D2.Infrastructure
 {
-    public class DataType : IUserType
+    [Serializable]
+    public class YearMonthType : IUserType
     {
         public object Assemble(object cached, object owner)
         {
-            if (cached == null) return null;
-            return DeepCopy(cached);
-        }
-
-        public void NullSafeSet(DbCommand cmd, object value, int index, ISessionImplementor session)
-        {
-            if (value == null) {
-                NHibernateUtil.Date.NullSafeSet(cmd, null, index, session);
-            }
-            else {
-                NHibernateUtil.Date.NullSafeSet(cmd, Date.fromObject(value).DateTime, index, session);
-            }
+            return cached == null ? null : DeepCopy(cached);
         }
 
         public object DeepCopy(object value)
         {
             if (value == null) return null;
-            return new Date(((Date)value).Days);
+            var other = (YearMonth)value;
+            return new YearMonth(other.Year, other.Month);
         }
 
         public object Disassemble(object value)
@@ -51,24 +42,34 @@ namespace D2.Infrastructure
             return x.GetHashCode();
         }
 
+        public bool IsMutable => false;
+
         public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner)
         {
             if (rs == null) return null;
             var data = NHibernateUtil.Date.NullSafeGet(rs, names[0], session);
             
             if (data == null) return null;
-            return new Date((DateTime)data);
+            return new YearMonth((DateTime)data);
         }
 
-        public bool IsMutable => false;
+        public void NullSafeSet(DbCommand cmd, object value, int index, ISessionImplementor session)
+        {
+            if (value == null) {
+                NHibernateUtil.Date.NullSafeSet(cmd, null, index, session);
+            }
+            else {
+                NHibernateUtil.Date.NullSafeSet(cmd, YearMonth.fromObject(value).DateTime, index, session);
+            }
+        }
 
         public object Replace(object original, object target, object owner)
         {
             return original;
         }
 
-        public Type ReturnedType => typeof(Date);
+        public Type ReturnedType => typeof(YearMonth);
 
-        public SqlType[] SqlTypes => new[] { new SqlType(System.Data.DbType.Date) };
+        public SqlType[] SqlTypes => new [] { new SqlType(System.Data.DbType.Date) };
     }
 }

@@ -1,8 +1,6 @@
 namespace D2.Common
 
 open System
-open System
-open System.Runtime.InteropServices
 
 type YearMonth =
     struct
@@ -15,6 +13,13 @@ type YearMonth =
         new (dateTime : DateTime) =
             { yearNumber = dateTime.Year;  monthNumber = dateTime.Month }
     end
+    
+    static member fromObject (instance : obj) =
+        match instance with 
+        | :? string      as value -> YearMonth(DateTime.Parse(value))
+        | :? (int * int) as value -> YearMonth(fst value, snd value)
+        | :? DateTime    as value -> YearMonth(value)
+        | _                    -> failwith "could not convert to YearMonth"
 
     override this.ToString () =
         sprintf "%04d-%02d" this.yearNumber this.monthNumber
@@ -34,3 +39,7 @@ type YearMonth =
     member this.Month
         with get() =
             this.monthNumber
+    
+    member this.DateTime
+        with get() =
+            DateTime (this.Year, this.Month, 1)
