@@ -1,5 +1,4 @@
-﻿using D2.MasterData.Models;
-using D2.MasterData.Parameters;
+﻿using D2.MasterData.Parameters;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;

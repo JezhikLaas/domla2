@@ -1,5 +1,4 @@
-﻿using D2.MasterData.Infrastructure;
-using D2.Service.IoC;
+﻿using D2.Service.IoC;
 using Microsoft.Extensions.Logging;
 using System;
 using D2.MasterData.Mappings;

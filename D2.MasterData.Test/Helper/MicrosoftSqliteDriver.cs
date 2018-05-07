@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using FluentNHibernate.Cfg.Db;
 using NHibernate.Dialect;
@@ -62,32 +61,26 @@ namespace D2.MasterData.Test.Helper
     
     public class SqliteConfiguration : PersistenceConfiguration<SqliteConfiguration>
     {
-        public static SqliteConfiguration Standard
-        {
-            get
-            {
-                return new SqliteConfiguration();
-            }
-        }
+        public static SqliteConfiguration Standard => new SqliteConfiguration();
 
         public SqliteConfiguration()
         {
-            this.Driver<MicrosoftSqliteDriver>();
-            this.Dialect<SQLiteDialect>();
-            this.Raw("query.substitutions", "true=1;false=0");
+            Driver<MicrosoftSqliteDriver>();
+            Dialect<SQLiteDialect>();
+            Raw("query.substitutions", "true=1;false=0");
         }
 
         public SqliteConfiguration InMemory()
         {
-            this.Raw("connection.release_mode", "on_close");
-            this.Raw("use_proxy_validator", "false");
-            return this.ConnectionString((Action<ConnectionStringBuilder>) (c => c.Is("Data Source=:memory:")));
+            Raw("connection.release_mode", "on_close");
+            Raw("use_proxy_validator", "false");
+            return ConnectionString(c => c.Is("Data Source=:memory:"));
         }
 
         public SqliteConfiguration UsingFile(string fileName)
         {
-            this.Raw("use_proxy_validator", "false");
-            return this.ConnectionString((Action<ConnectionStringBuilder>) (c => c.Is(string.Format("Data Source={0}", (object) fileName))));
+            Raw("use_proxy_validator", "false");
+            return ConnectionString(c => c.Is(string.Format("Data Source={0}", fileName)));
         }
     }
 }

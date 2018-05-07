@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using D2.Common;
 using FluentNHibernate.Cfg;
-using FluentNHibernate.Conventions.Inspections;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Npgsql;

@@ -1,10 +1,7 @@
-using D2.Service;
 using D2.Service.CallDispatcher;
 using D2.Service.Controller;
 using D2.Service.IoC;
-using D2.Service.ServiceProvider;
 using Newtonsoft.Json;
-using System;
 using System.Reflection;
 using Xunit;
 
@@ -49,15 +46,14 @@ namespace D2.Service.Test
             }
         }
 
-        DependencyResolver _dependencyResolver;
-        Dispatcher _dispatcher;
+        private readonly Dispatcher _dispatcher;
 
         public DispatcherTest()
         {
-            _dependencyResolver = new DependencyResolver();
-            _dependencyResolver.RegisterApplicationComponents(Assembly.GetExecutingAssembly());
+            var dependencyResolver = new DependencyResolver();
+            dependencyResolver.RegisterApplicationComponents(Assembly.GetExecutingAssembly());
 
-            _dispatcher = new Dispatcher(_dependencyResolver);
+            _dispatcher = new Dispatcher(dependencyResolver);
         }
         
         [Fact(DisplayName = "Execute a simple call returning a string")]
@@ -84,7 +80,7 @@ namespace D2.Service.Test
         [Fact(DisplayName = "Execute a call with parameters")]
         public void Execute_a_call_with_parameters()
         {
-            var parameters = new QueryParameter[] {
+            var parameters = new[] {
                 new QueryParameter { Name = "first", Value = "Hello" },
                 new QueryParameter { Name = "second", Value = "world" }
             };
@@ -95,12 +91,12 @@ namespace D2.Service.Test
         [Fact(DisplayName = "Execute a call with different parameters yields different results")]
         public void Execute_a_call_with_different_parameters_yields_different_results()
         {
-            var parametersOne = new QueryParameter[] {
+            var parametersOne = new[] {
                 new QueryParameter { Name = "first", Value = "Hello" },
                 new QueryParameter { Name = "second", Value = "world" }
             };
 
-            var parametersTwo = new QueryParameter[] {
+            var parametersTwo = new[] {
                 new QueryParameter { Name = "first", Value = "Goodbye" },
                 new QueryParameter { Name = "second", Value = "Hamburg" }
             };

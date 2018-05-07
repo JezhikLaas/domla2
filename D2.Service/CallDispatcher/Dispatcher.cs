@@ -21,10 +21,11 @@ namespace D2.Service.CallDispatcher
 
         public object Call(string topic, string verb, string action, string body, IEnumerable<QueryParameter> arguments)
         {
+            var argumtentList = arguments.ToList();
             var controller = _dependencyResolver.ResolveNamed<BaseController>(topic);
-            var call = GetCall(controller, verb, action, body, arguments);
+            var call = GetCall(controller, verb, action, body, argumtentList);
 
-            return call(controller, body, arguments);
+            return call(controller, body, argumtentList);
         }
 
         public object PreCallCheck(string topic, string verb, string action, string body, IEnumerable<QueryParameter> arguments)

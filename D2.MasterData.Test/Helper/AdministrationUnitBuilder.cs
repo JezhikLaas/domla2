@@ -2,13 +2,12 @@
 using D2.MasterData.Parameters;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace D2.MasterData.Test.Helper
 {
     class AdministrationUnitBuilder
     {
-        AdministrationUnitParameters _administrationUnitParameters;
+        readonly AdministrationUnitParameters _administrationUnitParameters;
 
         private AdministrationUnitBuilder()
         {

@@ -34,7 +34,6 @@ namespace D2.MasterData.Mappings
     public class AdministrationUnitMap : AdministrationUnitCreateMap
     {
         public AdministrationUnitMap()
-            : base()
         {
             Version(x => x.Version)
                 .Column("xmin")
