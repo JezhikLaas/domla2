@@ -7,14 +7,14 @@ import { CountryInfo } from '../../../shared/country-info';
 
 export class AdminUnitFactory {
   static empty(): AdministrationUnit {
-    return new AdministrationUnit('', '', '', new Date(), 0,[
+    return new AdministrationUnit('', '', '', new Date(), 0, [
       {
         Id: '',
         Title: '',
         Version: 0,
         Address: {
           Country:
-            { Iso2: '', Iso3: '', Name: ''},
+            { Iso2: 'DE', Iso3: '', Name: ''},
           City: '',
           Street: '',
           Number: '',
