@@ -19,7 +19,8 @@ type YearMonth =
         | :? string      as value -> YearMonth(DateTime.Parse(value))
         | :? (int * int) as value -> YearMonth(fst value, snd value)
         | :? DateTime    as value -> YearMonth(value)
-        | _                    -> failwith "could not convert to YearMonth"
+        | :? YearMonth   as value -> value
+        | _                       -> failwith "could not convert to YearMonth"
 
     override this.ToString () =
         sprintf "%04d-%02d" this.yearNumber this.monthNumber

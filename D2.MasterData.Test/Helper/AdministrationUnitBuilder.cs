@@ -2,6 +2,7 @@
 using D2.MasterData.Parameters;
 using System;
 using System.Collections.Generic;
+using D2.Common;
 
 namespace D2.MasterData.Test.Helper
 {
@@ -14,7 +15,7 @@ namespace D2.MasterData.Test.Helper
             _administrationUnitParameters = new AdministrationUnitParameters {
                 UserKey = "03",
                 Title = "ABC",
-                YearOfConstruction = new DateTime(2001, 10, 20),
+                YearOfConstruction = new YearMonth(2001, 10),
                 Entrances = new List<EntranceParameters>
                 {
                     new EntranceParameters {

@@ -2,6 +2,7 @@
 using D2.MasterData.Infrastructure.Validation;
 using System;
 using System.Collections.Generic;
+using D2.Common;
 
 namespace D2.MasterData.Parameters
 {
@@ -18,7 +19,7 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty(RequestType.Put, RequestType.Post)]
         public List<EntranceParameters> Entrances { get; set; }
 
-        public DateTime? YearOfConstruction { get; set; }
+        public YearMonth? YearOfConstruction { get; set; }
 
         public int Version { get; set; }
     }

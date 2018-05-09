@@ -1,4 +1,5 @@
-﻿using D2.MasterData.Models;
+﻿using D2.Infrastructure;
+using D2.MasterData.Models;
 using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
@@ -23,6 +24,7 @@ namespace D2.MasterData.Mappings
                 .Nullable();
             Map(x => x.YearOfConstruction)
                 .Access.BackingField()
+                .CustomType<YearMonthType>()
                 .Nullable();
             HasMany(x => x.Entrances)
                 .Cascade

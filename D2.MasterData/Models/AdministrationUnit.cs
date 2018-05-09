@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using D2.Common;
 
 namespace D2.MasterData.Models
 {
@@ -47,7 +48,7 @@ namespace D2.MasterData.Models
             get { return _entrances; }
         }
 
-        public virtual DateTime? YearOfConstruction
+        public virtual YearMonth? YearOfConstruction
         {
             get;
             protected set;
