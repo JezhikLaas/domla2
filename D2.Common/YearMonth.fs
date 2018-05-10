@@ -1,5 +1,6 @@
 namespace D2.Common
 
+open Newtonsoft.Json
 open System
 
 type YearMonth =
@@ -7,6 +8,7 @@ type YearMonth =
         val private monthNumber : int
         val private yearNumber : int
         
+        [<JsonConstructor>]
         new (year : int, month : int) =
             { yearNumber = year;  monthNumber = month }
     
@@ -41,6 +43,7 @@ type YearMonth =
         with get() =
             this.monthNumber
     
+    [<JsonIgnore>]
     member this.DateTime
         with get() =
             DateTime (this.Year, this.Month, 1)

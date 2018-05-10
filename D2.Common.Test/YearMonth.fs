@@ -8,6 +8,7 @@ open System
 [<TestFixture>]
 [<Category("Data types")>]
 module YearMonthTest =
+    open Newtonsoft.Json
 
     [<Test>]
     let ``Format should be YYYY-MM``() =
@@ -55,3 +56,10 @@ module YearMonthTest =
         let left = YearMonth (1978, 6)
         let right = YearMonth (1978, 6)
         left <> right |> should equal false
+
+    [<Test>]
+    let ``Instances can be serialized and deserialized``() =
+        let source = YearMonth (1978, 6)
+        let text = JsonConvert.SerializeObject source
+        let target = JsonConvert.DeserializeObject<YearMonth> text
+        source = target |> should equal true
