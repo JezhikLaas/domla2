@@ -23,6 +23,7 @@ import { AdministrationUnitsResolver } from './masterdata/adminunit/shared/admin
 import { NgSelectModule } from '@ng-select/ng-select';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import {AddressService} from './masterdata/shared/address.service';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import localeDe from '@angular/common/locales/de';
     AdministrationUnitsResolver,
     AdministrationUnitResolver,
     AdministrationUnitService,
+    AddressService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BearerInterceptor,

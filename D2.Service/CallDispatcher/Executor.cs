@@ -53,7 +53,7 @@ namespace D2.Service.CallDispatcher
                 return (ExecutionResponse)result;
             }
             catch (Exception error) {
-                var rootError = GetRootError(error.InnerException);
+                var rootError = GetRootError(error);
                 _logger.LogError(rootError, $"execution of {request.topic}::{request.action} failed");
                 return new ExecutionResponse {
                     code = 500,

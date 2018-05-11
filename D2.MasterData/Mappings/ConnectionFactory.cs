@@ -46,6 +46,7 @@ namespace D2.MasterData.Mappings
                                 .Add<EntranceCreateMap>()
                                 .Add<SubUnitCreateMap>()
                                 .Add<AddressMap>()
+                                .Add<PostalCodeInfoCreateMap>()
                         )
                         .ExposeConfiguration(BuildSchema)
                         .BuildConfiguration();
@@ -77,6 +78,7 @@ namespace D2.MasterData.Mappings
                         .Add<EntranceMap>()
                         .Add<SubUnitMap>()
                         .Add<AddressMap>()
+                        .Add<PostalCodeInfoMap>()
                 )
                 .BuildConfiguration()
                 .BuildSessionFactory();
@@ -85,6 +87,7 @@ namespace D2.MasterData.Mappings
         public static void Shutdown()
         {
             _sessionFactory?.Dispose();
+            _sessionFactory = null;
         }
         
         public static ISession Open()

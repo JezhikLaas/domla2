@@ -4,13 +4,11 @@ import { AccountService } from '../../../shared/account.service';
 import { IAdministrationUnit } from './iadministration-unit';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
-import { ServiceInfo } from '../../../shared/account.service';
-import {Entrance} from '../../../shared/entrance';
 import { AdministrationUnit } from './administration-unit';
 import { AdministrationUnitRaws} from './administration-unit-raws';
 import { AdminUnitFactory } from './admin-unit-factory';
 import { map } from 'rxjs/operators';
-import {CountryInfo} from '../../../shared/country-info';
+import { CountryInfo } from '../../../shared/country-info';
 
 @Injectable()
 export class AdministrationUnitService {
@@ -90,11 +88,6 @@ export class AdministrationUnitService {
             .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
         }).catch(error => Observable.throw(error));
     }
-  }
-
-  getCountries (): Observable <Array<CountryInfo>> {
-    return this.http.get('./assets/Countries.json')
-      .catch(error => Observable.throw(error));
   }
 }
 

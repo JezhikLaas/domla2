@@ -4,6 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CdkTableModule } from '@angular/cdk/table';
+import {FormsModule} from '@angular/forms';
 
 import {
   MatAutocompleteModule,
@@ -41,6 +42,8 @@ import {
 
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
+import {PostalCodeListComponent} from '../masterdata/shared/postal-code-list/postal-code-list.component';
+import {DateValueAccessorModule} from 'angular-date-value-accessor';
 
 
 
@@ -87,19 +90,24 @@ export class UiMaterialModule {}
   declarations: [
     ErrorDialogComponent,
     LoaderComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    PostalCodeListComponent
   ],
   imports: [
     ReactiveFormsModule,
     HttpClientModule,
     UiMaterialModule,
-    CommonModule
+    CommonModule,
+    DateValueAccessorModule,
+    FormsModule
   ],
   exports: [
     LoaderComponent,
     ErrorDialogComponent,
     ConfirmDialogComponent,
-    UiMaterialModule
+    UiMaterialModule,
+    PostalCodeListComponent,
+    DateValueAccessorModule
   ],
 
   schemas: [

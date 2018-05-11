@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import {Component, OnInit, HostListener, Output} from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from '../../../shared/menu-item';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
@@ -13,6 +13,8 @@ import { AdministrationUnitValidators } from '../shared/administration-unit.vali
 import { AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages } from './administration-form-error-messages';
 import { CountryInfo } from '../../../shared/country-info';
 import {DatePipe} from '@angular/common';
+import {AddressService} from '../../shared/address.service';
+import {PostalCodeListComponent} from '../../shared/postal-code-list/postal-code-list.component';
 
 export enum KEY_CODE {
   RIGHT_ARROW = 39,
@@ -45,7 +47,7 @@ export class AdministrationUnitEditComponent implements OnInit {
   Country: FormGroup;
   Countries: CountryInfo[];
   CountryDefaultIso2: string;
-  YearOfConstruction: string;
+  PostalCode: string;
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
@@ -53,7 +55,8 @@ export class AdministrationUnitEditComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute,
               private datepipe: DatePipe,
-              private AUdata: AdministrationUnitService) {
+              private as: AdministrationUnitService,
+              private ads: AddressService) {
   }
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -69,17 +72,20 @@ export class AdministrationUnitEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.AUdata.getCountries().subscribe(res =>
+    this.ads.getCountries().subscribe(res =>
       this.Countries = res);
     const id = this.route.snapshot.params ['id'];
     if (id !== '0') {
       this.isUpdatingAdminUnit = true;
       this.AdminUnit = this.route.snapshot.data['AdministrationUnit'];
-      this.YearOfConstruction = this.AdminUnit.YearOfConstruction.toISOString().substring(0, 10)
       for (let i = 0; i < this.AdminUnit.Entrances.length; i++) {
         this.CountryDefaultIso2 = this.AdminUnit.Entrances[i].Address.Country.Iso2;
+        this.PostalCode = this.AdminUnit.Entrances[i].Address.PostalCode;
       }
-    } else { this.CountryDefaultIso2 = 'DE'; }
+    } else {
+              this.CountryDefaultIso2 = 'DE';
+              this.PostalCode = '';
+            }
     this.initAdminUnit();
   }
 
@@ -151,11 +157,11 @@ export class AdministrationUnitEditComponent implements OnInit {
         AdminUnit.Entrances[i].Edit = this.AdminUnit.Entrances[i].Edit;
         AdminUnit.Entrances[i].Version = this.AdminUnit.Entrances[i].Version;
       }
-      this.AUdata.edit(AdminUnit).subscribe(res => {
+      this.as.edit(AdminUnit).subscribe(res => {
         this.router.navigate(['../../administrationUnits']);
       });
     } else {
-      this.AUdata.create(AdminUnit).subscribe(res => {
+      this.as.create(AdminUnit).subscribe(res => {
         this.AdminUnit = AdminUnitFactory.empty();
         this.editForm.reset(AdminUnitFactory.empty());
       });
@@ -249,16 +255,10 @@ export class AdministrationUnitEditComponent implements OnInit {
     this.entrances.removeAt(index);
   }
 
-  onCountrySelected(val: any, i: number) {
-    this.CountryRefresh(val, i);
-  }
 
-  CountryRefresh(val: any, i: number) {
-    const countryGroup = this.editForm.get(['Entrances', i, 'Address', 'Country']) as FormGroup;
-    if (this.Countries) {
-      const countryName = this.Countries.find(country => country.Iso2 === val ).Name;
-      countryGroup.patchValue( {Name: countryName});
-    }
+  onPostalCodeSelected (val: any, i: number) {
+    console.log(val);
+    console.log(this.editForm.get(['Entrances', i , 'Address' ]));
   }
 }
 
