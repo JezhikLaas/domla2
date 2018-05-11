@@ -60,8 +60,6 @@ export class AdministrationUnitEditComponent implements OnInit {
   }
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event);
-
     if (event.keyCode === KEY_CODE.RIGHT_ARROW) {
       this.addEntrancesControl();
     }

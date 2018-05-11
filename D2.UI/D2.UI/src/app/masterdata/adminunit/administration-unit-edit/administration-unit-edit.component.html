@@ -31,8 +31,6 @@
               <input formControlName="Title" placeholder="{{i+1}} Eingang">
             </div>
               <ui-address
-                (PostalCodeSelected)="onPostalCodeSelected($event, i)"
-                [PostalCode]="PostalCode"
                 [AddressFormGroup] = "editForm.get(['Entrances',i,'Address' ])"
                 [CountryFormGroup] = "editForm.get(['Entrances',i, 'Address','Country'])"
                 [Iso2Control] = "editForm.get(['Entrances',i,'Address','Country','Iso2'])"

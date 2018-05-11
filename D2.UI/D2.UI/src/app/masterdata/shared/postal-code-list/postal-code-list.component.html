@@ -1,13 +1,13 @@
 <div [formGroup]="AddressFormGroup" class="equal width fields">
    <div [formGroup]="CountryFormGroup" class="equal width fields">
     <div class="three wide field">
-      <select [(ngModel)] = "CountryDefaultIso2" id = "Iso2" (ngModelChange)="onCountrySelected($event)" [formControl]="Iso2Control">
+      <select [(ngModel)] = "CountryDefaultIso2" id = "Iso2" (ngModelChange)="onCountrySelected($event, PostalCodeControl.value)" [formControl]="Iso2Control">
         <option *ngFor="let country of Countries" [ngValue]="country.Iso2" > {{country.Iso2}} {{ country.Name }}</option>
       </select>
     </div>
   </div>
-  <div class="two wide field">
-    <input [formControl]="PostalCodeControl" placeholder="PLZ">
+  <div class="three wide field">
+    <input [formControl] = "PostalCodeControl" (blur)="onPostalCodeSelected($event.target.value, CountryDefaultIso2)" placeholder="PLZ">
   </div>
   <div class="three wide field">
     <input [formControl] = "CityControl" placeholder="Stadt">

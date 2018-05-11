@@ -3,8 +3,9 @@ import {AdministrationUnitService} from '../../adminunit/shared/administration-u
 import {AddressService} from '../address.service';
 import {IpostalCodeInfo} from '../ipostalcodeinfo';
 import {CountryInfo} from '../../../shared/country-info';
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import {ControlValueAccessor} from '@angular/forms';
+import { List } from 'linqts';
 
 @Component({
   selector: 'ui-address',
@@ -29,20 +30,15 @@ export class PostalCodeListComponent implements OnInit {
   City = '';
 
   constructor(
-    private as: AddressService) { }
+    private as: AddressService,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
     this.as.listPostalCodeInfo()
       .subscribe(res => {
         this.PostalCodeInfo = res;
-        if (this.PostalCode) {
-          const postalCodeInfoDefault = res.find(plz => plz.PostalCode === this.PostalCode);
-          if (postalCodeInfoDefault) {
-            this.PostalCodeDefaultId = postalCodeInfoDefault.Id;
-            this.City = postalCodeInfoDefault.City;
-          }
-        }
       });
+
     this.as.getCountries().subscribe(res => {
       this.Countries = res;
       if (this.CountryDefaultIso2) {
@@ -55,22 +51,40 @@ export class PostalCodeListComponent implements OnInit {
     });
   }
 
-  onPostalCodeSelected(val: any) {
-    this.PostalCodeSelected.emit(val);
-    this.CityRefresh(val);
+  onPostalCodeSelected(postcode: any, country: any) {
+    this.PostalCodeSelected.emit(postcode);
+    this.CityRefresh(postcode, country);
+    this.PostalCodeRefresh(postcode);
   }
-  onCountrySelected(val: any, i: number) {
-    this.CountryRefresh(val, i);
+  onCountrySelected( country: any, postcode: any) {
+    this.CountryRefresh(country);
+    this.CityRefresh( postcode, country);
   }
 
-  CountryRefresh(val: any, i: number) {
+  CountryRefresh(iso2: any) {
     if (this.Countries) {
-      const countryName = this.Countries.find(country => country.Iso2 === val ).Name;
+      const countryName = this.Countries.find(country => country.Iso2 === iso2 ).Name;
       this.CountryFormGroup.patchValue( {Name: countryName});
     }
   }
 
-  CityRefresh(val) {
-    this.City = this.PostalCodeInfo.find(plz => plz.Id === val).City;
+  PostalCodeRefresh(postcode) {
+    if (this.PostalCodeInfo) {
+      const postalCodeinfo = this.PostalCodeInfo.find(pc => pc.PostalCode === postcode);
+      if (postalCodeinfo) {
+        this.PostalCodeControl.setValue(postalCodeinfo.PostalCode);
+      }
+    }
+
+  }
+  CityRefresh(postcode: any, country: any ) {
+    if (this.PostalCodeInfo) {
+      const postalCodeArray = new List<IpostalCodeInfo>(this.PostalCodeInfo);
+      const postalCodeInfo = postalCodeArray
+        .FirstOrDefault(pc => pc.PostalCode === postcode && pc.Iso2 === country );
+      if (postalCodeInfo) {
+        this.CityControl.setValue( postalCodeInfo.City);
+      }
+    }
   }
 }
