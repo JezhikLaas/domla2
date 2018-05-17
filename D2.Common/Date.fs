@@ -1,5 +1,6 @@
 namespace D2.Common
 
+open Newtonsoft.Json
 open System
 
 module private DateStatics =
@@ -63,6 +64,7 @@ type Date =
         new (days : int) =
             { dayNumber = days }
     
+        [<JsonConstructor>]
         new (year : int, month : int, day : int) =
             { dayNumber = DateStatics.dateToDayNumber year month day }
     
@@ -119,6 +121,7 @@ type Date =
         let year, month, day = this.getDatePart ()
         sprintf "%04d-%02d-%02d" year month day
     
+    [<JsonIgnore>]
     member this.Days
         with get () =
              this.dayNumber
@@ -134,11 +137,13 @@ type Date =
     member this.Year
         with get () =
              this.getDatePart DateStatics.datePartYear
-     
+    
+    [<JsonIgnore>]
     member this.DateTime
         with get () =
              DateTime(int64 this.dayNumber * DateStatics.ticksPerDay)
     
+    [<JsonIgnore>]
     member this.DayOfWeek
         with get () =
             enum<DayOfWeek> ((this.dayNumber - 1) % 7)

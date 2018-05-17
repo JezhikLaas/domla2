@@ -2,6 +2,7 @@ namespace D2CommonTest
 
 open D2.Common
 open FsUnit
+open Newtonsoft.Json
 open NUnit.Framework
 open System
 
@@ -117,3 +118,10 @@ module DateTest =
         let left = Date (1978, 6, 9)
         let right = Date (1978, 6, 9)
         left <> right |> should equal false
+
+    [<Test>]
+    let ``Instances can be serialized and deserialized``() =
+        let source = Date (1978, 6, 9)
+        let text = JsonConvert.SerializeObject source
+        let target = JsonConvert.DeserializeObject<Date> text
+        source = target |> should equal true

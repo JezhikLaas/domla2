@@ -12,6 +12,7 @@
   <ItemGroup>
     <Compile Include="Date.fs" />
     <Compile Include="Request.fs" />
+    <Compile Include="Time.fs" />
     <Compile Include="YearMonth.fs" />
   </ItemGroup>
   <ItemGroup>

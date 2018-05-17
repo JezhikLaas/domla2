@@ -21,7 +21,7 @@ namespace D2.Infrastructure
         public object DeepCopy(object value)
         {
             if (value == null) return null;
-            var other = (YearMonth)value;
+            var other = YearMonth.fromObject(value);
             return new YearMonth(other.Year, other.Month);
         }
 
@@ -50,7 +50,7 @@ namespace D2.Infrastructure
             var data = NHibernateUtil.Date.NullSafeGet(rs, names[0], session);
             
             if (data == null) return null;
-            return new YearMonth((DateTime)data);
+            return YearMonth.fromObject(data);
         }
 
         public void NullSafeSet(DbCommand cmd, object value, int index, ISessionImplementor session)
