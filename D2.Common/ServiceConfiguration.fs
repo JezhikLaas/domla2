@@ -27,6 +27,8 @@ module ServiceConfiguration =
     
     type AuthorityProperties () =
         inherit ServiceAddress ()
+        member val ClientId = String.Empty with get, set
+        member val ClientSecret = String.Empty with get, set
     
     type BrokerProperties () =
         inherit ServiceAddress ()

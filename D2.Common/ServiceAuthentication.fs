@@ -8,12 +8,15 @@ module ServiceAuthentication =
     type IServiceCollection with
         member this.AddServiceAuthentication() =
             this
+                .AddMemoryCache()
                 .AddAuthentication("Bearer")
                 .AddOAuth2Introspection(
+                    "Bearer",
                     fun options -> options.Authority <- (ServiceConfiguration.authority.FullAddress)
+                                   options.CacheDuration <- TimeSpan.FromSeconds 10.0
+                                   options.ClientId <- ServiceConfiguration.authority.ClientId
+                                   options.ClientSecret <- ServiceConfiguration.authority.ClientSecret
                                    options.EnableCaching <- true
-                                   options.ClientId <- "api"
-                                   options.ClientSecret <- "78C2A2A1-6167-45E4-A9D7-46C5D921F7D5"
+                                   options.DiscoveryPolicy.RequireHttps <- false
                                    options.SaveToken <- true
-                                   options.CacheDuration <- TimeSpan.FromMinutes 10.0
                 )
