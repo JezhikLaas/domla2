@@ -5,11 +5,10 @@ import { environment } from '../environments/environment';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuDisplayService } from './shared/menu-display.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { AdministrationService } from './shared/administration.service';
 import { MenuItem } from './shared/menu-item';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'am-root',
@@ -88,8 +87,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.changeDetection.detectChanges();
       });
 
-    this.router.events
-      .filter((event) => event instanceof NavigationEnd)
+    this.router.events.pipe(
+       filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
         const navigationEnd = event as NavigationEnd;
         if (navigationEnd.url === '/') {

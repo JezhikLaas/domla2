@@ -1,9 +1,11 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { StorageService } from './storage.service';
 import { Registration } from './registration';
-import { Observable } from 'rxjs/Observable';
 
 interface LogoutUrl {
   url: string;
@@ -27,11 +29,8 @@ export class AdministrationService {
     return this.http.get<Registration[]>(`${this.api}${AdministrationService.List_Registrations_Url}`);
   }
 
-  confirmRegistrations(registrationIds: Array<string>): Observable<Array<Registration>> {
-    return this.http.post(`${this.api}${AdministrationService.Confirm_Registrations_Url}`, registrationIds)
-      .catch(error => {
-        return Observable.throw(error);
-      });
+  confirmRegistrations(registrationIds: Array<string>): Observable<any> {
+    return this.http.post(`${this.api}${AdministrationService.Confirm_Registrations_Url}`, registrationIds);
   }
 
   logout(failed: (message: string) => void) {

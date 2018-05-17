@@ -7,7 +7,7 @@ import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.compon
 import { MenuDisplayService } from '../shared/menu-display.service';
 import { MenuItem } from '../shared/menu-item';
 import { LoaderComponent } from '../shared/loader/loader.component';
-import 'rxjs/add/operator/finally';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'am-registrations',
@@ -41,7 +41,7 @@ export class RegistrationsComponent implements OnInit {
     this.loader.useDimmer = false;
     this.loader.show('Lade Registrierungen ...');
     this.service.fetchRegistrations()
-      .finally(() => this.loader.hide())
+      .pipe(finalize(() => this.loader.hide()))
       .subscribe(
         data => this.dataSource = new MatTableDataSource<Registration>(data),
         error => this.errorDialog.show('Fehler', error.message)
@@ -66,12 +66,12 @@ export class RegistrationsComponent implements OnInit {
     const registrationIds = this.selection.selected.map((value, index, values) => value.id);
     this.loader.show('Verarbeite Registrierungen ...');
     this.service.confirmRegistrations(registrationIds)
-      .finally(() => this.loader.hide())
+      .pipe(finalize(() => this.loader.hide()))
       .subscribe(() => {
           this.loader.show('Lade Registrierungen ...');
           this.selection.clear();
           this.service.fetchRegistrations()
-            .finally(() => this.loader.hide())
+            .pipe(finalize(() => this.loader.hide()))
             .subscribe(
               data => this.dataSource = new MatTableDataSource<Registration>(data),
               error => this.errorDialog.show('Fehler', error.message)
