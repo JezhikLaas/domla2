@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
@@ -47,6 +47,19 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StorageService } from './shared/storage.service';
 import { MenuDisplayService } from './shared/menu-display.service';
+import {
+  AuthModule,
+  OidcSecurityService,
+  OpenIDImplicitFlowConfiguration,
+  OidcConfigService,
+  AuthWellKnownEndpoints
+} from 'angular-auth-oidc-client';
+
+
+export function loadConfig(oidcConfigService: OidcConfigService) {
+  console.log('APP_INITIALIZER STARTING');
+  return () => oidcConfigService.load_using_stsServer('/LoadConfiguration');
+}
 
 @NgModule({
   exports: [
@@ -110,9 +123,35 @@ export class AdministrationMaterialModule {}
       useClass: BearerInterceptor,
       multi: true
     },
+    OidcConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [OidcConfigService],
+      multi: true
+    },
     AdministrationService,
     MenuDisplayService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+    constructor(
+      private oidcSecurityService: OidcSecurityService,
+      private oidcConfigService: OidcConfigService,
+    ) {
+      this.oidcConfigService.onConfigurationLoaded.subscribe(() => {
+        const openIDImplicitFlowConfiguration = new OpenIDImplicitFlowConfiguration();
+        openIDImplicitFlowConfiguration.stsServer = this.oidcConfigService.clientConfiguration.stsServer;
+        openIDImplicitFlowConfiguration.redirect_url = this.oidcConfigService.clientConfiguration.redirect_url;
+        openIDImplicitFlowConfiguration.client_id = this.oidcConfigService.clientConfiguration.client_id;
+        openIDImplicitFlowConfiguration.response_type = this.oidcConfigService.clientConfiguration.response_type;
+        openIDImplicitFlowConfiguration.scope = this.oidcConfigService.clientConfiguration.scope;
+
+        const authWellKnownEndpoints = new AuthWellKnownEndpoints();
+        authWellKnownEndpoints.setWellKnownEndpoints(this.oidcConfigService.wellKnownEndpoints);
+
+        this.oidcSecurityService.setupModule(openIDImplicitFlowConfiguration, authWellKnownEndpoints);
+      });
+    }
+}
