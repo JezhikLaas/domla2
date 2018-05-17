@@ -47,6 +47,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StorageService } from './shared/storage.service';
 import { MenuDisplayService } from './shared/menu-display.service';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
   exports: [
@@ -99,7 +100,8 @@ export class AdministrationMaterialModule {}
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AdministrationMaterialModule
+    AdministrationMaterialModule,
+    OAuthModule.forRoot()
   ],
   providers: [
     ErrorDialogComponent,
