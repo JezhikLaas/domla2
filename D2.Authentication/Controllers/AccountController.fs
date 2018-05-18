@@ -48,18 +48,16 @@ type AccountController
                         :> IActionResult
             
             | Some s -> logger.LogDebug (sprintf "authentication for %s succeeded" model.Username)
-                        events.RaiseAsync(new UserLoginSuccessEvent(s.Login, s.Id.ToString("N"), s.Login))
-                        |> Async.AwaitTask
-                        |> Async.RunSynchronously
+                        do! events.RaiseAsync(new UserLoginSuccessEvent(s.Login, s.Id.ToString("N"), s.Login))
+                            |> Async.AwaitTask
 
                         let isValidReturnUrl = interaction.IsValidReturnUrl model.ReturnUrl
                                                ||
                                                interaction.IsValidReturnUrl (model.ReturnUrl.HtmlDecode ())
 
                         match isValidReturnUrl with
-                        | true  -> this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
-                                   |> Async.AwaitTask
-                                   |> Async.RunSynchronously
+                        | true  -> do! this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
+                                       |> Async.AwaitTask
                                    return authorizer.Authorize (this.HttpContext) (model.ReturnUrl.HtmlDecode ())
 
                         | false -> logger.LogWarning (sprintf "checking return url %s (%s) failed" model.ReturnUrl (model.ReturnUrl.HtmlDecode ()))
@@ -89,14 +87,17 @@ type AccountController
             let! user = this.DetermineUser logoutId
             
             match user = null with
-            | false -> do! this.HttpContext.SignOutAsync()
+            | false -> let! context = interaction.GetLogoutContextAsync logoutId
+                                      |> Async.AwaitTask
+                                      
+                       do! this.HttpContext.SignOutAsync()
                            |> Async.AwaitTask
 
-                       do! events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
+                       do! events.RaiseAsync(new UserLogoutSuccessEvent(context.SubjectId, user.GetDisplayName()))
                            |> Async.AwaitTask
 
-                       do! users.updateActive (user.Identity.GetSubjectId()) false
-                       do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
+                       do! users.updateActive (context.SubjectId) false
+                       do! grantStore.removeAll (context.SubjectId) (context.ClientId)
         
                        let result = this.HttpContext.Request.Scheme
                                     +
