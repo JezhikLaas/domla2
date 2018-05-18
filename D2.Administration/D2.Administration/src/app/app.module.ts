@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { LoaderComponent } from './shared/loader/loader.component';
-import { BearerInterceptor } from './shared/bearer-interceptor';
 import { RegistrationsComponent } from './registrations/registrations.component';
 import { AdministrationService } from './shared/administration.service';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -101,17 +100,17 @@ export class AdministrationMaterialModule {}
     ReactiveFormsModule,
     HttpClientModule,
     AdministrationMaterialModule,
-    OAuthModule.forRoot()
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['http'],
+        sendAccessToken: true
+      }
+    })
   ],
   providers: [
     ErrorDialogComponent,
     StorageService,
     CookieService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: BearerInterceptor,
-      multi: true
-    },
     AdministrationService,
     MenuDisplayService
   ],
