@@ -40,13 +40,15 @@ type HomeController
         |> Async.StartAsTask
     
     member this.LoadConfiguration () =
+        logger.LogDebug "providing oidc configuration"
         ContentResult(
-            ContentType = "",
+            ContentType = "application/json",
             Content = sprintf """{
-                "stsServer": "%s",
-                "client_id":"adminclient",
-                "response_type":"id_token token",
-                "scope":"openid profile role.profile"
-            }""" (ServiceConfiguration.authority.FullAddress)
+                "issuer": "%s",
+                "clientId":"admin-client",
+                "responseType":"id_token token",
+                "scope":"openid profile role.profile api",
+                "redirectUri": "%s"
+            }""" (ServiceConfiguration.authority.FullAddress) (ServiceConfiguration.configuration.PublicUrl)
         )
             

@@ -35,7 +35,8 @@ module ServiceConfiguration =
     
     type Service () = 
         member val Hosting = List<ServiceAddress>() with get, set
-    
+        member val PublicUrl = String.Empty with get, set
+
     type SelfProperties () =
         member val Version = 0 with get, set
         member val Patch = 0 with get, set
