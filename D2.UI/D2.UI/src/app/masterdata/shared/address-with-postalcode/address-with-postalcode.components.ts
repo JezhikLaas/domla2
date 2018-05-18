@@ -7,19 +7,19 @@ import { List } from 'linqts';
 
 @Component({
   selector: 'ui-address',
-  templateUrl: './postal-code-list.component.html',
+  templateUrl: './.address-with-postalcode.component.html',
   styles: []
 })
-export class PostalCodeListComponent implements OnInit {
+export class AddressWithPostalcodeComponent implements OnInit {
   PostalCodeInfo: IpostalCodeInfo [];
   @Output() PostalCodeSelected = new EventEmitter<any>();
-  @Input() PostalCode;
   @Input() AddressFormGroup: FormGroup;
   @Input() CountryFormGroup: FormGroup;
-  @Input()Iso2Control: FormControl;
+  @Input() Iso2Control: FormControl;
   @Input() CountryDefaultIso2;
   @Input() CityControl: FormControl;
   @Input() StreetControl: FormControl;
+  @Input() NumberControl: FormControl;
   @Input() PostalCodeControl: FormControl;
   Countries: CountryInfo[];
   CountryDefaultName: string;

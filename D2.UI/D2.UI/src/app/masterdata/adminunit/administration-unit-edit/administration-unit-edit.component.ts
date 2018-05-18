@@ -1,4 +1,4 @@
-import {Component, OnInit, HostListener, Output} from '@angular/core';
+import { Component, OnInit, HostListener, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from '../../../shared/menu-item';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
@@ -7,14 +7,13 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
 import { AdministrationUnitService } from '../shared/administration-unit.service';
 import { IAdministrationUnit } from '../shared/iadministration-unit';
 import { AdminUnitFactory} from '../shared/admin-unit-factory';
-import { Entrance } from '../../../shared/entrance';
-import { forEach } from '@angular/router/src/utils/collection';
 import { AdministrationUnitValidators } from '../shared/administration-unit.validators';
 import { AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages } from './administration-form-error-messages';
 import { CountryInfo } from '../../../shared/country-info';
-import {DatePipe} from '@angular/common';
-import {AddressService} from '../../shared/address.service';
-import {PostalCodeListComponent} from '../../shared/postal-code-list/postal-code-list.component';
+import { DatePipe } from '@angular/common';
+import { AddressService } from '../../shared/address.service';
+import { YearMonth } from '../../shared/year-month';
+import { MatFormField} from '@angular/material';
 
 export enum KEY_CODE {
   RIGHT_ARROW = 39,
@@ -104,8 +103,9 @@ export class AdministrationUnitEditComponent implements OnInit {
         ]
       ),
       YearOfConstruction: this.fb.control(
-        // this.datepipe.transform( this.AdminUnit.YearOfConstruction, 'MM/dd/yyyy')
-        this.AdminUnit.YearOfConstruction
+        this.AdminUnit.YearOfConstruction ?
+                    new Date(this.AdminUnit.YearOfConstruction.Year, this.AdminUnit.YearOfConstruction.Month, 1) :
+                    this.AdminUnit.YearOfConstruction
       ),
       Entrances: this.entrances
     });
@@ -145,6 +145,11 @@ export class AdministrationUnitEditComponent implements OnInit {
   submitForm() {
     this.editForm.value.Entrances = this.editForm.value.Entrances.filter(entrance => entrance);
     const AdminUnit: IAdministrationUnit = AdminUnitFactory.fromObject(this.editForm.value);
+     if (AdminUnit.YearOfConstruction) {
+       const date: Date = new Date(AdminUnit.YearOfConstruction.toString());
+       const yearMonth: YearMonth = new YearMonth(date.getFullYear(), date.getMonth() + 1);
+       AdminUnit.YearOfConstruction = yearMonth;
+     }
     const formArray = this.editForm.get('Entrances') as FormArray;
     if (this.isUpdatingAdminUnit) {
       AdminUnit.Id = this.AdminUnit.Id;

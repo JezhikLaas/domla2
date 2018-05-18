@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PostalCodeListComponent } from './postal-code-list.component';
+import { AddressWithPostalcodeComponent } from './address-with-postalcode.components';
 
-describe('PostalCodeListComponent', () => {
-  let component: PostalCodeListComponent;
-  let fixture: ComponentFixture<PostalCodeListComponent>;
+describe('AddressWithPostalcode', () => {
+  let component: AddressWithPostalcodeComponent;
+  let fixture: ComponentFixture<AddressWithPostalcodeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PostalCodeListComponent ]
+      declarations: [ AddressWithPostalcodeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PostalCodeListComponent);
+    fixture = TestBed.createComponent(AddressWithPostalcodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

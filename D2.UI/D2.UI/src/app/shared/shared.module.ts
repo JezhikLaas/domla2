@@ -1,13 +1,16 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CdkTableModule } from '@angular/cdk/table';
-import {FormsModule} from '@angular/forms';
+import { SharedRoutingModule } from './shared-routing.module';
+
 
 import {
   MatAutocompleteModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -15,6 +18,7 @@ import {
   MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
+  MatDividerModule,
   MatExpansionModule,
   MatGridListModule,
   MatIconModule,
@@ -33,17 +37,19 @@ import {
   MatSlideToggleModule,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatStepperModule,
+  MatTreeModule,
 } from '@angular/material';
 
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
-import {PostalCodeListComponent} from '../masterdata/shared/postal-code-list/postal-code-list.component';
-import {DateValueAccessorModule} from 'angular-date-value-accessor';
+import { AddressWithPostalcodeComponent } from '../masterdata/shared/address-with-postalcode/address-with-postalcode.components';
+import { DateValueAccessorModule } from 'angular-date-value-accessor';
+import { DatepickerComponent } from './datepicker/datepicker.component';
 
 
 
@@ -51,6 +57,8 @@ import {DateValueAccessorModule} from 'angular-date-value-accessor';
   exports: [
     CdkTableModule,
     MatAutocompleteModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -59,6 +67,7 @@ import {DateValueAccessorModule} from 'angular-date-value-accessor';
     MatStepperModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatDividerModule,
     MatExpansionModule,
     MatGridListModule,
     MatIconModule,
@@ -81,8 +90,8 @@ import {DateValueAccessorModule} from 'angular-date-value-accessor';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-  ],
-  declarations: []
+    MatTreeModule,
+  ]
 })
 export class UiMaterialModule {}
 
@@ -91,7 +100,8 @@ export class UiMaterialModule {}
     ErrorDialogComponent,
     LoaderComponent,
     ConfirmDialogComponent,
-    PostalCodeListComponent
+    AddressWithPostalcodeComponent,
+    DatepickerComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -99,15 +109,17 @@ export class UiMaterialModule {}
     UiMaterialModule,
     CommonModule,
     DateValueAccessorModule,
-    FormsModule
+    FormsModule,
+    SharedRoutingModule
   ],
   exports: [
     LoaderComponent,
     ErrorDialogComponent,
     ConfirmDialogComponent,
     UiMaterialModule,
-    PostalCodeListComponent,
-    DateValueAccessorModule
+    AddressWithPostalcodeComponent,
+    DateValueAccessorModule,
+    DatepickerComponent
   ],
 
   schemas: [

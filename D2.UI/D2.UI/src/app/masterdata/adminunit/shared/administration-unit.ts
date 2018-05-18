@@ -1,5 +1,6 @@
 import {Entrance} from '../../../shared/entrance';
 import {IAdministrationUnit} from './iadministration-unit';
+import {YearMonth} from '../../shared/year-month';
 
 
 export class AdministrationUnit implements IAdministrationUnit {
@@ -10,6 +11,6 @@ export class AdministrationUnit implements IAdministrationUnit {
     public Edit: Date,
     public Version: number,
     public Entrances?: Entrance[],
-    public YearOfConstruction?: Date
+    public YearOfConstruction?: YearMonth
   ) { }
 }

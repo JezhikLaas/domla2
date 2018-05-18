@@ -1,5 +1,6 @@
+
+import {throwError as observableThrowError, Observable} from 'rxjs';
 import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
 import {AdministrationUnitRaws} from '../adminunit/shared/administration-unit-raws';
 import {map} from 'rxjs/operators';
 import {AdminUnitFactory} from '../adminunit/shared/admin-unit-factory';
@@ -7,6 +8,7 @@ import {AccountService} from '../../shared/account.service';
 import {HttpClient} from '@angular/common/http';
 import {IpostalCodeInfo} from './ipostalcodeinfo';
 import {CountryInfo} from '../../shared/country-info';
+import {catchError, switchMap} from 'rxjs/internal/operators';
 
 @Injectable()
 export class AddressService {
@@ -23,16 +25,19 @@ export class AddressService {
         .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
     } else {
       return this.accountService.fetchServices()
-        .switchMap(data => {
-          this.brokerUrl = data.Broker;
-          return this.http
-            .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
-        }).catch(error => Observable.throw(error));
+        .pipe(
+          switchMap(data => {
+            this.brokerUrl = data.Broker;
+            return this.http
+              .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+          }),
+          catchError(error => observableThrowError(error))
+        );
     }
   }
-  getCountries (): Observable <Array<CountryInfo>> {
-    return this.http.get('./assets/Countries.json')
-      .catch(error => Observable.throw(error));
-  }
 
+  getCountries (): Observable <Array<CountryInfo>> {
+    return this.http.get<Array<CountryInfo>>('./assets/Countries.json')
+      .pipe(catchError(error => observableThrowError(error)));
+  }
 }

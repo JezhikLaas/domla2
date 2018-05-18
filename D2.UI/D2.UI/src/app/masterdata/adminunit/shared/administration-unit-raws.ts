@@ -8,7 +8,10 @@ export interface AdministrationUnitRaws {
   Title: string;
   Edit: string;
   Version: number;
-  YearOfConstruction?: string;
+  YearOfConstruction?: {
+    Year: string;
+    Month: string;
+  };
   Entrances?: {
     Id: string;
     Title: string;

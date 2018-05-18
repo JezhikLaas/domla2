@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {NgModelGroup} from '@angular/forms';
 
 import { AdminunitRoutingModule } from './adminunit-routing.module';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';

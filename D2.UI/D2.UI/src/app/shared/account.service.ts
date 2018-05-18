@@ -1,13 +1,15 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { DOCUMENT } from '@angular/common';
-import 'rxjs/add/operator/retry';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+
+
+
 import {StorageService} from './storage.service';
 import {environment} from '../../environments/environment';
-import 'rxjs/add/operator/switchMap';
+import {catchError, switchMap} from 'rxjs/internal/operators';
+
 
 interface LogoutUrl {
   url: string;
@@ -47,9 +49,9 @@ export class AccountService {
 
   fetchServices(): Observable<BrokerUrl> {
     return this.http.get<BrokerUrl>(`${this.api}${AccountService.Services_Url}`)
-      .catch(error => {
-        return Observable.throw(error);
-      });
+      .pipe(catchError(error => {
+        return observableThrowError(error);
+      }));
   }
 
   fetchService(topic: string): Observable<ServiceInfo> {
@@ -57,10 +59,13 @@ export class AccountService {
       return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`);
     } else {
       return this.fetchServices()
-        .switchMap(data => {
-          this.brokerUrl = data.Broker;
-          return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`);
-        }).catch(error => Observable.throw(error));
+        .pipe(
+          switchMap(data => {
+            this.brokerUrl = data.Broker;
+            return this.http.get<ServiceInfo>(`${this.brokerUrl}/apps/Domla2/01/${topic}`);
+          }),
+          catchError(error => observableThrowError(error))
+        );
     }
   }
 

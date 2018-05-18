@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule} from '../shared/shared.module';
-import { PostalCodeListComponent } from './shared/postal-code-list/postal-code-list.component';
 
 
 @NgModule({
@@ -9,6 +8,9 @@ import { PostalCodeListComponent } from './shared/postal-code-list/postal-code-l
     CommonModule,
     SharedModule
   ],
-  declarations: []
+  declarations: [],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class MasterdataModule { }

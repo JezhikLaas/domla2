@@ -1,7 +1,7 @@
 <div [formGroup]="AddressFormGroup" class="equal width fields">
    <div [formGroup]="CountryFormGroup" class="equal width fields">
     <div class="three wide field">
-      <select [(ngModel)] = "CountryDefaultIso2" id = "Iso2" (ngModelChange)="onCountrySelected($event, PostalCodeControl.value)" [formControl]="Iso2Control">
+      <select  id = "Iso2" (ngModelChange)="onCountrySelected($event, PostalCodeControl.value)" [formControl]="Iso2Control">
         <option *ngFor="let country of Countries" [ngValue]="country.Iso2" > {{country.Iso2}} {{ country.Name }}</option>
       </select>
     </div>
@@ -16,7 +16,7 @@
     <input [formControl] = "StreetControl" placeholder="Strasse">
   </div>
   <div class="one wide field">
-    <input formControlName="Number" placeholder="Nummer">
+    <input [formControl]="NumberControl" placeholder="Nummer">
   </div>
 </div>
 

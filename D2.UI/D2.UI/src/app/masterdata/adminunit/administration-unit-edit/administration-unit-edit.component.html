@@ -17,7 +17,7 @@
     </div>
     <div class="fifteen wide field">
       <label>Baujahr:</label>
-      <input  type="date"  formControlName="YearOfConstruction" useValueAsDate>
+      <input  type="month" formControlName="YearOfConstruction" useValueAsDate>
     </div>
   </div>
   <div class="fields">
@@ -39,7 +39,7 @@
                 [StreetControl] = "editForm.get(['Entrances',i,'Address','Street'])"
                 [NumberControl] = "editForm.get(['Entrances',i,'Address','Number'])"
                 [PostalCodeControl] = "editForm.get(['Entrances', i, 'Address', 'PostalCode'])">
-
+                Address
               </ui-address>
         <div class="one wide field" *ngIf="l">
             <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
@@ -66,4 +66,9 @@
     </div>
    </div>
   </div>
+  <div>
+  <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])">Hello</ui-datepicker>
+  </div>
 </form>
+
+
