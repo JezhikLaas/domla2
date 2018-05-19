@@ -1,4 +1,4 @@
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,7 +7,6 @@ import { AdminunitRoutingModule } from './adminunit-routing.module';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
 import { SharedModule } from '../../shared/shared.module';
-import { DateValueAccessorModule } from 'angular-date-value-accessor';
 
 
 
@@ -17,8 +16,7 @@ import { DateValueAccessorModule } from 'angular-date-value-accessor';
     AdminunitRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    SharedModule,
-    DateValueAccessorModule
+    SharedModule
 
   ],
   declarations: [

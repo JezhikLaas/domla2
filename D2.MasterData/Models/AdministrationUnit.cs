@@ -42,6 +42,7 @@ namespace D2.MasterData.Models
         }
 
         private IList<Entrance> _entrances;
+
         [Required]
         public virtual IEnumerable<Entrance> Entrances
         {

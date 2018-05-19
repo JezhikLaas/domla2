@@ -17,7 +17,7 @@
     </div>
     <div class="fifteen wide field">
       <label>Baujahr:</label>
-      <input  type="date"  formControlName="YearOfConstruction"  name="YearOfConstruction " [ngModel]="YearOfConstruction  | date:'MM/dd/yyyy'">
+      <input  type="month" formControlName="YearOfConstruction" useValueAsDate>
     </div>
   </div>
   <div class="fields">
@@ -30,27 +30,17 @@
             <div class="one wide field">
               <input formControlName="Title" placeholder="{{i+1}} Eingang">
             </div>
-          <div formGroupName="Address" class="equal width fields">
-            <div formGroupName="Country" class="equal width fields">
-                <div class="three wide field">
-                  <select [(ngModel)] = "CountryDefaultIso2" id = "Iso2" formControlName="Iso2" (ngModelChange)="onCountrySelected($event, i)">
-                    <option *ngFor="let country of Countries" [ngValue]="country.Iso2" > {{country.Iso2}} {{ country.Name }}</option>
-                  </select>
-               </div>
-            </div>
-            <div class="two wide field">
-              <input formControlName="PostalCode" placeholder="PLZ">
-            </div>
-            <div class="three wide field">
-              <input formControlName="City" placeholder="Stadt">
-            </div>
-            <div class="three wide field">
-              <input formControlName="Street" placeholder="Strasse">
-            </div>
-            <div class="one wide field">
-              <input formControlName="Number" placeholder="Nummer">
-            </div>
-          </div>
+              <ui-address
+                [AddressFormGroup] = "editForm.get(['Entrances',i,'Address' ])"
+                [CountryFormGroup] = "editForm.get(['Entrances',i, 'Address','Country'])"
+                [Iso2Control] = "editForm.get(['Entrances',i,'Address','Country','Iso2'])"
+                [CountryDefaultIso2]="CountryDefaultIso2"
+                [CityControl] = "editForm.get(['Entrances',i,'Address','City'])"
+                [StreetControl] = "editForm.get(['Entrances',i,'Address','Street'])"
+                [NumberControl] = "editForm.get(['Entrances',i,'Address','Number'])"
+                [PostalCodeControl] = "editForm.get(['Entrances', i, 'Address', 'PostalCode'])">
+                Address
+              </ui-address>
         <div class="one wide field" *ngIf="l">
             <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
         </div>
@@ -76,4 +66,9 @@
     </div>
    </div>
   </div>
+  <div>
+  <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])">Hello</ui-datepicker>
+  </div>
 </form>
+
+

@@ -4,6 +4,7 @@ import { AdministrationUnitRaws } from './administration-unit-raws';
 import { Entrance } from '../../../shared/entrance';
 import { Address } from '../../../shared/address';
 import { CountryInfo } from '../../../shared/country-info';
+import {YearMonth} from '../../shared/year-month';
 
 export class AdminUnitFactory {
   static empty(): AdministrationUnit {
@@ -33,8 +34,9 @@ export class AdminUnitFactory {
             new Date (rawAdministrationUnit.Edit) : rawAdministrationUnit.Edit,
       rawAdministrationUnit.Version,
       rawAdministrationUnit.Entrances,
-      typeof(rawAdministrationUnit.YearOfConstruction) === 'string' ?
-                       new Date (rawAdministrationUnit.YearOfConstruction) : rawAdministrationUnit.YearOfConstruction,
+      typeof (rawAdministrationUnit.YearOfConstruction) === 'string' ?
+            new YearMonth(rawAdministrationUnit.YearOfConstruction.Year, rawAdministrationUnit.YearOfConstruction.Month) :
+              rawAdministrationUnit.YearOfConstruction
     );
   }
 }

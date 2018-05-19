@@ -1,10 +1,9 @@
+import { throwError as observableThrowError,  Observable } from 'rxjs';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { StorageService } from './storage.service';
 import { DOCUMENT } from '@angular/common';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
+import { catchError } from 'rxjs/internal/operators';
 
 @Injectable()
 export class BearerInterceptor implements HttpInterceptor {
@@ -24,8 +23,6 @@ export class BearerInterceptor implements HttpInterceptor {
 
     return next
       .handle(authReq)
-      .catch((error, caught) => {
-        return Observable.throw(error);
-      }) as any;
+      .pipe(catchError((error) => observableThrowError(error))) as any;
   }
 }

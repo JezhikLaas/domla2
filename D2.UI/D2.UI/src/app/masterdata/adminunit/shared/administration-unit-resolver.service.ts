@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {IAdministrationUnit} from './iadministration-unit';
 import {AdministrationUnitService} from './administration-unit.service';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class AdministrationUnitResolver implements Resolve<IAdministrationUnit> {

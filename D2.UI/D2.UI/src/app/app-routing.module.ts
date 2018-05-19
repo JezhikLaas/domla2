@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import {Routes, RouterModule, PreloadAllModules} from '@angular/router';
 import {HomeComponent} from './home/home.component';
+import {SharedModule} from './shared/shared.module';
 
 
 const routes: Routes = [
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'administrationUnits',
     loadChildren: 'app/masterdata/adminunit/adminunit.module#AdminunitModule'
+  },
+  {
+    path: 'datePicker',
+    loadChildren: 'app/shared/shared.module#SharedModule'
   }
 
 ];

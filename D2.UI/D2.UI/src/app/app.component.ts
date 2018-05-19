@@ -5,11 +5,11 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
 import { StorageService } from './shared/storage.service';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { environment } from '../environments/environment';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MenuDisplayService } from './shared/menu-display.service';
 import { Router, NavigationEnd } from '@angular/router';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
+import { filter } from 'rxjs/internal/operators';
+
 import {ConfirmDialogComponent} from './shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -92,7 +92,9 @@ export class AppComponent implements OnInit, OnDestroy {
       });
 
     this.router.events
-      .filter((event) => event instanceof NavigationEnd)
+      .pipe(
+        filter((event) => event instanceof NavigationEnd)
+      )
       .subscribe((event) => {
         const navigationEnd = event as NavigationEnd;
         if (navigationEnd.url === '/') {

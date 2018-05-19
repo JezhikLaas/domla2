@@ -1,12 +1,16 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CdkTableModule } from '@angular/cdk/table';
+import { SharedRoutingModule } from './shared-routing.module';
+
 
 import {
   MatAutocompleteModule,
+  MatBadgeModule,
+  MatBottomSheetModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -14,6 +18,7 @@ import {
   MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
+  MatDividerModule,
   MatExpansionModule,
   MatGridListModule,
   MatIconModule,
@@ -32,15 +37,19 @@ import {
   MatSlideToggleModule,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatStepperModule,
+  MatTreeModule,
 } from '@angular/material';
 
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
+import { AddressWithPostalcodeComponent } from '../masterdata/shared/address-with-postalcode/address-with-postalcode.components';
+import { DateValueAccessorModule } from 'angular-date-value-accessor';
+import { DatepickerComponent } from './datepicker/datepicker.component';
 
 
 
@@ -48,6 +57,8 @@ import { CommonModule } from '@angular/common';
   exports: [
     CdkTableModule,
     MatAutocompleteModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -56,6 +67,7 @@ import { CommonModule } from '@angular/common';
     MatStepperModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatDividerModule,
     MatExpansionModule,
     MatGridListModule,
     MatIconModule,
@@ -78,8 +90,8 @@ import { CommonModule } from '@angular/common';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-  ],
-  declarations: []
+    MatTreeModule,
+  ]
 })
 export class UiMaterialModule {}
 
@@ -87,19 +99,27 @@ export class UiMaterialModule {}
   declarations: [
     ErrorDialogComponent,
     LoaderComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    AddressWithPostalcodeComponent,
+    DatepickerComponent
   ],
   imports: [
     ReactiveFormsModule,
     HttpClientModule,
     UiMaterialModule,
-    CommonModule
+    CommonModule,
+    DateValueAccessorModule,
+    FormsModule,
+    SharedRoutingModule
   ],
   exports: [
     LoaderComponent,
     ErrorDialogComponent,
     ConfirmDialogComponent,
-    UiMaterialModule
+    UiMaterialModule,
+    AddressWithPostalcodeComponent,
+    DateValueAccessorModule,
+    DatepickerComponent
   ],
 
   schemas: [
