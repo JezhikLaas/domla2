@@ -5,6 +5,7 @@ open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
+open Microsoft.AspNetCore.Server.HttpSys
 open Microsoft.Extensions.Logging
 
 type HomeController
@@ -56,7 +57,7 @@ type HomeController
             ContentType = "application/json",
             Content = sprintf """{
                 "issuer": "%s",
-                "clientId":"admin-client",
+                "clientId":"customer-frontend",
                 "responseType":"id_token token",
                 "scope":"openid profile role.profile api",
                 "redirectUri": "%s"

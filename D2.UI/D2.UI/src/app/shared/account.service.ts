@@ -24,6 +24,14 @@ interface EndPointInfo {
   Uri: string;
 }
 
+interface OidcConfiguration {
+  issuer: string;
+  redirectUri: string;
+  clientId: string;
+  scope: string;
+  silentRefreshRedirectUri: string;
+}
+
 export interface ServiceInfo {
   Name: string;
   BaseUrl: string;
@@ -37,6 +45,7 @@ export class AccountService {
 
   private static readonly Logout_Url = '/home/logout';
   private static readonly Services_Url = '/home/services';
+  private static readonly OidcConfiguration_Url = '/home/loadconfiguration';
   private brokerUrl: string;
   private services: ServiceInfo[];
 
@@ -46,6 +55,10 @@ export class AccountService {
     @Inject('API_URL') private api: string,
     @Inject(DOCUMENT) private document: any
   ) { }
+
+  loadOidcConfiguration(): Observable<OidcConfiguration> {
+    return this.http.get<OidcConfiguration>(AccountService.OidcConfiguration_Url);
+  }
 
   fetchServices(): Observable<BrokerUrl> {
     return this.http.get<BrokerUrl>(`${this.api}${AccountService.Services_Url}`)
@@ -67,11 +80,5 @@ export class AccountService {
           catchError(error => observableThrowError(error))
         );
     }
-  }
-
-  logout(id: string, failed: (message: string) => void) {
-    this.storage.set('access_token', null);
-    this.storage.set('refresh_token', null);
-    this.document.location.href = `${this.api}${AccountService.Logout_Url}`;
   }
 }

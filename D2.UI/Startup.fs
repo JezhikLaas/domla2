@@ -29,7 +29,7 @@ type Startup private () =
                                     |> ignore
                             )
             )
-            .AddInteractiveAuthentication()
+            .AddServiceAuthentication()
             |> ignore
 
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =

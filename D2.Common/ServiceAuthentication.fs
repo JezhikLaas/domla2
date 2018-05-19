@@ -2,6 +2,7 @@
 
 [<AutoOpen>]
 module ServiceAuthentication =
+    open Microsoft.AspNetCore.Builder
     open Microsoft.Extensions.DependencyInjection
     open System
 
@@ -10,13 +11,13 @@ module ServiceAuthentication =
             this
                 .AddMemoryCache()
                 .AddAuthentication("Bearer")
-                .AddOAuth2Introspection(
+                .AddIdentityServerAuthentication(
                     "Bearer",
                     fun options -> options.Authority <- (ServiceConfiguration.authority.FullAddress)
                                    options.CacheDuration <- TimeSpan.FromSeconds 10.0
-                                   options.ClientId <- ServiceConfiguration.authority.ClientId
-                                   options.ClientSecret <- ServiceConfiguration.authority.ClientSecret
+                                   options.ApiName <- ServiceConfiguration.authority.ClientId
+                                   options.ApiSecret <- ServiceConfiguration.authority.ClientSecret
                                    options.EnableCaching <- true
-                                   options.DiscoveryPolicy.RequireHttps <- false
+                                   options.RequireHttpsMetadata <- false
                                    options.SaveToken <- true
                 )

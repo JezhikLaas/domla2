@@ -6,11 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { SharedModule } from './shared/shared.module';
-
-
 import { HomeComponent } from './home/home.component';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
-import { BearerInterceptor } from './shared/bearer-interceptor';
 import { StorageService } from './shared/storage.service';
 import { MenuDisplayService } from './shared/menu-display.service';
 import { AccountService } from './shared/account.service';
@@ -54,11 +51,6 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     AdministrationUnitResolver,
     AdministrationUnitService,
     AddressService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: BearerInterceptor,
-      multi: true
-    },
     {
       provide: LOCALE_ID,
       useValue: 'de'
