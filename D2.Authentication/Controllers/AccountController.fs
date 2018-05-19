@@ -83,10 +83,10 @@ type AccountController
     [<HttpGet("logout")>]
     member this.Logout (logoutId : string) =
         async {
-            logger.LogDebug(sprintf "logging out %s" logoutId)
+            logger.LogDebug(sprintf "logging out %s" (if logoutId = null then "<null>" else logoutId))
             let! user = this.DetermineUser logoutId
             
-            match user = null with
+            match user |> isNull && logoutId |> isNotNull with
             | false -> let! context = interaction.GetLogoutContextAsync logoutId
                                       |> Async.AwaitTask
                                       

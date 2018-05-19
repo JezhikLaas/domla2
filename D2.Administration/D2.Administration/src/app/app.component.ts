@@ -104,9 +104,18 @@ export class AppComponent implements OnInit, OnDestroy {
   private configureOidc() {
     this.service.loadOidcConfiguration()
       .subscribe(data => {
+        data.silentRefreshRedirectUri = window.location.origin + '/assets/silent-refresh.html';
+
         this.oauthService.configure(data);
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-        this.oauthService.loadDiscoveryDocumentAndLogin();
+        this.oauthService.loadDiscoveryDocumentAndLogin()
+          .then(succeeded => {
+            console.log(`Login returned ${succeeded}`);
+            if (succeeded) {
+              console.log(`Setting up silent refresh with ${data.silentRefreshRedirectUri}`);
+              this.oauthService.setupAutomaticSilentRefresh();
+            }
+        });
       });
   }
 }
