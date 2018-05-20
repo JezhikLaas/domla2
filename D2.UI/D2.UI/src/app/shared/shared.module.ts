@@ -49,7 +49,7 @@ import { CommonModule } from '@angular/common';
 import { AddressWithPostalcodeComponent } from '../masterdata/shared/address-with-postalcode/address-with-postalcode.components';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { DatepickerComponent } from './datepicker/datepicker.component';
-import {OAuthModule} from 'angular-oauth2-oidc';
+import { OAuthModule} from 'angular-oauth2-oidc';
 
 @NgModule({
   exports: [
