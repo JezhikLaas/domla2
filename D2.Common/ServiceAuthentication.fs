@@ -13,7 +13,7 @@ module ServiceAuthentication =
                 .AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(
                     "Bearer",
-                    fun options -> options.Authority <- (ServiceConfiguration.authority.FullAddress)
+                    fun options -> options.Authority <- (ServiceConfiguration.authority.StandardAddress)
                                    options.CacheDuration <- TimeSpan.FromSeconds 10.0
                                    options.ApiName <- ServiceConfiguration.authority.ClientId
                                    options.ApiSecret <- ServiceConfiguration.authority.ClientSecret
