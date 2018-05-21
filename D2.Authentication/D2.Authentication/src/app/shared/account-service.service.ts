@@ -46,7 +46,7 @@ export class AccountServiceService {
     loginData.append('Password', login.password);
     loginData.append('ReturnUrl', login.returnUrl);
 
-    this.http.post<AuthorizeResult>(`${this.api}${AccountServiceService.Login_Url}`, loginData, { headers: httpHeaders })
+    this.http.post<AuthorizeResult>(AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
@@ -75,7 +75,7 @@ export class AccountServiceService {
 
     const loginData: FormData = new FormData();
     loginData.append('LogoutId', id);
-    this.http.post(`${this.api}${AccountServiceService.Logout_Url}`, loginData, { headers: httpHeaders })
+    this.http.post(AccountServiceService.Logout_Url, loginData, { headers: httpHeaders })
       .catch(error => {
         failed(error.message);
         return Observable.throw(error);
