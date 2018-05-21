@@ -23,17 +23,6 @@ type AccountController
      ) =
     inherit Controller()
 
-    [<HttpGet("login")>]
-    [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
-    member this.Get (returnUrl : string) =
-        async {
-            logger.LogDebug (sprintf "invoking login view with returnUrl %s" returnUrl)
-            let request = sprintf "/_auth/login?encodedReturnUrl=%s" (returnUrl.Base64UrlEncode())
-            logger.LogDebug request
-            return RedirectResult (request)
-        }
-        |> Async.StartAsTask
-
     [<HttpPost("login")>]
     [<AutoValidateAntiforgeryToken>]
     member this.Post (model : LoginInputModel) =
