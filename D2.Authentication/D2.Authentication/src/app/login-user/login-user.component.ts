@@ -7,7 +7,6 @@ import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.compon
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { UserLogin } from '../shared/user-login';
 import { ErrorMessages } from './login-user-error-messages';
-import 'rxjs/add/operator/map';
 
 declare var $: any;
 

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AccountServiceService } from '../shared/account-service.service';
 import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
 import base64url from 'base64url';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'da-logout-user',
@@ -22,7 +23,7 @@ export class LogoutUserComponent implements OnInit {
   ngOnInit() {
     this.route
       .queryParamMap
-      .map(params => params.get('logoutId'))
+      .pipe(map(params => params.get('logoutId')))
       .subscribe(value => {
         this.logoutId = base64url.decode(value);
       });

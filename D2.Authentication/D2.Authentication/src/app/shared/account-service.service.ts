@@ -4,11 +4,9 @@ import { DOCUMENT } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { UserLogin } from './user-login';
 import { API_URL } from '../../url';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/retry';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
 import * as parseUri from 'parse-uri';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs/internal/observable/throwError';
 
 interface AuthorizeResult {
   redirectUri: string;
@@ -47,10 +45,10 @@ export class AccountServiceService {
     loginData.append('ReturnUrl', login.returnUrl);
 
     this.http.post<AuthorizeResult>(AccountServiceService.Login_Url, loginData, { headers: httpHeaders })
-      .catch(error => {
+      .pipe(catchError(error => {
         failed(error.message);
-        return Observable.throw(error);
-      })
+        return throwError(error);
+      }))
       .subscribe(data => {
         if (!data.isError) {
           completed();
@@ -76,10 +74,10 @@ export class AccountServiceService {
     const loginData: FormData = new FormData();
     loginData.append('LogoutId', id);
     this.http.post(AccountServiceService.Logout_Url, loginData, { headers: httpHeaders })
-      .catch(error => {
+      .pipe(catchError(error => {
         failed(error.message);
-        return Observable.throw(error);
-      })
+        return throwError(error);
+      }))
       .subscribe();
   }
 }
