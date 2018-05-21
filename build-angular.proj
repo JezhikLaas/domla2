@@ -13,22 +13,22 @@
   
   <Target Name="BuildUserManagement">
 	<Exec Command="npm install" WorkingDirectory="D2.UserManagement/D2.UserManagement" Condition=" '$(AngularEnvironment)' != 'dev' " />
-	<Exec Command="ng build $(CompileCommand) --e=$(AngularEnvironment) --bh /$(UserManagementPrefix)" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
+	<Exec Command="ng build $(CompileCommand) -c=$(AngularEnvironment) --bh /$(UserManagementPrefix)" WorkingDirectory="D2.UserManagement/D2.UserManagement" />
   </Target>
   
   <Target Name="BuildAdmin">
 	<Exec Command="npm install" WorkingDirectory="D2.Administration/D2.Administration" Condition=" '$(AngularEnvironment)' != 'dev' " />
-	<Exec Command="ng build $(CompileCommand) --e=$(AngularEnvironment) --bh /$(AdminPrefix)" WorkingDirectory="D2.Administration/D2.Administration" />
+	<Exec Command="ng build $(CompileCommand) -c=$(AngularEnvironment) --bh /$(AdminPrefix)" WorkingDirectory="D2.Administration/D2.Administration" />
   </Target>
   
   <Target Name="BuildAuth">
 	<Exec Command="npm install" WorkingDirectory="D2.Authentication/D2.Authentication" Condition=" '$(AngularEnvironment)' != 'dev' " />
-	<Exec Command="ng build $(CompileCommand) --e=$(AngularEnvironment) --bh /$(AuthPrefix)" WorkingDirectory="D2.Authentication/D2.Authentication" />
+	<Exec Command="ng build $(CompileCommand) -c=$(AngularEnvironment) --bh /$(AuthPrefix)" WorkingDirectory="D2.Authentication/D2.Authentication" />
   </Target>
   
   <Target Name="BuildUi">
 	<Exec Command="npm install" WorkingDirectory="D2.UI/D2.UI" Condition=" '$(AngularEnvironment)' != 'dev' " />
-	<Exec Command="ng build $(CompileCommand) --e=$(AngularEnvironment) --bh /$(UiPrefix)" WorkingDirectory="D2.UI/D2.UI" />
+	<Exec Command="ng build $(CompileCommand) -c=$(AngularEnvironment) --bh /$(UiPrefix)" WorkingDirectory="D2.UI/D2.UI" />
   </Target>
   
   <Target Name="Build" DependsOnTargets="BuildUi;BuildAdmin;BuildAuth;BuildUserManagement">
