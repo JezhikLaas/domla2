@@ -61,7 +61,7 @@ type HomeController
                 "responseType":"id_token token",
                 "scope":"openid profile role.profile api",
                 "redirectUri": "%s"
-            }""" (ServiceConfiguration.authority.FullAddress) (ServiceConfiguration.configuration.PublicUrl)
+            }""" (ServiceConfiguration.authority.StandardAddress) (ServiceConfiguration.configuration.PublicUrl)
         )
 
     [<HttpGet>]
