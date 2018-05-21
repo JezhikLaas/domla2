@@ -17,6 +17,7 @@ interface OidcConfiguration {
   clientId: string;
   scope: string;
   silentRefreshRedirectUri: string;
+  requireHttps: boolean;
 }
 
 @Injectable()

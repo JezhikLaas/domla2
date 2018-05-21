@@ -30,6 +30,7 @@ interface OidcConfiguration {
   clientId: string;
   scope: string;
   silentRefreshRedirectUri: string;
+  requireHttps: boolean;
 }
 
 export interface ServiceInfo {
