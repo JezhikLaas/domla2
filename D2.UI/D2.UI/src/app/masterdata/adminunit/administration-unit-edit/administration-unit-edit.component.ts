@@ -104,7 +104,7 @@ export class AdministrationUnitEditComponent implements OnInit {
       ),
       YearOfConstruction: this.fb.control(
         this.AdminUnit.YearOfConstruction ?
-                    new Date(this.AdminUnit.YearOfConstruction.Year, this.AdminUnit.YearOfConstruction.Month, 1) :
+                    new Date(this.AdminUnit.YearOfConstruction.Year, this.AdminUnit.YearOfConstruction.Month - 1, 1) :
                     this.AdminUnit.YearOfConstruction
       ),
       Entrances: this.entrances

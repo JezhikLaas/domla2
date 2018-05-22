@@ -8,16 +8,16 @@
       {{ errors.AdminUnitUserKey }}
     </div>
   </div>
-    <div class="required fifteen wide field">
+    <div class="required ten wide field">
       <label>Bezeichnung:</label>
       <input formControlName="Title" type="text">
       <div *ngIf="errors.AdminUnitTitle" class="ui negative message">
         {{ errors.AdminUnitTitle }}
       </div>
     </div>
-    <div class="fifteen wide field">
+    <div class="three wide field">
       <label>Baujahr:</label>
-      <input  type="month" formControlName="YearOfConstruction" useValueAsDate>
+      <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])"></ui-datepicker>
     </div>
   </div>
   <div class="fields">
@@ -65,9 +65,6 @@
         </div>
     </div>
    </div>
-  </div>
-  <div>
-  <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])">Hello</ui-datepicker>
   </div>
 </form>
 

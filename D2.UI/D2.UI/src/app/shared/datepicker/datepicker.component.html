@@ -1,4 +1,4 @@
-
+<div class = "fields">
   <input matInput [matDatepicker]="dp" placeholder="Month and Year" [formControl]="YearOfConstruction">
   <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
   <mat-datepicker #dp
@@ -7,4 +7,5 @@
                   (monthSelected)="chosenMonthHandler($event, dp)"
                   panelClass="example-month-picker">
   </mat-datepicker>
+</div>
 

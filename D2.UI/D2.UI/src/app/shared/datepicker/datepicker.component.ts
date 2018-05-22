@@ -41,8 +41,12 @@ export const MY_FORMATS = {
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
 })
-export class DatepickerComponent {
+export class DatepickerComponent  implements OnInit{
   @Input() YearOfConstruction: FormControl;
+
+  ngOnInit() {
+    this.YearOfConstruction.setValue(moment([this.YearOfConstruction.value.getFullYear(), this.YearOfConstruction.value.getMonth(), 1]));
+  }
 
   chosenYearHandler(normalizedYear: Moment) {
     const ctrlValue = this.YearOfConstruction.value;
@@ -56,5 +60,6 @@ export class DatepickerComponent {
     this.YearOfConstruction.setValue(ctrlValue);
     datepicker.close();
   }
+
 }
 

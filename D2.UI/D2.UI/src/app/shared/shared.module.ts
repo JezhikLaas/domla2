@@ -5,7 +5,7 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { SharedRoutingModule } from './shared-routing.module';
-
+import { MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {
   MatAutocompleteModule,
@@ -91,6 +91,7 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
+    MatMomentDateModule
   ]
 })
 export class UiMaterialModule {}
