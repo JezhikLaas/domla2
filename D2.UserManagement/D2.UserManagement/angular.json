@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "d2.authentication": {
+    "d2.user-management": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -84,21 +84,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "d2.authentication:build"
+            "browserTarget": "d2.user-management:build"
           },
           "configurations": {
             "qa": {
-              "browserTarget": "d2.authentication:build:qa"
+              "browserTarget": "d2.user-management:build:qa"
             },
             "production": {
-              "browserTarget": "d2.authentication:build:production"
+              "browserTarget": "d2.user-management:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "d2.authentication:build"
+            "browserTarget": "d2.user-management:build"
           }
         },
         "test": {
@@ -140,7 +140,7 @@
         }
       }
     },
-    "d2.authentication-e2e": {
+    "d2.user-management-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -149,7 +149,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "d2.authentication:serve"
+            "devServerTarget": "d2.user-management:serve"
           }
         },
         "lint": {
@@ -166,15 +166,15 @@
       }
     }
   },
-  "defaultProject": "d2.authentication",
+  "defaultProject": "d2.user-management",
   "schematics": {
     "@schematics/angular:component": {
       "inlineStyle": true,
-      "prefix": "da",
+      "prefix": "um",
       "styleext": "css"
     },
     "@schematics/angular:directive": {
-      "prefix": "da"
+      "prefix": "um"
     }
   }
 }
