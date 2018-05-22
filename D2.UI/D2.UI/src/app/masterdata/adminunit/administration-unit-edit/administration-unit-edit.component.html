@@ -4,15 +4,15 @@
   <div class="required field">
     <label>Schlüssel:</label>
     <input formControlName="UserKey" type="text">
-    <div *ngIf="errors.AdminUnitUserKey" class="ui negative message">
-      {{ errors.AdminUnitUserKey }}
+    <div *ngIf="errors?.AdminUnitUserKey" class="ui negative message">
+      {{ errors?.AdminUnitUserKey }}
     </div>
   </div>
     <div class="required ten wide field">
       <label>Bezeichnung:</label>
       <input formControlName="Title" type="text">
-      <div *ngIf="errors.AdminUnitTitle" class="ui negative message">
-        {{ errors.AdminUnitTitle }}
+      <div *ngIf="errors?.AdminUnitTitle" class="ui negative message">
+        {{ errors?.AdminUnitTitle }}
       </div>
     </div>
     <div class="three wide field">
@@ -48,20 +48,20 @@
             <button (click)="removeEntrancesControl(i)" class="ui large button" type="button"> - </button>
           </div>
       </div>
-        <div *ngIf="errors.EntranceTitle" class="ui negative message">
-          {{ errors.EntranceTitle }}
+        <div *ngIf="errors?.EntranceTitle" class="ui negative message">
+          {{ errors?.EntranceTitle }}
         </div>
-        <div *ngIf="errors.AddressPostalCode" class="ui negative message">
-          {{ errors.AddressPostalCode }}
+        <div *ngIf="errors?.AddressPostalCode" class="ui negative message">
+          {{ errors?.AddressPostalCode }}
         </div>
-        <div *ngIf="errors.AddressCity" class="ui negative message">
-          {{ errors.AddressCity }}
+        <div *ngIf="errors?.AddressCity" class="ui negative message">
+          {{ errors?.AddressCity }}
         </div>
-        <div *ngIf="errors.AddressStreet" class="ui negative message">
-          {{ errors.AddressStreet }}
+        <div *ngIf="errors?.AddressStreet" class="ui negative message">
+          {{ errors?.AddressStreet }}
         </div>
-        <div *ngIf="errors.AddressNumber" class="ui negative message">
-          {{ errors.AddressNumber }}
+        <div *ngIf="errors?.AddressNumber" class="ui negative message">
+          {{ errors?.AddressNumber }}
         </div>
     </div>
    </div>

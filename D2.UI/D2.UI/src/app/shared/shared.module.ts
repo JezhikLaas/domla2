@@ -5,7 +5,6 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { SharedRoutingModule } from './shared-routing.module';
-import { MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import {
   MatAutocompleteModule,
@@ -50,8 +49,7 @@ import { CommonModule } from '@angular/common';
 import { AddressWithPostalcodeComponent } from '../masterdata/shared/address-with-postalcode/address-with-postalcode.components';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { DatepickerComponent } from './datepicker/datepicker.component';
-
-
+import { OAuthModule} from 'angular-oauth2-oidc';
 
 @NgModule({
   exports: [
@@ -91,7 +89,6 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-    MatMomentDateModule
   ]
 })
 export class UiMaterialModule {}
@@ -111,7 +108,13 @@ export class UiMaterialModule {}
     CommonModule,
     DateValueAccessorModule,
     FormsModule,
-    SharedRoutingModule
+    SharedRoutingModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['http'],
+        sendAccessToken: true
+      }
+    })
   ],
   exports: [
     LoaderComponent,

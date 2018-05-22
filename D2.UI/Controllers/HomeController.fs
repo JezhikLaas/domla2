@@ -5,6 +5,7 @@ open Microsoft.AspNetCore.Authentication
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Mvc
+open Microsoft.AspNetCore.Server.HttpSys
 open Microsoft.Extensions.Logging
 
 type HomeController
@@ -13,35 +14,9 @@ type HomeController
      ) =
     inherit Controller()
 
-    [<Authorize>]
     [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
     member this.Index () =
         async {
-            logger.LogDebug "starting authorized request for UI"
-            let user = this.HttpContext.User
-            if user |> isNotNull then
-                logger.LogDebug (sprintf "user identified as %s" user.Identity.Name)
-                let! accessToken = this.HttpContext.GetTokenAsync "access_token"
-                                   |> Async.AwaitTask
-                let! refreshToken = this.HttpContext.GetTokenAsync "refresh_token"
-                                   |> Async.AwaitTask
-                
-                this.HttpContext.Response.Cookies.Append(
-                    "access_token",
-                    accessToken,
-                    CookieOptions(
-                        HttpOnly = false,
-                        Secure = false
-                    )
-                )
-                this.HttpContext.Response.Cookies.Append(
-                    "refresh_token",
-                    refreshToken,
-                    CookieOptions(
-                        HttpOnly = false,
-                        Secure = false
-                    )
-                )
             return VirtualFileResult ("~/index.html", "text/html")
         }
         |> Async.StartAsTask
@@ -75,6 +50,19 @@ type HomeController
                    )
         }
         |> Async.StartAsTask
+    
+    member this.LoadConfiguration () =
+        logger.LogDebug "providing oidc configuration"
+        ContentResult(
+            ContentType = "application/json",
+            Content = sprintf """{
+                "issuer": "%s",
+                "clientId":"customer-frontend",
+                "responseType":"id_token token",
+                "scope":"openid profile role.profile api",
+                "redirectUri": "%s"
+            }""" (ServiceConfiguration.authority.StandardAddress) (ServiceConfiguration.configuration.PublicUrl)
+        )
 
     [<HttpGet>]
     member this.Welcome (id : string) =

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "d2.ui": {
+    "d2.authentication": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -21,7 +21,6 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "src/styles.css",
               "node_modules/semantic-ui-css/semantic.css",
               "node_modules/vex-js/dist/css/vex.css",
               "node_modules/vex-js/dist/css/vex-theme-os.css"
@@ -85,21 +84,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "d2.ui:build"
+            "browserTarget": "d2.authentication:build"
           },
           "configurations": {
             "qa": {
-              "browserTarget": "d2.ui:build:qa"
+              "browserTarget": "d2.authentication:build:qa"
             },
             "production": {
-              "browserTarget": "d2.ui:build:production"
+              "browserTarget": "d2.authentication:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "d2.ui:build"
+            "browserTarget": "d2.authentication:build"
           }
         },
         "test": {
@@ -117,7 +116,6 @@
               "node_modules/vex-dialog/dist/vex.dialog.min.js"
             ],
             "styles": [
-              "src/styles.css",
               "node_modules/semantic-ui-css/semantic.css",
               "node_modules/vex-js/dist/css/vex.css",
               "node_modules/vex-js/dist/css/vex-theme-os.css"
@@ -142,7 +140,7 @@
         }
       }
     },
-    "d2.ui-e2e": {
+    "d2.authentication-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -151,7 +149,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "d2.ui:serve"
+            "devServerTarget": "d2.authentication:serve"
           }
         },
         "lint": {
@@ -168,15 +166,15 @@
       }
     }
   },
-  "defaultProject": "d2.ui",
+  "defaultProject": "d2.authentication",
   "schematics": {
     "@schematics/angular:component": {
       "inlineStyle": true,
-      "prefix": "ui",
+      "prefix": "da",
       "styleext": "css"
     },
     "@schematics/angular:directive": {
-      "prefix": "ui"
+      "prefix": "da"
     }
   }
 }

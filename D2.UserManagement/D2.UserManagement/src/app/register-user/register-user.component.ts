@@ -131,7 +131,7 @@ export class RegisterUserComponent implements OnInit {
             break;
           default:
             this.errorDialog.show('Fehler', message);
-        }
+          }
       });
   }
 

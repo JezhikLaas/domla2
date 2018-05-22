@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'da-authentication-error',
@@ -18,11 +17,11 @@ export class AuthenticationErrorComponent implements OnInit {
     this.error = { };
     this.route
       .queryParamMap
-      .map(params => params.get('error'))
+      .pipe(map(params => params.get('error')))
       .subscribe(error => this.error['error'] = error);
     this.route
       .queryParamMap
-      .map(params => params.get('description'))
+      .pipe(map(params => params.get('description')))
       .subscribe(description => this.error['description'] = description);
   }
 }

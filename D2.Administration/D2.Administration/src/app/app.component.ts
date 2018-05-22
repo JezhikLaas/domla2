@@ -5,11 +5,11 @@ import { environment } from '../environments/environment';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuDisplayService } from './shared/menu-display.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { AdministrationService } from './shared/administration.service';
 import { MenuItem } from './shared/menu-item';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
+import { filter } from 'rxjs/operators';
+import { JwksValidationHandler, OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'am-root',
@@ -60,24 +60,14 @@ export class AppComponent implements OnInit, OnDestroy {
     private menuDisplay: MenuDisplayService,
     private service: AdministrationService,
     private changeDetection: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private oauthService: OAuthService
   ) {
     this.MenuButtons = [];
   }
 
   ngOnInit() {
-    const access_token = this.cookieService.get('access_token');
-    const refresh_token = this.cookieService.get('refresh_token');
-
-    if (refresh_token) {
-      this.storage.set('refreh_token', refresh_token);
-    }
-
-    if (access_token) {
-      this.storage.set('access_token', access_token);
-    } else if (environment.production) {
-      this.errorDialog.show('Fehler', 'Es konnte kein Zugriffstoken ermittelt werden!');
-    }
+    this.configureOidc();
 
     this.subscription = this.menuDisplay.menuNeeded
       .subscribe((data: Array<MenuItem>) => {
@@ -88,8 +78,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.changeDetection.detectChanges();
       });
 
-    this.router.events
-      .filter((event) => event instanceof NavigationEnd)
+    this.router.events.pipe(
+       filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
         const navigationEnd = event as NavigationEnd;
         if (navigationEnd.url === '/') {
@@ -108,8 +98,25 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.service.logout(
-      (message) => this.errorDialog.show('Fehler', message)
-    );
+    this.oauthService.logOut();
+  }
+
+  private configureOidc() {
+    this.service.loadOidcConfiguration()
+      .subscribe(data => {
+        data.silentRefreshRedirectUri = window.location.origin + '/assets/silent-refresh.html';
+        data.requireHttps = false;
+
+        this.oauthService.configure(data);
+        this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+        this.oauthService.loadDiscoveryDocumentAndLogin()
+          .then(succeeded => {
+            console.log(`Login returned ${succeeded}`);
+            if (succeeded) {
+              console.log(`Setting up silent refresh with ${data.silentRefreshRedirectUri}`);
+              this.oauthService.setupAutomaticSilentRefresh();
+            }
+        });
+      });
   }
 }

@@ -67,7 +67,7 @@ type Startup private () =
             .AddScoped<Authorizer>()
             .AddScoped<IPersistedGrantStore, PersistedGrantStore>()
             .AddSingleton<TokenCleanup>()
-            .AddIdentityServer()
+            .AddIdentityServer(fun options -> options.UserInteraction.LoginUrl <- "/login")
             .AddInMemoryCaching()
             .AddDeveloperSigningCredential()
             .AddClientStore<ClientStore>()

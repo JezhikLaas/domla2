@@ -23,17 +23,6 @@ type AccountController
      ) =
     inherit Controller()
 
-    [<HttpGet("login")>]
-    [<ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)>]
-    member this.Get (returnUrl : string) =
-        async {
-            logger.LogDebug (sprintf "invoking login view with returnUrl %s" returnUrl)
-            let request = sprintf "/_auth/login?encodedReturnUrl=%s" (returnUrl.Base64UrlEncode())
-            logger.LogDebug request
-            return RedirectResult (request)
-        }
-        |> Async.StartAsTask
-
     [<HttpPost("login")>]
     [<AutoValidateAntiforgeryToken>]
     member this.Post (model : LoginInputModel) =
@@ -48,18 +37,16 @@ type AccountController
                         :> IActionResult
             
             | Some s -> logger.LogDebug (sprintf "authentication for %s succeeded" model.Username)
-                        events.RaiseAsync(new UserLoginSuccessEvent(s.Login, s.Id.ToString("N"), s.Login))
-                        |> Async.AwaitTask
-                        |> Async.RunSynchronously
+                        do! events.RaiseAsync(new UserLoginSuccessEvent(s.Login, s.Id.ToString("N"), s.Login))
+                            |> Async.AwaitTask
 
                         let isValidReturnUrl = interaction.IsValidReturnUrl model.ReturnUrl
                                                ||
                                                interaction.IsValidReturnUrl (model.ReturnUrl.HtmlDecode ())
 
                         match isValidReturnUrl with
-                        | true  -> this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
-                                   |> Async.AwaitTask
-                                   |> Async.RunSynchronously
+                        | true  -> do! this.HttpContext.SignInAsync (s.Id.ToString("N"), s.Login)
+                                       |> Async.AwaitTask
                                    return authorizer.Authorize (this.HttpContext) (model.ReturnUrl.HtmlDecode ())
 
                         | false -> logger.LogWarning (sprintf "checking return url %s (%s) failed" model.ReturnUrl (model.ReturnUrl.HtmlDecode ()))
@@ -85,18 +72,21 @@ type AccountController
     [<HttpGet("logout")>]
     member this.Logout (logoutId : string) =
         async {
-            logger.LogDebug(sprintf "logging out %s" logoutId)
+            logger.LogDebug(sprintf "logging out %s" (if logoutId = null then "<null>" else logoutId))
             let! user = this.DetermineUser logoutId
             
-            match user = null with
-            | false -> do! this.HttpContext.SignOutAsync()
+            match user |> isNull && logoutId |> isNotNull with
+            | false -> let! context = interaction.GetLogoutContextAsync logoutId
+                                      |> Async.AwaitTask
+                                      
+                       do! this.HttpContext.SignOutAsync()
                            |> Async.AwaitTask
 
-                       do! events.RaiseAsync(new UserLogoutSuccessEvent(user.GetSubjectId(), user.GetDisplayName()))
+                       do! events.RaiseAsync(new UserLogoutSuccessEvent(context.SubjectId, user.GetDisplayName()))
                            |> Async.AwaitTask
 
-                       do! users.updateActive (user.Identity.GetSubjectId()) false
-                       do! grantStore.removeAll (user.Identity.GetSubjectId()) "interactive"
+                       do! users.updateActive (context.SubjectId) false
+                       do! grantStore.removeAll (context.SubjectId) (context.ClientId)
         
                        let result = this.HttpContext.Request.Scheme
                                     +

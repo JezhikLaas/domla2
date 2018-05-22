@@ -1,11 +1,8 @@
+import { throwError as observableThrowError,  Observable } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { UserRegistration } from './user-registration';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/retry';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class RegisterUserService {
@@ -26,10 +23,10 @@ export class RegisterUserService {
   ) {
     const requestData = JSON.stringify(registration);
     return this.http.put(`${this.api}${this.registerApi}`, requestData, { headers: this.headers })
-      .catch(error => {
+      .pipe(catchError(error => {
         failed(error.status, error.message);
-        return Observable.throw(error);
-      })
+        return observableThrowError(error);
+      }))
       .subscribe(data =>
         succeeded()
       );
