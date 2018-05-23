@@ -66,7 +66,7 @@ type HomeController
 
     [<HttpGet>]
     member this.Welcome (id : string) =
-        ()
+        this.View("Welcome")
 
     [<HttpPost>]
     member this.Password (id : string, password : string) =
