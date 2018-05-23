@@ -1,5 +1,6 @@
-<div class = "fields">
-  <input matInput [matDatepicker]="dp" placeholder="Month and Year" [formControl]="YearOfConstruction">
+<mat-form-field appearance="outline" style="width: 50%">
+  <mat-label>Baujahr</mat-label>
+  <input matInput [matDatepicker]="dp" placeholder="Monat and Jahr" [formControl]="YearOfConstruction">
   <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
   <mat-datepicker #dp
                   startView="multi-year"
@@ -7,5 +8,5 @@
                   (monthSelected)="chosenMonthHandler($event, dp)"
                   panelClass="example-month-picker">
   </mat-datepicker>
-</div>
+</mat-form-field>
 

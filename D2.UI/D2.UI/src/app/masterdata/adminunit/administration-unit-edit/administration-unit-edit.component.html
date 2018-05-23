@@ -1,35 +1,44 @@
-<form [formGroup]="editForm" class="ui form">
+<form [formGroup]="editForm" xmlns="http://www.w3.org/1999/html">
   <h5 class="ui dividing header">Objektdaten</h5>
-  <div class="fields">
-  <div class="required field">
-    <label>Schlüssel:</label>
-    <input formControlName="UserKey" type="text">
-    <div *ngIf="errors?.AdminUnitUserKey" class="ui negative message">
-      {{ errors?.AdminUnitUserKey }}
-    </div>
+
+<div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+  <div fxFlex="7%">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Schlüssel</mat-label>
+        <input matInput formControlName="UserKey" placeholder="Bezeichnung"  >
+          <mat-error *ngIf="errors?.AdminUnitUserKey" >
+          {{ errors?.AdminUnitUserKey }}
+          </mat-error>
+      </mat-form-field>
   </div>
-    <div class="required ten wide field">
-      <label>Bezeichnung:</label>
-      <input formControlName="Title" type="text">
-      <div *ngIf="errors?.AdminUnitTitle" class="ui negative message">
-        {{ errors?.AdminUnitTitle }}
-      </div>
+  <div fxFlex="46%">
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Bezeichnung</mat-label>
+        <input matInput formControlName="Title" type="text">
+          <mat-error *ngIf="errors?.AdminUnitTitle" >
+          {{ errors?.AdminUnitTitle }}
+         </mat-error>
+      </mat-form-field>
     </div>
-    <div class="three wide field">
-      <label>Baujahr:</label>
-      <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])"></ui-datepicker>
-    </div>
+  <div fxFlex="33%">
+      <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])" ></ui-datepicker>
   </div>
-  <div class="fields">
-    <div class="required field">
-      <label>Eingänge:</label>
-      <div formArrayName="Entrances" >
+</div>
+  <div style="margin-top: 1em; margin-bottom: 1em;">
+  <label >Eingänge</label>
+  </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+         <div formArrayName="Entrances" fxFlex="100%">
         <div *ngFor="let control of entrances.controls; index as i; last as l"
              [formGroupName]="i"
-             class = "twenty-one fields">
-            <div class="one wide field">
-              <input formControlName="Title" placeholder="{{i+1}} Eingang">
+             class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+            <div fxFlex="6%">
+              <mat-form-field appearance="outline" style="width: 100%">
+                <mat-label>Bezeichnung</mat-label>
+                <input matInput formControlName="Title" placeholder="{{i+1}} Eingang" >
+              </mat-form-field>
             </div>
+          <div fxFlex="88%">
               <ui-address
                 [AddressFormGroup] = "editForm.get(['Entrances',i,'Address' ])"
                 [CountryFormGroup] = "editForm.get(['Entrances',i, 'Address','Country'])"
@@ -41,11 +50,12 @@
                 [PostalCodeControl] = "editForm.get(['Entrances', i, 'Address', 'PostalCode'])">
                 Address
               </ui-address>
-        <div class="one wide field" *ngIf="l">
-            <button (click)="addEntrancesControl()" class="ui large button" type="button"> + </button>
+          </div>
+        <div *ngIf="l" fxFlex="3%">
+            <button  (click)="addEntrancesControl()" style="width: 100%;" type="button" class="ui button"> + </button>
         </div>
-          <div class="one wide field" *ngIf="l && i!==0">
-            <button (click)="removeEntrancesControl(i)" class="ui large button" type="button"> - </button>
+          <div *ngIf="l && i!==0" fxFlex="3%">
+            <button  (click)="removeEntrancesControl(i)" style="width: 100%" type="button" class="ui button"> - </button>
           </div>
       </div>
         <div *ngIf="errors?.EntranceTitle" class="ui negative message">
@@ -65,7 +75,6 @@
         </div>
     </div>
    </div>
-  </div>
 </form>
 
 

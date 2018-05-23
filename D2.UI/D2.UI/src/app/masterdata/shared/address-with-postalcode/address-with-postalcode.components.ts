@@ -8,7 +8,7 @@ import { List } from 'linqts';
 @Component({
   selector: 'ui-address',
   templateUrl: './.address-with-postalcode.component.html',
-  styles: []
+  styleUrls: ['./address-with-postalcode.component.css']
 })
 export class AddressWithPostalcodeComponent implements OnInit {
   PostalCodeInfo: IpostalCodeInfo [];

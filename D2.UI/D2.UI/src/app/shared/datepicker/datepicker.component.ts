@@ -45,7 +45,9 @@ export class DatepickerComponent  implements OnInit{
   @Input() YearOfConstruction: FormControl;
 
   ngOnInit() {
-    this.YearOfConstruction.setValue(moment([this.YearOfConstruction.value.getFullYear(), this.YearOfConstruction.value.getMonth(), 1]));
+    if (this.YearOfConstruction) {
+      this.YearOfConstruction.setValue(moment([this.YearOfConstruction.value.getFullYear(), this.YearOfConstruction.value.getMonth(), 1]));
+    }
   }
 
   chosenYearHandler(normalizedYear: Moment) {

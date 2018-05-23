@@ -5,6 +5,7 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { LoaderComponent } from './loader/loader.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { SharedRoutingModule } from './shared-routing.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {
   MatAutocompleteModule,
@@ -102,6 +103,7 @@ export class UiMaterialModule {}
     DatepickerComponent
   ],
   imports: [
+    FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
     UiMaterialModule,
@@ -123,7 +125,8 @@ export class UiMaterialModule {}
     UiMaterialModule,
     AddressWithPostalcodeComponent,
     DateValueAccessorModule,
-    DatepickerComponent
+    DatepickerComponent,
+    FlexLayoutModule
   ],
 
   schemas: [

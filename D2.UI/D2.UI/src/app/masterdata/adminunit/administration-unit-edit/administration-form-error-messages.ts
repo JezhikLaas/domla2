@@ -18,7 +18,7 @@ export const AdministrationUnitFormErrorMessages = [
 export const AddressErrorMessages = [
   new ErrorMessage('Street', 'required', 'Geben Sie bitte eine Straße ein'),
   new ErrorMessage('City', 'required', 'Geben Sie bitte ein Ort ein'),
-  new ErrorMessage('PostalCodeInfo', 'required', 'Geben Sie bitte eine PLZ ein'),
+  new ErrorMessage('PostalCode', 'required', 'Geben Sie bitte eine PLZ ein'),
   new ErrorMessage('Number', 'required', 'Geben Sie bitte eine Hausnummer ein'),
 ];
 

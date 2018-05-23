@@ -24,7 +24,7 @@ export enum KEY_CODE {
 @Component({
   selector: 'ui-administration-unit-edit',
   templateUrl: './administration-unit-edit.component.html',
-  styles: [],
+  styleUrls: [ './administration-unit-edit.component.css'],
   providers: [DatePipe],
 })
 
