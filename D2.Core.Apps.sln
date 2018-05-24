@@ -1,34 +1,36 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Persistence", "D2.UserManagement.Persistence/D2.UserManagement.Persistence.fsproj", "{8CFDB70A-63C6-4033-9847-C933C951378E}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Persistence", "D2.UserManagement.Persistence\D2.UserManagement.Persistence.fsproj", "{8CFDB70A-63C6-4033-9847-C933C951378E}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement", "D2.UserManagement/D2.UserManagement.fsproj", "{423C373A-6CB4-4543-9E0E-3D6CEB5CE9C6}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement", "D2.UserManagement\D2.UserManagement.fsproj", "{423C373A-6CB4-4543-9E0E-3D6CEB5CE9C6}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test", "D2.UserManagement.Test/D2.UserManagement.Test.fsproj", "{BC91BDD4-3CE3-48BF-B1B2-53FC7F3FA364}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test", "D2.UserManagement.Test\D2.UserManagement.Test.fsproj", "{BC91BDD4-3CE3-48BF-B1B2-53FC7F3FA364}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test.Endpoints", "D2.UserManagement.Test.Endpoints/D2.UserManagement.Test.Endpoints.fsproj", "{56E90190-707F-4208-B7CB-874C051B3B27}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test.Endpoints", "D2.UserManagement.Test.Endpoints\D2.UserManagement.Test.Endpoints.fsproj", "{56E90190-707F-4208-B7CB-874C051B3B27}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test.Persistence", "D2.UserManagement.Test.Persistence/D2.UserManagement.Test.Persistence.fsproj", "{9C93856B-B818-4EDE-AD68-E564F106ADC1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.UserManagement.Test.Persistence", "D2.UserManagement.Test.Persistence\D2.UserManagement.Test.Persistence.fsproj", "{9C93856B-B818-4EDE-AD68-E564F106ADC1}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Common", "D2.Common/D2.Common.fsproj", "{95AB35C1-573B-4670-8099-286BA42EEE98}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Common", "D2.Common\D2.Common.fsproj", "{95AB35C1-573B-4670-8099-286BA42EEE98}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Administration", "D2.Administration/D2.Administration.fsproj", "{36ECD5F1-5473-499D-BEAD-0F1B88541E46}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Administration", "D2.Administration\D2.Administration.fsproj", "{36ECD5F1-5473-499D-BEAD-0F1B88541E46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.MasterData", "D2.MasterData/D2.MasterData.csproj", "{3200BFAC-15A1-4C63-887A-4B2CDDCA20C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.MasterData", "D2.MasterData\D2.MasterData.csproj", "{3200BFAC-15A1-4C63-887A-4B2CDDCA20C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.MasterData.Test", "D2.MasterData.Test/D2.MasterData.Test.csproj", "{BCFE6561-4609-4557-8E20-55B1DDDDCD63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.MasterData.Test", "D2.MasterData.Test\D2.MasterData.Test.csproj", "{BCFE6561-4609-4557-8E20-55B1DDDDCD63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Service", "D2.Service/D2.Service.csproj", "{52090DB8-A964-407C-BB9C-6B6ABDEE727B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Service", "D2.Service\D2.Service.csproj", "{52090DB8-A964-407C-BB9C-6B6ABDEE727B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Service.Test", "D2.Service.Test/D2.Service.Test.csproj", "{165E9096-68C9-450F-A2A2-CC63C39401D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Service.Test", "D2.Service.Test\D2.Service.Test.csproj", "{165E9096-68C9-450F-A2A2-CC63C39401D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Service.Contracts", "D2.Service.Contracts/D2.Service.Contracts.csproj", "{46695127-2CA7-431A-B57F-03AB5F17DC8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Service.Contracts", "D2.Service.Contracts\D2.Service.Contracts.csproj", "{46695127-2CA7-431A-B57F-03AB5F17DC8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.NpgSql", "NHibernate.NpgSql/NHibernate.NpgSql.csproj", "{146EB864-AF79-429C-8A00-820C6F58BE27}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHibernate.NpgSql", "NHibernate.NpgSql\NHibernate.NpgSql.csproj", "{146EB864-AF79-429C-8A00-820C6F58BE27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D2.Infrastructure", "D2.Infrastructure\D2.Infrastructure.csproj", "{79E73831-ACBD-4AFE-9A94-6ED2F843F728}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D2.Welcome", "D2.Welcome\D2.Welcome.csproj", "{C639D5A4-7246-4E30-9599-D4BD8421609B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -208,6 +210,18 @@ Global
 		{79E73831-ACBD-4AFE-9A94-6ED2F843F728}.Release|x64.Build.0 = Release|Any CPU
 		{79E73831-ACBD-4AFE-9A94-6ED2F843F728}.Release|x86.ActiveCfg = Release|Any CPU
 		{79E73831-ACBD-4AFE-9A94-6ED2F843F728}.Release|x86.Build.0 = Release|Any CPU
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Debug|x64.ActiveCfg = Debug|x64
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Debug|x64.Build.0 = Debug|x64
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Debug|x86.ActiveCfg = Debug|x86
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Debug|x86.Build.0 = Debug|x86
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Release|x64.ActiveCfg = Release|x64
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Release|x64.Build.0 = Release|x64
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Release|x86.ActiveCfg = Release|x86
+		{C639D5A4-7246-4E30-9599-D4BD8421609B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

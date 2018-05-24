@@ -9,7 +9,6 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open System.IdentityModel.Tokens.Jwt
 
-
 type Startup private () =
     new (configuration: IConfiguration) as this =
         Startup() then
