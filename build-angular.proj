@@ -27,8 +27,13 @@
 	<Exec Command="npm install" WorkingDirectory="D2.UI/D2.UI" Condition=" '$(AngularEnvironment)' != 'dev' " />
 	<Exec Command="ng build -c=$(AngularEnvironment) --base-href /$(UiPrefix)" WorkingDirectory="D2.UI/D2.UI" />
   </Target>
-  
-  <Target Name="Build" DependsOnTargets="BuildUi;BuildAdmin;BuildAuth;BuildUserManagement">
+
+  <Target Name="BuildWelcome">
+	<Exec Command="npm install" WorkingDirectory="D2.Welcome/D2.Welcome" Condition=" '$(AngularEnvironment)' != 'dev' " />
+	<Exec Command="ng build -c=$(AngularEnvironment) --base-href /$(UiPrefix)" WorkingDirectory="D2.Welcome/D2.Welcome" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="BuildUi;BuildAdmin;BuildAuth;BuildUserManagement;BuildWelcome">
     <Message Text="Built angular projects for environment '$(AngularEnvironment)'" />
   </Target>
 </Project>
