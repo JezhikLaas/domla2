@@ -1,14 +1,19 @@
-namespace D2.UserManagement
+namespace D2.Welcome
 
 open D2.Common
+open System
+open System.Collections.Generic
+open System.IO
+open System.Linq
+open System.Threading.Tasks
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Hosting
+open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.Logging
+open NLog
 open NLog.Web
-open System.IO
 
 module Program =
-    open NLog
 
     let BuildWebHost args =
         WebHost

@@ -14,7 +14,7 @@
     <PackageReference Include="NHibernate" Version="5.1.2" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Ninject.Extensions.Conventions" Version="3.3.0" />
-    <PackageReference Include="NLog" Version="4.5.4" />
+    <PackageReference Include="NLog" Version="4.5.5" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.4" />
     <PackageReference Include="Npgsql" Version="3.2.7" />
     <PackageReference Include="zeroc.ice.net" Version="3.7.1" />
