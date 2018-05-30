@@ -7,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PrivacyStatementComponent implements OnInit {
 
+  public statementAccepted: boolean;
+
   constructor() { }
 
   ngOnInit() {
   }
 
+  acceptChange(value: boolean): void {
+    this.statementAccepted = value;
+  }
+
+  state(): string {
+    return this.statementAccepted ? '' : 'disabled';
+  }
 }

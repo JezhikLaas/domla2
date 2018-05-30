@@ -18,11 +18,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    $(document).ready(function() {
-      $('.ui.sticky')
-        .sticky({
-          context: '#appheader'
-        });
-    });
+    $('.ui.sticky')
+      .sticky({
+        context: '#appheader'
+      });
   }
 }
