@@ -8,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
 export class PrivacyStatementComponent implements OnInit {
 
   public statementAccepted: boolean;
+  public stepOneActive: boolean;
+  public stepTwoActive: boolean;
+  public errors: { [key: string]: string};
 
   constructor() { }
 
   ngOnInit() {
+    this.stepOneActive = true;
+    this.errors = { 'passwordOne': null, 'passwordTwo': null };
   }
 
   acceptChange(value: boolean): void {
@@ -20,5 +25,10 @@ export class PrivacyStatementComponent implements OnInit {
 
   state(): string {
     return this.statementAccepted ? '' : 'disabled';
+  }
+
+  commitAcceptance(): void {
+    this.stepOneActive = false;
+    this.stepTwoActive = true;
   }
 }

@@ -1,19 +1,40 @@
-<div style="background: azure" class="ui raised very padded text container segment">
-<p>
+<div *ngIf="stepOneActive">
+  <div style="background: azure" class="ui raised very padded text container segment">
+    <p>
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
 Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
 
 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
-</p>
-</div>
-
-<div style="margin-bottom: 1em;" class="ui padded text container segment">
-  <div class="ui checkbox">
-    <input type="checkbox" #box (change)="acceptChange(box.checked)">
-    <label>Ich stimme den Nutzungsbedingungen zu</label>
+    </p>
   </div>
-  <div style="float: right; position: absolute; top: 50%; right: 1em; transform: translate(0, -50%)" class="ui {{state()}} button hover">
-    Weiter
+
+  <div style="margin-bottom: 1em;" class="ui padded text container segment">
+    <div class="ui checkbox">
+      <input type="checkbox" #box (change)="acceptChange(box.checked)">
+      <label>Ich stimme den Nutzungsbedingungen zu</label>
+    </div>
+    <div style="float: right; position: absolute; top: 50%; right: 1em; transform: translate(0, -50%)" class="ui {{state()}} button hover" (click)="commitAcceptance()">
+      Weiter
+    </div>
+  </div>
+</div>
+<div *ngIf="stepTwoActive">
+  <div style="background: azure" class="ui raised very padded text container segment">
+    <div class="ui input" style="position: center">
+      <input type="password" placeholder="Passwort...">
+      <div *ngIf="errors?.passwordOne" class="ui negative message">
+        {{ errors?.passwordOne }}
+      </div>
+    </div>
+    <div class="ui input" style="position: center">
+      <input type="password" placeholder="Wiederholung...">
+      <div *ngIf="errors?.passwordTwo" class="ui negative message">
+        {{ errors?.passwordTwo }}
+      </div>
+    </div>
+    <div style="float: right; position: absolute; top: 50%; right: 1em; transform: translate(0, -50%)" class="ui {{state()}} button hover" (click)="commitAcceptance()">
+      Absenden
+    </div>
   </div>
 </div>
