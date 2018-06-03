@@ -11,30 +11,36 @@ Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lo
 
   <div style="margin-bottom: 1em;" class="ui padded text container segment">
     <div class="ui checkbox">
-      <input type="checkbox" #box (change)="acceptChange(box.checked)">
-      <label>Ich stimme den Nutzungsbedingungen zu</label>
+      <input type="checkbox" #box (change)="acceptChange(box.checked)" id="acceptBox">
+      <label for="acceptBox">Ich stimme den Nutzungsbedingungen zu</label>
     </div>
     <div style="float: right; position: absolute; top: 50%; right: 1em; transform: translate(0, -50%)" class="ui {{state()}} button hover" (click)="commitAcceptance()">
       Weiter
     </div>
   </div>
 </div>
-<div *ngIf="stepTwoActive">
+<form [formGroup]="passwordGroup" *ngIf="stepTwoActive" class="ui form">
   <div style="background: azure" class="ui raised very padded text container segment">
-    <div class="ui input" style="position: center">
-      <input type="password" placeholder="Passwort...">
-      <div *ngIf="errors?.passwordOne" class="ui negative message">
-        {{ errors?.passwordOne }}
+    <h4 class="ui dividing header">Vergeben Sie nun ein Passwort.</h4>
+    <h5 class="ui dividing header">
+      Dieses muss mindestens 8 Zeichen, einen Groß-, einen Kleinbuchstaben, eine Zahl und ein Sonderzeichen enthalten.
+    </h5>
+    <div class="two fields">
+      <div class="field">
+        <input type="password" placeholder="Passwort..." formControlName="passwordOne">
+        <div *ngIf="errors?.passwordOne" class="ui negative message">
+          {{ errors?.passwordOne }}
+        </div>
+      </div>
+      <div class="field">
+        <input type="password" placeholder="Wiederholung..." formControlName="passwordTwo">
+        <div *ngIf="errors?.passwordTwo" class="ui negative message">
+          {{ errors?.passwordTwo }}
+        </div>
       </div>
     </div>
-    <div class="ui input" style="position: center">
-      <input type="password" placeholder="Wiederholung...">
-      <div *ngIf="errors?.passwordTwo" class="ui negative message">
-        {{ errors?.passwordTwo }}
-      </div>
-    </div>
-    <div style="float: right; position: absolute; top: 50%; right: 1em; transform: translate(0, -50%)" class="ui {{state()}} button hover" (click)="commitAcceptance()">
+    <div style="float: right;" class="ui {{maySubmit()}} button hover" (click)="commitAcceptance()">
       Absenden
     </div>
   </div>
-</div>
+</form>
