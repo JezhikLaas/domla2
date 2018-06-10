@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Component } from '@angular/core';
+import { Component, Injectable} from '@angular/core';
 import * as _ from 'underscore';
 
 declare var $: any;
 declare var vex: any;
 
 @Component({
-  selector: 'app-error-dialog',
+  selector: 'app-info-dialog',
   template: ``,
   styles: []
 })
 
 @Injectable()
-export class ErrorDialogComponent {
+export class InfoDialogComponent {
 
   constructor() {
     vex.defaultOptions.className = 'vex-theme-os';

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ErrorMessages } from './privacy-statement-errors';
+import { FinishRegistration } from '../shared/finish-registration';
+import { StorageService } from '../shared/storage.service';
+import { FinishRegistrationService } from '../shared/finish-registration.service';
+import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
+import { InfoDialogComponent } from '../shared/info-dialog/info-dialog.component';
 
 function checkIfPasswordsAreMatching(group: FormGroup) {
   // safety check
@@ -28,7 +33,12 @@ export class PrivacyStatementComponent implements OnInit {
   public passwordOne: string;
   public passwordTwo: string;
 
-  constructor() { }
+  constructor(
+    private storage: StorageService,
+    private finishRegistration: FinishRegistrationService,
+    private errorDialog: ErrorDialogComponent,
+    private infoDialog: InfoDialogComponent
+  ) { }
 
   ngOnInit() {
     this.stepOneActive = true;
@@ -71,6 +81,19 @@ export class PrivacyStatementComponent implements OnInit {
   commitAcceptance(): void {
     this.stepOneActive = false;
     this.stepTwoActive = true;
+  }
+
+  sendRegistration(): void {
+    const info = new FinishRegistration(
+      this.storage.get('id'),
+      this.passwordGroup.get('passwordOne').value as string
+    );
+    this.finishRegistration.finishRegistration(info).subscribe(
+      obj => this.errorDialog.show('Erfolg', 'Die Registrierung wurde erfolgreich abgeschlossen.'),
+      error => {
+        this.errorDialog.show('Fehler', error.message);
+      }
+    );
   }
 
   updateErrorMessages() {

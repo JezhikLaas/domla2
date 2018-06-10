@@ -3,24 +3,29 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.component';
 import { PrivacyStatementComponent } from './privacy-statement/privacy-statement.component';
-import { ProvidePasswordComponent } from './provide-password/provide-password.component';
 import { LoaderComponent } from './shared/loader/loader.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { InfoDialogComponent } from './shared/info-dialog/info-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorDialogComponent,
     PrivacyStatementComponent,
-    ProvidePasswordComponent,
-    LoaderComponent
+    LoaderComponent,
+    InfoDialogComponent
   ],
   imports: [
     BrowserModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule.forRoot([])
   ],
   providers: [
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    InfoDialogComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
