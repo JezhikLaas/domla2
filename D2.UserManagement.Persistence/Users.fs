@@ -109,6 +109,18 @@ module Users =
                     return canContinue
         }
     
+    let private finishRegistrationWorker (id : Guid) (logger : ILogger) =
+        async {
+            use session = Connection.session ()
+            use transaction = session.BeginTransaction()
+            
+            let! registration = session.GetAsync<UserRegistrationI>(id) |> Async.AwaitTask
+            if registration |> isNull then
+                return false
+            else
+                return true
+        }
+    
     let Storage = {
         register = registerUserWorker;
         listPending = listPendingUsersWorker;
