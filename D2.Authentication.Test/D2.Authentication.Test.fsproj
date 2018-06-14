@@ -16,7 +16,6 @@
     <PackageReference Include="RestSharp.NetCore" Version="105.2.3">
       <NoWarn>NU1603</NoWarn>
     </PackageReference>
-    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Storage.fs" />
