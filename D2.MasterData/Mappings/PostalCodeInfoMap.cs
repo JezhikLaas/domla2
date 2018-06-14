@@ -9,6 +9,7 @@ namespace D2.MasterData.Mappings
         {
             Table("postalcodeinfo");
             Id(x => x.Id);
+            Schema("md");
             Map(x => x.Iso2)
                 .Access.BackingField()
                 .Length(3)
