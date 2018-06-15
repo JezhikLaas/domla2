@@ -37,7 +37,9 @@ module UserData =
                        match BCrypt.Verify(password, storedPassword) with
                        | true  -> return Some (UserI.fromReader reader)
                        | false -> return None
-            | false -> return None
+            
+            | false -> BCrypt.HashPassword password |> ignore // prevent timing attacks
+                       return None
         }
     
     let private fetchUser (options : ConnectionOptions) (id : string) =

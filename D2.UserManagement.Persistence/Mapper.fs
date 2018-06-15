@@ -1,5 +1,7 @@
 ﻿namespace D2.UserManagement.Persistence
 
+open BCrypt.Net
+open BCrypt.Net
 open Cast
 open System
 
@@ -66,6 +68,7 @@ type UserI() =
     let mutable title = String.Empty
     let mutable email = String.Empty
     let mutable login = String.Empty
+    let mutable password = String.Empty
     let mutable loggedIn : Nullable<DateTime> = Nullable()
     let mutable privacyAccepted : Nullable<DateTime> = Nullable()
     let mutable version = 0
@@ -94,6 +97,9 @@ type UserI() =
                             set(value) =
                                 login <- if not(value |> isNull) then value.ToLower() else null
 
+    abstract member Password : string with get, set
+    default this.Password with get() = password and set(value) = password <- value
+
     abstract member LoggedIn : Nullable<DateTime> with get, set
     default this.LoggedIn with get() = loggedIn and set(value) = loggedIn <- value
 
@@ -103,6 +109,21 @@ type UserI() =
     abstract member Version : int with get, set
     default this.Version with get() = version and set(value) = version <- value
     
+    static member fromRegistration (data : UserRegistrationI) (password : string) =
+        let salt = BCrypt.GenerateSalt ()
+        let hashedPassword = BCrypt.HashPassword (password, salt)
+        
+        UserI (
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Salutation = data.Salutation,
+            Title = data.Title,
+            EMail = data.EMail,
+            Login = data.Login,
+            PrivacyAccepted = Nullable(DateTime.Now),
+            Password = hashedPassword
+        )
+    
     interface User with
         member this.Id with get() = this.Id
         member this.FirstName with get() = this.FirstName
@@ -111,6 +132,7 @@ type UserI() =
         member this.Title with get() = this.Title
         member this.EMail with get() = this.EMail
         member this.Login with get() = this.Login
+        member this.Password with get() = this.Password
         member this.LoggedIn with get() = (if this.LoggedIn.HasValue then Some this.LoggedIn.Value else None)
         member this.PrivacyAccepted with get() = (if this.PrivacyAccepted.HasValue then Some this.PrivacyAccepted.Value else None)
         member this.Version with get() = this.Version

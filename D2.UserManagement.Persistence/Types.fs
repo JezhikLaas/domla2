@@ -45,6 +45,8 @@ type User =
 
     abstract member Login : string
     
+    abstract member Password : string
+    
     abstract member Version : int
 
     abstract member LoggedIn : DateTime option
@@ -55,6 +57,7 @@ type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)
     listPending : Async<UserRegistration list>
     acceptRegistration : (Guid -> ILogger -> (UserRegistration -> Async<bool>) -> Async<bool>)
+    finishRegistration : (Guid -> string -> ILogger -> Async<bool>) 
 }
 
 

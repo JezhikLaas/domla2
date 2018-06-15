@@ -53,7 +53,7 @@ module Users =
             }
 
         async {
-            use session = Connection.readOnlySession ()
+            use session = Connection.session ()
             use transaction = session.BeginTransaction()
 
             let! known = knownRegistration session
@@ -109,15 +109,22 @@ module Users =
                     return canContinue
         }
     
-    let private finishRegistrationWorker (id : Guid) (logger : ILogger) =
+    let private finishRegistrationWorker (id : Guid) (password : string) (logger : ILogger) =
         async {
             use session = Connection.session ()
             use transaction = session.BeginTransaction()
             
             let! registration = session.GetAsync<UserRegistrationI>(id) |> Async.AwaitTask
             if registration |> isNull then
+                logger.LogWarning (sprintf "no registration with if %s found" (id.ToString()))
                 return false
             else
+                let user = UserI.fromRegistration registration password
+                session.Delete registration
+                session.Save user |> ignore
+                do! transaction.CommitAsync () |> Async.AwaitTask
+                logger.LogInformation (sprintf "user with login %s successfully activated" user.Login)
+                
                 return true
         }
     
@@ -125,4 +132,5 @@ module Users =
         register = registerUserWorker;
         listPending = listPendingUsersWorker;
         acceptRegistration = acceptRegistrationWorker;
+        finishRegistration = finishRegistrationWorker;
     }
