@@ -16,6 +16,9 @@
     <property name="LastName">
       <column name="last_name" length="255" not-null="true" />
     </property>
+    <property name="Password">
+      <column name="password" length="255" not-null="true" />
+    </property>
     <property name="Salutation">
       <column name="salutation" length="50" />
     </property>
