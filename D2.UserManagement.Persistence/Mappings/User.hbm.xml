@@ -32,7 +32,7 @@
       <column name="logged_in" />
     </property>
     <property name="PrivacyAccepted" type="UtcDateTime">
-      <column name="provacy_accepted" />
+      <column name="privacy_accepted" />
     </property>
   </class>
 </hibernate-mapping>
