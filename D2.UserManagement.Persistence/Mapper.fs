@@ -120,7 +120,7 @@ type UserI() =
             Title = data.Title,
             EMail = data.EMail,
             Login = data.Login,
-            PrivacyAccepted = Nullable(DateTime.Now),
+            PrivacyAccepted = Nullable(DateTime.UtcNow),
             Password = hashedPassword
         )
     
