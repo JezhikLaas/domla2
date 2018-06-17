@@ -17,7 +17,7 @@ type RegistrationsController
     inherit Controller()
 
     [<HttpGet("list")>]
-    [<Authorize>]
+    [<Authorize(Roles = "admin")>]
     member this.List () =
         async {
             let! response = CompositionRoot.Storage.listPending ()
@@ -25,7 +25,7 @@ type RegistrationsController
         }
 
     [<HttpPost("confirm")>]
-    [<Authorize>]
+    [<Authorize(Roles = "admin")>]
     member this.Confirm ([<FromBody>]ids : Guid[]) =
         async {
             let confirmIds = ids |> Seq.toList

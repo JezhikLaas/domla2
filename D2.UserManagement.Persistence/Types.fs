@@ -3,6 +3,7 @@
 open D2.Common
 open Microsoft.Extensions.Logging
 open System
+open System.Security.Claims
 
 type RegistrationResult =
     | Ok
@@ -52,6 +53,8 @@ type User =
     abstract member LoggedIn : DateTime option
     
     abstract member PrivacyAccepted : DateTime option
+    
+    abstract member UserClaims : Claim list
 
 type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)

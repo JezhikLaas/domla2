@@ -3,7 +3,9 @@
 open BCrypt.Net
 open BCrypt.Net
 open Cast
+open Newtonsoft.Json
 open System
+open System.Security.Claims
 
 [<AllowNullLiteral>]
 type UserRegistrationI() =
@@ -69,6 +71,8 @@ type UserI() =
     let mutable email = String.Empty
     let mutable login = String.Empty
     let mutable password = String.Empty
+    let mutable claims = String.Empty
+    let mutable userClaims = List.empty<Claim>
     let mutable loggedIn : Nullable<DateTime> = Nullable()
     let mutable privacyAccepted : Nullable<DateTime> = Nullable()
     let mutable version = 0
@@ -90,6 +94,17 @@ type UserI() =
 
     abstract member EMail : string with get, set
     default this.EMail with get() = email and set(value) = email <- value
+
+    abstract member UserClaims : Claim list with get, set
+    default this.UserClaims with get() = userClaims and set(value) = userClaims <- value
+
+    abstract member Claims : string with get, set
+    default this.Claims
+        with get() =
+            JsonConvert.SerializeObject(userClaims)
+        and set(value) =
+            userClaims <- JsonConvert.DeserializeObject<System.Collections.Generic.List<Claim>>(value)
+                          |> Seq.toList
 
     abstract member Login : string with get, set
     default this.Login with get() = login
@@ -121,7 +136,12 @@ type UserI() =
             EMail = data.EMail,
             Login = data.Login,
             PrivacyAccepted = Nullable(DateTime.UtcNow),
-            Password = hashedPassword
+            Password = hashedPassword,
+            UserClaims = [
+                Claim("role", "user");
+                Claim("id", Guid.NewGuid().ToString("N"));
+                Claim("name", data.Login);
+            ]
         )
     
     interface User with
@@ -136,3 +156,4 @@ type UserI() =
         member this.LoggedIn with get() = (if this.LoggedIn.HasValue then Some this.LoggedIn.Value else None)
         member this.PrivacyAccepted with get() = (if this.PrivacyAccepted.HasValue then Some this.PrivacyAccepted.Value else None)
         member this.Version with get() = this.Version
+        member this.UserClaims with get() = this.UserClaims
