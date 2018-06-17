@@ -3,6 +3,7 @@
 open BCrypt.Net
 open BCrypt.Net
 open Cast
+open D2.Common
 open Newtonsoft.Json
 open System
 open System.Security.Claims
@@ -103,7 +104,7 @@ type UserI() =
         with get() =
             JsonConvert.SerializeObject(userClaims)
         and set(value) =
-            userClaims <- JsonConvert.DeserializeObject<System.Collections.Generic.List<Claim>>(value)
+            userClaims <- Json.deserialize<System.Collections.Generic.List<Claim>>(value)
                           |> Seq.toList
 
     abstract member Login : string with get, set
