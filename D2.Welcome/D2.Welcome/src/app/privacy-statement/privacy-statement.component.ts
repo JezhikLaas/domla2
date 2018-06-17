@@ -89,9 +89,9 @@ export class PrivacyStatementComponent implements OnInit {
       this.passwordGroup.get('passwordOne').value as string
     );
     this.finishRegistration.finishRegistration(info).subscribe(
-  obj => {
-        this.errorDialog.show('Erfolg', 'Die Registrierung wurde erfolgreich abgeschlossen.');
-        console.log(obj);
+      result => {
+        this.errorDialog.show('Erfolg', 'Die Registrierung wurde erfolgreich abgeschlossen. Sie können sich nun anmelden.');
+        window.location.href = result.goto;
       },
       error => {
         this.errorDialog.show('Fehler', error.message);

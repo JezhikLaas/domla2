@@ -37,7 +37,10 @@ type WelcomeController
     
     member this.Finish ([<FromBody>] info : FinishRegistration) =
         match finishRegistration info with
-        | Success   address -> RedirectResult address
+        | Success   address -> ContentResult(
+                                   Content = (sprintf "{\"goto\": \"%s\"}" address),
+                                   ContentType = "application/json"
+                               )
                                :> ActionResult
         | InternalFailure e -> logger.LogError (e, "Internal error")
                                StatusCodeResult StatusCodes.Status500InternalServerError
