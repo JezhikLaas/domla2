@@ -31,7 +31,7 @@
     <property name="Login">
       <column name="login" length="255" not-null="true" />
     </property>
-    <property name="Claims" column="claims" type="Beginor.NHibernate.NpgSql.JsonbType, Beginor.NHibernate.NpgSql" />
+    <property name="Claims" column="claims" type="Beginor.NHibernate.NpgSql.JsonbType, NHibernate.NpgSql" />
     <property name="LoggedIn" type="UtcDateTime">
       <column name="logged_in" />
     </property>
