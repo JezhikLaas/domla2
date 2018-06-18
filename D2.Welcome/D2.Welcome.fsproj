@@ -4,12 +4,18 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="D2.Welcome\tsconfig.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="Types\FinishRegistration.fs" />
     <Compile Include="Controllers\HomeController.fs" />
     <Compile Include="Controllers\WelcomeController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D2.Welcome\tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />

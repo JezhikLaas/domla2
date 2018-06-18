@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
@@ -31,9 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHibernate.NpgSql", "NHiber
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Infrastructure", "D2.Infrastructure\D2.Infrastructure.csproj", "{79E73831-ACBD-4AFE-9A94-6ED2F843F728}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D2.Infrastructure.Test", "D2.Infrastructure.Test\D2.Infrastructure.Test.csproj", "{C54BCED9-73A0-479C-8AFD-4CB083238A57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2.Infrastructure.Test", "D2.Infrastructure.Test\D2.Infrastructure.Test.csproj", "{C54BCED9-73A0-479C-8AFD-4CB083238A57}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "D2.Welcome", "D2.Welcome\D2.Welcome.fsproj", "{3DA49785-5F66-426E-AD02-79DB868DCF77}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.Welcome", "D2.Welcome\D2.Welcome.fsproj", "{3DA49785-5F66-426E-AD02-79DB868DCF77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,16 +226,16 @@ Global
 		{C54BCED9-73A0-479C-8AFD-4CB083238A57}.Release|x86.Build.0 = Release|Any CPU
 		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x64.ActiveCfg = Debug|x64
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x64.Build.0 = Debug|x64
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x86.ActiveCfg = Debug|x86
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x86.Build.0 = Debug|x86
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x64.Build.0 = Debug|Any CPU
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Debug|x86.Build.0 = Debug|Any CPU
 		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x64.ActiveCfg = Release|x64
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x64.Build.0 = Release|x64
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x86.ActiveCfg = Release|x86
-		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x86.Build.0 = Release|x86
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x64.ActiveCfg = Release|Any CPU
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x64.Build.0 = Release|Any CPU
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x86.ActiveCfg = Release|Any CPU
+		{3DA49785-5F66-426E-AD02-79DB868DCF77}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
