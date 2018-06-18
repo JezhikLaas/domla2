@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ErrorMessages } from './privacy-statement-errors';
 import { FinishRegistration } from '../shared/finish-registration';
@@ -6,6 +6,7 @@ import { StorageService } from '../shared/storage.service';
 import { FinishRegistrationService } from '../shared/finish-registration.service';
 import { ErrorDialogComponent } from '../shared/error-dialog/error-dialog.component';
 import { InfoDialogComponent } from '../shared/info-dialog/info-dialog.component';
+import { LoaderComponent } from '../shared/loader/loader.component';
 
 function checkIfPasswordsAreMatching(group: FormGroup) {
   // safety check
@@ -29,6 +30,7 @@ async function delay(ms: number) {
 })
 export class PrivacyStatementComponent implements OnInit {
 
+  @ViewChild(LoaderComponent) loader: LoaderComponent;
   public statementAccepted: boolean;
   public stepOneActive: boolean;
   public stepTwoActive: boolean;
@@ -88,18 +90,25 @@ export class PrivacyStatementComponent implements OnInit {
   }
 
   sendRegistration(): void {
+    this.loader.show('Schließe Registrierung ab...');
     const info = new FinishRegistration(
       this.storage.get('id'),
       this.passwordGroup.get('passwordOne').value as string
     );
     this.finishRegistration.finishRegistration(info).subscribe(
       result => {
-        this.errorDialog.show('Erfolg', 'Die Registrierung wurde erfolgreich abgeschlossen. Sie werden gleich zur Anmeldung weitergeleitet.');
+        this.loader.hide();
+        this.infoDialog.show(
+          'Erfolg',
+          'Die Registrierung wurde erfolgreich abgeschlossen. Sie werden gleich zur Anmeldung weitergeleitet.'
+        );
         delay(2000).then(() => window.location.href = result.goto);
       },
       error => {
+        this.loader.hide();
         this.errorDialog.show('Fehler', error.message);
-      }
+      },
+      () => this.loader.hide()
     );
   }
 
