@@ -18,6 +18,10 @@ function checkIfPasswordsAreMatching(group: FormGroup) {
   return null;
 }
 
+async function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
 @Component({
   selector: 'app-privacy-statement',
   templateUrl: './privacy-statement.component.html',
@@ -90,8 +94,8 @@ export class PrivacyStatementComponent implements OnInit {
     );
     this.finishRegistration.finishRegistration(info).subscribe(
       result => {
-        this.errorDialog.show('Erfolg', 'Die Registrierung wurde erfolgreich abgeschlossen. Sie können sich nun anmelden.');
-        window.location.href = result.goto;
+        this.errorDialog.show('Erfolg', 'Die Registrierung wurde erfolgreich abgeschlossen. Sie werden gleich zur Anmeldung weitergeleitet.');
+        delay(2000).then(() => window.location.href = result.goto);
       },
       error => {
         this.errorDialog.show('Fehler', error.message);
