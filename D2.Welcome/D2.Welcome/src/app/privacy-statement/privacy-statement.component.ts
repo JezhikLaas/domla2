@@ -47,6 +47,7 @@ export class PrivacyStatementComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loader.useDimmer = false;
     this.stepOneActive = true;
     this.errors = { 'hasErrors': 'false', 'passwordOne': null, 'passwordTwo': null };
     this.passwordGroup = new FormGroup({
