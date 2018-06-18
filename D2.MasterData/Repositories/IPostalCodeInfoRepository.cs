@@ -1,4 +1,5 @@
 ﻿using D2.MasterData.Models;
+using D2.MasterData.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace D2.MasterData.Repositories
         void Insert(PostalCodeInfo item);
         IEnumerable<PostalCodeInfo> List();
         PostalCodeInfo Load(Guid id);
+        bool Exists(PostalCodeInfoParameters postalcode);
     }
 }

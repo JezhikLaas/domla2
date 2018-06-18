@@ -15,7 +15,7 @@ namespace D2.MasterData.Mappings
                 .Not.Nullable();
             Map(x => x.PostalCode)
                 .Access.BackingField()
-                .Length(5)
+                .Length(20)
                 .Not
                 .Nullable();
             Map(x => x.Edit)

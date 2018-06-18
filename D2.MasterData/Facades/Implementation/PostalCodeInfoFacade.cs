@@ -75,5 +75,21 @@ namespace D2.MasterData.Facades.Implementation
 
             return new ValidationResponse(State.ExternalFailure, errors);
         }
+
+        public void CheckExistsPostalCode (AdministrationUnitParameters value)
+        {
+            foreach (EntranceParameters entrance in value.Entrances)
+            {
+                PostalCodeInfoParameters postalCodeParam =  new PostalCodeInfoParameters();
+                postalCodeParam.PostalCode = entrance.Address.PostalCode;
+                postalCodeParam.City = entrance.Address.City;
+                postalCodeParam.Iso2 = entrance.Address.Country.Iso2;
+                var result = _repository.Exists(postalCodeParam);
+                if (!result)
+                {
+                    CreateNewPostalCodeInfo(postalCodeParam);
+                }
+            }
+        }
    }
 }

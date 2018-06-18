@@ -1,5 +1,6 @@
 ﻿using D2.MasterData.Facades.Implementation;
 using D2.MasterData.Infrastructure;
+using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
 using D2.MasterData.Test.Helper;
@@ -82,6 +83,42 @@ namespace D2.MasterData.Test
 
             var result = facade.ValidateCreate(new PostalCodeInfoParameters());
             Assert.Equal(State.NoError, result.result);
+        }
+
+        [Fact(DisplayName = "CheckExistsPostalCode with existing postal code does not insert")]
+        public void CheckExistsPostalCode_with_existing_postalcode_does_not_insert()
+        {
+            var validator = Substitute.For<IParameterValidator>();
+            validator
+                .Validate(Arg.Any<PostalCodeInfoParameters>(), RequestType.Post)
+                .Returns(new ValidationResult());
+            var repository = Substitute.For<IPostalCodeInfoRepository>();
+            repository.Exists(Arg.Any<PostalCodeInfoParameters>()).Returns(true);
+
+            var facade = new PostalCodeInfoFacade(repository, validator);
+            var unit = AdministrationUnitParametersBuilder.New.Build();
+            
+            facade.CheckExistsPostalCode(unit);
+            repository.Received(1).Exists(Arg.Any<PostalCodeInfoParameters>());
+            repository.Received(0).Insert(Arg.Any<PostalCodeInfo>());
+        }
+
+        [Fact(DisplayName = "CheckExistsPostalCode with non-existing postal code insert")]
+        public void CheckExistsPostalCode_with_non_existing_postalcode_insert()
+        {
+            var validator = Substitute.For<IParameterValidator>();
+            validator
+                .Validate(Arg.Any<PostalCodeInfoParameters>(), RequestType.Post)
+                .Returns(new ValidationResult());
+            var repository = Substitute.For<IPostalCodeInfoRepository>();
+            repository.Exists(Arg.Any<PostalCodeInfoParameters>()).Returns(false);
+
+            var facade = new PostalCodeInfoFacade(repository, validator);
+            var unit = AdministrationUnitParametersBuilder.New.Build();
+
+            facade.CheckExistsPostalCode(unit);
+            repository.Received(1).Exists(Arg.Any<PostalCodeInfoParameters>());
+            repository.Received(1).Insert(Arg.Any<PostalCodeInfo>());
         }
     }
 }

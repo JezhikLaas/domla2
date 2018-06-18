@@ -98,5 +98,26 @@ namespace D2.MasterData.Test
             }
         }
 
+        [Fact(DisplayName = "PostalCodeInfoRepository can find existing postalcode")]
+        public void PostalCodeInfoRepository_can_find_existing_postalcode()
+        {
+            InsertPostalCodeInfo();
+
+            using (var context = GetContext())
+            {
+                var repository = new PostalCodeInfoRepository(context);
+                Assert.True(repository.Exists(PostalCodeInfoParametersBuilder.New.Build()));
+            }
+        }
+
+        [Fact(DisplayName = "PostalCodeInfoRepository does not find postalcode")]
+        public void PostalCodeInfoRepository_does_not_find_postalcode()
+        {
+            using (var context = GetContext())
+            {
+                var repository = new PostalCodeInfoRepository(context);
+                Assert.False(repository.Exists(PostalCodeInfoParametersBuilder.New.Build()));
+            }
+        }
     }
 }

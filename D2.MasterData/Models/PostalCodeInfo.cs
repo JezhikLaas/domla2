@@ -26,7 +26,7 @@ namespace D2.MasterData.Models
         }
 
         [Required]
-        [MaxLength(5)]
+        [MaxLength(20)]
         public virtual string PostalCode
         {
             get;

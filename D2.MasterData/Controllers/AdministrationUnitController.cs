@@ -16,15 +16,17 @@ namespace D2.MasterData.Controllers
     public class AdministrationUnitController : BaseController
     {
         IAdministrationUnitFacade _administrationUnitFacade;
+        IPostalCodeInfoFacade _postalCodeInfoFacade;
 
         /// <summary>
         /// Konstruktor.
         /// </summary>
         /// <param name="administrationUnitFacade">Fassade für fachliche Aufgaben.</param>
         public AdministrationUnitController(
-            IAdministrationUnitFacade administrationUnitFacade)
+            IAdministrationUnitFacade administrationUnitFacade, IPostalCodeInfoFacade postalCodeInfoFacade)
         {
             _administrationUnitFacade = administrationUnitFacade;
+            _postalCodeInfoFacade = postalCodeInfoFacade;
         }
 
         [Routing("Post", "Validate_Create")]
@@ -37,6 +39,7 @@ namespace D2.MasterData.Controllers
         public ExecutionResponse Create([FromBody]AdministrationUnitParameters value)
         {
             _administrationUnitFacade.CreateNewAdministrationUnit(value);
+            _postalCodeInfoFacade.CheckExistsPostalCode(value);
             return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
 
@@ -50,6 +53,7 @@ namespace D2.MasterData.Controllers
         public ExecutionResponse Edit([FromBody]AdministrationUnitParameters value)
         {
             _administrationUnitFacade.EditAdministrationUnit(value);
+            _postalCodeInfoFacade.CheckExistsPostalCode(value);
             return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
 

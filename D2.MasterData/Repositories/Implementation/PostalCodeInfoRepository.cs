@@ -1,5 +1,6 @@
 ﻿using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
+using D2.MasterData.Parameters;
 using D2.Service.IoC;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,16 @@ namespace D2.MasterData.Repositories.Implementation
         public PostalCodeInfo Load(Guid id)
         {
             return _context.Session.Get<PostalCodeInfo>(id);
+        }
+
+        public bool Exists (PostalCodeInfoParameters postalCode)
+        {
+            var result = from unit in _context.Session.Query<PostalCodeInfo>()
+                         where unit.City == postalCode.City 
+                            && unit.Iso2 == postalCode.Iso2 
+                            && unit.PostalCode == postalCode.PostalCode
+                         select unit;
+            return result.Any();
         }
     }
 }

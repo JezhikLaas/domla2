@@ -12,5 +12,6 @@ namespace D2.MasterData.Facades
         IEnumerable<PostalCodeInfo> ListPostalCodeInfos();
         ExecutionResponse LoadPostalCodeInfo(string id);
         ValidationResponse ValidateCreate(PostalCodeInfoParameters value);
+        void CheckExistsPostalCode(AdministrationUnitParameters vlaue);
     }
 }
