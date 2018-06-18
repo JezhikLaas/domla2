@@ -10,6 +10,7 @@ namespace D2.MasterData.Mappings
         {
             Table("administrationunits");
             Id(x => x.Id);
+            Schema("md");
             Map(x => x.UserKey)
                 .Access.BackingField()
                 .Length(10)

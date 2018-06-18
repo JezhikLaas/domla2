@@ -16,6 +16,9 @@
     <property name="LastName">
       <column name="last_name" length="255" not-null="true" />
     </property>
+    <property name="Password">
+      <column name="password" length="255" not-null="true" />
+    </property>
     <property name="Salutation">
       <column name="salutation" length="50" />
     </property>
@@ -28,11 +31,12 @@
     <property name="Login">
       <column name="login" length="255" not-null="true" />
     </property>
+    <property name="Claims" column="claims" type="Beginor.NHibernate.NpgSql.JsonbType, NHibernate.NpgSql" />
     <property name="LoggedIn" type="UtcDateTime">
       <column name="logged_in" />
     </property>
     <property name="PrivacyAccepted" type="UtcDateTime">
-      <column name="provacy_accepted" />
+      <column name="privacy_accepted" />
     </property>
   </class>
 </hibernate-mapping>

@@ -93,6 +93,14 @@ module ServiceConfiguration =
             config
         evaluate ()
     
+    let login =
+        let evaluate () =
+            let config = BrokerProperties ()
+            configurationSources.GetSection("Login").Bind config
+
+            config
+        evaluate ()
+    
     let versionInfo =
         let evaluate () =
             let config = SelfProperties ()

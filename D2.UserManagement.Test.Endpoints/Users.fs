@@ -39,6 +39,11 @@ module RegistrationTest =
             return true
         }
     
+    let private finishRegistrationTest (item : Guid) (password : string) (logger : ILogger) =
+        async {
+            return true
+        }
+    
     type UserRegistrationI() =
         member val Id = Guid.Empty with get, set
         member val FirstName = String.Empty with get, set
@@ -65,6 +70,7 @@ module RegistrationTest =
         register = registerUser
         listPending = listPendingUsers
         acceptRegistration = acceptRegistrationTest
+        finishRegistration = finishRegistrationTest
     }
     
     let mutable browser = null

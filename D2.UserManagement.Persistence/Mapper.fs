@@ -1,7 +1,12 @@
 ﻿namespace D2.UserManagement.Persistence
 
+open BCrypt.Net
+open BCrypt.Net
 open Cast
+open D2.Common
+open Newtonsoft.Json
 open System
+open System.Security.Claims
 
 [<AllowNullLiteral>]
 type UserRegistrationI() =
@@ -66,6 +71,9 @@ type UserI() =
     let mutable title = String.Empty
     let mutable email = String.Empty
     let mutable login = String.Empty
+    let mutable password = String.Empty
+    let mutable claims = String.Empty
+    let mutable userClaims = List.empty<Claim>
     let mutable loggedIn : Nullable<DateTime> = Nullable()
     let mutable privacyAccepted : Nullable<DateTime> = Nullable()
     let mutable version = 0
@@ -88,11 +96,25 @@ type UserI() =
     abstract member EMail : string with get, set
     default this.EMail with get() = email and set(value) = email <- value
 
+    abstract member UserClaims : Claim list with get, set
+    default this.UserClaims with get() = userClaims and set(value) = userClaims <- value
+
+    abstract member Claims : string with get, set
+    default this.Claims
+        with get() =
+            JsonConvert.SerializeObject(userClaims)
+        and set(value) =
+            userClaims <- Json.deserialize<System.Collections.Generic.List<Claim>>(value)
+                          |> Seq.toList
+
     abstract member Login : string with get, set
     default this.Login with get() = login
                             and
                             set(value) =
                                 login <- if not(value |> isNull) then value.ToLower() else null
+
+    abstract member Password : string with get, set
+    default this.Password with get() = password and set(value) = password <- value
 
     abstract member LoggedIn : Nullable<DateTime> with get, set
     default this.LoggedIn with get() = loggedIn and set(value) = loggedIn <- value
@@ -103,6 +125,26 @@ type UserI() =
     abstract member Version : int with get, set
     default this.Version with get() = version and set(value) = version <- value
     
+    static member fromRegistration (data : UserRegistrationI) (password : string) =
+        let salt = BCrypt.GenerateSalt ()
+        let hashedPassword = BCrypt.HashPassword (password, salt)
+        
+        UserI (
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Salutation = data.Salutation,
+            Title = data.Title,
+            EMail = data.EMail,
+            Login = data.Login,
+            PrivacyAccepted = Nullable(DateTime.UtcNow),
+            Password = hashedPassword,
+            UserClaims = [
+                Claim("role", "user");
+                Claim("id", Guid.NewGuid().ToString("N"));
+                Claim("name", data.Login);
+            ]
+        )
+    
     interface User with
         member this.Id with get() = this.Id
         member this.FirstName with get() = this.FirstName
@@ -111,6 +153,8 @@ type UserI() =
         member this.Title with get() = this.Title
         member this.EMail with get() = this.EMail
         member this.Login with get() = this.Login
+        member this.Password with get() = this.Password
         member this.LoggedIn with get() = (if this.LoggedIn.HasValue then Some this.LoggedIn.Value else None)
         member this.PrivacyAccepted with get() = (if this.PrivacyAccepted.HasValue then Some this.PrivacyAccepted.Value else None)
         member this.Version with get() = this.Version
+        member this.UserClaims with get() = this.UserClaims

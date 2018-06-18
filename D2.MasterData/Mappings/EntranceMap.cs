@@ -9,6 +9,7 @@ namespace D2.MasterData.Mappings
         {
             Table("entrances");
             Id(x => x.Id);
+            Schema("md");
             Map(x => x.Edit)
                 .Access.BackingField()
                 .Generated.Always();

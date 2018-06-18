@@ -10,8 +10,6 @@ open System.IO
 module Program =
     open NLog
 
-    let exitCode = 0
-
     let BuildWebHost args =
         WebHost
             .CreateDefaultBuilder(args)
