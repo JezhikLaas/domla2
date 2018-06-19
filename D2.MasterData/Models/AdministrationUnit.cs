@@ -26,15 +26,12 @@ namespace D2.MasterData.Models
             Version = argument.Version;
         }
 
-        [Required]
-        [MaxLength(10)]
         public virtual string UserKey
         {
             get;
             protected set;
         }
 
-        [MaxLength(256)]
         public virtual string Title
         {
             get;
@@ -43,7 +40,6 @@ namespace D2.MasterData.Models
 
         private IList<Entrance> _entrances;
 
-        [Required]
         public virtual IEnumerable<Entrance> Entrances
         {
             get { return _entrances; }
@@ -55,7 +51,6 @@ namespace D2.MasterData.Models
             protected set;
         }
 
-        [ConcurrencyCheck]
         public virtual int Version
         {
             get;

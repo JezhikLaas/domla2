@@ -6,8 +6,6 @@ namespace D2.MasterData.Models
 {
     public class BaseModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual Guid Id
         {
             get;

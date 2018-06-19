@@ -17,6 +17,6 @@
     <ProjectReference Include="..\D2.UserManagement\D2.UserManagement.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.3.4" />
+    <PackageReference Update="FSharp.Core" Version="4.5.0" />
   </ItemGroup>
 </Project>

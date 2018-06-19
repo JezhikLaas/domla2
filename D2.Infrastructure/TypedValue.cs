@@ -11,20 +11,23 @@ namespace D2.Infrastructure
     {
         private decimal Value_;
         private string Unit_;
+        private int DecimalPlace_;
 
         public string Unit { get => Unit_; }
         public decimal Value { get => Value_; }
 
-        public TypedValue(decimal value, string unit)
+        public TypedValue(decimal value, string unit, int decimalPlace)
         {
             Value_ = value;
             Unit_ = unit;
+            DecimalPlace_ = decimalPlace;
         }
 
         public TypedValue(TypedValue value)
         {
             Value_ = value.Value_;
             Unit_ = value.Unit_;
+            DecimalPlace_ = value.DecimalPlace_;
         }
 
         public int CompareTo(TypedValue other)
@@ -46,7 +49,7 @@ namespace D2.Infrastructure
 
         public static TypedValue operator -(TypedValue value)
         {
-            return new TypedValue(-value.Value_, value.Unit_);
+            return new TypedValue(-value.Value_, value.Unit_, value.DecimalPlace_);
         }
 
         public static TypedValue operator +(TypedValue value)
@@ -66,7 +69,7 @@ namespace D2.Infrastructure
                 throw DifferentUnits();
             }
 
-            return new TypedValue(left.Value_ + right.Value_, left.Unit);
+            return new TypedValue(left.Value_ + right.Value_, left.Unit, left.DecimalPlace_);
         }
 
         public static TypedValue operator -(TypedValue left, TypedValue right)
@@ -76,17 +79,17 @@ namespace D2.Infrastructure
                 throw DifferentUnits();
             }
 
-            return new TypedValue(left.Value_ - right.Value_, left.Unit);
+            return new TypedValue(left.Value_ - right.Value_, left.Unit, left.DecimalPlace_);
         }
 
         public static TypedValue operator *(TypedValue left, Decimal right)
         {
-            return new TypedValue(left.Value_ * right, left.Unit);
+            return new TypedValue(left.Value_ * right, left.Unit, left.DecimalPlace_);
         }
 
         public static TypedValue operator /(TypedValue left, Decimal right)
         {
-            return new TypedValue(left.Value_ / right, left.Unit);
+            return new TypedValue(left.Value_ / right, left.Unit, left.DecimalPlace_);
         }
 
         public static bool operator ==(TypedValue left, TypedValue right)

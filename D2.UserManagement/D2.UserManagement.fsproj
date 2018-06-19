@@ -38,6 +38,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.3.4" />
+    <PackageReference Update="FSharp.Core" Version="4.5.0" />
   </ItemGroup>
 </Project>

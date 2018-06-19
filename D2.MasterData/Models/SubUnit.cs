@@ -21,8 +21,6 @@ namespace D2.MasterData.Models
             EntranceId = entrance.Id;
         }
 
-
-        [MaxLength(256)]
         public virtual string Title
         {
             get;
@@ -35,7 +33,6 @@ namespace D2.MasterData.Models
             protected set;
         }
 
-        [Required]
         public virtual Entrance Entrance
         {
             get;
@@ -48,21 +45,18 @@ namespace D2.MasterData.Models
             protected set;
         }
 
-        [Required]
         public virtual int? Number
         {
             get;
             protected set;
         }
 
-        [MaxLength(256)]
         public virtual string Usage
         {
             get;
             protected set;
         }
 
-        [ConcurrencyCheck]
         public virtual int Version
         {
             get;

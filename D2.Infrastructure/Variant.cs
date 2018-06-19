@@ -7,7 +7,7 @@ namespace D2.Infrastructure
     {
         public VariantTag Tag { get; }
 
-        public decimal Decimal => AsDecimal();
+        public TypedValue Number => AsTypedValue();
 
         public DateTime DateTime => AsDateTime();
 
@@ -16,9 +16,9 @@ namespace D2.Infrastructure
         public Variant()
         { }
 
-        public Variant(decimal value)
+        public Variant(TypedValue value)
         {
-            Tag = VariantTag.Decimal;
+            Tag = VariantTag.TypedValue;
             _storage = value;
         }
 
@@ -36,16 +36,15 @@ namespace D2.Infrastructure
 
         private object _storage;
 
-        private decimal AsDecimal()
+        private TypedValue AsTypedValue()
         {
             switch (Tag) {
                 case VariantTag.DateTime:
-                    // oder: RaiseInvalidCast(VariantTag.Decimal) ???
-                    return ((DateTime) _storage).Ticks;
+                    throw RaiseInvalidCast(VariantTag.TypedValue);
                 case VariantTag.String:
-                    throw RaiseInvalidCast(VariantTag.Decimal);
+                    throw RaiseInvalidCast(VariantTag.TypedValue);
                 default:
-                    return (decimal) _storage;
+                    return (TypedValue) _storage;
             }
         }
 
@@ -57,7 +56,7 @@ namespace D2.Infrastructure
                 case VariantTag.String:
                     return (string) _storage;
                 default:
-                    return ((decimal)_storage).ToString(CultureInfo.CurrentCulture);
+                    return ((TypedValue)_storage).ToString();
             }
         }
 
@@ -83,7 +82,7 @@ namespace D2.Infrastructure
     {
         None,
         DateTime,
-        Decimal,
+        TypedValue,
         String
     }
 }

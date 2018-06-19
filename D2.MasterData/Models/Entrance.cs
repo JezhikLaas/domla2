@@ -29,7 +29,6 @@ namespace D2.MasterData.Models
             AdministrationUnitId = unit.Id;
         }
 
-        [MaxLength(256)]
         public virtual string Title
         {
             get;
@@ -60,7 +59,6 @@ namespace D2.MasterData.Models
             get { return _subUnits; }
         }
 
-        [ConcurrencyCheck]
         public virtual int Version
         {
             get;

@@ -14,14 +14,12 @@ namespace D2.MasterData.Models
             Name = argument.Name;
         }
 
-        [Required]
         public string Iso2
         {
             get;
             private set;
         }
 
-        [Required]
         public string Name
         {
             get;

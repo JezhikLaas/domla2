@@ -18,32 +18,24 @@ namespace D2.MasterData.Models
             Version = argument.Version;
         }
 
-        [Required]
         public virtual string Iso2
         {
             get;
             protected set;
         }
 
-        [Required]
-        [MaxLength(20)]
-        public virtual string PostalCode
+       public virtual string PostalCode
         {
             get;
             protected set;
         }
 
-        [Required]
-        [MaxLength(256)]
         public virtual string City
         {
             get;
             protected set;
         }
 
-
-
-        [ConcurrencyCheck]
         public virtual int Version
         {
             get;

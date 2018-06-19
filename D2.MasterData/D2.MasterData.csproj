@@ -4,6 +4,15 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Parameters\AddressParameters.cs" />
+    <Content Include="Parameters\AdministrationUnitFeatureParameters.cs" />
+    <Content Include="Parameters\AdministrationUnitParameters.cs" />
+    <Content Include="Parameters\CountryInfoParameters.cs" />
+    <Content Include="Parameters\EntranceParameters.cs" />
+    <Content Include="Parameters\PostalCodeInfoParameters.cs" />
+    <Content Include="Parameters\SubUnitParameters.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
