@@ -86,7 +86,7 @@ module RegistrationTest =
         dummyData.Clear()
     
     [<Test>]
-    let ``User Management answers 'Ok' when user can be inserted``() =
+    let ``User Management answers Ok when user can be inserted``() =
         let user = UserRegistrationI(
                        FirstName = "foo",
                        LastName = "bar",

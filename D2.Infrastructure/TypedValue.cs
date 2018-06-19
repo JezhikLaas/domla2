@@ -13,8 +13,9 @@ namespace D2.Infrastructure
         private string Unit_;
         private int DecimalPlace_;
 
-        public string Unit { get => Unit_; }
-        public decimal Value { get => Value_; }
+        public string Unit => Unit_;
+        public decimal Value => Value_;
+        public decimal DecimalPlaces => DecimalPlace_;
 
         public TypedValue(decimal value, string unit, int decimalPlace)
         {

@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="FsUnit" Version="3.1.0" />
     <PackageReference Include="RestSharp.CoreNet" Version="105.2.4-rc4-24214-03" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Routes.fs" />
@@ -20,6 +20,6 @@
     <ProjectReference Include="..\D2.ServiceBroker.Persistence\D2.ServiceBroker.Persistence.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.3.4" />
+    <PackageReference Update="FSharp.Core" Version="4.5.0" />
   </ItemGroup>
 </Project>

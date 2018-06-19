@@ -12,6 +12,8 @@ namespace D2.Infrastructure
         public DateTime DateTime => AsDateTime();
 
         public string String => AsString();
+
+        public object Raw => _storage;
         
         public Variant()
         { }
@@ -34,8 +36,44 @@ namespace D2.Infrastructure
             _storage = value;
         }
 
+        public Variant(Variant value)
+        {
+            Tag = value.Tag;
+            _storage = value._storage;
+        }
+
+        public Variant(string tag, string value)
+        {
+            Tag = Enum.Parse<VariantTag>(tag);
+            switch (Tag) {
+                case VariantTag.DateTime:
+                    _storage = new DateTime(long.Parse(value));
+                    break;
+                case VariantTag.String:
+                    _storage = value;
+                    break;
+                case VariantTag.TypedValue:
+                    var elements = value.Split(':');
+                    _storage = new TypedValue(decimal.Parse(elements[0]), elements[1], int.Parse(elements[2]));
+                    break;
+                default:
+                    break;
+            }
+        }
+        
         private object _storage;
 
+        public string Encode()
+        {
+            switch (Tag) {
+                case VariantTag.None: return string.Empty;
+                case VariantTag.DateTime: return DateTime.Ticks.ToString();
+                case VariantTag.String: return String;
+                case VariantTag.TypedValue: return $"{Number.Value}:{Number.Unit}:{Number.DecimalPlaces}";
+                default: throw new Exception("something went wrong here");
+            }
+        }
+        
         private TypedValue AsTypedValue()
         {
             switch (Tag) {
