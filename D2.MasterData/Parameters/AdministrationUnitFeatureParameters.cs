@@ -14,7 +14,6 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public string Title { get; set; }
 
-        [NotNullOrEmpty]
         public string Description { get; set; }
 
         [NotNullOrEmpty]

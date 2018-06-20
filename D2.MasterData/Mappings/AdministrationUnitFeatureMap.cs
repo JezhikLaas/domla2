@@ -1,4 +1,5 @@
-﻿using D2.MasterData.Models;
+﻿using D2.Infrastructure;
+using D2.MasterData.Models;
 using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
@@ -20,6 +21,7 @@ namespace D2.MasterData.Mappings
                 .Length(1024)
                 .Nullable();
             Map(x => x.Tag)
+                .CustomType<GenericEnumMapper<VariantTag>>()
                 .Access.BackingField()
                 .Length(32)
                 .Not
@@ -34,7 +36,7 @@ namespace D2.MasterData.Mappings
         }
     }
 
-    public class AdministrationUnitFeatureMap : AdministrationUnitCreateMap
+    public class AdministrationUnitFeatureMap : AdministrationUnitFeatureCreateMap
     {
         public AdministrationUnitFeatureMap()
         {
