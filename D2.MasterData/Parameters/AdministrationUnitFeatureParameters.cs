@@ -24,5 +24,6 @@ namespace D2.MasterData.Parameters
 
         public string TypedValueUnit { get; set; }
 
+        public int Version { get; set; }
     }
 }

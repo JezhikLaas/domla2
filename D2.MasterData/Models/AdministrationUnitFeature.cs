@@ -13,9 +13,10 @@ namespace D2.MasterData.Models
         protected AdministrationUnitFeature ()
         { }
 
-        public AdministrationUnitFeature (AdministrationUnitFeatureParameters argument, AdministrationUnit unit)
+        public AdministrationUnitFeature (AdministrationUnitFeatureParameters argument)
         {
             Id = argument.Id;
+            Version = argument.Version;
             Title = argument.Title;
             Description = argument.Description;
             Tag = argument.Tag;
@@ -48,6 +49,12 @@ namespace D2.MasterData.Models
         }
 
         public virtual string TypedValueUnit
+        {
+            get;
+            protected set;
+        }
+
+        public virtual int Version
         {
             get;
             protected set;
