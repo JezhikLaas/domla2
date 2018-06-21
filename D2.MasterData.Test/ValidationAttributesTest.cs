@@ -62,5 +62,21 @@ namespace D2.MasterData.Test
             var check = target.Error(_validator, new string[] { }, typeof(IEnumerable<string>));
             Assert.Equal("must not be empty", check);
         }
+
+        [Fact(DisplayName = "MaxLengthAttribute detects text thats too long")]
+        public void MaxLength_detects_text_thats_too_long()
+        {
+            var target = new MaxLengthAttribute(5);
+            var check = target.Error(_validator, "123456", typeof(IEnumerable<string>));
+            Assert.Equal("text value contains too much characters", check);
+        }
+
+        [Fact(DisplayName = "MaxLengthAttribute ignores fitting text")]
+        public void MaxLength_ignores_fitting_text()
+        {
+            var target = new MaxLengthAttribute(5);
+            var check = target.Error(_validator, "12345", typeof(IEnumerable<string>));
+            Assert.Null(check);
+        }
     }
 }
