@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 
 namespace D2.MasterData.Infrastructure.Validation
 {
@@ -18,14 +19,11 @@ namespace D2.MasterData.Infrastructure.Validation
             var text = value as string;
             if (text != null && text.Length > _maxLength) return "text value contains too much characters";
 
-            if (value is IEnumerable list) {
-                var count = 0;
-                foreach (var _ in list) {
-                    ++count;
-                }
-                if (count > _maxLength) return "container contains too much elements";
-            }
+            if (!(value is IEnumerable list)) return null;
             
+            var count = list.Cast<object>().Count();
+            if (count > _maxLength) return "container contains too much elements";
+
             return null;
         }
     }
