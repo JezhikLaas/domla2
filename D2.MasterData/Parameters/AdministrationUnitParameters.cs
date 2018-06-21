@@ -22,5 +22,7 @@ namespace D2.MasterData.Parameters
         public YearMonth? YearOfConstruction { get; set; }
 
         public int Version { get; set; }
+
+        public List<AdministrationUnitPropertyParameters> AdministrationUnitProperties { get; set; }
     }
 }

@@ -29,42 +29,42 @@ namespace D2.MasterData.Controllers
         }
 
         [Routing("Post", "Validate_Create")]
-        public ValidationResponse ValidateCreate([FromBody]AdministrationUnitFeatureParameters value)
+        public ValidationResponse ValidateCreate([FromBody]AdministrationUnitsFeatureParameters value)
         {
             return _BaseSettingsFacade.ValidateCreate(value);
         }
 
         [Routing("Post", "Create")]
-        public ExecutionResponse Create([FromBody]AdministrationUnitFeatureParameters value)
+        public ExecutionResponse Create([FromBody]AdministrationUnitsFeatureParameters value)
         {
-            _BaseSettingsFacade.CreateNewAdministrationUnitFeature(value);
+            _BaseSettingsFacade.CreateNewAdministrationUnitsFeature(value);
             return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
 
         [Routing("Put", "Validate_Edit")]
-        public ValidationResponse ValidateEdit([FromBody]AdministrationUnitFeatureParameters value)
+        public ValidationResponse ValidateEdit([FromBody]AdministrationUnitsFeatureParameters value)
         {
             return _BaseSettingsFacade.ValidateEdit(value);
         }
 
         [Routing("Put", "Edit")]
-        public ExecutionResponse Edit([FromBody]AdministrationUnitFeatureParameters value)
+        public ExecutionResponse Edit([FromBody]AdministrationUnitsFeatureParameters value)
         {
-            _BaseSettingsFacade.EditAdministrationUnitFeature(value);
+            _BaseSettingsFacade.EditAdministrationUnitsFeature(value);
             return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
 
         [Routing("Get", "List")]
         public ExecutionResponse List()
         {
-            var result = Json.Serialize(_BaseSettingsFacade.ListAdministrationUnitFeatures());
+            var result = Json.Serialize(_BaseSettingsFacade.ListAdministrationUnitsFeatures());
             return new ExecutionResponse(StatusCodes.Status200OK, result, new Error[0]);
         }
 
         [Routing("Get", "Load")]
         public ExecutionResponse Load(string id)
         {
-            return _BaseSettingsFacade.LoadAdministrationUnitFeature(id);
+            return _BaseSettingsFacade.LoadAdministrationUnitsFeature(id);
         }
     }
 }

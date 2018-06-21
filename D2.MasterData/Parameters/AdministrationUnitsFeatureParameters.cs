@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace D2.MasterData.Parameters
 {
-    public class AdministrationUnitFeatureParameters
+    public class AdministrationUnitsFeatureParameters
     {
         public Guid Id { get; set; }
 

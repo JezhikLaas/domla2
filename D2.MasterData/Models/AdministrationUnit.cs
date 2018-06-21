@@ -12,6 +12,7 @@ namespace D2.MasterData.Models
         protected AdministrationUnit()
         {
             _entrances = new List<Entrance>();
+            _administrationUnitProperties = new List<AdministrationUnitProperty>();
         }
 
         public AdministrationUnit(AdministrationUnitParameters argument)
@@ -24,6 +25,12 @@ namespace D2.MasterData.Models
             _entrances = new List<Entrance>(items);
             YearOfConstruction = argument.YearOfConstruction;
             Version = argument.Version;
+            if (argument.AdministrationUnitProperties != null)
+            {
+                var properties = from propertiesParameter in argument.AdministrationUnitProperties
+                                 select new AdministrationUnitProperty(propertiesParameter, this);
+                _administrationUnitProperties = new List<AdministrationUnitProperty>(properties);
+            }
         }
 
         public virtual string UserKey
@@ -43,6 +50,13 @@ namespace D2.MasterData.Models
         public virtual IEnumerable<Entrance> Entrances
         {
             get { return _entrances; }
+        }
+
+        private IList<AdministrationUnitProperty> _administrationUnitProperties;
+
+        public virtual IEnumerable<AdministrationUnitProperty> AdministrationUnitProperties
+        {
+            get { return _administrationUnitProperties; }
         }
 
         public virtual YearMonth? YearOfConstruction

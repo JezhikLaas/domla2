@@ -27,24 +27,24 @@ namespace D2.MasterData.Facades.Implementation
             _parameterValidator = parameterValidator;
         }
 
-        public void CreateNewAdministrationUnitFeature(AdministrationUnitFeatureParameters value)
+        public void CreateNewAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value)
         {
-            var AdministrationUnitFeature = new AdministrationUnitFeature(value);
+            var AdministrationUnitFeature = new AdministrationUnitsFeature(value);
             _repository.Insert(AdministrationUnitFeature);
         }
 
-        public void EditAdministrationUnitFeature(AdministrationUnitFeatureParameters value)
+        public void EditAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value)
         {
-            var AdministrationUnitFeature = new AdministrationUnitFeature(value);
+            var AdministrationUnitFeature = new AdministrationUnitsFeature(value);
             _repository.Update(AdministrationUnitFeature);
         }
 
-        public IEnumerable<AdministrationUnitFeature> ListAdministrationUnitFeatures()
+        public IEnumerable<AdministrationUnitsFeature> ListAdministrationUnitsFeatures()
         {
             return _repository.List();
         }
 
-        public ExecutionResponse LoadAdministrationUnitFeature(string id)
+        public ExecutionResponse LoadAdministrationUnitsFeature(string id)
         {
             Guid unitId;
             if (Guid.TryParse(id, out unitId) == false)
@@ -65,7 +65,7 @@ namespace D2.MasterData.Facades.Implementation
             return new ExecutionResponse(StatusCodes.Status200OK, Json.Serialize(unit), new Error[0]);
         }
 
-        public ValidationResponse ValidateCreate(AdministrationUnitFeatureParameters value)
+        public ValidationResponse ValidateCreate(AdministrationUnitsFeatureParameters value)
         {
             var result = _parameterValidator.Validate(value, RequestType.Post);
 
@@ -82,7 +82,7 @@ namespace D2.MasterData.Facades.Implementation
             return new ValidationResponse(State.ExternalFailure, errors);
         }
 
-        public ValidationResponse ValidateEdit(AdministrationUnitFeatureParameters value)
+        public ValidationResponse ValidateEdit(AdministrationUnitsFeatureParameters value)
         {
             var result = _parameterValidator.Validate(value, RequestType.Put);
 

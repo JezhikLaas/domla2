@@ -16,7 +16,7 @@ namespace D2.MasterData.Test
         public void Load_with_invalid_id_yields_422()
         {
             var validator = Substitute.For<IParameterValidator>();
-            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
 
             var facade = new AdministrationUnitFacade(repository, validator);
             var result = facade.LoadAdministrationUnit("");
@@ -28,7 +28,7 @@ namespace D2.MasterData.Test
         public void Load_with_unknown_id_yields_404()
         {
             var validator = Substitute.For<IParameterValidator>();
-            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
 
             var facade = new AdministrationUnitFacade(repository, validator);
             var result = facade.LoadAdministrationUnit(Guid.NewGuid().ToString());
@@ -40,7 +40,7 @@ namespace D2.MasterData.Test
         public void Load_with_known_id_yields_200_and_valid_json_object()
         {
             var validator = Substitute.For<IParameterValidator>();
-            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
             var unitId = Guid.NewGuid();
             
             repository.Load(Arg.Any<Guid>()).Returns(AdministrationUnitBuilder.New.WithId(unitId).Build());
@@ -63,7 +63,7 @@ namespace D2.MasterData.Test
                     validation.AddError("test", "Fehler");
                     return validation;
                 });
-            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
             var facade = new AdministrationUnitFacade(repository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitParameters());
@@ -77,7 +77,7 @@ namespace D2.MasterData.Test
             validator
                 .Validate(Arg.Any<AdministrationUnitParameters>(), RequestType.Post)
                 .Returns(new ValidationResult());
-            var repository = Substitute.For<IAdministrationUnitRepository>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
             var facade = new AdministrationUnitFacade(repository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitParameters());

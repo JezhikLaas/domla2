@@ -32,7 +32,6 @@ export class AdministrationUnitsListComponent implements OnInit {
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,
-    private units: AdministrationUnitService,
     private route: ActivatedRoute
   ) { }
 

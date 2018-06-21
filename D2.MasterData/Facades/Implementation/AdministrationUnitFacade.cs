@@ -16,11 +16,11 @@ namespace D2.MasterData.Facades.Implementation
     [RequestScope]
     public class AdministrationUnitFacade : IAdministrationUnitFacade
     {
-        readonly IAdministrationUnitRepository _repository;
+        readonly IAdministrationUnitsRepository _repository;
         readonly IParameterValidator _parameterValidator;
 
         public AdministrationUnitFacade(
-            IAdministrationUnitRepository repository,
+            IAdministrationUnitsRepository repository,
             IParameterValidator parameterValidator)
         {
             _repository = repository;

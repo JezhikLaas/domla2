@@ -6,9 +6,9 @@ namespace D2.MasterData.Repositories
 {
     public interface IBasicSettingsRepository
     {
-        void Insert(AdministrationUnitFeature item);
-        IEnumerable<AdministrationUnitFeature> List();
-        AdministrationUnitFeature Load(Guid id);
-        void Update(AdministrationUnitFeature administrationUnitFeature);
+        void Insert(AdministrationUnitsFeature item);
+        IEnumerable<AdministrationUnitsFeature> List();
+        AdministrationUnitsFeature Load(Guid id);
+        void Update(AdministrationUnitsFeature administrationUnitFeature);
     }
 }

@@ -8,11 +8,11 @@ namespace D2.MasterData.Facades
 {
     public interface IBaseSettingsFacade
     {
-        void CreateNewAdministrationUnitFeature(AdministrationUnitFeatureParameters value);
-        void EditAdministrationUnitFeature(AdministrationUnitFeatureParameters value);
-        IEnumerable<AdministrationUnitFeature> ListAdministrationUnitFeatures();
-        ExecutionResponse LoadAdministrationUnitFeature(string id);
-        ValidationResponse ValidateCreate(AdministrationUnitFeatureParameters value);
-        ValidationResponse ValidateEdit(AdministrationUnitFeatureParameters value);
+        void CreateNewAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value);
+        void EditAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value);
+        IEnumerable<AdministrationUnitsFeature> ListAdministrationUnitsFeatures();
+        ExecutionResponse LoadAdministrationUnitsFeature(string id);
+        ValidationResponse ValidateCreate(AdministrationUnitsFeatureParameters value);
+        ValidationResponse ValidateEdit(AdministrationUnitsFeatureParameters value);
     }
 }

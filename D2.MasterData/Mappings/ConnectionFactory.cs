@@ -47,7 +47,8 @@ namespace D2.MasterData.Mappings
                                 .Add<SubUnitCreateMap>()
                                 .Add<AddressMap>()
                                 .Add<PostalCodeInfoCreateMap>()
-                                .Add<AdministrationUnitFeatureCreateMap>()
+                                .Add<AdministrationUnitsFeatureCreateMap>()
+                                .Add<AdministrationUnitPropertyCreateMap>()
                         )
                         .ExposeConfiguration(BuildSchema)
                         .BuildConfiguration();
@@ -80,7 +81,8 @@ namespace D2.MasterData.Mappings
                         .Add<SubUnitMap>()
                         .Add<AddressMap>()
                         .Add<PostalCodeInfoMap>()
-                        .Add<AdministrationUnitFeatureMap>()
+                        .Add<AdministrationUnitsFeatureMap>()
+                        .Add<AdministrationUnitPropertyMap>()
                 )
                 .BuildConfiguration()
                 .BuildSessionFactory();

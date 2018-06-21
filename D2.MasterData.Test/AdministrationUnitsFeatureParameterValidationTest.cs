@@ -8,12 +8,12 @@ using Xunit;
 
 namespace D2.MasterData.Test
 {
-    public class AdministrationUnitFeatureParameterValidationTest
+    public class AdministrationUnitsFeatureParameterValidationTest
     {
-        [Fact(DisplayName = "Validation of AdministrationUnitFeatureParameters succeeds for valid post")]
-        public void ValidationOfAdministrationUnitFeatureParameters_succeeds_for_valid_post()
+        [Fact(DisplayName = "Validation of AdministrationUnitsFeatureParameters succeeds for valid post")]
+        public void ValidationOfAdministrationUnitsFeatureParameters_succeeds_for_valid_post()
         {
-            var parameters = new AdministrationUnitFeatureParameters
+            var parameters = new AdministrationUnitsFeatureParameters
             {
                 Title = "Wohnflaeche",
                 Description = "Wird benoetigt",
@@ -29,10 +29,10 @@ namespace D2.MasterData.Test
         }
 
 
-        [Fact(DisplayName = "Validation of AdministrationUnitFeatureParameters for post fails w/o Titel")]
-        public void Validation_of_AdministrationUnitFeatureParameters_for_post_fails_wo_Titel()
+        [Fact(DisplayName = "Validation of AdministrationUnitsFeatureParameters for post fails w/o Titel")]
+        public void Validation_of_AdministrationUnitsFeatureParameters_for_post_fails_wo_Titel()
         {
-            var parameters = new AdministrationUnitFeatureParameters
+            var parameters = new AdministrationUnitsFeatureParameters
             {
                 Description = "Wird benoetigt",
                 Tag = VariantTag.TypedValue
@@ -45,8 +45,8 @@ namespace D2.MasterData.Test
             Assert.Single(result.Errors);
         }
 
-        [Fact(DisplayName = "Validation of AdministrationUnitFeatureParameters for post fails with null")]
-        public void Validation_of_AdministrationUnitFeatureParameters_for_post_fails_with_null()
+        [Fact(DisplayName = "Validation of AdministrationUnitsFeatureParameters for post fails with null")]
+        public void Validation_of_AdministrationUnitsFeatureParameters_for_post_fails_with_null()
         {
             var validator = new ParameterValidator();
 

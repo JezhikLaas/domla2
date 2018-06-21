@@ -31,6 +31,10 @@ namespace D2.MasterData.Mappings
                 .Cascade
                 .AllDeleteOrphan()
                 .Inverse();
+            HasMany(x => x.AdministrationUnitProperties)
+                .Cascade
+                .AllDeleteOrphan()
+                .Inverse();
         }
     }
 

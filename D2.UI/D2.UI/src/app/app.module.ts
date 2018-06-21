@@ -22,6 +22,8 @@ import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeDeExtra from '@angular/common/locales/extra/de';
 import {AddressService} from './masterdata/shared/address.service';
+import {BaseSettingResolver} from './masterdata/shared/base-setting-resolver.service';
+import {BaseSettingsResolver} from './masterdata/shared/base-settings-resolver.service';
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
@@ -51,6 +53,8 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     AdministrationUnitResolver,
     AdministrationUnitService,
     AddressService,
+    BaseSettingResolver,
+    BaseSettingsResolver,
     {
       provide: LOCALE_ID,
       useValue: 'de'

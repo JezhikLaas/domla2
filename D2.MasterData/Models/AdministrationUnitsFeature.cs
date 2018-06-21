@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace D2.MasterData.Models
 {
-    public class AdministrationUnitFeature : BaseModel
+    public class AdministrationUnitsFeature : BaseModel
     {
-        protected AdministrationUnitFeature ()
+        protected AdministrationUnitsFeature ()
         { }
 
-        public AdministrationUnitFeature (AdministrationUnitFeatureParameters argument)
+        public AdministrationUnitsFeature (AdministrationUnitsFeatureParameters argument)
         {
             Id = argument.Id;
             Version = argument.Version;

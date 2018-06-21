@@ -8,17 +8,17 @@ using D2.MasterData.Controllers;
 
 namespace D2.MasterData.Test
 {
-    public class AdministrationUnitFeatureControllerTest
+    public class AdministrationUnitsFeatureControllerTest
     {
-        [Fact(DisplayName = "AdministrationUnitFeatureController.Post calls CreateNewAdministrationUnitFeature")]
-        public void AdministrationUnitController_Post_calls_CreateNewAdministrationUnitFeature()
+        [Fact(DisplayName = "AdministrationUnitsFeatureController.Post calls CreateNewAdministrationUnitsFeature")]
+        public void AdministrationUnitsController_Post_calls_CreateNewAdministrationUnitFeature()
         {
             var baseSettingsFacade = Substitute.For<IBaseSettingsFacade>();
             var postalCodeFacade = Substitute.For<IPostalCodeInfoFacade>();
             var controller = new BaseSettingsController(baseSettingsFacade);
 
             controller.Create(null);
-            baseSettingsFacade.Received(1).CreateNewAdministrationUnitFeature(null);
+            baseSettingsFacade.Received(1).CreateNewAdministrationUnitsFeature(null);
         }
     }
 }

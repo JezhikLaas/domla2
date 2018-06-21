@@ -17,7 +17,7 @@ namespace D2.MasterData.Repositories.Implementation
             _context = context;
         }
 
-        public void Insert(AdministrationUnitFeature item)
+        public void Insert(AdministrationUnitsFeature item)
         {
             using (var transaction = _context.Session.BeginTransaction())
             {
@@ -26,21 +26,21 @@ namespace D2.MasterData.Repositories.Implementation
             }
         }
 
-        public IEnumerable<AdministrationUnitFeature> List()
+        public IEnumerable<AdministrationUnitsFeature> List()
         {
-            var result = from unit in _context.Session.Query<AdministrationUnitFeature>()
+            var result = from unit in _context.Session.Query<AdministrationUnitsFeature>()
                          orderby unit.Title
                          select unit;
 
             return result.ToList();
         }
 
-        public AdministrationUnitFeature Load(Guid id)
+        public AdministrationUnitsFeature Load(Guid id)
         {
-            return _context.Session.Get<AdministrationUnitFeature>(id);
+            return _context.Session.Get<AdministrationUnitsFeature>(id);
         }
 
-        public void Update(AdministrationUnitFeature administrationUnitFeature)
+        public void Update(AdministrationUnitsFeature administrationUnitFeature)
         {
             using (var transaction = _context.Session.BeginTransaction())
             {

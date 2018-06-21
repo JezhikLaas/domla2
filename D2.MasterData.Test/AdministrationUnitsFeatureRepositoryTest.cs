@@ -12,11 +12,11 @@ using NHibernate.Tool.hbm2ddl;
 
 namespace D2.MasterData.Test
 {
-    public class AdministrationUnitFeatureRepositoryTest : IDisposable
+    public class AdministrationUnitsFeatureRepositoryTest : IDisposable
     {
         private readonly string _testFile;
 
-        public AdministrationUnitFeatureRepositoryTest()
+        public AdministrationUnitsFeatureRepositoryTest()
         {
             _testFile = Path.GetTempFileName();
             var configuration = Fluently.Configure()
@@ -62,7 +62,7 @@ namespace D2.MasterData.Test
 
         (Guid, int) InsertAdministrationUnitFeature()
         {
-            var unit = AdministrationUnitFeatureBuilder.New.Build();
+            var unit = AdministrationUnitsFeatureBuilder.New.Build();
 
             using (var context = GetContext())
             {
@@ -73,8 +73,8 @@ namespace D2.MasterData.Test
             return (unit.Id, unit.Version);
         }
 
-        [Fact(DisplayName = "BasicSettingsRepository can insert AdministrationUnitFeature")]
-        public void AdministrationUnitFeatureRepository_can_insert_AdministrationUnitFeature()
+        [Fact(DisplayName = "BasicSettingsRepository can insert AdministrationUnitsFeature")]
+        public void AdministrationUnitFeatureRepository_can_insert_AdministrationUnitsFeature()
         {
             InsertAdministrationUnitFeature();
 
@@ -88,7 +88,7 @@ namespace D2.MasterData.Test
         }
 
         [Fact(DisplayName = "BasicSettingsRepository yields null for unknown id")]
-        public void AdministrationUnitFeatureRepository_yields_null_for_unknown_id()
+        public void BasicSettingsRepository_yields_null_for_unknown_id()
         {
             InsertAdministrationUnitFeature();
 
@@ -103,7 +103,7 @@ namespace D2.MasterData.Test
         public void BasicSettingsRepository_can_update_AdministrationUnitFeature()
         {
             var info = InsertAdministrationUnitFeature();
-            var unit = AdministrationUnitFeatureBuilder.New
+            var unit = AdministrationUnitsFeatureBuilder.New
                 .WithId(info.Item1)
                 .WithTitle("Modernisierungsjahr")
                 .WithVersion(info.Item2)

@@ -4,11 +4,11 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class AdministrationUnitFeatureCreateMap : ClassMap<AdministrationUnitFeature>
+    public class AdministrationUnitsFeatureCreateMap : ClassMap<AdministrationUnitsFeature>
     {
-        public AdministrationUnitFeatureCreateMap()
+        public AdministrationUnitsFeatureCreateMap()
         {
-            Table("administrationunitfeatures");
+            Table("administrationunitsfeatures");
             Id(x => x.Id);
             Schema("md");
             Map(x => x.Title)
@@ -36,9 +36,9 @@ namespace D2.MasterData.Mappings
         }
     }
 
-    public class AdministrationUnitFeatureMap : AdministrationUnitFeatureCreateMap
+    public class AdministrationUnitsFeatureMap : AdministrationUnitsFeatureCreateMap
     {
-        public AdministrationUnitFeatureMap()
+        public AdministrationUnitsFeatureMap()
         {
             Version(x => x.Version)
                 .Column("xmin")

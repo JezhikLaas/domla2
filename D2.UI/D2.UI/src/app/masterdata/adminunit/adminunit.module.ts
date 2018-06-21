@@ -12,10 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule,
     AdminunitRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
     SharedModule
 
   ],

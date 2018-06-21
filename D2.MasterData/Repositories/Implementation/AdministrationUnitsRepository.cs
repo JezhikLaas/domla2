@@ -8,11 +8,11 @@ using System.Linq;
 namespace D2.MasterData.Repositories.Implementation
 {
     [RequestScope]
-    public class AdministrationUnitRepository : IAdministrationUnitRepository
+    public class AdministrationUnitsRepository : IAdministrationUnitsRepository
     {
         readonly IDataContext _context;
 
-        public AdministrationUnitRepository(IDataContext context)
+        public AdministrationUnitsRepository(IDataContext context)
         {
             _context = context;
         }

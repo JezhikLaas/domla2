@@ -21,7 +21,11 @@ const routes: Routes = [
   {
     path: 'datePicker',
     loadChildren: 'app/shared/shared.module#SharedModule'
-  }
+  },
+  {
+    path: 'baseSettings',
+    loadChildren: 'app/masterdata/basesettings/basesettings.module#BaseSettingsModule'
+  },
 
 ];
 

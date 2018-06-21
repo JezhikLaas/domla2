@@ -6,7 +6,7 @@ using System.Text;
 
 namespace D2.MasterData.Test.Helper
 {
-    class AdministrationUnitFeatureParametersBuilder
+    class AdministrationUnitsFeatureParametersBuilder
     {
         private string _title;
         private string _description;
@@ -15,7 +15,7 @@ namespace D2.MasterData.Test.Helper
         private string _typedValueUnit;
 
 
-        private AdministrationUnitFeatureParametersBuilder()
+        private AdministrationUnitsFeatureParametersBuilder()
         {
             _title = "Wohnflaeche";
             _description = "Wird fuer Makleranzeigen benoetigt";
@@ -24,14 +24,14 @@ namespace D2.MasterData.Test.Helper
             _typedValueUnit = "meter";
         }
 
-        static public AdministrationUnitFeatureParametersBuilder New
+        static public AdministrationUnitsFeatureParametersBuilder New
         {
-            get { return new AdministrationUnitFeatureParametersBuilder(); }
+            get { return new AdministrationUnitsFeatureParametersBuilder(); }
         }
 
-        public AdministrationUnitFeatureParameters Build()
+        public AdministrationUnitsFeatureParameters Build()
         {
-            return new AdministrationUnitFeatureParameters
+            return new AdministrationUnitsFeatureParameters
             {
                 Title = _title,
                 Description = _description,

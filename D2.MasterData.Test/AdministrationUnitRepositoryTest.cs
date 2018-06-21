@@ -63,7 +63,7 @@ namespace D2.MasterData.Test
             var unit = AdministrationUnitBuilder.New.Build();
 
             using (var context = GetContext()) {
-                var repository = new AdministrationUnitRepository(context);
+                var repository = new AdministrationUnitsRepository(context);
                 repository.Insert(unit);
             }
 
@@ -76,7 +76,7 @@ namespace D2.MasterData.Test
             InsertAdministrationUnit();
 
             using (var context = GetContext()) {
-                var repository = new AdministrationUnitRepository(context);
+                var repository = new AdministrationUnitsRepository(context);
                 var stored = repository.List().ToList();
 
                 Assert.Collection(stored, u => Assert.Equal("03", u.UserKey));
@@ -91,7 +91,7 @@ namespace D2.MasterData.Test
             InsertAdministrationUnit();
 
             using (var context = GetContext()) {
-                var repository = new AdministrationUnitRepository(context);
+                var repository = new AdministrationUnitsRepository(context);
                 Assert.Null(repository.Load(Guid.NewGuid()));
             }
         }
@@ -108,12 +108,12 @@ namespace D2.MasterData.Test
 
             using (var context = GetContext())
             {
-                var repository = new AdministrationUnitRepository(context);
+                var repository = new AdministrationUnitsRepository(context);
                 repository.Update(unit);
             }
             using (var context = GetContext())
             {
-                var repository = new AdministrationUnitRepository(context);
+                var repository = new AdministrationUnitsRepository(context);
                 var modified = repository.Load(info.Item1);
                 Assert.Equal("Drachenhöhle", modified.Title);
             }

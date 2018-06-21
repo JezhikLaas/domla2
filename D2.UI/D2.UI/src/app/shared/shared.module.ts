@@ -126,7 +126,10 @@ export class UiMaterialModule {}
     AddressWithPostalcodeComponent,
     DateValueAccessorModule,
     DatepickerComponent,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    CommonModule
   ],
 
   schemas: [
