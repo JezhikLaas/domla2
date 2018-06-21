@@ -1,4 +1,5 @@
-﻿using D2.MasterData.Infrastructure;
+﻿using System;
+using D2.MasterData.Infrastructure;
 using D2.MasterData.Infrastructure.Validation;
 using NSubstitute;
 using System.Collections.Generic;
@@ -93,6 +94,46 @@ namespace D2.MasterData.Test
             var target = new MaxLengthAttribute(2);
             var check = target.Error(_validator, new[]{ 0, 0}, typeof(IEnumerable<int>));
             Assert.Null(check);
+        }
+
+        [Fact(DisplayName = "RangeAttribute detects ints which are too large")]
+        public void Range_detects_ints_which_are_too_large()
+        {
+            var target = new RangeAttribute {MaxValue = 5};
+            var check = target.Error(_validator, 6, typeof(int));
+            Assert.Equal("Value is greater then MaxValue", check);
+        }
+
+        [Fact(DisplayName = "RangeAttribute detects nullable ints which are too large")]
+        public void Range_detects_nullable_ints_which_are_too_large()
+        {
+            var target = new RangeAttribute {MaxValue = 5};
+            var check = target.Error(_validator, new Nullable<int>(6), typeof(int?));
+            Assert.Equal("Value is greater then MaxValue", check);
+        }
+
+        [Fact(DisplayName = "RangeAttribute let ints pass that fit")]
+        public void Range_let_ints_pass_then_fit()
+        {
+            var target = new RangeAttribute {MaxValue = 5};
+            var check = target.Error(_validator, 4, typeof(int));
+            Assert.Null(check);
+        }
+
+        [Fact(DisplayName = "RangeAttribute let nullable ints pass that fit")]
+        public void Range_let_nullable_ints_pass_that_fit()
+        {
+            var target = new RangeAttribute {MaxValue = 5};
+            var check = target.Error(_validator, new Nullable<int>(4), typeof(int?));
+            Assert.Null(check);
+        }
+
+        [Fact(DisplayName = "RangeAttribute detects null when MinValue is set")]
+        public void Range_detects_null_when_MinValue_is_set()
+        {
+            var target = new RangeAttribute {MinValue = 5};
+            var check = target.Error(_validator, null, typeof(int?));
+            Assert.Equal("Value is null", check);
         }
     }
 }
