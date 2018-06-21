@@ -14,12 +14,12 @@ using System.Linq;
 namespace D2.MasterData.Facades.Implementation
 {
     [RequestScope]
-    public class BasicSettingsFacade : IBasicSettingsFacade
+    public class BaseSettingsFacade : IBaseSettingsFacade
     {
         readonly IBasicSettingsRepository _repository;
         readonly IParameterValidator _parameterValidator;
 
-        public BasicSettingsFacade (
+        public BaseSettingsFacade (
             IBasicSettingsRepository repository,
             IParameterValidator parameterValidator)
         {

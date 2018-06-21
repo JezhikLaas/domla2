@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace D2.MasterData.Facades
 {
-    interface IBasicSettingsFacade
+    public interface IBaseSettingsFacade
     {
         void CreateNewAdministrationUnitFeature(AdministrationUnitFeatureParameters value);
         void EditAdministrationUnitFeature(AdministrationUnitFeatureParameters value);

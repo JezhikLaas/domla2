@@ -66,7 +66,7 @@ namespace D2.MasterData.Test
 
             using (var context = GetContext())
             {
-                var repository = new BasicSettingsRepository(context);
+                var repository = new BaseSettingsRepository(context);
                 repository.Insert(unit);
             }
 
@@ -80,7 +80,7 @@ namespace D2.MasterData.Test
 
             using (var context = GetContext())
             {
-                var repository = new BasicSettingsRepository(context);
+                var repository = new BaseSettingsRepository(context);
                 var stored = repository.List().ToList();
 
                 Assert.Collection(stored, u => Assert.Equal("Wohnflaeche", u.Title));
@@ -94,7 +94,7 @@ namespace D2.MasterData.Test
 
             using (var context = GetContext())
             {
-                var repository = new BasicSettingsRepository(context);
+                var repository = new BaseSettingsRepository(context);
                 Assert.Null(repository.Load(Guid.NewGuid()));
             }
         }
@@ -111,12 +111,12 @@ namespace D2.MasterData.Test
 
             using (var context = GetContext())
             {
-                var repository = new BasicSettingsRepository(context);
+                var repository = new BaseSettingsRepository(context);
                 repository.Update(unit);
             }
             using (var context = GetContext())
             {
-                var repository = new BasicSettingsRepository(context);
+                var repository = new BaseSettingsRepository(context);
                 var modified = repository.Load(info.Item1);
                 Assert.Equal("Modernisierungsjahr", modified.Title);
             }

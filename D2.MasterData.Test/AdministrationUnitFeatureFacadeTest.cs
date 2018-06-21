@@ -18,7 +18,7 @@ namespace D2.MasterData.Test
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IBasicSettingsRepository>();
 
-            var facade = new BasicSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, validator);
             var result = facade.LoadAdministrationUnitFeature("");
 
             Assert.Equal(422, result.code);
@@ -30,7 +30,7 @@ namespace D2.MasterData.Test
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IBasicSettingsRepository>();
 
-            var facade = new BasicSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, validator);
             var result = facade.LoadAdministrationUnitFeature(Guid.NewGuid().ToString());
 
             Assert.Equal(404, result.code);
@@ -45,7 +45,7 @@ namespace D2.MasterData.Test
 
             repository.Load(Arg.Any<Guid>()).Returns(AdministrationUnitFeatureBuilder.New.WithId(unitId).Build());
 
-            var facade = new BasicSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, validator);
             var result = facade.LoadAdministrationUnitFeature(unitId.ToString());
 
             Assert.Equal(200, result.code);
@@ -64,7 +64,7 @@ namespace D2.MasterData.Test
                     return validation;
                 });
             var repository = Substitute.For<IBasicSettingsRepository>();
-            var facade = new BasicSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitFeatureParameters());
             Assert.Equal(State.ExternalFailure, result.result);
@@ -78,7 +78,7 @@ namespace D2.MasterData.Test
                 .Validate(Arg.Any<AdministrationUnitFeatureParameters>(), RequestType.Post)
                 .Returns(new ValidationResult());
             var repository = Substitute.For<IBasicSettingsRepository>();
-            var facade = new BasicSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitFeatureParameters());
             Assert.Equal(State.NoError, result.result);
