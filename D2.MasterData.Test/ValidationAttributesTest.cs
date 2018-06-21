@@ -8,7 +8,7 @@ namespace D2.MasterData.Test
 {
     public class ValidationAttributesTest
     {
-        IParameterValidator _validator;
+        readonly IParameterValidator _validator;
 
         public ValidationAttributesTest()
         {
@@ -67,7 +67,7 @@ namespace D2.MasterData.Test
         public void MaxLength_detects_text_thats_too_long()
         {
             var target = new MaxLengthAttribute(5);
-            var check = target.Error(_validator, "123456", typeof(IEnumerable<string>));
+            var check = target.Error(_validator, "123456", typeof(string));
             Assert.Equal("text value contains too much characters", check);
         }
 
@@ -75,7 +75,23 @@ namespace D2.MasterData.Test
         public void MaxLength_ignores_fitting_text()
         {
             var target = new MaxLengthAttribute(5);
-            var check = target.Error(_validator, "12345", typeof(IEnumerable<string>));
+            var check = target.Error(_validator, "12345", typeof(string));
+            Assert.Null(check);
+        }
+
+        [Fact(DisplayName = "MaxLengthAttribute detects containers with too much elements")]
+        public void MaxLength_detects_containers_with_too_much_elements()
+        {
+            var target = new MaxLengthAttribute(2);
+            var check = target.Error(_validator, new[]{ "", "", ""}, typeof(IEnumerable<string>));
+            Assert.Equal("container contains too much elements", check);
+        }
+
+        [Fact(DisplayName = "MaxLengthAttribute ignores fitting containers")]
+        public void MaxLength_ignores_fitting_containers()
+        {
+            var target = new MaxLengthAttribute(2);
+            var check = target.Error(_validator, new[]{ 0, 0}, typeof(IEnumerable<int>));
             Assert.Null(check);
         }
     }
