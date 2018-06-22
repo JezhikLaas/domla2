@@ -38,6 +38,7 @@ namespace D2.MasterData.Controllers
         public ExecutionResponse Create([FromBody]AdministrationUnitsFeatureParameters value)
         {
             _BaseSettingsFacade.CreateNewAdministrationUnitsFeature(value);
+            _BaseSettingsFacade.CreateNewAdministratioUnitPropertyForAllAdministraionUnits(value);
             return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
 

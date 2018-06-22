@@ -12,19 +12,20 @@ namespace D2.MasterData.Models
         public AdministrationUnitProperty(AdministrationUnitPropertyParameters argument, AdministrationUnit unit)
         {
             Id = argument.Id;
-            Titel = argument.Title;
+            Title = argument.Title;
             Description = argument.Description;
             Value = argument.Value;
             Version = argument.Version;
-            AdministrationUnitId = unit.Id;
+            AdministrationUnit = unit;
         }
 
-        public virtual Guid AdministrationUnitId
+        public virtual AdministrationUnit AdministrationUnit
         {
             get;
             protected set;
         }
-        public virtual string Titel
+
+        public virtual string Title
         {
             get;
             protected set;

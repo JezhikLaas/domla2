@@ -1,6 +1,7 @@
 ﻿using D2.Infrastructure;
 using D2.MasterData.Infrastructure;
 using D2.MasterData.Infrastructure.Validation;
+using D2.MasterData.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

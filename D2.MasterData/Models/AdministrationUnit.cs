@@ -70,5 +70,10 @@ namespace D2.MasterData.Models
             get;
             protected set;
         }
+
+        public virtual void AddProperty (AdministrationUnitProperty property)
+        {
+            _administrationUnitProperties.Add(property);
+        }
     }
 }

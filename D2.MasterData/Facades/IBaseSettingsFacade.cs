@@ -9,6 +9,7 @@ namespace D2.MasterData.Facades
     public interface IBaseSettingsFacade
     {
         void CreateNewAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value);
+        void CreateNewAdministratioUnitPropertyForAllAdministraionUnits (AdministrationUnitsFeatureParameters value);
         void EditAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value);
         IEnumerable<AdministrationUnitsFeature> ListAdministrationUnitsFeatures();
         ExecutionResponse LoadAdministrationUnitsFeature(string id);

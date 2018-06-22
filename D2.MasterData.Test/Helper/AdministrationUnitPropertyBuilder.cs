@@ -8,11 +8,11 @@ namespace D2.MasterData.Test.Helper
 {
     class AdministrationUnitPropertyBuilder
     {
-        readonly AdministrationUnitPropertyParameters _AdministrationUnitPropertyParameters;
+        readonly AdministrationUnitPropertyParameters _administrationUnitPropertyParameters;
 
         private AdministrationUnitPropertyBuilder()
         {
-            _AdministrationUnitPropertyParameters = AdministrationUnitPropertyParameterBuilder.New.Build();
+            _administrationUnitPropertyParameters = AdministrationUnitPropertyParameterBuilder.New.Build();
 
         }
 
@@ -23,20 +23,28 @@ namespace D2.MasterData.Test.Helper
 
         public AdministrationUnitPropertyBuilder WithId(Guid id)
         {
-            _AdministrationUnitPropertyParameters.Id = id;
+            _administrationUnitPropertyParameters.Id = id;
             return this;
         }
 
         public AdministrationUnitPropertyBuilder WithVersion(int version)
         {
-            _AdministrationUnitPropertyParameters.Version = version;
+            _administrationUnitPropertyParameters.Version = version;
             return this;
         }
 
         public AdministrationUnitPropertyBuilder WithTitle(string title)
         {
-            _AdministrationUnitPropertyParameters.Title = title;
+            _administrationUnitPropertyParameters.Title = title;
             return this;
+        }
+
+        public AdministrationUnitProperty Build()
+        {
+            var unit = AdministrationUnitBuilder.New
+                .WithId(Guid.NewGuid())
+                .Build();
+            return new AdministrationUnitProperty(_administrationUnitPropertyParameters, unit) ;
         }
     }
 }

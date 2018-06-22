@@ -55,7 +55,7 @@ namespace D2.Infrastructure
             
             var variant = (Variant) value;
             NHibernateUtil.String.NullSafeSet(cmd, variant.Tag.ToString(), index, session);
-            NHibernateUtil.String.NullSafeSet(cmd, variant.Raw, index + 1, session);
+            NHibernateUtil.String.NullSafeSet(cmd, variant.Encode(), index + 1, session);
         }
 
         public object DeepCopy(object value)

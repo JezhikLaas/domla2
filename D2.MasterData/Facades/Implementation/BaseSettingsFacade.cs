@@ -1,4 +1,5 @@
-﻿using D2.MasterData.Infrastructure;
+﻿using D2.Infrastructure;
+using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
@@ -18,13 +19,19 @@ namespace D2.MasterData.Facades.Implementation
     {
         readonly IBasicSettingsRepository _repository;
         readonly IParameterValidator _parameterValidator;
+        readonly IAdministrationUnitPropertyRepository _administrationUnitPropertyRepository;
+        readonly IAdministrationUnitsRepository _administrationUnitsRepository;
 
         public BaseSettingsFacade (
             IBasicSettingsRepository repository,
+            IAdministrationUnitsRepository administrationUnitsRepository,
+            IAdministrationUnitPropertyRepository administrationUnitPropertyRepository,
             IParameterValidator parameterValidator)
         {
             _repository = repository;
             _parameterValidator = parameterValidator;
+            _administrationUnitsRepository = administrationUnitsRepository;
+            _administrationUnitPropertyRepository = administrationUnitPropertyRepository;
         }
 
         public void CreateNewAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value)
@@ -97,6 +104,37 @@ namespace D2.MasterData.Facades.Implementation
                             .ToArray();
 
             return new ValidationResponse(State.ExternalFailure, errors);
+        }
+
+
+        public void CreateNewAdministratioUnitPropertyForAllAdministraionUnits(AdministrationUnitsFeatureParameters value)
+        {
+            var result = from unit in _administrationUnitsRepository.List()
+                         select unit;
+            foreach(AdministrationUnit administrationUnit in result)
+            {
+                if (administrationUnit.Id != value.InitialAdministrationUnitId) continue;
+                AdministrationUnitPropertyParameters parameter = new AdministrationUnitPropertyParameters();
+                parameter.Title = value.Title;
+                parameter.Description = value.Description;
+                switch (value.Tag)
+                {
+                    case VariantTag.DateTime:
+                        parameter.Value = new Variant(new DateTime());
+                        break;
+                    case VariantTag.String:
+                        parameter.Value = new Variant(string.Empty);
+                        break;
+                    case VariantTag.TypedValue:
+                        parameter.Value = new Variant(new TypedValue(0, value.TypedValueUnit, value.TypedValueDecimalPlace));
+                        break;
+                    default:
+                        break;
+                }
+
+                var administrationUnitProperty = new AdministrationUnitProperty(parameter, administrationUnit);
+                administrationUnit.AddProperty(administrationUnitProperty);
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace D2.MasterData.Mappings
             Map(x => x.Edit)
                 .Access.BackingField()
                 .Generated.Always();
-            Map(x => x.Titel)
+            Map(x => x.Title)
                 .Access.BackingField()
                 .Length(256)
                 .Not.Nullable();
@@ -25,6 +25,9 @@ namespace D2.MasterData.Mappings
             Map(x => x.Value)
                 .Access.BackingField()
                 .CustomType<VariantType>()
+                .Not.Nullable();
+            References(x => x.AdministrationUnit)
+                .Access.BackingField()
                 .Not.Nullable();
         }
     }

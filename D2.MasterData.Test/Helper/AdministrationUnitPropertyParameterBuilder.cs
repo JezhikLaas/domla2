@@ -1,4 +1,5 @@
 ﻿using D2.Infrastructure;
+using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace D2.MasterData.Test.Helper
         private string _title;
         private string _description;
         private Variant _value;
+        private AdministrationUnit _administrationUnit; 
         
         private AdministrationUnitPropertyParameterBuilder()
         {

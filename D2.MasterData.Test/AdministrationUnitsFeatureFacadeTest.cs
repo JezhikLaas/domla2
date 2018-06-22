@@ -17,8 +17,10 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IBasicSettingsRepository>();
+            var administrationUnitRepository = Substitute.For<IAdministrationUnitsRepository>();
+            var administrationUnitPropertyRepository = Substitute.For<IAdministrationUnitPropertyRepository>();
 
-            var facade = new BaseSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, administrationUnitRepository, administrationUnitPropertyRepository, validator);
             var result = facade.LoadAdministrationUnitsFeature("");
 
             Assert.Equal(422, result.code);
@@ -29,8 +31,10 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IBasicSettingsRepository>();
+            var administrationUnitRepository = Substitute.For<IAdministrationUnitsRepository>();
+            var administrationUnitPropertyRepository = Substitute.For<IAdministrationUnitPropertyRepository>();
 
-            var facade = new BaseSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, administrationUnitRepository, administrationUnitPropertyRepository, validator);
             var result = facade.LoadAdministrationUnitsFeature(Guid.NewGuid().ToString());
 
             Assert.Equal(404, result.code);
@@ -41,11 +45,13 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IBasicSettingsRepository>();
+            var administrationUnitRepository = Substitute.For<IAdministrationUnitsRepository>();
+            var administrationUnitPropertyRepository = Substitute.For<IAdministrationUnitPropertyRepository>();
             var unitId = Guid.NewGuid();
 
             repository.Load(Arg.Any<Guid>()).Returns(AdministrationUnitsFeatureBuilder.New.WithId(unitId).Build());
 
-            var facade = new BaseSettingsFacade(repository, validator);
+            var facade = new BaseSettingsFacade(repository, administrationUnitRepository, administrationUnitPropertyRepository, validator);
             var result = facade.LoadAdministrationUnitsFeature(unitId.ToString());
 
             Assert.Equal(200, result.code);
@@ -64,7 +70,9 @@ namespace D2.MasterData.Test
                     return validation;
                 });
             var repository = Substitute.For<IBasicSettingsRepository>();
-            var facade = new BaseSettingsFacade(repository, validator);
+            var administrationUnitRepository = Substitute.For<IAdministrationUnitsRepository>();
+            var administrationUnitPropertyRepository = Substitute.For<IAdministrationUnitPropertyRepository>();
+            var facade = new BaseSettingsFacade(repository, administrationUnitRepository, administrationUnitPropertyRepository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitsFeatureParameters());
             Assert.Equal(State.ExternalFailure, result.result);
@@ -78,7 +86,9 @@ namespace D2.MasterData.Test
                 .Validate(Arg.Any<AdministrationUnitsFeatureParameters>(), RequestType.Post)
                 .Returns(new ValidationResult());
             var repository = Substitute.For<IBasicSettingsRepository>();
-            var facade = new BaseSettingsFacade(repository, validator);
+            var administrationUnitRepository = Substitute.For<IAdministrationUnitsRepository>();
+            var administrationUnitPropertyRepository = Substitute.For<IAdministrationUnitPropertyRepository>();
+            var facade = new BaseSettingsFacade(repository, administrationUnitRepository, administrationUnitPropertyRepository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitsFeatureParameters());
             Assert.Equal(State.NoError, result.result);
