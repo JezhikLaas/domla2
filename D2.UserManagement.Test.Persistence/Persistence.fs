@@ -1,95 +1,46 @@
 ﻿namespace D2.UserManagement.Persistence.Test
 
+open Beginor.NHibernate.NpgSql
 open D2.Common
 open D2.UserManagement.Persistence
 open FsUnit
+open FluentNHibernate.Cfg
+open NHibernate.Mapping
+open NHibernate.Tool.hbm2ddl
 open Npgsql
 open NUnit.Framework
 open System
+open System.IO
 
 [<TestFixture>]
 [<Category("Persistence")>]
-module StorageTest = 
+module StorageTest =
+
+    let mutable testFile = String.Empty 
+    
+    let buildSchema (config : NHibernate.Cfg.Configuration) =
+        let versioned = config.ClassMappings
+                        |> Seq.filter (fun cm -> cm.Version <> null)
+                        |> Seq.toList
+
+        for mapping in versioned do
+            mapping.Version.Generation <- PropertyGeneration.Never
+            mapping.Version.IsInsertable <- true
+
+        (SchemaExport(config)).Create(false, true) |> ignore
 
     [<SetUp>]
     let ``For each test setup`` () =
-        try
-            let builder = new NpgsqlConnectionStringBuilder()
-            builder.Database <- "D2.Authentication";
-            builder.Port <- 5433
-            builder.Host <- "janeway"
-            builder.Username <- "d2admin"
-            builder.Password <- "d2admin" 
-            
-            use connection = new NpgsqlConnection(builder.ConnectionString)
-            connection.Open()
-            
-            use command = connection.CreateCommand()
-            command.CommandText <- """CREATE SCHEMA test_um AUTHORIZATION d2admin
-                                          CREATE TABLE users
-                                          (
-                                              id uuid NOT NULL,
-                                              login character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              first_name character varying(255) COLLATE pg_catalog."default",
-                                              last_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              title character varying COLLATE pg_catalog."default",
-                                              salutation character varying COLLATE pg_catalog."default",
-                                              email character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              logged_in time without time zone,
-                                              claims jsonb,
-                                              password character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              CONSTRAINT users_pkey PRIMARY KEY (id)
-                                          )
-                                          CREATE TABLE registrations
-                                          (
-                                              login character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              first_name character varying(255) COLLATE pg_catalog."default",
-                                              last_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              email character varying(255) COLLATE pg_catalog."default" NOT NULL,
-                                              salutation character varying(50) COLLATE pg_catalog."default",
-                                              title character varying(50) COLLATE pg_catalog."default",
-                                              id uuid NOT NULL,
-                                              CONSTRAINT registrations_pkey PRIMARY KEY (login)
-                                          )
-                                          """
-            command.ExecuteNonQuery() |> ignore
-            
-            Connection.connectionProvider <-
-                fun () -> 
-                    let builder = new NpgsqlConnectionStringBuilder()
-                    builder.Database <- "D2.Authentication";
-                    builder.Port <- 5433
-                    builder.Host <- "janeway"
-                    builder.Username <- "d2admin"
-                    builder.Password <- "d2admin" 
-                    builder.SearchPath <- "test_um"
-                    
-                    new NpgsqlConnection(builder.ConnectionString)
-        with
-        | _ -> ()
-        ()
+        testFile <- Path.GetTempFileName()
+        let configuration = Fluently.Configure()
+                                    .Database(SqliteConfiguration.Standard.UsingFile(testFile))
+                                    .ExposeConfiguration(fun config -> buildSchema config)
+        Connection.initialize configuration
     
     [<TearDown>]
     let ``After each test tear down`` () =
-        try
-            let builder = new NpgsqlConnectionStringBuilder()
-            builder.Database <- "D2.Authentication";
-            builder.Port <- 5433
-            builder.Host <- "janeway"
-            builder.Username <- "d2admin"
-            builder.Password <- "d2admin" 
-            
-            use connection = new NpgsqlConnection(builder.ConnectionString)
-            connection.Open()
-            
-            use command = connection.CreateCommand()
-            command.CommandText <- "DROP SCHEMA IF EXISTS test_um CASCADE"
-            
-            command.ExecuteNonQuery() |> ignore
-        with
-        | _ -> ()
-        ()
-
+        Connection.shutdown ()
+        
     [<Test>]
     let ``Registering unknown user succeeds`` () =
         let user = {

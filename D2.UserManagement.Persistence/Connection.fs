@@ -12,60 +12,66 @@ type Postgres_Type = {
 }
 
 module Connection = 
+    open FluentNHibernate.Cfg
     open NHibernate
     open NHibernate.Cfg
+    open NHibernate.Tool.hbm2ddl
+    open System
     open System.Reflection
 
     let configurationFromFile = ServiceConfiguration.connectionInfo
-
-    let mutable connectionInfo = {
-        Database = configurationFromFile.Name;
-        Port = configurationFromFile.Port;
-        Host = configurationFromFile.Host;
-        User = configurationFromFile.User;
-        Password = configurationFromFile.Password 
-    }
     
-    let mutable connectionProvider =
+    let private connectionString =
         fun () -> 
             let builder = new NpgsqlConnectionStringBuilder()
             builder.ApplicationName <- configurationFromFile.Identifier
-            builder.Database <- connectionInfo.Database
-            builder.Host <- connectionInfo.Host
-            builder.Password <- connectionInfo.Password
-            builder.Username <- connectionInfo.User
-            builder.Port <- connectionInfo.Port
-    
-            new NpgsqlConnection(builder.ConnectionString)
-
-    let client () =
-        let result = connectionProvider ()
-        result.Open()
-        result
-    
-    let mutable connectionString =
-        fun () -> 
-            let builder = new NpgsqlConnectionStringBuilder()
-            builder.ApplicationName <- configurationFromFile.Identifier
-            builder.Database <- connectionInfo.Database
-            builder.Host <- connectionInfo.Host
-            builder.Password <- connectionInfo.Password
-            builder.Username <- connectionInfo.User
-            builder.Port <- connectionInfo.Port
+            builder.Database <- configurationFromFile.Name
+            builder.Host <- configurationFromFile.Host
+            builder.Password <- configurationFromFile.Password
+            builder.Username <- configurationFromFile.User
+            builder.Port <- configurationFromFile.Port
             
             builder.ConnectionString
     
-    let connectionProperties = Map.empty
-                                .Add("connection.connection_string", connectionString ())
-                                .Add("connection.driver_class", "Beginor.NHibernate.NpgSql.NpgSqlDriver,NHibernate.NpgSql")
-                                .Add("dialect", "NHibernate.Dialect.PostgreSQL83Dialect")
-                                .Add("use_proxy_validator", "false")
-    let sessionFactory = Configuration()
-                            .SetProperties(connectionProperties)
-                            .AddAssembly(Assembly.GetExecutingAssembly())
-                            .BuildSessionFactory()
+    let private connectionProperties = Map.empty
+                                        .Add("connection.connection_string", connectionString ())
+                                        .Add("connection.driver_class", "Beginor.NHibernate.NpgSql.NpgSqlDriver,NHibernate.NpgSql")
+                                        .Add("dialect", "NHibernate.Dialect.PostgreSQL83Dialect")
+                                        .Add("use_proxy_validator", "false")
+    
+    let private configuration = Configuration().SetProperties(connectionProperties)
+
+    let mutable (private sessionFactory : ISessionFactory) = null  
+    
+    let initialize (configuration : FluentConfiguration) =
+        if sessionFactory <> null then sessionFactory.Dispose()
+        sessionFactory <- configuration
+                              .Mappings(fun m -> m.FluentMappings
+                                                  .Add<UserMap>()
+                                                  .Add<UserRegistrationMap>()
+                                                  |> ignore)
+                              .BuildConfiguration()
+                              .BuildSessionFactory()
+
+    let shutdown () =
+        if sessionFactory <> null then
+            sessionFactory.Dispose()
+            sessionFactory <- null
+
+    let private defaultInitialize () =
+        if sessionFactory = null then
+            Fluently.Configure(configuration)
+                    .Mappings(fun m -> m.FluentMappings
+                                        .Add<UserCreateMap>()
+                                        .Add<UserRegistrationCreateMap>()
+                                        |> ignore)
+                    .ExposeConfiguration(fun config -> (SchemaUpdate(config)).Execute(false, true))
+                    .BuildConfiguration()
+                    |> ignore
+            initialize (Fluently.Configure(configuration))
 
     let session () =
+        defaultInitialize ()
         sessionFactory
             .WithOptions()
             .ConnectionReleaseMode(ConnectionReleaseMode.OnClose)
@@ -74,6 +80,7 @@ module Connection =
             .OpenSession()
     
     let readOnlySession () =
+        defaultInitialize ()
         sessionFactory
             .WithOptions()
             .ConnectionReleaseMode(ConnectionReleaseMode.OnClose)

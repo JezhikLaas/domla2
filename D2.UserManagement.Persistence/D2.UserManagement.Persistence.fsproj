@@ -4,9 +4,11 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Connection.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Mapper.fs" />
+    <Compile Include="Mappings\UserMap.fs" />
+    <Compile Include="Mappings\UserRegistration.fs" />
+    <Compile Include="Connection.fs" />
     <Compile Include="Users.fs" />
   </ItemGroup>
   <ItemGroup>
@@ -17,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="2.1.3" />
+    <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="NHibernate" Version="5.1.3" />
     <PackageReference Include="Npgsql" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />

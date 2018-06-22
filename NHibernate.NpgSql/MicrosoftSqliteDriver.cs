@@ -5,7 +5,7 @@ using NHibernate.Dialect;
 using NHibernate.Engine;
 using NHibernate.Driver;
 
-namespace D2.MasterData.Test.Helper
+namespace Beginor.NHibernate.NpgSql
 {
     public class MicrosoftSqliteDriver : ReflectionBasedDriver
     {

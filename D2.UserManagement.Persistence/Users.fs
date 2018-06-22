@@ -25,8 +25,6 @@ module Users =
                                 .SingleOrDefaultAsync()
                                 |> Async.AwaitTask
             
-            do! transaction.CommitAsync() |> Async.AwaitTask
-            
             match existing = null with
             | true  -> return RegistrationResult.Ok
             | false -> if existing.EMail = email then
@@ -38,6 +36,7 @@ module Users =
     let private registerUserWorker (user : UserRegistration) =
         let knownRegistration (session : ISession) =
             async {
+                use transaction = session.BeginTransaction()
                 let email = user.EMail.ToLowerInvariant()
                 let login = user.Login.ToLowerInvariant()
 
@@ -54,14 +53,13 @@ module Users =
 
         async {
             use session = Connection.session ()
-            use transaction = session.BeginTransaction()
-
             let! known = knownRegistration session
 
             match known with
             | None   -> let! accepted = isAccepted user 
                         match accepted with
-                        | RegistrationResult.Ok -> session.Save user |> ignore
+                        | RegistrationResult.Ok -> use transaction = session.BeginTransaction() 
+                                                   session.Save (UserRegistrationI.fromRegistration user) |> ignore
                                                    transaction.Commit ()
                                                    return RegistrationResult.Ok
                         
