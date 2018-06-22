@@ -1,4 +1,5 @@
-﻿using D2.MasterData.Repositories.Implementation;
+﻿using Beginor.NHibernate.NpgSql;
+using D2.MasterData.Repositories.Implementation;
 using D2.MasterData.Infrastructure;
 using System;
 using System.IO;

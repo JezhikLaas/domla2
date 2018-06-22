@@ -50,6 +50,16 @@ type UserRegistrationI() =
     abstract member Version : int with get, set
     default this.Version with get() = version and set(value) = version <- value
     
+    static member fromRegistration (data : UserRegistration) =
+        UserRegistrationI (
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Salutation = data.Salutation,
+            Title = data.Title,
+            EMail = data.EMail,
+            Login = data.Login
+        )
+    
     interface UserRegistration with
         member this.Id with get() = this.Id
         member this.FirstName with get() = this.FirstName
