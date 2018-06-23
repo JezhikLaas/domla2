@@ -78,7 +78,7 @@ module RegistrationTest =
     [<OneTimeSetUp>]
     let setupOnce() =
         CompositionRoot.setStorage testStorage
-        let server = new TestServer((WebHostBuilder()).UseStartup<Startup>())
+        let server = new TestServer((WebHostBuilder()).UseStartup<StartupTest>())
         browser <- server.CreateClient()
 
     [<SetUp>]
@@ -103,7 +103,7 @@ module RegistrationTest =
         int result |> should equal StatusCodes.Status200OK
     
     [<Test>]
-    let ``User Management answers 'MovedPermanently' when email is in use``() =
+    let ``User Management answers MovedPermanently when email is in use``() =
         let user = UserRegistrationI(
                        FirstName = "foo",
                        LastName = "bar",
@@ -128,7 +128,7 @@ module RegistrationTest =
         int result |> should equal StatusCodes.Status301MovedPermanently
     
     [<Test>]
-    let ``User Management answers 'Conflict' when login is in use``() =
+    let ``User Management answers Conflict when login is in use``() =
         let user = UserRegistrationI(
                        FirstName = "foo",
                        LastName = "bar",

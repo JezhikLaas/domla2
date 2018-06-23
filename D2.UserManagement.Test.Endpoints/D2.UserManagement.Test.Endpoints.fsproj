@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StartupTest.fs" />
     <Compile Include="Users.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
