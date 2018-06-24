@@ -11,10 +11,12 @@ type UserCreateMap() =
         base.Id(fun x -> x.Id :> obj) |> ignore
         base.Map(fun x -> x.FirstName :> obj)
             .Length(255)
+            .Column("first_name")
             .Nullable()
             |> ignore
         base.Map(fun x -> x.LastName :> obj)
             .Length(255)
+            .Column("last_name")
             .Not.Nullable()
             |> ignore
         base.Map(fun x -> x.Password :> obj)
@@ -43,10 +45,12 @@ type UserCreateMap() =
             |> ignore
         base.Map(fun x -> x.LoggedIn :> obj)
             .CustomType<UtcDateTimeType>()
+            .Column("logged_in")
             .Nullable()
             |> ignore
         base.Map(fun x -> x.PrivacyAccepted :> obj)
             .CustomType<UtcDateTimeType>()
+            .Column("privacy_accepted")
             .Nullable()
             |> ignore
 

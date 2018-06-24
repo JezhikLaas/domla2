@@ -11,10 +11,12 @@ type UserRegistrationCreateMap() =
         base.Id(fun x -> x.Id :> obj) |> ignore
         base.Map(fun x -> x.FirstName :> obj)
             .Length(255)
+            .Column("first_name")
             .Nullable()
             |> ignore
         base.Map(fun x -> x.LastName :> obj)
             .Length(255)
+            .Column("last_name")
             .Not.Nullable()
             |> ignore
         base.Map(fun x -> x.Salutation :> obj)
@@ -35,6 +37,7 @@ type UserRegistrationCreateMap() =
             |> ignore
         base.Map(fun x -> x.MailSent :> obj)
             .CustomType<UtcDateTimeType>()
+            .Column("mail_sent")
             .Nullable()
             |> ignore
 
