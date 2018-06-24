@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -7,8 +7,6 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker", "D2.ServiceBroker/D2.ServiceBroker.fsproj", "{B29C4007-7381-4AB0-A9C7-CC25A796FA52}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker.Persistence", "D2.ServiceBroker.Persistence/D2.ServiceBroker.Persistence.fsproj", "{48814C03-0A5B-4A83-86AE-ADC19891A014}"
-EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker.Test.Persistence", "D2.ServiceBroker.Test.Persistence/D2.ServiceBroker.Test.Persistence.fsproj", "{33E47674-EC62-4884-992C-23946EA6ACAB}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "D2.ServiceBroker.Test.Endpoints", "D2.ServiceBroker.Test.Endpoints/D2.ServiceBroker.Test.Endpoints.fsproj", "{B678C00E-5BB0-46F3-A973-C6CAD049212C}"
 EndProject
@@ -68,18 +66,6 @@ Global
 		{48814C03-0A5B-4A83-86AE-ADC19891A014}.Release|x64.Build.0 = Release|Any CPU
 		{48814C03-0A5B-4A83-86AE-ADC19891A014}.Release|x86.ActiveCfg = Release|Any CPU
 		{48814C03-0A5B-4A83-86AE-ADC19891A014}.Release|x86.Build.0 = Release|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Debug|x64.Build.0 = Debug|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Debug|x86.Build.0 = Debug|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x64.ActiveCfg = Release|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x64.Build.0 = Release|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x86.ActiveCfg = Release|Any CPU
-		{33E47674-EC62-4884-992C-23946EA6ACAB}.Release|x86.Build.0 = Release|Any CPU
 		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B678C00E-5BB0-46F3-A973-C6CAD049212C}.Debug|x64.ActiveCfg = Debug|Any CPU

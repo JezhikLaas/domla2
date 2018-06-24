@@ -7,6 +7,8 @@ open D2.Common
 open Newtonsoft.Json
 open System
 open System.Security.Claims
+open System.Security.Cryptography
+open System.Text
 
 [<AllowNullLiteral>]
 type UserRegistrationI() =
@@ -136,9 +138,16 @@ type UserI() =
     default this.Version with get() = version and set(value) = version <- value
     
     static member fromRegistration (data : UserRegistrationI) (password : string) =
+        let computeAssociation () =
+            use hasher = MD5.Create()
+            let association = Guid.NewGuid().ToString("N")
+            let binaryData = hasher.ComputeHash (Encoding.UTF8.GetBytes association)
+            let dbkey = "D" + BitConverter.ToString(binaryData).Replace("-", "")
+            (association, dbkey)
         let salt = BCrypt.GenerateSalt ()
         let hashedPassword = BCrypt.HashPassword (password, salt)
-        
+        let association, dbkey = computeAssociation ()
+
         UserI (
             FirstName = data.FirstName,
             LastName = data.LastName,
@@ -152,6 +161,8 @@ type UserI() =
                 Claim("role", "user");
                 Claim("id", Guid.NewGuid().ToString("N"));
                 Claim("name", data.Login);
+                Claim("association", association);
+                Claim("dbkey", dbkey);
             ]
         )
     

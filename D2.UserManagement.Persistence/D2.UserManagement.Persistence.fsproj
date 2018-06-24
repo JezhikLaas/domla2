@@ -12,12 +12,6 @@
     <Compile Include="Users.fs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Mappings\User.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Mappings\UserRegistration.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="2.1.3" />
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="NHibernate" Version="5.1.3" />
