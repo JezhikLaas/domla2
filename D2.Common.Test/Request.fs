@@ -29,5 +29,15 @@ module RequestHandlerTest =
         match success() with
         | InternalFailure e -> true
         | _ -> false
-        
+        |> should be True
+
+    [<Test>]
+    let ``Exception should be caught by outer scope``() =
+        let success =  handle {
+            return 1 / 0
+        }
+
+        match success() with
+        | InternalFailure e -> true
+        | _ -> false
         |> should be True

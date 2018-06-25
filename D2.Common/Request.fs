@@ -25,7 +25,7 @@ module Request =
                       | Success r -> (rest r)
                       | ExternalFailure f -> failExternal f
                       | InternalFailure f -> failInternal f
-    let delay h = (fun () -> handleRequest (h()))
+    let delay h = (fun () -> handleRequest (try h() with | error -> failInternal error))
 
     type HandleRequestBuilder() =
         member b.Bind(h, rest) = bind h rest
