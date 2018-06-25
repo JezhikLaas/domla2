@@ -4,6 +4,7 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AdminConnection.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Mapper.fs" />
     <Compile Include="Mappings\UserMap.fs" />

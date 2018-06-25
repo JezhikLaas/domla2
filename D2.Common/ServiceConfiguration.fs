@@ -117,6 +117,14 @@ module ServiceConfiguration =
             config
         evaluate ()
     
+    let adminConnectionInfo =
+        let evaluate () =
+            let config = DatabaseProperties ()
+            configurationSources.GetSection("Admin").Bind config
+
+            config
+        evaluate ()
+    
     let emailsInfo =
         let evaluate () =
             let config = EMailProperties ()

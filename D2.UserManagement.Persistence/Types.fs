@@ -60,7 +60,8 @@ type StorageService = {
     register : (UserRegistration -> Async<RegistrationResult>)
     listPending : Async<UserRegistration list>
     acceptRegistration : (Guid -> ILogger -> (UserRegistration -> Async<bool>) -> Async<bool>)
-    finishRegistration : (Guid -> string -> ILogger -> Async<bool>) 
+    finishRegistration : (Guid -> string -> ILogger -> Async<bool * string>)
+    createDatabase : (string -> Async<unit>) 
 }
 
 

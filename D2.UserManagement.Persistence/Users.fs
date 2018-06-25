@@ -115,7 +115,7 @@ module Users =
             let! registration = session.GetAsync<UserRegistrationI>(id) |> Async.AwaitTask
             if registration |> isNull then
                 logger.LogWarning (sprintf "no registration with if %s found" (id.ToString()))
-                return false
+                return (false, String.Empty)
             else
                 let user = UserI.fromRegistration registration password
                 session.Delete registration
@@ -123,7 +123,22 @@ module Users =
                 do! transaction.CommitAsync () |> Async.AwaitTask
                 logger.LogInformation (sprintf "user with login %s successfully activated" user.Login)
                 
-                return true
+                let dbkey = user.UserClaims
+                            |> List.find(fun u -> u.Type = "dbkey")
+                
+                return (true, dbkey.Value)
+        }
+    
+    let private createUserDatabaseWorker (dbkey : string) =
+        async {
+            use connection = AdminConnection.connection ()
+            use command = connection.CreateCommand()
+            
+            command.CommandText <- "CREATE ROLE " + dbkey + " LOGIN PASSWORD '" + dbkey + "'"
+            command.ExecuteNonQuery () |> ignore
+            
+            command.CommandText <- "CREATE DATABASE " + dbkey + " OWNER " + dbkey
+            command.ExecuteNonQuery () |> ignore
         }
     
     let Storage = {
@@ -131,4 +146,5 @@ module Users =
         listPending = listPendingUsersWorker;
         acceptRegistration = acceptRegistrationWorker;
         finishRegistration = finishRegistrationWorker;
+        createDatabase = createUserDatabaseWorker;
     }

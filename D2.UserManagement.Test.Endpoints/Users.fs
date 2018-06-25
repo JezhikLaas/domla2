@@ -41,7 +41,12 @@ module RegistrationTest =
     
     let private finishRegistrationTest (item : Guid) (password : string) (logger : ILogger) =
         async {
-            return true
+            return (true, "X")
+        }
+    
+    let private createDatabaseTest (dbkey : string) =
+        async {
+            return ()
         }
     
     type UserRegistrationI() =
@@ -71,6 +76,7 @@ module RegistrationTest =
         listPending = listPendingUsers
         acceptRegistration = acceptRegistrationTest
         finishRegistration = finishRegistrationTest
+        createDatabase = createDatabaseTest
     }
     
     let mutable browser = null
