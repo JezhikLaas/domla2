@@ -20,11 +20,15 @@ namespace D2.MasterData.Models
             Id = argument.Id;
             UserKey = argument.UserKey;
             Title = argument.Title;
+            YearOfConstruction = argument.YearOfConstruction;
+            Version = argument.Version;
+
             var items = from entranceParameter in argument.Entrances
                         select new Entrance(entranceParameter, this);
             _entrances = new List<Entrance>(items);
-            YearOfConstruction = argument.YearOfConstruction;
-            Version = argument.Version;
+
+            _administrationUnitProperties = new List<AdministrationUnitProperty>();
+
             if (argument.AdministrationUnitProperties != null)
             {
                 var properties = from propertiesParameter in argument.AdministrationUnitProperties

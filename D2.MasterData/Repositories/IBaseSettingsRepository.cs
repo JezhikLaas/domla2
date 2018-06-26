@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace D2.MasterData.Repositories
 {
-    public interface IBasicSettingsRepository
+    public interface IBaseSettingsRepository
     {
         void Insert(AdministrationUnitsFeature item);
         IEnumerable<AdministrationUnitsFeature> List();

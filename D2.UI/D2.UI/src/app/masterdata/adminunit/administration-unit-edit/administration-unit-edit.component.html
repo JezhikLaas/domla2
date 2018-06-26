@@ -75,6 +75,55 @@
         </div>
     </div>
    </div>
+  <div style="margin-top: 1em; margin-bottom: 1em;" *ngIf="AdminUnit.AdministrationUnitProperties.length > 0 && AdminUnit.AdministrationUnitProperties[0].Title !==''">
+    <label >Zusatzeigenschaften</label>
+  </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left"
+       *ngIf="AdminUnit.AdministrationUnitProperties.length > 0 && AdminUnit.AdministrationUnitProperties[0].Title !==''">
+    <div formArrayName="AdministrationUnitProperties" fx="100%">
+      <div *ngFor="let control of properties.controls; index as i; last as l"
+           [formGroupName]="i"
+           class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+        <div fxFlex="20%">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Bezeichnung</mat-label>
+            <input matInput formControlName="Title"  >
+          </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Beschreibung</mat-label>
+            <input matInput formControlName="Description"  >
+          </mat-form-field>
+        </div>
+          <div formGroupName="Value" fxLayout="row" fxLayoutWrap fxLayoutGap="1%" class="container"  fxLayoutAlign="left" fxFlex="100%" fxLayout.xs="column">
+            <div fxFlex="40">
+              <mat-form-field appearance="outline" style="width: 100%">
+                <mat-label>Typ</mat-label>
+                <input matInput formControlName="Tag"  >
+              </mat-form-field>
+            </div>
+            <div fxFlex="60">
+              <mat-form-field appearance="outline" style="width: 100%">
+                <mat-label>Typ</mat-label>
+                <input matInput formControlName="Raw"  >
+              </mat-form-field>
+            </div>
+          </div>
+        <div fxLayout="row" fxLayoutGap="1%" fxLayoutAlign="left" fxFlex="100%">
+          <div *ngIf="l" fxFlex="3%">
+            <button (click)="addPropertiesControl()" style="width: 100%;" type="button" class="ui button"> + </button>
+          </div>
+          <div  fxFlex="3%"  >
+            <button  (click)="removePropertiesControl(i)" style="width: 100%" type="button" class="ui button"> - </button>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top: 1em; margin-bottom: 1em;">
+    <a class="item" routerLink="/baseSettings" routerLinkActive="active">Grundeinstellungen</a>
+  </div>
 </form>
 
 

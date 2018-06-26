@@ -1,19 +1,27 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Globalization;
 
 namespace D2.Infrastructure
 {
     public class Variant
     {
-        public VariantTag Tag { get; }
+        public VariantTag Tag { get; set; }
 
+        [JsonIgnore]
         public TypedValue Number => AsTypedValue();
 
+        [JsonIgnore]
         public DateTime DateTime => AsDateTime();
 
+        [JsonIgnore]
         public string String => AsString();
 
-        public object Raw => _storage;
+        public object Raw
+        {
+            get => _storage;
+            set => _storage = value;
+        }
         
         public Variant()
         { }

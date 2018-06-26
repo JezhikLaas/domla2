@@ -1,11 +1,13 @@
 ﻿using D2.MasterData.Facades.Implementation;
 using D2.MasterData.Infrastructure;
+using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
 using D2.MasterData.Test.Helper;
 using D2.Service.Contracts.Validation;
 using NSubstitute;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace D2.MasterData.Test
@@ -17,8 +19,9 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IAdministrationUnitsRepository>();
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
 
-            var facade = new AdministrationUnitFacade(repository, validator);
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
             var result = facade.LoadAdministrationUnit("");
 
             Assert.Equal(422, result.code);
@@ -29,8 +32,9 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IAdministrationUnitsRepository>();
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
 
-            var facade = new AdministrationUnitFacade(repository, validator);
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
             var result = facade.LoadAdministrationUnit(Guid.NewGuid().ToString());
 
             Assert.Equal(404, result.code);
@@ -41,11 +45,12 @@ namespace D2.MasterData.Test
         {
             var validator = Substitute.For<IParameterValidator>();
             var repository = Substitute.For<IAdministrationUnitsRepository>();
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
             var unitId = Guid.NewGuid();
             
             repository.Load(Arg.Any<Guid>()).Returns(AdministrationUnitBuilder.New.WithId(unitId).Build());
 
-            var facade = new AdministrationUnitFacade(repository, validator);
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
             var result = facade.LoadAdministrationUnit(unitId.ToString());
 
             Assert.Equal(200, result.code);
@@ -64,8 +69,9 @@ namespace D2.MasterData.Test
                     return validation;
                 });
             var repository = Substitute.For<IAdministrationUnitsRepository>();
-            var facade = new AdministrationUnitFacade(repository, validator);
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
 
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
             var result = facade.ValidateCreate(new AdministrationUnitParameters());
             Assert.Equal(State.ExternalFailure, result.result);
         }
@@ -78,10 +84,31 @@ namespace D2.MasterData.Test
                 .Validate(Arg.Any<AdministrationUnitParameters>(), RequestType.Post)
                 .Returns(new ValidationResult());
             var repository = Substitute.For<IAdministrationUnitsRepository>();
-            var facade = new AdministrationUnitFacade(repository, validator);
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
+
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
 
             var result = facade.ValidateCreate(new AdministrationUnitParameters());
             Assert.Equal(State.NoError, result.result);
+        }
+
+        [Fact(DisplayName = "Create AdministrationUnitProperty from BaseSettings is valid")]
+        public void Create_AdministrationUnitProperty_from_BaseSettings_is_valid()
+        {
+            var validator = Substitute.For<IParameterValidator>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
+            var hasProperties = false;
+
+            repository.Insert(Arg.Do<AdministrationUnit>(unit => hasProperties = unit.AdministrationUnitProperties.Any()));
+
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
+            AdministrationUnitsFeature unitsFeature = AdministrationUnitsFeatureBuilder.New.WithId(Guid.NewGuid()).Build();
+            baseSettingsRepository.List().Returns(new[] { unitsFeature });
+            AdministrationUnitParameters adminUnitParameters = AdministrationUnitParametersBuilder.New.Build();
+            facade.CreateNewAdministrationUnit(adminUnitParameters);
+
+            Assert.True(hasProperties);
         }
     }
 }

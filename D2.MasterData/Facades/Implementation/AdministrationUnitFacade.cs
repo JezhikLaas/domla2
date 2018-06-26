@@ -1,4 +1,5 @@
-﻿using D2.MasterData.Infrastructure;
+﻿using D2.Infrastructure;
+using D2.MasterData.Infrastructure;
 using D2.MasterData.Models;
 using D2.MasterData.Parameters;
 using D2.MasterData.Repositories;
@@ -17,19 +18,46 @@ namespace D2.MasterData.Facades.Implementation
     public class AdministrationUnitFacade : IAdministrationUnitFacade
     {
         readonly IAdministrationUnitsRepository _repository;
+        readonly IBaseSettingsRepository _basicSettingsRepository;
         readonly IParameterValidator _parameterValidator;
 
         public AdministrationUnitFacade(
             IAdministrationUnitsRepository repository,
+            IBaseSettingsRepository basicSettingsRepository,
             IParameterValidator parameterValidator)
         {
             _repository = repository;
+            _basicSettingsRepository = basicSettingsRepository;
             _parameterValidator = parameterValidator;
         }
 
         public void CreateNewAdministrationUnit(AdministrationUnitParameters value)
         {
             var administrationUnit = new AdministrationUnit(value);
+            var result = from baseSettings in _basicSettingsRepository.List()
+                         select baseSettings;
+            foreach (AdministrationUnitsFeature feature in result)
+            {
+                AdministrationUnitPropertyParameters propertyParameters = new AdministrationUnitPropertyParameters();
+                propertyParameters.Description = feature.Description;
+                propertyParameters.Title = feature.Title;
+                switch (feature.Tag)
+                {
+                    case VariantTag.DateTime:
+                        propertyParameters.Value = new Variant(new DateTime());
+                        break;
+                    case VariantTag.String:
+                        propertyParameters.Value = new Variant(string.Empty);
+                        break;
+                    case VariantTag.TypedValue:
+                        propertyParameters.Value = new Variant(new TypedValue(0, feature.TypedValueUnit, feature.TypedValueDecimalPlace));
+                        break;
+                    default:
+                        break;
+                }
+                var admnistrationUnitProperty = new AdministrationUnitProperty(propertyParameters, administrationUnit);
+                administrationUnit.AddProperty(admnistrationUnitProperty);
+            }
             _repository.Insert(administrationUnit);
         }
 

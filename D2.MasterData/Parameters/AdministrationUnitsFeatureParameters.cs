@@ -25,6 +25,5 @@ namespace D2.MasterData.Parameters
 
         public int Version { get; set; }
 
-        public Guid InitialAdministrationUnitId { get; set;  }
     }
 }

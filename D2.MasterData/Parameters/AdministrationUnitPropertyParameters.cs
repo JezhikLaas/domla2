@@ -22,5 +22,6 @@ namespace D2.MasterData.Parameters
         public Variant Value { get; set; }
 
         public int Version { get; set; }
+
     }
 }

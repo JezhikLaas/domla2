@@ -10,6 +10,7 @@ import { AdminUnitFactory} from '../shared/admin-unit-factory';
 import { AdministrationUnitValidators } from '../shared/administration-unit.validators';
 import { AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages } from './administration-form-error-messages';
 import { CountryInfo } from '../../../shared/country-info';
+import { AdministrationUnitPropertyValue} from '../../../shared/administration-unit-property-value';
 import { DatePipe } from '@angular/common';
 import { AddressService } from '../../shared/address.service';
 import { YearMonth } from '../../shared/year-month';
@@ -42,8 +43,10 @@ export class AdministrationUnitEditComponent implements OnInit {
   AdminUnit = AdminUnitFactory.empty();
   errors: { [key: string]: string } = {};
   entrances: FormArray;
+  properties: FormArray;
   Address: FormGroup;
   Country: FormGroup;
+  Value: FormGroup;
   Countries: CountryInfo[];
   CountryDefaultIso2: string;
   PostalCode: string;
@@ -89,6 +92,7 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   initAdminUnit () {
     this.buildEntrancesArray();
+    this.buildPropertiesArray();
     this.editForm = this.fb.group({
       UserKey: this.fb.control(
         this.AdminUnit.UserKey,
@@ -107,7 +111,8 @@ export class AdministrationUnitEditComponent implements OnInit {
                     new Date(this.AdminUnit.YearOfConstruction.Year, this.AdminUnit.YearOfConstruction.Month - 1, 1) :
                     this.AdminUnit.YearOfConstruction
       ),
-      Entrances: this.entrances
+      Entrances: this.entrances,
+      AdministrationUnitProperties: this.properties
     });
     this.editForm.statusChanges.subscribe(() => this.updateErrorMessages());
     this.MenuButtons[0].isActive = () => {
@@ -139,6 +144,23 @@ export class AdministrationUnitEditComponent implements OnInit {
         } )
       ),
       AdministrationUnitValidators.atLeastOneEntrance
+    );
+  }
+
+  buildPropertiesArray() {
+    this.properties = this.fb.array(
+      this.AdminUnit.AdministrationUnitProperties.map(
+        t => this.fb.group({
+          Title: this.fb.control(t.Title, [ Validators.required]),
+          Description: this.fb.control((t.Description)),
+          Value: this.Value =  this.fb.group(
+            {
+              Tag: this.fb.control(t.Value.Tag),
+              Raw: this.fb.control(t.Value.Raw)
+            }
+          )
+        } )
+      )
     );
   }
 
@@ -251,13 +273,29 @@ export class AdministrationUnitEditComponent implements OnInit {
         PostalCode: this.fb.control (null, [Validators.required])
       })
     }));
-    // this.editForm.statusChanges.subscribe(() => this.updateErrorMessagesAddress());
+  }
+
+  addPropertiesControl() {
+    this.properties.push(this.fb.group({
+        Title: this.fb.control(null, [ Validators.required]),
+        Description: this.fb.control((null)),
+        Value: this.Value =  this.fb.group(
+          {
+            Tag: this.fb.control(null, [Validators.required]),
+            Raw: this.fb.control(null)
+          }
+        )
+      })
+    );
   }
 
   removeEntrancesControl(index: number) {
     this.entrances.removeAt(index);
   }
 
+  removePropertiesControl(index: number) {
+    this.properties.removeAt(index);
+  }
 
   onPostalCodeSelected (val: any, i: number) {
     console.log(val);

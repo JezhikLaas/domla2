@@ -30,4 +30,12 @@ export interface AdministrationUnitRaws {
     SubUnits?: string;
     AdministrationUnitId: string;
   }[];
+  AdministrationUnitProperties?: {
+    Title: string;
+    Description: string;
+    Value?: {
+      Tag: string;
+      Raw: string;
+    }
+  }[];
 }

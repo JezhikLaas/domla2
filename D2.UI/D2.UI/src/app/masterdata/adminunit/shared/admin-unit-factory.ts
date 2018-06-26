@@ -15,14 +15,27 @@ export class AdminUnitFactory {
         Version: 0,
         Address: {
           Country:
-            { Iso2: 'DE', Iso3: '', Name: ''},
+            {Iso2: 'DE', Iso3: '', Name: ''},
           City: '',
           Street: '',
           Number: '',
           PostalCode: ''
         },
-        Edit: '' ,
-        AdministrationUnitId: ''}] );
+        Edit: '',
+        AdministrationUnitId: ''
+      }],
+      new YearMonth(0, 0 ),
+      [
+        {
+          Title: '',
+          Description: '',
+          Value: {
+            Tag: '',
+            Raw: ''
+          }
+        }
+        ]
+    );
   }
 
   static fromObject (rawAdministrationUnit: AdministrationUnitRaws | any): AdministrationUnit {
@@ -36,7 +49,8 @@ export class AdminUnitFactory {
       rawAdministrationUnit.Entrances,
       typeof (rawAdministrationUnit.YearOfConstruction) === 'string' ?
             new YearMonth(rawAdministrationUnit.YearOfConstruction.Year, rawAdministrationUnit.YearOfConstruction.Month) :
-              rawAdministrationUnit.YearOfConstruction
+              rawAdministrationUnit.YearOfConstruction,
+      rawAdministrationUnit.AdministrationUnitProperties
     );
   }
 }

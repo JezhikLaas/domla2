@@ -17,21 +17,18 @@ namespace D2.MasterData.Facades.Implementation
     [RequestScope]
     public class BaseSettingsFacade : IBaseSettingsFacade
     {
-        readonly IBasicSettingsRepository _repository;
+        readonly IBaseSettingsRepository _repository;
         readonly IParameterValidator _parameterValidator;
-        readonly IAdministrationUnitPropertyRepository _administrationUnitPropertyRepository;
         readonly IAdministrationUnitsRepository _administrationUnitsRepository;
 
         public BaseSettingsFacade (
-            IBasicSettingsRepository repository,
+            IBaseSettingsRepository repository,
             IAdministrationUnitsRepository administrationUnitsRepository,
-            IAdministrationUnitPropertyRepository administrationUnitPropertyRepository,
             IParameterValidator parameterValidator)
         {
             _repository = repository;
             _parameterValidator = parameterValidator;
             _administrationUnitsRepository = administrationUnitsRepository;
-            _administrationUnitPropertyRepository = administrationUnitPropertyRepository;
         }
 
         public void CreateNewAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value)
@@ -113,7 +110,6 @@ namespace D2.MasterData.Facades.Implementation
                          select unit;
             foreach(AdministrationUnit administrationUnit in result)
             {
-                if (administrationUnit.Id != value.InitialAdministrationUnitId) continue;
                 AdministrationUnitPropertyParameters parameter = new AdministrationUnitPropertyParameters();
                 parameter.Title = value.Title;
                 parameter.Description = value.Description;

@@ -7,6 +7,7 @@ import { AdminunitRoutingModule } from './adminunit-routing.module';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
 import { SharedModule } from '../../shared/shared.module';
+import { AdministrationUnitPropertyComponent } from './administration-unit-property/administration-unit-property.component';
 
 
 
@@ -18,7 +19,8 @@ import { SharedModule } from '../../shared/shared.module';
   ],
   declarations: [
     AdministrationUnitEditComponent,
-    AdministrationUnitsListComponent
+    AdministrationUnitsListComponent,
+    AdministrationUnitPropertyComponent
   ],
 
   schemas: [

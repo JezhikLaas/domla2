@@ -15,6 +15,7 @@ namespace D2.MasterData.Test.Helper
             _administrationUnitParameters = new AdministrationUnitParameters {
                 UserKey = "03",
                 Title = "ABC",
+                AdministrationUnitProperties = new List<AdministrationUnitPropertyParameters>(),
                 YearOfConstruction = new YearMonth(2001, 10),
                 Entrances = new List<EntranceParameters>
                 {

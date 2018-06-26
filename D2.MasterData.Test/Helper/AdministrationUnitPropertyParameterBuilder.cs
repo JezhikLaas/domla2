@@ -12,7 +12,6 @@ namespace D2.MasterData.Test.Helper
         private string _title;
         private string _description;
         private Variant _value;
-        private AdministrationUnit _administrationUnit; 
         
         private AdministrationUnitPropertyParameterBuilder()
         {
