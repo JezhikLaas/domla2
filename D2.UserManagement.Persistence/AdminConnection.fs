@@ -19,6 +19,9 @@ module AdminConnection =
             
             builder.ConnectionString
 
+    let fetchAdminRole () =
+         configurationFromFile.User
+
     let connection () =
         let result = new NpgsqlConnection (connectionString ())
         result.Open ()
