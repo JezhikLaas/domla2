@@ -18,15 +18,17 @@ namespace D2.MasterData.Models
             Id = argument.Id;
             Title = argument.Title;
             Address = new Address(argument.Address);
+            Version = argument.Version;
+            AdministrationUnit = unit;
+            AdministrationUnitId = unit.Id;
+            
+            _subUnits = new List<SubUnit>();
             if (argument.SubUnits != null) {
                 var items = from subUnitParameter in argument.SubUnits
                             select new SubUnit(subUnitParameter, this);
 
                 _subUnits = new List<SubUnit>(items);
             }
-            Version = argument.Version;
-            AdministrationUnit = unit;
-            AdministrationUnitId = unit.Id;
         }
 
         public virtual string Title

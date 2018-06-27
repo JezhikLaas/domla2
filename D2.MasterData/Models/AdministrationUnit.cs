@@ -23,6 +23,7 @@ namespace D2.MasterData.Models
             var items = from entranceParameter in argument.Entrances
                         select new Entrance(entranceParameter, this);
             _entrances = new List<Entrance>(items);
+            _administrationUnitProperties = new List<AdministrationUnitProperty>();
             YearOfConstruction = argument.YearOfConstruction;
             Version = argument.Version;
             if (argument.AdministrationUnitProperties != null)

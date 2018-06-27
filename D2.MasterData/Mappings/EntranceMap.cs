@@ -25,6 +25,7 @@ namespace D2.MasterData.Mappings
             Component(x => x.Address);
             HasMany(x => x.SubUnits)
                 .Cascade.AllDeleteOrphan()
+                .Cascade.Merge()
                 .Inverse();
         }
     }
