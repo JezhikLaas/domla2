@@ -42,9 +42,8 @@ namespace D2.MasterData.Repositories.Implementation
 
         public void Update(AdministrationUnit administrationUnit)
         {
-            using (var transaction = _context.Session.BeginTransaction())
-            {
-                _context.Session.Update(administrationUnit);
+            using (var transaction = _context.Session.BeginTransaction()) {
+                _context.Session.Merge(administrationUnit);
                 transaction.Commit();
             }
         }

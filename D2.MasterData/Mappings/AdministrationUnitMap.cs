@@ -28,12 +28,12 @@ namespace D2.MasterData.Mappings
                 .CustomType<YearMonthType>()
                 .Nullable();
             HasMany(x => x.Entrances)
-                .Cascade
-                .AllDeleteOrphan()
+                .Cascade.AllDeleteOrphan()
+                .Cascade.Merge()
                 .Inverse();
             HasMany(x => x.AdministrationUnitProperties)
-                .Cascade
-                .AllDeleteOrphan()
+                .Cascade.AllDeleteOrphan()
+                .Cascade.Merge()
                 .Inverse();
         }
     }

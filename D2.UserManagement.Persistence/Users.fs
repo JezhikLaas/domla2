@@ -137,6 +137,9 @@ module Users =
             command.CommandText <- "CREATE ROLE " + dbkey + " LOGIN PASSWORD '" + dbkey + "'"
             command.ExecuteNonQuery () |> ignore
             
+            command.CommandText <- "GRANT " + dbkey + " TO " + AdminConnection.fetchAdminRole()
+            command.ExecuteNonQuery () |> ignore
+            
             command.CommandText <- "CREATE DATABASE " + dbkey + " OWNER " + dbkey
             command.ExecuteNonQuery () |> ignore
         }
