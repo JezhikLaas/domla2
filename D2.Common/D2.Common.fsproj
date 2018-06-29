@@ -4,6 +4,7 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cache.fs" />
     <Compile Include="Date.fs" />
     <Compile Include="Html.fs" />
     <Compile Include="Parameters.fs" />
