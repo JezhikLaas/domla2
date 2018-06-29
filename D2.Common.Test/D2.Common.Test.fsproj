@@ -10,6 +10,7 @@
     <PackageReference Include="FsUnit" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache.fs" />
     <Compile Include="Date.fs" />
     <Compile Include="Request.fs" />
     <Compile Include="Time.fs" />
