@@ -22,6 +22,15 @@ export const AddressErrorMessages = [
   new ErrorMessage('Number', 'required', 'Geben Sie bitte eine Hausnummer ein'),
 ];
 
+export const PropertiesErrorMessages = [
+  new ErrorMessage('Title', 'required', 'Geben Sie bitte eine Zusatzfeld-Bezeichnung ein'),
+];
+
+export const PropertyValueErrorMessages = [
+  new ErrorMessage('Tag', 'required', 'Wählen Sie bitte den Typ des Zusatzfeldes aus'),
+  new ErrorMessage('Raw', 'required', 'Geben Sie bitte den Wert des Zusatzfeldes ein'),
+];
+
 export const EntranceErrorMessages = [
   new ErrorMessage('Title', 'required', 'Es muss ein Eingangsname angegeben werden'),
 ];

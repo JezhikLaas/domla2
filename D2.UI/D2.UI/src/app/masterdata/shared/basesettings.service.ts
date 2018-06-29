@@ -22,7 +22,7 @@ export class BaseSettingsService {
   constructor( private http: HttpClient,
                private accountService: AccountService ) { }
 
-  listBaseSetings(): Observable<Array<IBaseSettings>> {
+  listBaseSettings(): Observable<Array<IBaseSettings>> {
     if (this.brokerUrl) {
       return this.http
         .get<IBaseSettings []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);

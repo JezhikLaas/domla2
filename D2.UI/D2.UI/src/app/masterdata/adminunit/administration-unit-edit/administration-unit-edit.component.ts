@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Output } from '@angular/core';
+import {Component, OnInit, HostListener, Output, AfterViewInit, ViewChild} from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from '../../../shared/menu-item';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
@@ -8,13 +8,23 @@ import { AdministrationUnitService } from '../shared/administration-unit.service
 import { IAdministrationUnit } from '../shared/iadministration-unit';
 import { AdminUnitFactory} from '../shared/admin-unit-factory';
 import { AdministrationUnitValidators } from '../shared/administration-unit.validators';
-import { AdministrationUnitFormErrorMessages, AddressErrorMessages, EntranceErrorMessages } from './administration-form-error-messages';
+import {
+  AdministrationUnitFormErrorMessages,
+  AddressErrorMessages,
+  EntranceErrorMessages,
+  PropertiesErrorMessages, PropertyValueErrorMessages
+} from './administration-form-error-messages';
 import { CountryInfo } from '../../../shared/country-info';
-import { AdministrationUnitPropertyValue} from '../../../shared/administration-unit-property-value';
 import { DatePipe } from '@angular/common';
 import { AddressService } from '../../shared/address.service';
 import { YearMonth } from '../../shared/year-month';
-import { MatFormField} from '@angular/material';
+import { DataType } from '../../shared/data-type';
+import {AdministrationUnitPropertyValue} from '../../../shared/administration-unit-property-value';
+import {AdministrationUnitPropertyValidator} from './AdministrationUnitPropertyValidator';
+import {BaseSettingsListComponent} from '../../basesettings/basesettingslist/base-settings-list.component';
+import {BaseSettingsService} from '../../shared/basesettings.service';
+import {IBaseSettings} from '../../shared/Ibasesettings';
+import {MatTableDataSource} from '@angular/material';
 
 export enum KEY_CODE {
   RIGHT_ARROW = 39,
@@ -50,6 +60,11 @@ export class AdministrationUnitEditComponent implements OnInit {
   Countries: CountryInfo[];
   CountryDefaultIso2: string;
   PostalCode: string;
+  DataType;
+  ShowPropertiesForAllAdministrationUnits: boolean;
+  PropertiesForSelectedAdministrationUnitsShow: boolean;
+  @ViewChild(BaseSettingsListComponent)subject: BaseSettingsListComponent;
+  baseSettings: IBaseSettings[];
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
@@ -58,7 +73,8 @@ export class AdministrationUnitEditComponent implements OnInit {
               private route: ActivatedRoute,
               private datepipe: DatePipe,
               private as: AdministrationUnitService,
-              private ads: AddressService) {
+              private ads: AddressService,
+              private baseSettingsService: BaseSettingsService) {
   }
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -70,6 +86,7 @@ export class AdministrationUnitEditComponent implements OnInit {
       this.removeEntrancesControl(this.entrances.length - 1);
     }
   }
+
 
   ngOnInit() {
     this.ads.getCountries().subscribe(res =>
@@ -88,7 +105,6 @@ export class AdministrationUnitEditComponent implements OnInit {
             }
     this.initAdminUnit();
   }
-
 
   initAdminUnit () {
     this.buildEntrancesArray();
@@ -111,9 +127,11 @@ export class AdministrationUnitEditComponent implements OnInit {
                     new Date(this.AdminUnit.YearOfConstruction.Year, this.AdminUnit.YearOfConstruction.Month - 1, 1) :
                     this.AdminUnit.YearOfConstruction
       ),
-      Entrances: this.entrances,
-      AdministrationUnitProperties: this.properties
+      Entrances: this.entrances
     });
+    if (this.isUpdatingAdminUnit) {
+      this.addPropertiesArray();
+    }
     this.editForm.statusChanges.subscribe(() => this.updateErrorMessages());
     this.MenuButtons[0].isActive = () => {
       if (this.editForm.valid && (this.editForm.touched || this.editForm.dirty)) {
@@ -121,6 +139,7 @@ export class AdministrationUnitEditComponent implements OnInit {
       } else { return false; }
     };
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
+    this.DataType = DataType;
   }
 
   buildEntrancesArray() {
@@ -147,25 +166,47 @@ export class AdministrationUnitEditComponent implements OnInit {
     );
   }
 
+  addPropertiesArray() {
+    this.editForm.addControl('AdministrationUnitProperties', this.properties);
+    if (this.properties.length === 0 ) {
+      this.addPropertiesControl();
+    }
+  }
+
   buildPropertiesArray() {
     this.properties = this.fb.array(
       this.AdminUnit.AdministrationUnitProperties.map(
         t => this.fb.group({
-          Title: this.fb.control(t.Title, [ Validators.required]),
+          Title: this.fb.control(t.Title, [Validators.required]),
           Description: this.fb.control((t.Description)),
           Value: this.Value =  this.fb.group(
             {
-              Tag: this.fb.control(t.Value.Tag),
-              Raw: this.fb.control(t.Value.Raw)
+              Tag: this.fb.control(this.setDefaultTagValueByNewAdminUnit(t), [Validators.required] ),
+              Raw: this.fb.control(
+                  this.formatRaw(t.Value), [Validators.required]
+                )
             }
           )
-        } )
+        }, AdministrationUnitPropertyValidator)
       )
     );
   }
 
+  formatRaw(value: AdministrationUnitPropertyValue) {
+    if (value.Tag === '1') {
+      return new Date(value.Raw);
+    } else { return value.Raw; }
+  }
+
+  setDefaultTagValueByNewAdminUnit (property: any) {
+    if (property.Title === '') {
+      return 3;
+    } else { return property.Value.Tag; }
+  }
+
   submitForm() {
     this.editForm.value.Entrances = this.editForm.value.Entrances.filter(entrance => entrance);
+    this.editForm.value.AdministrationUnitProperties = this.editForm.value.AdministrationUnitProperties.filter(properties => properties);
     const AdminUnit: IAdministrationUnit = AdminUnitFactory.fromObject(this.editForm.value);
      if (AdminUnit.YearOfConstruction) {
        const date: Date = new Date(AdminUnit.YearOfConstruction.toString());
@@ -181,6 +222,13 @@ export class AdministrationUnitEditComponent implements OnInit {
         AdminUnit.Entrances[i].Id = this.AdminUnit.Entrances[i].Id;
         AdminUnit.Entrances[i].Edit = this.AdminUnit.Entrances[i].Edit;
         AdminUnit.Entrances[i].Version = this.AdminUnit.Entrances[i].Version;
+      }
+      for (let i = 0; i < AdminUnit.AdministrationUnitProperties.length; i++) {
+        if (AdminUnit.AdministrationUnitProperties[i].Value.Tag === '1'
+          &&  typeof AdminUnit.AdministrationUnitProperties[i].Value.Raw === 'string' ) {
+          AdminUnit.AdministrationUnitProperties[i].Value.Raw =
+            new Date (AdminUnit.AdministrationUnitProperties[i].Value.Raw).toISOString();
+        }
       }
       this.as.edit(AdminUnit).subscribe(res => {
         this.router.navigate(['../../administrationUnits']);
@@ -207,13 +255,15 @@ export class AdministrationUnitEditComponent implements OnInit {
     }
     this.updateErrorMessagesEntrance();
     this.updateErrorMessagesAddress();
+    if (this.editForm.controls.AdministrationUnitProperties) {
+      this.updateErrorMessagesProperties();
+      this.updateErrorMessagesPropertyValue();
+    }
   }
 
   updateErrorMessagesEntrance() {
     const formArray = this.editForm.get('Entrances') as FormArray;
     for (let i = 0; i < formArray.length; i++) {
-      const entrance = formArray.controls[i] as FormGroup;
-      const address = entrance.controls.Address as FormGroup;
       for (const message of EntranceErrorMessages) {
         const control = this.editForm.get(['Entrances', i, message.forControl]);
         if (control &&
@@ -228,11 +278,43 @@ export class AdministrationUnitEditComponent implements OnInit {
     }
   }
 
+  updateErrorMessagesProperties() {
+    const formArray = this.editForm.get('AdministrationUnitProperties') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of PropertiesErrorMessages) {
+        const control = this.editForm.get(['AdministrationUnitProperties', i, message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.errors['Property' + message.forControl]) {
+          this.errors['Property' + message.forControl] = message.text;
+        }
+      }
+    }
+  }
+
+  updateErrorMessagesPropertyValue() {
+    const formArray = this.editForm.get('AdministrationUnitProperties') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of PropertyValueErrorMessages) {
+        const control = this.editForm.get(['AdministrationUnitProperties', i, 'Value', message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.errors['PropertyValue' + message.forControl]) {
+          this.errors['PropertyValue' + message.forControl] = message.text;
+        }
+      }
+    }
+  }
+
   updateErrorMessagesAddress() {
     const formArray = this.editForm.get('Entrances') as FormArray;
     for (let i = 0; i < formArray.length; i++) {
-      const entrance = formArray.controls[i] as FormGroup;
-      const address = entrance.controls.Address as FormGroup;
       for (const message of AddressErrorMessages) {
         const control = this.editForm.get(['Entrances', i, 'Address', message.forControl]);
         if (control &&
@@ -281,11 +363,11 @@ export class AdministrationUnitEditComponent implements OnInit {
         Description: this.fb.control((null)),
         Value: this.Value =  this.fb.group(
           {
-            Tag: this.fb.control(null, [Validators.required]),
-            Raw: this.fb.control(null)
+            Tag: this.fb.control(3, [Validators.required]),
+            Raw: this.fb.control(null, [Validators.required])
           }
         )
-      })
+      }, AdministrationUnitPropertyValidator)
     );
   }
 
@@ -295,11 +377,20 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   removePropertiesControl(index: number) {
     this.properties.removeAt(index);
+    if (this.properties.length === 0 ) {
+      this.editForm.removeControl('AdministrationUnitProperties');
+    }
   }
 
-  onPostalCodeSelected (val: any, i: number) {
-    console.log(val);
-    console.log(this.editForm.get(['Entrances', i , 'Address' ]));
+  onShowPropertiesForAllAdministrationUnits() {
+    this.ShowPropertiesForAllAdministrationUnits = true;
+    this.baseSettingsService.listBaseSettings().subscribe(bs => this.baseSettings = bs);
+    this.subject.dataSource = new MatTableDataSource<IBaseSettings>(this.baseSettings);
+  }
+
+
+  onDataTypeSelected( val: any) {
+    // this.Value.patchValue({Tag: val});
   }
 }
 

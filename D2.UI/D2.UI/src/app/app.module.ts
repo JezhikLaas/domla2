@@ -24,6 +24,8 @@ import localeDeExtra from '@angular/common/locales/extra/de';
 import {AddressService} from './masterdata/shared/address.service';
 import {BaseSettingResolver} from './masterdata/shared/base-setting-resolver.service';
 import {BaseSettingsResolver} from './masterdata/shared/base-settings-resolver.service';
+import {MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
+import {BaseSettingsService} from './masterdata/shared/basesettings.service';
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
@@ -55,6 +57,8 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     AddressService,
     BaseSettingResolver,
     BaseSettingsResolver,
+    BaseSettingsService,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {
       provide: LOCALE_ID,
       useValue: 'de'

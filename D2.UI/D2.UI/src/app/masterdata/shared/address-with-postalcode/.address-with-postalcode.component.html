@@ -1,31 +1,31 @@
 <div [formGroup]="AddressFormGroup" class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
    <div [formGroup]="CountryFormGroup" fxFlex="30%">
-      <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-form-field style="width: 100%;">
         <mat-select  (ngModelChange)="onCountrySelected($event, PostalCodeControl.value)" [formControl]="Iso2Control">
           <mat-option *ngFor="let country of Countries" [value]="country.Iso2"> {{country.Iso2}} {{ country.Name }} </mat-option>
         </mat-select>
       </mat-form-field>
   </div>
   <div fxFlex="10%">
-    <mat-form-field appearance="outline" style="width: 100%">
+    <mat-form-field style="width: 100%">
       <mat-label>PLZ</mat-label>
       <input matInput [formControl] = "PostalCodeControl" (blur)="onPostalCodeSelected($event.target.value, CountryDefaultIso2)" placeholder="PLZ">
     </mat-form-field>
   </div>
   <div fxFlex="25%">
-    <mat-form-field appearance="outline" style="width: 100%">
+    <mat-form-field style="width: 100%">
       <mat-label>Ort</mat-label>
       <input matInput [formControl] = "CityControl" placeholder="Stadt">
     </mat-form-field>
   </div>
   <div fxFlex="25%">
-    <mat-form-field appearance="outline" style="width: 100%">
+    <mat-form-field style="width: 100%">
       <mat-label>Straße</mat-label>
       <input matInput [formControl] = "StreetControl" placeholder="Strasse">
     </mat-form-field>
   </div>
   <div fxFlex="10%">
-    <mat-form-field appearance="outline" style="width: 100%">
+    <mat-form-field style="width: 100%">
       <mat-label>Hausnummer</mat-label>
       <input matInput [formControl]="NumberControl" placeholder="Nummer">
     </mat-form-field>

@@ -1,129 +1,128 @@
 <form [formGroup]="editForm" xmlns="http://www.w3.org/1999/html">
-  <h5 class="ui dividing header">Objektdaten</h5>
-
-<div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
-  <div fxFlex="7%">
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-label>Schlüssel</mat-label>
-        <input matInput formControlName="UserKey" placeholder="Bezeichnung"  >
-          <mat-error *ngIf="errors?.AdminUnitUserKey" >
-          {{ errors?.AdminUnitUserKey }}
-          </mat-error>
-      </mat-form-field>
-  </div>
-  <div fxFlex="46%">
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-label>Bezeichnung</mat-label>
-        <input matInput formControlName="Title" type="text">
-          <mat-error *ngIf="errors?.AdminUnitTitle" >
-          {{ errors?.AdminUnitTitle }}
-         </mat-error>
-      </mat-form-field>
-    </div>
-  <div fxFlex="33%">
-      <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])" ></ui-datepicker>
-  </div>
-</div>
-  <div style="margin-top: 1em; margin-bottom: 1em;">
-  <label >Eingänge</label>
-  </div>
-  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
-         <div formArrayName="Entrances" fxFlex="100%">
-        <div *ngFor="let control of entrances.controls; index as i; last as l"
+<mat-tab-group>
+  <mat-tab label="Stammdaten">
+    <ng-template matTabContent>
+      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 5em">
+        <div fxFlex="7%">
+            <mat-form-field  style="width: 100%">
+              <mat-label>Schlüssel</mat-label>
+              <input matInput formControlName="UserKey" placeholder="Bezeichnung"  >
+                <mat-error *ngIf="errors?.AdminUnitUserKey" >
+                {{ errors?.AdminUnitUserKey }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div fxFlex="46%">
+            <mat-form-field style="width: 100%">
+              <mat-label>Bezeichnung</mat-label>
+              <input matInput formControlName="Title" type="text">
+                <mat-error *ngIf="errors?.AdminUnitTitle" >
+                {{ errors?.AdminUnitTitle }}
+               </mat-error>
+            </mat-form-field>
+          </div>
+        <div fxFlex="33%">
+            <ui-datepicker [YearOfConstruction]="editForm.get(['YearOfConstruction'])" ></ui-datepicker>
+        </div>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Eingänge">
+    <ng-template matTabContent>
+      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 5em">
+         <div formArrayName="Entrances" fx="100%">
+           <div *ngFor="let control of entrances.controls; index as i; last as l"
              [formGroupName]="i"
              class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
-            <div fxFlex="6%">
-              <mat-form-field appearance="outline" style="width: 100%">
-                <mat-label>Bezeichnung</mat-label>
-                <input matInput formControlName="Title" placeholder="{{i+1}} Eingang" >
-              </mat-form-field>
-            </div>
-          <div fxFlex="88%">
-              <ui-address
-                [AddressFormGroup] = "editForm.get(['Entrances',i,'Address' ])"
-                [CountryFormGroup] = "editForm.get(['Entrances',i, 'Address','Country'])"
-                [Iso2Control] = "editForm.get(['Entrances',i,'Address','Country','Iso2'])"
-                [CountryDefaultIso2]="CountryDefaultIso2"
-                [CityControl] = "editForm.get(['Entrances',i,'Address','City'])"
-                [StreetControl] = "editForm.get(['Entrances',i,'Address','Street'])"
-                [NumberControl] = "editForm.get(['Entrances',i,'Address','Number'])"
-                [PostalCodeControl] = "editForm.get(['Entrances', i, 'Address', 'PostalCode'])">
-                Address
-              </ui-address>
-          </div>
-        <div *ngIf="l" fxFlex="3%">
-            <button  (click)="addEntrancesControl()" style="width: 100%;" type="button" class="ui button"> + </button>
-        </div>
-          <div *ngIf="l && i!==0" fxFlex="3%">
-            <button  (click)="removeEntrancesControl(i)" style="width: 100%" type="button" class="ui button"> - </button>
-          </div>
-      </div>
-        <div *ngIf="errors?.EntranceTitle" class="ui negative message">
-          {{ errors?.EntranceTitle }}
-        </div>
-        <div *ngIf="errors?.AddressPostalCode" class="ui negative message">
-          {{ errors?.AddressPostalCode }}
-        </div>
-        <div *ngIf="errors?.AddressCity" class="ui negative message">
-          {{ errors?.AddressCity }}
-        </div>
-        <div *ngIf="errors?.AddressStreet" class="ui negative message">
-          {{ errors?.AddressStreet }}
-        </div>
-        <div *ngIf="errors?.AddressNumber" class="ui negative message">
-          {{ errors?.AddressNumber }}
-        </div>
-    </div>
-   </div>
-  <div style="margin-top: 1em; margin-bottom: 1em;" *ngIf="AdminUnit.AdministrationUnitProperties.length > 0 && AdminUnit.AdministrationUnitProperties[0].Title !==''">
-    <label >Zusatzeigenschaften</label>
-  </div>
-  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left"
-       *ngIf="AdminUnit.AdministrationUnitProperties.length > 0 && AdminUnit.AdministrationUnitProperties[0].Title !==''">
-    <div formArrayName="AdministrationUnitProperties" fx="100%">
-      <div *ngFor="let control of properties.controls; index as i; last as l"
-           [formGroupName]="i"
-           class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
-        <div fxFlex="20%">
-          <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>Bezeichnung</mat-label>
-            <input matInput formControlName="Title"  >
-          </mat-form-field>
-        </div>
-        <div fxFlex="50%">
-          <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>Beschreibung</mat-label>
-            <input matInput formControlName="Description"  >
-          </mat-form-field>
-        </div>
-          <div formGroupName="Value" fxLayout="row" fxLayoutWrap fxLayoutGap="1%" class="container"  fxLayoutAlign="left" fxFlex="100%" fxLayout.xs="column">
-            <div fxFlex="40">
-              <mat-form-field appearance="outline" style="width: 100%">
-                <mat-label>Typ</mat-label>
-                <input matInput formControlName="Tag"  >
-              </mat-form-field>
-            </div>
-            <div fxFlex="60">
-              <mat-form-field appearance="outline" style="width: 100%">
-                <mat-label>Typ</mat-label>
-                <input matInput formControlName="Raw"  >
-              </mat-form-field>
-            </div>
-          </div>
-        <div fxLayout="row" fxLayoutGap="1%" fxLayoutAlign="left" fxFlex="100%">
-          <div *ngIf="l" fxFlex="3%">
-            <button (click)="addPropertiesControl()" style="width: 100%;" type="button" class="ui button"> + </button>
-          </div>
-          <div  fxFlex="3%"  >
-            <button  (click)="removePropertiesControl(i)" style="width: 100%" type="button" class="ui button"> - </button>
+              <div fxFlex="6%">
+                <mat-form-field style="width: 100%">
+                  <mat-label>Bezeichnung</mat-label>
+                  <input matInput formControlName="Title" placeholder="{{i+1}} Eingang" >
+                </mat-form-field>
+              </div>
+              <div fxFlex="88%">
+                <ui-address
+                  [AddressFormGroup] = "editForm.get(['Entrances',i,'Address' ])"
+                  [CountryFormGroup] = "editForm.get(['Entrances',i, 'Address','Country'])"
+                  [Iso2Control] = "editForm.get(['Entrances',i,'Address','Country','Iso2'])"
+                  [CountryDefaultIso2]="CountryDefaultIso2"
+                  [CityControl] = "editForm.get(['Entrances',i,'Address','City'])"
+                  [StreetControl] = "editForm.get(['Entrances',i,'Address','Street'])"
+                  [NumberControl] = "editForm.get(['Entrances',i,'Address','Number'])"
+                  [PostalCodeControl] = "editForm.get(['Entrances', i, 'Address', 'PostalCode'])">
+                </ui-address>
+              </div>
+             <div fxLayout="row" fxLayoutWrap fxLayoutGap="2%" class="container"  fxLayoutAlign="left" fxFlex="10%" fxLayout.xs="column">
+              <div *ngIf="l" fxFlex="50%">
+                <button  (click)="addEntrancesControl()" style="width: 100%; margin-top: 0.25em;" type="button" class="ui button"> + </button>
+              </div>
+              <div *ngIf="entrances.length!==1" fxFlex="50%">
+                <button  (click)="removeEntrancesControl(i)" style="width: 100%; margin-top: 0.25em;" type="button" class="ui button"> - </button>
+              </div>
+             </div>
            </div>
+           <div *ngIf="errors?.EntranceTitle" class="ui negative message">
+             {{ errors?.EntranceTitle }}
+            </div>
+           <div *ngIf="errors?.AddressPostalCode" class="ui negative message">
+             {{ errors?.AddressPostalCode }}
+            </div>
+           <div *ngIf="errors?.AddressCity" class="ui negative message">
+             {{ errors?.AddressCity }}
+           </div>
+           <div *ngIf="errors?.AddressStreet" class="ui negative message">
+            {{ errors?.AddressStreet }}
+           </div>
+           <div *ngIf="errors?.AddressNumber" class="ui negative message">
+            {{ errors?.AddressNumber }}
+           </div>
+         </div>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Zusatzeigenschaften">
+    <ng-template matTabContent>
+      <div class="container"  style="margin-top: 5em">
+        <div formArrayName="AdministrationUnitProperties" fx="100%" *ngIf = "editForm.get(['AdministrationUnitProperties']) !== null" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" >
+          <div *ngFor="let control of properties.controls; index as i; last as l"
+               [formGroupName]="i"
+               class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+            <ui-administration-unit-property class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left"
+              [Value] = "editForm.get(['AdministrationUnitProperties',i,'Value' ])"
+              [Title] = "editForm.get(['AdministrationUnitProperties',i,'Title' ])"
+              [Tag] = "editForm.get(['AdministrationUnitProperties',i,'Value', 'Tag' ])"
+              [Raw] = "editForm.get(['AdministrationUnitProperties',i,'Value', 'Raw' ])"
+              [Description] = "editForm.get(['AdministrationUnitProperties',i,'Description' ])"
+              [ArrayLastElement] = "l"
+              (addPropertiesControl) = "addPropertiesControl()"
+              (removePropertiesControl) = "removePropertiesControl(i)">
+            </ui-administration-unit-property>
+          </div>
+          <div *ngIf="errors?.PropertyTitle" class="ui negative message">
+            {{ errors?.PropertyTitle }}
+          </div>
+          <div *ngIf="errors?.PropertyValueTag" class="ui negative message">
+            {{ errors?.PropertyValueTag }}
+          </div>
+          <div *ngIf="errors?.PropertyValueRaw" class="ui negative message">
+            {{ errors?.PropertyValueRaw }}
+          </div>
+        </div>
+          <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" fx="30">
+            <div fxFlex="50">
+              <button mat-raised-button (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle Objekte anlegen</button>
+            </div>
+            <div fxFlex="50">
+               <button mat-raised-button (click)="addPropertiesArray()"  *ngIf = "editForm.get(['AdministrationUnitProperties']) === null">Zusaztfelder für dieses Objekt anlegen</button>
+            </div>
+          </div>
+        <div style="margin-top: 2em">
+          <ui-base-settings-list *ngIf = "ShowPropertiesForAllAdministrationUnits===true">Hallo</ui-base-settings-list>
         </div>
       </div>
-    </div>
-  </div>
-  <div style="margin-top: 1em; margin-bottom: 1em;">
-    <a class="item" routerLink="/baseSettings" routerLinkActive="active">Grundeinstellungen</a>
-  </div>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
 </form>
 
 

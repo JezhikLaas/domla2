@@ -30,7 +30,7 @@ export class AdminUnitFactory {
           Title: '',
           Description: '',
           Value: {
-            Tag: '',
+            Tag: '3',
             Raw: ''
           }
         }

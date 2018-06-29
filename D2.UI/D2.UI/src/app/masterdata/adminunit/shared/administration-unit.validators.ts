@@ -12,15 +12,15 @@ export class AdministrationUnitValidators  {
     };
   }
 
-  static  EntranceNotEmpty(Address: Address, Title: string ): boolean {
+  static  EntranceNotEmpty(address: Address, title: string ): boolean {
     const check = (
-      Address.Street
-      && Address.Number
-      && Address.City
-      && Address.PostalCode
-      && Address.Country
-      && Address.Street
-      && Title) ? true : false;
+      address.Street
+      && address.Number
+      && address.City
+      && address.PostalCode
+      && address.Country
+      && address.Street
+      && title) ? true : false;
     return check ? true :  false;
   }
 

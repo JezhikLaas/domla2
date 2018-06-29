@@ -10,6 +10,6 @@ export class BaseSettingsResolver implements Resolve<Array<IBaseSettings>> {
   constructor( private baseSettingsService: BaseSettingsService) { }
 
   resolve(): Observable<Array<IBaseSettings>> {
-    return this.baseSettingsService.listBaseSetings();
+    return this.baseSettingsService.listBaseSettings();
   }
 }

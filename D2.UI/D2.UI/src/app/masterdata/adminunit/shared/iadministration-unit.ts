@@ -10,8 +10,7 @@ export interface IAdministrationUnit {
   Entrances?: Entrance[];
   YearOfConstruction?: YearMonth;
   Edit: Date;
-  AdministrationUnitProperty?: {
-    Id: string;
+  AdministrationUnitProperties?: {
     Title: string;
     Description: string;
     Value?: AdministrationUnitPropertyValue;

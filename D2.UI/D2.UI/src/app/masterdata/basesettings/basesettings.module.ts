@@ -19,6 +19,12 @@ import { SharedModule } from '../../shared/shared.module';
 
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
+  ],
+
+  exports: [
+    BaseSettingsListComponent,
+    BaseSettingEditComponent,
+    BaseSettingsRoutingModule
   ]
 })
 export class BaseSettingsModule { }

@@ -42,7 +42,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatTreeModule,
+  MatTreeModule
 } from '@angular/material';
 
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
@@ -89,7 +89,7 @@ import { OAuthModule} from 'angular-oauth2-oidc';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule,
+    MatTreeModule
   ]
 })
 export class UiMaterialModule {}
@@ -129,7 +129,8 @@ export class UiMaterialModule {}
     FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
 
   schemas: [

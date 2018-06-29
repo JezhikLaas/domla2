@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
 import { MenuItem } from '../../../shared/menu-item';
-import {AdministrationUnitService} from '../../adminunit/shared/administration-unit.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MenuDisplayService} from '../../../shared/menu-display.service';
-import {IBaseSettings} from '../../shared/Ibasesettings';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MenuDisplayService } from '../../../shared/menu-display.service';
+import { IBaseSettings } from '../../shared/Ibasesettings';
 import {BaseSettingsService} from '../../shared/basesettings.service';
 
 @Component({
-  selector: 'ui-basesettingslist',
+  selector: 'ui-base-settings-list',
   templateUrl: './base-settings-list.component.html',
   styles: [`
     .mat-column-select {
@@ -30,6 +29,7 @@ export class BaseSettingsListComponent implements OnInit {
   initialSelection = [];
   allowMultiSelect = false;
   selection = new SelectionModel<IBaseSettings>(this.allowMultiSelect, this.initialSelection);
+  receivedBaseSettings: IBaseSettings [];
 
   constructor(
     private menuDisplay: MenuDisplayService,

@@ -26,8 +26,7 @@ export class AddressWithPostalcodeComponent implements OnInit {
   City = '';
 
   constructor(
-    private as: AddressService,
-    private fb: FormBuilder) { }
+    private as: AddressService) { }
 
   ngOnInit() {
     this.as.listPostalCodeInfo()
