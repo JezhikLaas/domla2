@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace D2.Infrastructure
 {
+    [JsonObject(MemberSerialization.Fields)]
     public struct TypedValue : IEquatable<TypedValue>,
         IComparable<TypedValue>,
         IComparable
@@ -17,6 +19,7 @@ namespace D2.Infrastructure
         public decimal Value => Value_;
         public decimal DecimalPlaces => DecimalPlace_;
 
+        [JsonConstructor]
         public TypedValue(decimal value, string unit, int decimalPlace)
         {
             Value_ = value;
