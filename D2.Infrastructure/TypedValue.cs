@@ -11,33 +11,33 @@ namespace D2.Infrastructure
         IComparable<TypedValue>,
         IComparable
     {
-        private decimal Value_;
-        private string Unit_;
-        private int DecimalPlace_;
+        private readonly decimal _value;
+        private readonly string _unit;
+        private readonly int _decimalPlaces;
 
-        public string Unit => Unit_;
-        public decimal Value => Value_;
-        public decimal DecimalPlaces => DecimalPlace_;
+        public string Unit => _unit;
+        public decimal Value => _value;
+        public decimal DecimalPlaces => _decimalPlaces;
 
         [JsonConstructor]
-        public TypedValue(decimal value, string unit, int decimalPlace)
+        public TypedValue(decimal value, string unit, int decimalPlaces)
         {
-            Value_ = value;
-            Unit_ = unit;
-            DecimalPlace_ = decimalPlace;
+            _value = value;
+            _unit = unit;
+            _decimalPlaces = decimalPlaces;
         }
 
         public TypedValue(TypedValue value)
         {
-            Value_ = value.Value_;
-            Unit_ = value.Unit_;
-            DecimalPlace_ = value.DecimalPlace_;
+            _value = value._value;
+            _unit = value._unit;
+            _decimalPlaces = value._decimalPlaces;
         }
 
         public int CompareTo(TypedValue other)
         {
-            if (other.Unit_ != Unit_) throw new Exception(string.Format("cannot compare '{0}' to '{1}'", other.Unit_, Unit_));
-            return Value_.CompareTo(other.Value_);
+            if (other._unit != _unit) throw new Exception(string.Format("cannot compare '{0}' to '{1}'", other._unit, _unit));
+            return _value.CompareTo(other._value);
         }
 
         public int CompareTo(object obj)
@@ -48,12 +48,12 @@ namespace D2.Infrastructure
 
         public bool Equals(TypedValue other)
         {
-            return Unit_ == other.Unit_ && Value_ == other.Value_;
+            return _unit == other._unit && _value == other._value;
         }
 
         public static TypedValue operator -(TypedValue value)
         {
-            return new TypedValue(-value.Value_, value.Unit_, value.DecimalPlace_);
+            return new TypedValue(-value._value, value._unit, value._decimalPlaces);
         }
 
         public static TypedValue operator +(TypedValue value)
@@ -68,32 +68,32 @@ namespace D2.Infrastructure
 
         public static TypedValue operator +(TypedValue left, TypedValue right)
         {
-            if (left.Unit_ != right.Unit)
+            if (left._unit != right.Unit)
             {
                 throw DifferentUnits();
             }
 
-            return new TypedValue(left.Value_ + right.Value_, left.Unit, left.DecimalPlace_);
+            return new TypedValue(left._value + right._value, left.Unit, left._decimalPlaces);
         }
 
         public static TypedValue operator -(TypedValue left, TypedValue right)
         {
-            if (left.Unit_ != right.Unit)
+            if (left._unit != right.Unit)
             {
                 throw DifferentUnits();
             }
 
-            return new TypedValue(left.Value_ - right.Value_, left.Unit, left.DecimalPlace_);
+            return new TypedValue(left._value - right._value, left.Unit, left._decimalPlaces);
         }
 
         public static TypedValue operator *(TypedValue left, Decimal right)
         {
-            return new TypedValue(left.Value_ * right, left.Unit, left.DecimalPlace_);
+            return new TypedValue(left._value * right, left.Unit, left._decimalPlaces);
         }
 
         public static TypedValue operator /(TypedValue left, Decimal right)
         {
-            return new TypedValue(left.Value_ / right, left.Unit, left.DecimalPlace_);
+            return new TypedValue(left._value / right, left.Unit, left._decimalPlaces);
         }
 
         public static bool operator ==(TypedValue left, TypedValue right)
@@ -128,21 +128,21 @@ namespace D2.Infrastructure
 
         public override int GetHashCode()
         {
-            return Value_.GetHashCode() | (Unit_ != null ? Unit_.GetHashCode() : 0);
+            return _value.GetHashCode() | (_unit != null ? _unit.GetHashCode() : 0);
         }
 
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
             if (obj.GetType() != typeof(TypedValue)) return false;
-            if (((TypedValue)obj).Unit_ != Unit_) return false;
-            return ((TypedValue)obj).Value_ == Value_;
+            if (((TypedValue)obj)._unit != _unit) return false;
+            return ((TypedValue)obj)._value == _value;
         }
 
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", Value_, Unit_);
+            return string.Format("{0} {1}", _value, _unit);
         }
     }
 }

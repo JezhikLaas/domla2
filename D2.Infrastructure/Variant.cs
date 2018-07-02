@@ -44,9 +44,9 @@ namespace D2.Infrastructure
                             break;
                         case VariantTag.TypedValue:
                             _storage = new TypedValue(
-                                jsonValue["Value_"].ToObject<decimal>(),
-                                jsonValue["Unit_"].ToObject<string>(),
-                                jsonValue["DecimalPlace_"].ToObject<int>());
+                                jsonValue["_value"].ToObject<decimal>(),
+                                jsonValue["_unit"].ToObject<string>(),
+                                jsonValue["_decimalPlaces"].ToObject<int>());
                             break;
                     }
                 }
