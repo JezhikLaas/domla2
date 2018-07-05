@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace D2.Infrastructure.Test
@@ -124,5 +125,16 @@ namespace D2.Infrastructure.Test
             Assert.Equal(-3, result.Value);
         }
 
+        [Fact(DisplayName = "TypedValue can be serialized and deserialized")]
+        public void SerializeAndDeserialize()
+        {
+            var value = new TypedValue(3M, "Meter", 2);
+            var serialized = JsonConvert.SerializeObject(value);
+            var restored = JsonConvert.DeserializeObject<TypedValue>(serialized);
+            
+            Assert.Equal(3M, restored.Value);
+            Assert.Equal("Meter", restored.Unit);
+            Assert.Equal(2, restored.DecimalPlaces);
+        }
     }
 }

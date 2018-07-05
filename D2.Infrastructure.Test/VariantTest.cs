@@ -90,7 +90,5 @@ namespace D2.Infrastructure.Test
             var target = new Variant(DateTime.Now);
             Assert.Equal(DateTime.Now.ToString(), target.String);
         }
-
-
     }
 }

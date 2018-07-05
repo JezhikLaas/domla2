@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 
 namespace D2.Infrastructure
 {
@@ -20,7 +21,36 @@ namespace D2.Infrastructure
         public object Raw
         {
             get => _storage;
-            set => _storage = value;
+            set
+            {
+                if (value is DateTime dateTime) {
+                    _storage = dateTime;
+                    return;
+                }
+
+                if (value is string text) {
+                    _storage = text;
+                    return;
+                }
+                
+                var jsonValue = value as JObject;
+                if (jsonValue != null) {
+                    switch (Tag) {
+                        case VariantTag.DateTime:
+                            _storage = jsonValue.ToObject<DateTime>();
+                            break;
+                        case VariantTag.String:
+                            _storage = jsonValue.ToObject<string>();
+                            break;
+                        case VariantTag.TypedValue:
+                            _storage = new TypedValue(
+                                jsonValue["_value"].ToObject<decimal>(),
+                                jsonValue["_unit"].ToObject<string>(),
+                                jsonValue["_decimalPlaces"].ToObject<int>());
+                            break;
+                    }
+                }
+            }
         }
         
         public Variant()
@@ -50,9 +80,17 @@ namespace D2.Infrastructure
             _storage = value._storage;
         }
 
+        [JsonConstructor]
+        public Variant(string tag, object value)
+        {
+            Tag = Enum.Parse<VariantTag>(tag);
+            _storage = value;
+        }
+
         public Variant(string tag, string value)
         {
             Tag = Enum.Parse<VariantTag>(tag);
+            if (value == null) return;
             switch (Tag) {
                 case VariantTag.DateTime:
                     _storage = new DateTime(long.Parse(value));
