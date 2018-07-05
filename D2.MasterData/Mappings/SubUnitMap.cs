@@ -3,9 +3,9 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class SubUnitCreateMap : ClassMap<SubUnit>
+    public class SubUnitMap : ClassMap<SubUnit>
     {
-        public SubUnitCreateMap()
+        public SubUnitMap()
         {
             Table("subunits");
             Id(x => x.Id);
@@ -26,19 +26,16 @@ namespace D2.MasterData.Mappings
             Map(x => x.Usage)
                 .Access.BackingField()
                 .Length(256)
-                .Nullable();
-            References(x => x.Entrance)
-                .Access.BackingField();
-        }
-    }
-
-    public class SubUnitMap : SubUnitCreateMap
-    {
-        public SubUnitMap()
-        {
+                .Not.Nullable();
             Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
+                .Access.BackingField()
+                .Generated.Never()
+                .Nullable();
+            OptimisticLock.Version();
+            References(x => x.Entrance)
+                .Access.BackingField()
+                .Cascade.SaveUpdate()
+                .Not.Nullable();
         }
     }
 }

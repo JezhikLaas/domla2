@@ -6,27 +6,33 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using D2.Service.Controller;
 
 namespace D2.Service.CallDispatcher
 {
     public class Executor : ExecutorDisp_
     {
-        ILogger<Executor> _logger;
-        Dispatcher _dispatcher;
+        private readonly ILogger<Executor> _logger;
+        private readonly Dispatcher _dispatcher;
+        private readonly IServices _resolver;
 
-        public Executor(ILogger<Executor> logger, Dispatcher dispatcher)
+        public Executor(ILogger<Executor> logger, Dispatcher dispatcher, IServices resolver)
         {
             _logger = logger;
             _dispatcher = dispatcher;
+            _resolver = resolver;
         }
 
         public override ExecutionResponse execute(Contracts.Common.Request request, Ice.Current current = null)
         {
             var clock = new Stopwatch();
             ExecutionResponse result = null;
+            var context = current?.ctx ?? new Dictionary<string, string>();
 
             clock.Start();
             using (Scope.BeginScope()) {
+                var callContext = _resolver.Resolve<ICallContext>();
+                callContext.SetupContext(context);
                 result = InternalExecute(request, current);
             }
             clock.Stop();

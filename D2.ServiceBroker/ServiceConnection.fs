@@ -50,13 +50,13 @@ module ServiceConnection =
             member this.Dispose () =
                 this.Dispose true
         
-        member this.ValidateRequest (request : Request) =
-            this.Validator.validateAsync request
+        member this.ValidateRequest (request : Request) (context : Dictionary<string, string>) =
+            this.Validator.validateAsync (request, !> context)
                            |> Async.AwaitTask
                            |> Async.RunSynchronously
         
-        member this.ExecuteRequest (request : Request) =
-            this.Executor.executeAsync request
+        member this.ExecuteRequest (request : Request) (context : Dictionary<string, string>) =
+            this.Executor.executeAsync (request, !> context)
                           |> Async.AwaitTask
                           |> Async.RunSynchronously
             
@@ -108,19 +108,19 @@ module ServiceConnection =
             
             ExececutionResult (validation, ExecutionResponse(grouped |> Seq.head |> fst, json, [||]))
         
-    let execute (groups : string seq) (request : Request) =
+    let execute (groups : string seq) (request : Request) (context: Dictionary<string, string>) =
         lock connectors (fun () ->
             let matches = connectors |> Seq.where (fun connector -> groups |> Seq.contains connector.Group)
             let executions = (
                     seq {
                         for item in matches do
-                            yield item.ExecuteRequest request
+                            yield item.ExecuteRequest request context
                     } |> Seq.toList
                 )
             consolidateExecutions (new ValidationResponse(State.NoError, [||])) executions
         )
     
-    let validateAndExecute (groups : string seq) (request : Request) =
+    let validateAndExecute (groups : string seq) (request : Request) (context: Dictionary<string, string>) =
         lock connectors (fun () ->
             let matches = connectors
                           |> Seq.where (fun connector -> groups |> Seq.contains connector.Group)
@@ -129,7 +129,7 @@ module ServiceConnection =
             let validations = (
                     seq {
                         for item in matches do
-                            yield item.ValidateRequest request
+                            yield item.ValidateRequest request context
                     } |> Seq.toList
                 )
             let validation = consolidateValidations validations
@@ -138,7 +138,7 @@ module ServiceConnection =
                 let executions = (
                         seq {
                             for item in matches do
-                                yield item.ExecuteRequest request
+                                yield item.ExecuteRequest request context
                         } |> Seq.toList
                     )
                 consolidateExecutions validation executions

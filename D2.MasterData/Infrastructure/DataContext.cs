@@ -1,5 +1,6 @@
 ﻿using System;
 using D2.MasterData.Mappings;
+using D2.Service.Controller;
 using D2.Service.IoC;
 using NHibernate;
 
@@ -8,9 +9,10 @@ namespace D2.MasterData.Infrastructure
     [RequestScope]
     public class DataContext : IDataContext
     {
-        public DataContext()
+        public DataContext(ICallContext context)
         {
-            Session = ConnectionFactory.Open();
+            var key = context["dbkey"];
+            Session = ConnectionFactory.Open(key);
         }
         
         public ISession Session { get; }

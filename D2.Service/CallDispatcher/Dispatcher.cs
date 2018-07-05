@@ -10,8 +10,9 @@ namespace D2.Service.CallDispatcher
 {
     public class Dispatcher
     {
-        Dictionary<string, Func<BaseController, string, IEnumerable<QueryParameter>, object>> _callCache;
-        DependencyResolver _dependencyResolver;
+        private readonly Dictionary<string, Func<BaseController, string, IEnumerable<QueryParameter>, object>>
+            _callCache;
+        private readonly DependencyResolver _dependencyResolver;
 
         public Dispatcher(DependencyResolver dependencyResolver)
         {

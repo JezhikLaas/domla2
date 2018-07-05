@@ -140,7 +140,7 @@ namespace D2.Service.IoC
 
         public IServices AddControllers()
         {
-            RegisterApplicationComponents(Assembly.GetCallingAssembly());
+            RegisterApplicationComponents(Assembly.GetCallingAssembly(), Assembly.GetExecutingAssembly());
             return this;
         }
     }

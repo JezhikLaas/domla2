@@ -8,7 +8,9 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Http
 open System
+open System.Collections.Generic
 open System.Linq
+open System.Security.Claims
 
 [<Route("[controller]")>]
 type DispatchController
@@ -23,6 +25,13 @@ type DispatchController
         let descriptions = errors |> Array.map(fun error -> error.property + ": " + error.description)
         String.Join(" ; ", descriptions)
     
+    let claimsToContext (claims : Claim seq) =
+        let result = new Dictionary<string, string>()
+        for claim in claims do
+            if not (result.ContainsKey claim.Type) then
+                result.Add (claim.Type, claim.Value)
+        result
+    
     [<Authorize>]
     [<HttpPost>]
     member this.Post(groups : string, topic : string, call : string) =
@@ -35,6 +44,7 @@ type DispatchController
 
     member this.Modify(verb : string, groups : string, topic : string, call : string) =
         logger.LogDebug (sprintf "starting %s request" verb)
+        let context = claimsToContext this.HttpContext.User.Claims
         let body = if this.Request.Body <> null then this.Request.Body.AsUtf8String () else null
         let parameterKeys = this.HttpContext.Request.Query.Keys.Where(argumentNames.Contains >> not)
 
@@ -52,7 +62,7 @@ type DispatchController
                       )
 
         try
-            let result = ServiceConnection.validateAndExecute (groups.Split(',')) request
+            let result = ServiceConnection.validateAndExecute (groups.Split(',')) request context
             match result.Execution with
             | null ->   match result.Validation.result with
                         | State.ExternalFailure -> result.Validation.errors |> concatErrorMessages |> logger.LogWarning
@@ -78,6 +88,7 @@ type DispatchController
     [<HttpGet>]
     member this.Get(groups : string, topic : string, call : string) =
         logger.LogDebug "starting log request"
+        let context = claimsToContext this.HttpContext.User.Claims
         let parameterKeys = this.HttpContext.Request.Query.Keys.Where(argumentNames.Contains >> not)
 
         let parameters = seq {
@@ -93,7 +104,7 @@ type DispatchController
                           parameters |> Seq.toArray
                       )
         try
-            let result = ServiceConnection.execute (groups.Split(',')) request
+            let result = ServiceConnection.execute (groups.Split(',')) request context
             match result.Execution with
             | null ->   match result.Validation.result with
                         | State.ExternalFailure -> result.Validation.errors |> concatErrorMessages |> logger.LogWarning

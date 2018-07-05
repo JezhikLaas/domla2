@@ -4,9 +4,9 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class AdministrationUnitPropertyCreateMap: ClassMap<AdministrationUnitProperty>
+    public class AdministrationUnitPropertyMap: ClassMap<AdministrationUnitProperty>
     {
-        public AdministrationUnitPropertyCreateMap()
+        public AdministrationUnitPropertyMap()
         {
             Table("administrationunitproperty");
             Id(x => x.Id);
@@ -26,19 +26,15 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .CustomType<VariantType>()
                 .Not.Nullable();
+            Version(x => x.Version)
+                .Access.BackingField()
+                .Generated.Never()
+                .Not.Nullable();
+            OptimisticLock.Version();
             References(x => x.AdministrationUnit)
                 .Access.BackingField()
+                .Cascade.SaveUpdate()
                 .Not.Nullable();
-        }
-    }
-
-    public class AdministrationUnitPropertyMap: AdministrationUnitPropertyCreateMap
-    {
-        public AdministrationUnitPropertyMap()
-        {
-            Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
         }
     }
 }

@@ -4,9 +4,9 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class AdministrationUnitsFeatureCreateMap : ClassMap<AdministrationUnitsFeature>
+    public class AdministrationUnitsFeatureMap : ClassMap<AdministrationUnitsFeature>
     {
-        public AdministrationUnitsFeatureCreateMap()
+        public AdministrationUnitsFeatureMap()
         {
             Table("administrationunitsfeatures");
             Id(x => x.Id);
@@ -33,16 +33,11 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .Length(256)
                 .Nullable();
-        }
-    }
-
-    public class AdministrationUnitsFeatureMap : AdministrationUnitsFeatureCreateMap
-    {
-        public AdministrationUnitsFeatureMap()
-        {
             Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
+                .Access.BackingField()
+                .Generated.Never()
+                .Not.Nullable();
+            OptimisticLock.Version();
         }
     }
 }

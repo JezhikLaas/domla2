@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace D2.Infrastructure
@@ -138,7 +135,6 @@ namespace D2.Infrastructure
             if (((TypedValue)obj)._unit != _unit) return false;
             return ((TypedValue)obj)._value == _value;
         }
-
 
         public override string ToString()
         {

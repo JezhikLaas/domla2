@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace D2.MasterData.Models
 {
-    public class BaseModel
+    public abstract class BaseModel
     {
         public virtual Guid Id
         {
