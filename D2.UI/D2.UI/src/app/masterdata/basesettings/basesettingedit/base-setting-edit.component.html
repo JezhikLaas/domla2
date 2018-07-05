@@ -1,3 +1,56 @@
-<p>
-  basesettingedit works!
-</p>
+<form [formGroup]="EditForm" xmlns="http://www.w3.org/1999/html">
+  <div style="margin-top: 5em" >
+      <div formGroupName="BaseSettings"
+           fxLayout="row" fxLayout.xs="column"
+           fxLayoutWrap
+           fxLayoutGap="2%"
+           fxLayoutAlign="left" >
+        <div fxFlex="10%">
+          <mat-form-field style="width: 100%">
+            <mat-label>Bezeichnung</mat-label>
+            <input matInput formControlName="Title">
+          </mat-form-field>
+        </div>
+        <div fxFlex="27%">
+          <mat-form-field style="width: 100%">
+            <mat-label>Beschreibung</mat-label>
+            <input matInput formControlName="Description"  >
+          </mat-form-field>
+        </div>
+        <div fxFlex="10%">
+          <mat-form-field style="width: 100%">
+            <mat-select  formControlName="Tag">
+              <mat-option *ngFor="let Typ of DataType; let i = index" [value]=i+1>{{Typ}} </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex="27%">
+          <mat-form-field style="width: 100%">
+            <mat-label>Zahl der Nachkommastellen</mat-label>
+            <input matInput formControlName="TypedValueDecimalPlace" type="number"  >
+          </mat-form-field>
+        </div>
+        <div fxFlex="20%">
+          <mat-form-field style="width: 100%">
+            <mat-label>Maßeinheit</mat-label>
+            <input matInput formControlName="TypedValueUnit" >
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutWrap fxLayoutGap="1%" class="container"  fxLayoutAlign="left"  fxLayout.xs="column">
+          <div fxFlex="50%">
+            <button (click)="onAddBaseControl()"
+                    style="margin-top: 0.25em;" type="button" class="ui button"
+                    matTooltip="Beim Anklicken werden alle bestehnenden Objekte mit diesem Zusatzfeld versehen"
+                    [matTooltipPosition]="'above'"
+                    [disabled]="EditForm.invalid"> + </button>
+          </div>
+        </div>
+    </div>
+    <div *ngIf="Errors?.BaseSettingsTitle" class="ui negative message" fxFlex="50%" style="margin-bottom: 1em">
+      {{ Errors?.BaseSettingsTitle }}
+    </div>
+    <div *ngIf="Errors?.BaseSettingsTag" class="ui negative message" fxFlex="50%" style="margin-bottom: 1em">
+      {{ Errors?.BaseSettingsTag }}
+    </div>
+  </div>
+</form>

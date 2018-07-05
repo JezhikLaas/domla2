@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material';
 import { MenuItem } from '../../../shared/menu-item';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
-import { IBaseSettings } from '../../shared/Ibasesettings';
+import { IBaseSetting } from '../../shared/ibasesetting';
 import {BaseSettingsService} from '../../shared/basesettings.service';
 
 @Component({
@@ -25,11 +25,11 @@ export class BaseSettingsListComponent implements OnInit {
     new MenuItem('New', () => this.router.navigate([`baseSettings/0`]), () => true),
   ];
   displayedColumns = ['Title', 'Description', 'Tag', 'TypedValueDecimalPlace', 'TypedValueUnit'];
-  dataSource: MatTableDataSource<IBaseSettings>;
+  dataSource: MatTableDataSource<IBaseSetting>;
   initialSelection = [];
   allowMultiSelect = false;
-  selection = new SelectionModel<IBaseSettings>(this.allowMultiSelect, this.initialSelection);
-  receivedBaseSettings: IBaseSettings [];
+  selection = new SelectionModel<IBaseSetting>(this.allowMultiSelect, this.initialSelection);
+  receivedBaseSettings: IBaseSetting [];
 
   constructor(
     private menuDisplay: MenuDisplayService,
@@ -38,8 +38,8 @@ export class BaseSettingsListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.menuDisplay.menuNeeded.emit(this.MenuButtons);
-    this.dataSource = new MatTableDataSource<IBaseSettings>(this.route.snapshot.data['BaseSettings']);
+    // this.menuDisplay.menuNeeded.emit(this.MenuButtons);
+    this.dataSource = new MatTableDataSource<IBaseSetting>(this.route.snapshot.data['BaseSettings']);
   }
   selectRow (BaseSettings) {
     this.router.navigate([`baseSettings/${BaseSettings.Id}`]);

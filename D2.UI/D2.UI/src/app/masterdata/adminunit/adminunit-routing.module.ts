@@ -19,7 +19,8 @@ const routes: Routes = [
     path: ':id',
     component: AdministrationUnitEditComponent,
     resolve: {
-    AdministrationUnit: AdministrationUnitResolver
+      AdministrationUnit: AdministrationUnitResolver,
+      BaseSettings: BaseSettingsResolver
     }
   }
 ];
