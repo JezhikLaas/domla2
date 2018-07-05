@@ -3,9 +3,9 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class EntranceCreateMap : ClassMap<Entrance>
+    public class EntranceMap : ClassMap<Entrance>
     {
-        public EntranceCreateMap()
+        public EntranceMap()
         {
             Table("entrances");
             Id(x => x.Id);
@@ -17,8 +17,14 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .Length(256)
                 .Nullable();
+            Version(x => x.Version)
+                .Access.BackingField()
+                .Generated.Never()
+                .Not.Nullable();
+            OptimisticLock.Version();
             References(x => x.AdministrationUnit)
                 .Access.BackingField()
+                .Cascade.SaveUpdate()
                 .Not.Nullable();
             // ReSharper disable once VirtualMemberCallInConstructor
             // member is not overwritten in descendents
@@ -27,16 +33,6 @@ namespace D2.MasterData.Mappings
                 .Cascade.AllDeleteOrphan()
                 .Cascade.Merge()
                 .Inverse();
-        }
-    }
-
-    public class EntranceMap : EntranceCreateMap
-    {
-        public EntranceMap()
-        {
-            Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
         }
     }
 }

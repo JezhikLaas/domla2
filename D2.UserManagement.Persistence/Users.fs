@@ -142,6 +142,12 @@ module Users =
             
             command.CommandText <- "CREATE DATABASE " + dbkey + " OWNER " + dbkey
             command.ExecuteNonQuery () |> ignore
+        
+            use specificConnection = AdminConnection.connectSpecific dbkey dbkey dbkey
+            use specificCommand = connection.CreateCommand()
+
+            specificCommand.CommandText <- "CREATE SCHEMA md"
+            specificCommand.ExecuteNonQuery () |> ignore
         }
     
     let Storage = {

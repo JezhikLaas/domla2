@@ -4,9 +4,9 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class AdministrationUnitCreateMap : ClassMap<AdministrationUnit>
+    public class AdministrationUnitMap : ClassMap<AdministrationUnit>
     {
-        public AdministrationUnitCreateMap()
+        public AdministrationUnitMap()
         {
             Table("administrationunits");
             Id(x => x.Id);
@@ -27,6 +27,11 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .CustomType<YearMonthType>()
                 .Nullable();
+            Version(x => x.Version)
+                .Access.BackingField()
+                .Generated.Never()
+                .Not.Nullable();
+            OptimisticLock.Version();
             HasMany(x => x.Entrances)
                 .Cascade.AllDeleteOrphan()
                 .Cascade.Merge()
@@ -35,16 +40,6 @@ namespace D2.MasterData.Mappings
                 .Cascade.AllDeleteOrphan()
                 .Cascade.Merge()
                 .Inverse();
-        }
-    }
-
-    public class AdministrationUnitMap : AdministrationUnitCreateMap
-    {
-        public AdministrationUnitMap()
-        {
-            Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
         }
     }
 }

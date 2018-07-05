@@ -7,9 +7,11 @@ using System.Linq;
 using D2.MasterData.Mappings;
 using Xunit;
 using D2.MasterData.Test.Helper;
+using D2.Service.Controller;
 using FluentNHibernate.Cfg;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
+using NSubstitute;
 
 namespace D2.MasterData.Test
 {
@@ -58,7 +60,10 @@ namespace D2.MasterData.Test
 
         IDataContext GetContext()
         {
-            return new DataContext();
+            var callContext = Substitute.For<ICallContext>();
+            callContext["dbkey"].Returns((string)null);
+            
+            return new DataContext(callContext);
         }
 
         (Guid, int) InsertAdministrationUnitFeature()

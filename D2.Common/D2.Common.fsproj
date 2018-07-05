@@ -6,6 +6,7 @@
   <ItemGroup>
     <Compile Include="Cache.fs" />
     <Compile Include="Date.fs" />
+    <Compile Include="FSharpFuncUtil.fs" />
     <Compile Include="Html.fs" />
     <Compile Include="Parameters.fs" />
     <Compile Include="Json.fs" />

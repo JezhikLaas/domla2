@@ -18,12 +18,30 @@ module AdminConnection =
             builder.Port <- configurationFromFile.Port
             
             builder.ConnectionString
+    
+    let private specificConnectionString (db : string) (user : string) (pwd : string) =
+        fun () -> 
+            let builder = new NpgsqlConnectionStringBuilder()
+            builder.ApplicationName <- configurationFromFile.Identifier
+            builder.Database <- db
+            builder.Host <- configurationFromFile.Host
+            builder.Password <- pwd
+            builder.Username <- user
+            builder.Port <- configurationFromFile.Port
+            
+            builder.ConnectionString
 
     let fetchAdminRole () =
          configurationFromFile.User
 
     let connection () =
         let result = new NpgsqlConnection (connectionString ())
+        result.Open ()
+        
+        result
+
+    let connectSpecific (db : string) (user : string) (pwd : string) =
+        let result = new NpgsqlConnection ((specificConnectionString db user pwd) ())
         result.Open ()
         
         result

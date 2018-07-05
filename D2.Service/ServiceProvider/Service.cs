@@ -35,10 +35,10 @@ namespace D2.Service.ServiceProvider
             try {
                 var adapter = _communicator.createObjectAdapter("Dispatcher");
                 adapter.add(
-                    new Validator(_dependencyResolver.Resolve<ILogger<Validator>>(), _dispatcher),
+                    new Validator(_dependencyResolver.Resolve<ILogger<Validator>>(), _dispatcher, _dependencyResolver),
                     Util.stringToIdentity("Validator"));
                 adapter.add(
-                    new Executor(_dependencyResolver.Resolve<ILogger<Executor>>(), _dispatcher),
+                    new Executor(_dependencyResolver.Resolve<ILogger<Executor>>(), _dispatcher, _dependencyResolver),
                     Util.stringToIdentity("Executor"));
 
                 adapter.activate();

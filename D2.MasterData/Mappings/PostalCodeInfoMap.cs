@@ -3,9 +3,9 @@ using FluentNHibernate.Mapping;
 
 namespace D2.MasterData.Mappings
 {
-    public class PostalCodeInfoCreateMap : ClassMap<PostalCodeInfo>
+    public class PostalCodeInfoMap : ClassMap<PostalCodeInfo>
     {
-        public PostalCodeInfoCreateMap()
+        public PostalCodeInfoMap()
         {
             Table("postalcodeinfo");
             Id(x => x.Id);
@@ -26,15 +26,11 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .Length(256)
                 .Not.Nullable();
-        }
-   }
-    public class PostalCodeInfoMap : PostalCodeInfoCreateMap
-    {
-        public PostalCodeInfoMap()
-        {
             Version(x => x.Version)
-                .Column("xmin")
-                .Generated.Always();
+                .Access.BackingField()
+                .Generated.Never()
+                .Not.Nullable();
+            OptimisticLock.Version();
         }
     }
 }
