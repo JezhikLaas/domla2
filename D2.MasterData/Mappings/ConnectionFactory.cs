@@ -84,8 +84,8 @@ namespace D2.MasterData.Mappings
             builder.ApplicationName = options.Identifier;
             builder.Database = key;
             builder.Host = options.Host;
-            builder.Password = options.Password;
-            builder.Username = options.User;
+            builder.Password = key;
+            builder.Username = key;
             builder.Port = options.Port;
     
             var connectionProperties = new Dictionary<string, string>
