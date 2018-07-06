@@ -17,9 +17,9 @@ namespace D2.MasterData.Mappings
         private ISessionFactory _sessionFactory;
         private readonly Cache<ISessionFactory, string> _sessionFactories;
         private readonly object _syncRoot;
-        private readonly ILogger _logger;
+        private readonly ILogger<ConnectionFactory> _logger;
         
-        public ConnectionFactory(ILogger logger)
+        public ConnectionFactory(ILogger<ConnectionFactory> logger)
         {
             _syncRoot = new object();
             _logger = logger;
