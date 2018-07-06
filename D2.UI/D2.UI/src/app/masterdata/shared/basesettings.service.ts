@@ -8,7 +8,7 @@ import {HttpClient} from '@angular/common/http';
 import {IpostalCodeInfo} from './ipostalcodeinfo';
 import {CountryInfo} from '../../shared/country-info';
 import {catchError, switchMap} from 'rxjs/internal/operators';
-import {IBaseSettings} from './Ibasesettings';
+import {IBaseSetting} from './ibasesetting';
 import {IAdministrationUnit} from '../adminunit/shared/iadministration-unit';
 
 @Injectable({
@@ -22,35 +22,35 @@ export class BaseSettingsService {
   constructor( private http: HttpClient,
                private accountService: AccountService ) { }
 
-  listBaseSettings(): Observable<Array<IBaseSettings>> {
+  listBaseSettings(): Observable<Array<IBaseSetting>> {
     if (this.brokerUrl) {
       return this.http
-        .get<IBaseSettings []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+        .get<IBaseSetting []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
     } else {
       return this.accountService.fetchServices()
         .pipe(
           switchMap(data => {
             this.brokerUrl = data.Broker;
             return this.http
-              .get<IBaseSettings []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+              .get<IBaseSetting []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
           }),
           catchError(error => observableThrowError(error))
         );
     }
   }
 
-  getSingleBaseSetting (id: string): Observable <IBaseSettings> {
+  getSingleBaseSetting (id: string): Observable <IBaseSetting> {
     if (id !== '0') {
       if (this.brokerUrl) {
         return this.http
-          .get<IBaseSettings>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
+          .get<IBaseSetting>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
       } else {
         return this.accountService.fetchServices()
           .pipe(
             switchMap(data => {
               this.brokerUrl = data.Broker;
               return this.http
-                .get<IBaseSettings>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
+                .get<IBaseSetting>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
             }),
             catchError(error => observableThrowError(error))
           );
@@ -58,7 +58,7 @@ export class BaseSettingsService {
     }
   }
 
-  createBaseSettings(BaseSettings: IBaseSettings): Observable<any> {
+  createBaseSettings(BaseSettings: IBaseSetting): Observable<any> {
     if (this.brokerUrl) {
       return this.http
         .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, BaseSettings);
@@ -75,7 +75,7 @@ export class BaseSettingsService {
     }
   }
 
-  editBaseSettings (BaseSettings: IBaseSettings): Observable<any> {
+  editBaseSettings (BaseSettings: IBaseSetting): Observable<any> {
     if (this.brokerUrl) {
       return this.http
         .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, BaseSettings);

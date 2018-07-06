@@ -1,4 +1,4 @@
-export interface IBaseSettings {
+export interface IBaseSetting {
   Title: string;
   Description: string;
   Tag: string;

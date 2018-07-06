@@ -6,7 +6,7 @@ export class AdministrationUnitPropertyValidator {
     const Title = controlPropertyArray.get(['Title']).value;
     const ValueTag = controlPropertyArray.get(['Value', 'Tag']).value;
     const ValueRaw = controlPropertyArray.get(['Value', 'Raw']).value;
-    return (Length > 0 && Title !== '' && ValueTag !== '' && ValueRaw !== '') ? null : {
+    return (Length > 0 && Title !== '' && ValueTag !== '') ? null : {
       checkProperty: {valid: false}
     };
   }
