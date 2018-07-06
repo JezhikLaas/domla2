@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using D2.Service.Controller;
 
 namespace D2.Service.CallDispatcher
@@ -23,6 +24,16 @@ namespace D2.Service.CallDispatcher
             _resolver = resolver;
         }
 
+        private void DumpContext(ICallContext context)
+        {
+            var builder = new StringBuilder("call context: ");
+            foreach (var valuePair in context.Context) {
+                builder.Append($"{valuePair.Key}: {valuePair.Value}");
+            }
+
+            _logger.LogInformation(builder.ToString());
+        }
+
         public override ExecutionResponse execute(Contracts.Common.Request request, Ice.Current current = null)
         {
             var clock = new Stopwatch();
@@ -33,6 +44,7 @@ namespace D2.Service.CallDispatcher
             using (Scope.BeginScope()) {
                 var callContext = _resolver.Resolve<ICallContext>();
                 callContext.SetupContext(context);
+                DumpContext(callContext);
                 result = InternalExecute(request, current);
             }
             clock.Stop();

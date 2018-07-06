@@ -12,9 +12,9 @@ namespace D2.Service.CallDispatcher
 {
     public class Validator : ValidatorDisp_
     {
-        ILogger<Validator> _logger;
-        Dispatcher _dispatcher;
-        private IServices _resolver;
+        private readonly ILogger<Validator> _logger;
+        private readonly Dispatcher _dispatcher;
+        private readonly IServices _resolver;
 
         public Validator(ILogger<Validator> logger, Dispatcher dispatcher, IServices resolver)
         {
