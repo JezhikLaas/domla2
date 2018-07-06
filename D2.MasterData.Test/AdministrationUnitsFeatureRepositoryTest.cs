@@ -24,7 +24,7 @@ namespace D2.MasterData.Test
 
         public AdministrationUnitsFeatureRepositoryTest()
         {
-            var logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger<ConnectionFactory>>();
             _connectionFactory = new ConnectionFactory(logger);
             _testFile = Path.GetTempFileName();
             var configuration = Fluently.Configure()
