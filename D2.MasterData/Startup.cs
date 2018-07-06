@@ -33,7 +33,8 @@ namespace D2.MasterData
         public void Configure(IServices services)
         {
             try {
-                ConnectionFactory.Initialize();
+                var factory = services.Resolve<IConnectionFactory>();
+                factory.Initialize();
                 _logger.LogInformation("Database initialized");
             }
             catch (Exception error) {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using D2.Common;
+using D2.Service.IoC;
 using FluentNHibernate.Cfg;
+using Microsoft.Extensions.Logging;
 using Microsoft.FSharp.Core;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
@@ -9,32 +11,33 @@ using Npgsql;
 
 namespace D2.MasterData.Mappings
 {
-    public static class ConnectionFactory
+    [Singleton]
+    public class ConnectionFactory : IConnectionFactory
     {
-        private static ISessionFactory _sessionFactory;
-
-        private static readonly Cache<ISessionFactory, string> SessionFactories;
-
-        private static readonly object SyncRoot;
+        private ISessionFactory _sessionFactory;
+        private readonly Cache<ISessionFactory, string> _sessionFactories;
+        private readonly object _syncRoot;
+        private readonly ILogger _logger;
         
-        static ConnectionFactory()
+        public ConnectionFactory(ILogger logger)
         {
-            SyncRoot = new object();
+            _syncRoot = new object();
+            _logger = logger;
             Func<string, ISessionFactory> createFactory = x => CreateFactory(x);
-            Func<ISessionFactory, Unit> dropFactory = x => DropFactory(x);
+            Func<string, ISessionFactory, Unit> dropFactory = (x, y) => DropFactory(x, y);
             
             var options = new CacheOptions<ISessionFactory, string>(
                 FSharpFuncUtil<string, ISessionFactory>.ToFSharpFunc(createFactory),
-                FSharpFuncUtil<ISessionFactory, Unit>.ToFSharpFunc(dropFactory),
+                FSharpFuncUtil<(string, ISessionFactory), Unit>.ToFSharpFunc(dropFactory),
                 600,
                 10
                 );
-            SessionFactories = new Cache<ISessionFactory, string>(options);
+            _sessionFactories = new Cache<ISessionFactory, string>(options);
         }
 
-        public static void Initialize()
+        public void Initialize()
         {
-            lock (SyncRoot)
+            lock (_syncRoot)
             {
                 if (_sessionFactory == null)
                 {
@@ -76,8 +79,10 @@ namespace D2.MasterData.Mappings
             }
         }
 
-        private static ISessionFactory CreateFactory(string key)
+        private ISessionFactory CreateFactory(string key)
         {
+            _logger.LogInformation($"Creating factory for {key}");
+            
             var builder = new NpgsqlConnectionStringBuilder();
             var options = ServiceConfiguration.connectionInfo;
 
@@ -98,7 +103,7 @@ namespace D2.MasterData.Mappings
             var configuration = new NHibernate.Cfg.Configuration()
                 .SetProperties(connectionProperties);
             
-            return Fluently.Configure(configuration)
+            var result = Fluently.Configure(configuration)
                 .Mappings(m =>
                     m.FluentMappings
                         .Add<AdministrationUnitMap>()
@@ -112,9 +117,13 @@ namespace D2.MasterData.Mappings
                 .ExposeConfiguration(BuildSchema)
                 .BuildConfiguration()
                 .BuildSessionFactory();
+            
+            _logger.LogInformation($"Created factory for {key}");
+
+            return result;
         }
 
-        private static ISession FromFactory(ISessionFactory factory, bool readOnly)
+        private ISession FromFactory(ISessionFactory factory, bool readOnly)
         {
             return factory
                 .WithOptions()
@@ -124,29 +133,30 @@ namespace D2.MasterData.Mappings
                 .OpenSession();
         }
 
-        private static ISession FetchSession(string key, bool readOnly)
+        private ISession FetchSession(string key, bool readOnly)
         {
             if (string.IsNullOrEmpty(key)) {
                 Initialize();
                 return FromFactory(_sessionFactory, readOnly);
             }
 
-            var factory = SessionFactories.fetch(key);
+            var factory = _sessionFactories.fetch(key);
             return FromFactory(factory, readOnly);
         }
 
-        private static Unit DropFactory(ISessionFactory factory)
+        private Unit DropFactory(string key, ISessionFactory factory)
         {
+            _logger.LogInformation($"Dropping factory for {key}");
             factory.Dispose();
             return null;
         }
         
-        private static void BuildSchema(NHibernate.Cfg.Configuration config)
+        private void BuildSchema(NHibernate.Cfg.Configuration config)
         {
             new SchemaUpdate(config).Execute(false, true);
         }
         
-        public static void Initialize(FluentConfiguration configuration)
+        public void Initialize(FluentConfiguration configuration)
         {
             _sessionFactory?.Dispose();
 
@@ -165,28 +175,28 @@ namespace D2.MasterData.Mappings
                 .BuildSessionFactory();
         }
 
-        public static void Shutdown()
+        public void Shutdown()
         {
             _sessionFactory?.Dispose();
             _sessionFactory = null;
         }
         
-        public static ISession Open()
+        public ISession Open()
         {
             return FetchSession(null, false);
         }
         
-        public static ISession OpenReadOnly()
+        public ISession OpenReadOnly()
         {
             return FetchSession(null, true);
         }
         
-        public static ISession Open(string key)
+        public ISession Open(string key)
         {
             return FetchSession(key, false);
         }
         
-        public static ISession OpenReadOnly(string key)
+        public ISession OpenReadOnly(string key)
         {
             return FetchSession(key, true);
         }

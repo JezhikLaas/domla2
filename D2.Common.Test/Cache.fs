@@ -14,7 +14,7 @@ module CacheTest =
     let ``Cache can be created``() =
         let options = {
             createItem = fun (x : int) -> x.ToString();
-            dropItem = fun (x : string) -> ();
+            dropItem = fun (y : int) (x : string) -> ();
             secondsToLive = 10;
             sweepInterval = 1;
         }
@@ -26,7 +26,7 @@ module CacheTest =
         let mutable counter = 0
         let options = {
             createItem = fun (x : int) -> counter <- counter + 1; x.ToString();
-            dropItem = fun (x : string) -> ();
+            dropItem = fun (y : int) (x : string) -> ();
             secondsToLive = 10;
             sweepInterval = 1;
         }
@@ -42,7 +42,7 @@ module CacheTest =
         let waiter = new ManualResetEventSlim(false)
         let options = {
             createItem = fun (x : int) -> counter <- counter + 1; x.ToString();
-            dropItem = fun (x : string) -> waiter.Set();
+            dropItem = fun (y : int) (x : string) -> waiter.Set();
             secondsToLive = 1;
             sweepInterval = 1;
         }
@@ -60,7 +60,7 @@ module CacheTest =
         let waiter = new ManualResetEventSlim(false)
         let options = {
             createItem = fun (x : int) -> x.ToString();
-            dropItem = fun (x : string) -> counter <- counter + 1; waiter.Set();
+            dropItem = fun (y : int) (x : string) -> counter <- counter + 1; waiter.Set();
             secondsToLive = 1;
             sweepInterval = 1;
         }

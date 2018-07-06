@@ -6,7 +6,7 @@ open System.Collections.Generic
 
 type CacheOptions<'T, 'K> = {
     createItem : 'K -> 'T
-    dropItem : 'T -> unit
+    dropItem : 'K -> 'T -> unit
     secondsToLive : int
     sweepInterval : int
 }
@@ -27,7 +27,7 @@ type Cache<'T, 'K when 'K : equality>(options : CacheOptions<'T, 'K>) =
                 for bucket in buckets do
                     let unused = (DateTime.UtcNow - bucket.Value.access).TotalSeconds
                     if unused > (float options.secondsToLive) then
-                        options.dropItem bucket.Value.item
+                        options.dropItem bucket.Key bucket.Value.item
                         removals.Add bucket.Key
                 for key in removals do
                     buckets.Remove key |> ignore
