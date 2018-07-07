@@ -24,10 +24,9 @@ namespace D2.MasterData.Infrastructure
 
         protected void Dispose(bool disposing)
         {
-            if (disposing) {
-                Session?.Dispose();
-                GC.SuppressFinalize(this);
-            }
+            if (!disposing) return;
+            Session?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

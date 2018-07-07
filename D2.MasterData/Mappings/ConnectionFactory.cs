@@ -23,8 +23,8 @@ namespace D2.MasterData.Mappings
         {
             _syncRoot = new object();
             _logger = logger;
-            Func<string, ISessionFactory> createFactory = x => CreateFactory(x);
-            Func<string, ISessionFactory, Unit> dropFactory = (x, y) => DropFactory(x, y);
+            Func<string, ISessionFactory> createFactory = CreateFactory;
+            Func<string, ISessionFactory, Unit> dropFactory = DropFactory;
             
             var options = new CacheOptions<ISessionFactory, string>(
                 FSharpFuncUtil<string, ISessionFactory>.ToFSharpFunc(createFactory),
@@ -118,7 +118,7 @@ namespace D2.MasterData.Mappings
                 .BuildConfiguration()
                 .BuildSessionFactory();
             
-            _logger.LogInformation($"Created factory for {key}");
+            _logger.LogTrace($"Created factory for {key}");
 
             return result;
         }
@@ -146,7 +146,7 @@ namespace D2.MasterData.Mappings
 
         private Unit DropFactory(string key, ISessionFactory factory)
         {
-            _logger.LogInformation($"Dropping factory for {key}");
+            _logger.LogDebug($"Dropping factory for {key}");
             factory.Dispose();
             return null;
         }

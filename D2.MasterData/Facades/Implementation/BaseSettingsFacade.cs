@@ -33,14 +33,14 @@ namespace D2.MasterData.Facades.Implementation
 
         public void CreateNewAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value)
         {
-            var AdministrationUnitFeature = new AdministrationUnitsFeature(value);
-            _repository.Insert(AdministrationUnitFeature);
+            var administrationUnitFeature = new AdministrationUnitsFeature(value);
+            _repository.Insert(administrationUnitFeature);
         }
 
         public void EditAdministrationUnitsFeature(AdministrationUnitsFeatureParameters value)
         {
-            var AdministrationUnitFeature = new AdministrationUnitsFeature(value);
-            _repository.Update(AdministrationUnitFeature);
+            var administrationUnitFeature = new AdministrationUnitsFeature(value);
+            _repository.Update(administrationUnitFeature);
         }
 
         public IEnumerable<AdministrationUnitsFeature> ListAdministrationUnitsFeatures()
@@ -50,8 +50,7 @@ namespace D2.MasterData.Facades.Implementation
 
         public ExecutionResponse LoadAdministrationUnitsFeature(string id)
         {
-            Guid unitId;
-            if (Guid.TryParse(id, out unitId) == false)
+            if (Guid.TryParse(id, out var unitId) == false)
             {
                 return new ExecutionResponse(
                     StatusCodes.Status422UnprocessableEntity,
@@ -106,13 +105,12 @@ namespace D2.MasterData.Facades.Implementation
 
         public void CreateNewAdministratioUnitPropertyForAllAdministraionUnits(AdministrationUnitsFeatureParameters value)
         {
-            var result = from unit in _administrationUnitsRepository.List()
-                         select unit;
-            foreach(AdministrationUnit administrationUnit in result)
+            foreach(var administrationUnit in _administrationUnitsRepository.List())
             {
-                AdministrationUnitPropertyParameters parameter = new AdministrationUnitPropertyParameters();
-                parameter.Title = value.Title;
-                parameter.Description = value.Description;
+                var parameter = new AdministrationUnitPropertyParameters {
+                    Title = value.Title,
+                    Description = value.Description
+                };
                 switch (value.Tag)
                 {
                     case VariantTag.DateTime:
@@ -124,8 +122,10 @@ namespace D2.MasterData.Facades.Implementation
                     case VariantTag.TypedValue:
                         parameter.Value = new Variant(new TypedValue(0, value.TypedValueUnit, value.TypedValueDecimalPlace));
                         break;
-                    default:
+                    case VariantTag.None:
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 var administrationUnitProperty = new AdministrationUnitProperty(parameter, administrationUnit);
