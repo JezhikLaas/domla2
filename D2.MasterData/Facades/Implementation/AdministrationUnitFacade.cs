@@ -17,9 +17,9 @@ namespace D2.MasterData.Facades.Implementation
     [RequestScope]
     public class AdministrationUnitFacade : IAdministrationUnitFacade
     {
-        readonly IAdministrationUnitsRepository _repository;
-        readonly IBaseSettingsRepository _basicSettingsRepository;
-        readonly IParameterValidator _parameterValidator;
+        private readonly IAdministrationUnitsRepository _repository;
+        private readonly IBaseSettingsRepository _basicSettingsRepository;
+        private readonly IParameterValidator _parameterValidator;
 
         public AdministrationUnitFacade(
             IAdministrationUnitsRepository repository,
@@ -34,13 +34,14 @@ namespace D2.MasterData.Facades.Implementation
         public Guid CreateNewAdministrationUnit(AdministrationUnitParameters value)
         {
             var administrationUnit = new AdministrationUnit(value);
-            var result = from baseSettings in _basicSettingsRepository.List()
-                         select baseSettings;
-            foreach (AdministrationUnitsFeature feature in result)
+
+            foreach (var feature in _basicSettingsRepository.List())
             {
-                AdministrationUnitPropertyParameters propertyParameters = new AdministrationUnitPropertyParameters();
-                propertyParameters.Description = feature.Description;
-                propertyParameters.Title = feature.Title;
+                var propertyParameters = new AdministrationUnitPropertyParameters {
+                    Description = feature.Description,
+                    Title = feature.Title
+                };
+                
                 switch (feature.Tag)
                 {
                     case VariantTag.DateTime:
@@ -52,8 +53,10 @@ namespace D2.MasterData.Facades.Implementation
                     case VariantTag.TypedValue:
                         propertyParameters.Value = new Variant(new TypedValue(0, feature.TypedValueUnit, feature.TypedValueDecimalPlace));
                         break;
-                    default:
+                    case VariantTag.None:
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
                 var admnistrationUnitProperty = new AdministrationUnitProperty(propertyParameters, administrationUnit);
                 administrationUnit.AddProperty(admnistrationUnitProperty);
@@ -75,8 +78,7 @@ namespace D2.MasterData.Facades.Implementation
 
         public ExecutionResponse LoadAdministrationUnit(string id)
         {
-            Guid unitId;
-            if (Guid.TryParse(id, out unitId) == false) {
+            if (Guid.TryParse(id, out var unitId) == false) {
                 return new ExecutionResponse(
                     StatusCodes.Status422UnprocessableEntity,
                     null,

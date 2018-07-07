@@ -44,7 +44,7 @@ module RegistrationTest =
             return (true, "X")
         }
     
-    let private createDatabaseTest (dbkey : string) =
+    let private createDatabaseTest (dbkey : string) (logger : ILogger) =
         async {
             return ()
         }

@@ -16,8 +16,8 @@ namespace D2.MasterData.Facades.Implementation
     [RequestScope]
     public class PostalCodeInfoFacade : IPostalCodeInfoFacade
     {
-        readonly IPostalCodeInfoRepository _repository;
-        readonly IParameterValidator _parameterValidator;
+        private readonly IPostalCodeInfoRepository _repository;
+        private readonly IParameterValidator _parameterValidator;
 
         public PostalCodeInfoFacade(
             IPostalCodeInfoRepository repository,
@@ -40,8 +40,7 @@ namespace D2.MasterData.Facades.Implementation
 
         public ExecutionResponse LoadPostalCodeInfo(string id)
         {
-            Guid unitId;
-            if (Guid.TryParse(id, out unitId) == false)
+            if (Guid.TryParse(id, out var unitId) == false)
             {
                 return new ExecutionResponse(
                     StatusCodes.Status422UnprocessableEntity,
@@ -80,10 +79,11 @@ namespace D2.MasterData.Facades.Implementation
         {
             foreach (EntranceParameters entrance in value.Entrances)
             {
-                PostalCodeInfoParameters postalCodeParam =  new PostalCodeInfoParameters();
-                postalCodeParam.PostalCode = entrance.Address.PostalCode;
-                postalCodeParam.City = entrance.Address.City;
-                postalCodeParam.Iso2 = entrance.Address.Country.Iso2;
+                var postalCodeParam = new PostalCodeInfoParameters {
+                    PostalCode = entrance.Address.PostalCode,
+                    City = entrance.Address.City,
+                    Iso2 = entrance.Address.Country.Iso2
+                };
                 var result = _repository.Exists(postalCodeParam);
                 if (!result)
                 {

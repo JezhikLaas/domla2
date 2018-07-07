@@ -129,7 +129,7 @@ module Users =
                 return (true, dbkey.Value)
         }
     
-    let private createUserDatabaseWorker (dbkey : string) =
+    let private createUserDatabaseWorker (dbkey : string) (logger : ILogger) =
         async {
             use connection = AdminConnection.connection ()
             use command = connection.CreateCommand()
@@ -143,8 +143,8 @@ module Users =
             command.CommandText <- "CREATE DATABASE " + dbkey + " OWNER " + dbkey
             command.ExecuteNonQuery () |> ignore
         
-            use specificConnection = AdminConnection.connectSpecific dbkey dbkey dbkey
-            use specificCommand = connection.CreateCommand()
+            use specificConnection = AdminConnection.connectSpecific logger dbkey dbkey dbkey
+            use specificCommand = specificConnection.CreateCommand()
 
             specificCommand.CommandText <- "CREATE SCHEMA md"
             specificCommand.ExecuteNonQuery () |> ignore

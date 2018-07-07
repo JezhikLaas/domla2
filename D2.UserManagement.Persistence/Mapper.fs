@@ -140,9 +140,9 @@ type UserI() =
     static member fromRegistration (data : UserRegistrationI) (password : string) =
         let computeAssociation () =
             use hasher = MD5.Create()
-            let association = Guid.NewGuid().ToString("N")
+            let association = Guid.NewGuid().ToString("N").ToLowerInvariant()
             let binaryData = hasher.ComputeHash (Encoding.UTF8.GetBytes association)
-            let dbkey = "D" + BitConverter.ToString(binaryData).Replace("-", "")
+            let dbkey = "d" + BitConverter.ToString(binaryData).Replace("-", "").ToLowerInvariant()
             (association, dbkey)
         let salt = BCrypt.GenerateSalt ()
         let hashedPassword = BCrypt.HashPassword (password, salt)

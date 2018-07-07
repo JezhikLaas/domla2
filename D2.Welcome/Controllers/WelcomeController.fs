@@ -29,7 +29,7 @@ type WelcomeController
             
             | true  -> let id = Guid (info.id)
                        match CompositionRoot.Storage.finish id info.password logger |> Async.RunSynchronously with 
-                       | true, dbkey  -> CompositionRoot.Storage.createDatabase dbkey |> Async.RunSynchronously
+                       | true, dbkey  -> CompositionRoot.Storage.createDatabase dbkey logger |> Async.RunSynchronously
                                          return! succeed ServiceConfiguration.login.StandardAddress
                        | false, _     -> return! failExternal "storage failed"
         }

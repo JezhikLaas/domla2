@@ -9,10 +9,10 @@ namespace D2.MasterData.Infrastructure
     [RequestScope]
     public class DataContext : IDataContext
     {
-        public DataContext(ICallContext context)
+        public DataContext(ICallContext context, IConnectionFactory factory)
         {
             var key = context["dbkey"];
-            Session = ConnectionFactory.Open(key);
+            Session = factory.Open(key);
         }
         
         public ISession Session { get; }
@@ -24,10 +24,9 @@ namespace D2.MasterData.Infrastructure
 
         protected void Dispose(bool disposing)
         {
-            if (disposing) {
-                Session?.Dispose();
-                GC.SuppressFinalize(this);
-            }
+            if (!disposing) return;
+            Session?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

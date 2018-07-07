@@ -1,6 +1,7 @@
 namespace D2.UserManagement.Persistence
 
 open D2.Common
+open Microsoft.Extensions.Logging
 open Npgsql
 
 module AdminConnection =
@@ -40,8 +41,10 @@ module AdminConnection =
         
         result
 
-    let connectSpecific (db : string) (user : string) (pwd : string) =
-        let result = new NpgsqlConnection ((specificConnectionString db user pwd) ())
+    let connectSpecific (logger : ILogger) (db : string) (user : string) (pwd : string) =
+        let connectionString = (specificConnectionString db user pwd) ()
+        logger.LogInformation connectionString
+        let result = new NpgsqlConnection (connectionString)
         result.Open ()
         
         result

@@ -9,6 +9,7 @@ using Xunit;
 using D2.MasterData.Test.Helper;
 using D2.Service.Controller;
 using FluentNHibernate.Cfg;
+using Microsoft.Extensions.Logging;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
 using NSubstitute;
@@ -19,13 +20,17 @@ namespace D2.MasterData.Test
     {
         private readonly string _testFile;
 
+        private readonly IConnectionFactory _connectionFactory;
+
         public AdministrationUnitsFeatureRepositoryTest()
         {
+            var logger = Substitute.For<ILogger<ConnectionFactory>>();
+            _connectionFactory = new ConnectionFactory(logger);
             _testFile = Path.GetTempFileName();
             var configuration = Fluently.Configure()
                 .Database(SqliteConfiguration.Standard.UsingFile(_testFile))
                 .ExposeConfiguration(BuildSchema);
-            ConnectionFactory.Initialize(configuration);
+            _connectionFactory.Initialize(configuration);
         }
 
         private static void BuildSchema(NHibernate.Cfg.Configuration config)
@@ -53,7 +58,7 @@ namespace D2.MasterData.Test
         {
             if (disposing)
             {
-                ConnectionFactory.Shutdown();
+                _connectionFactory.Shutdown();
                 File.Delete(_testFile);
             }
         }
@@ -63,7 +68,7 @@ namespace D2.MasterData.Test
             var callContext = Substitute.For<ICallContext>();
             callContext["dbkey"].Returns((string)null);
             
-            return new DataContext(callContext);
+            return new DataContext(callContext, _connectionFactory);
         }
 
         (Guid, int) InsertAdministrationUnitFeature()
