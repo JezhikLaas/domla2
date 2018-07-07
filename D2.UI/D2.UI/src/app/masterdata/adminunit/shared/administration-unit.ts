@@ -17,6 +17,8 @@ export class AdministrationUnit implements IAdministrationUnit {
       Title: string;
       Description: string;
       Value: AdministrationUnitPropertyValue;
+      Version: number;
+      Id: string;
     }[]
   ) { }
 }

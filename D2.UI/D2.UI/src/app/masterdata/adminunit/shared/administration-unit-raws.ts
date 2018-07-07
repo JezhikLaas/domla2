@@ -36,6 +36,8 @@ export interface AdministrationUnitRaws {
     Value?: {
       Tag: string;
       Raw: string;
-    }
+    },
+    Version: number,
+    Id: string;
   }[];
 }

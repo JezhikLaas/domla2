@@ -31,7 +31,7 @@ namespace D2.MasterData.Facades.Implementation
             _parameterValidator = parameterValidator;
         }
 
-        public void CreateNewAdministrationUnit(AdministrationUnitParameters value)
+        public Guid CreateNewAdministrationUnit(AdministrationUnitParameters value)
         {
             var administrationUnit = new AdministrationUnit(value);
             var result = from baseSettings in _basicSettingsRepository.List()
@@ -59,6 +59,7 @@ namespace D2.MasterData.Facades.Implementation
                 administrationUnit.AddProperty(admnistrationUnitProperty);
             }
             _repository.Insert(administrationUnit);
+            return administrationUnit.Id;
         }
 
         public void EditAdministrationUnit(AdministrationUnitParameters value)

@@ -2,13 +2,14 @@
 using D2.MasterData.Parameters;
 using D2.Service.Contracts.Execution;
 using D2.Service.Contracts.Validation;
+using System;
 using System.Collections.Generic;
 
 namespace D2.MasterData.Facades
 {
     public interface IAdministrationUnitFacade
     {
-        void CreateNewAdministrationUnit(AdministrationUnitParameters value);
+        Guid CreateNewAdministrationUnit(AdministrationUnitParameters value);
         void EditAdministrationUnit(AdministrationUnitParameters value);
         IEnumerable<AdministrationUnit> ListAdministrationUnits();
         ExecutionResponse LoadAdministrationUnit(string id);
