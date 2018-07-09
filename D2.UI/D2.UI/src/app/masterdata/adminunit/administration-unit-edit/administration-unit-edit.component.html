@@ -110,10 +110,16 @@
         </div>
       </div>
       <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" fxFlex="50">
-        <div fxFlex="50" *ngIf ="IsUpdatingAdminUnit===true">
+        <div fxFlex="50" *ngIf ="IsUpdatingAdminUnit && !ShowPropertiesForAllAdministrationUnits">
           <button
             mat-raised-button
             (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle Objekte anlegen
+          </button>
+        </div>
+        <div fxFlex="50" *ngIf ="IsUpdatingAdminUnit && ShowPropertiesForAllAdministrationUnits">
+          <button
+            mat-raised-button
+            (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle Objekte verbergen
           </button>
         </div>
         <div fxFlex="50">

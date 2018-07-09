@@ -14,5 +14,7 @@ export interface IAdministrationUnit {
     Title: string;
     Description: string;
     Value?: AdministrationUnitPropertyValue;
+    Version: number;
+    Id: string;
   }[];
 }

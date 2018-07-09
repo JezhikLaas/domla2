@@ -38,9 +38,9 @@ namespace D2.MasterData.Controllers
         [Routing("Post", "Create")]
         public ExecutionResponse Create([FromBody]AdministrationUnitParameters value)
         {
-            _administrationUnitFacade.CreateNewAdministrationUnit(value);
+            var id =_administrationUnitFacade.CreateNewAdministrationUnit(value);
             _postalCodeInfoFacade.CheckExistsPostalCode(value);
-            return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
+            return new ExecutionResponse(StatusCodes.Status201Created, $"{{\"newId\":\"{id}\"}}", new Error[0]);
         }
 
         [Routing("Put", "Validate_Edit")]

@@ -10,5 +10,6 @@ namespace D2.MasterData.Repositories
         IEnumerable<AdministrationUnit> List();
         AdministrationUnit Load(Guid id);
         void Update(AdministrationUnit administrationUnit);
+        void Modify(AdministrationUnit administrationUnit);
     }
 }

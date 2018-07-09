@@ -40,12 +40,39 @@ namespace D2.MasterData.Repositories.Implementation
             return _context.Session.Get<AdministrationUnit>(id);
         }
 
-        public void Update(AdministrationUnit administrationUnit)
+        public void Modify(AdministrationUnit administrationUnit)
         {
-            using (var transaction = _context.Session.BeginTransaction()) {
-                _context.Session.Merge(administrationUnit);
+            using (var transaction = _context.Session.BeginTransaction())
+            {
+                _context.Session.Update(administrationUnit);
                 transaction.Commit();
             }
+        }
+
+        public void Update(AdministrationUnit administrationUnit)
+        {
+
+            using (var transaction = _context.Session.BeginTransaction())
+            {
+
+                if (_context.Session.Contains(administrationUnit))
+                {
+
+                    _context.Session.Update(administrationUnit);
+
+                }
+
+                else
+                {
+
+                    _context.Session.Merge(administrationUnit);
+
+                }
+
+                transaction.Commit();
+
+            }
+
         }
     }
 }

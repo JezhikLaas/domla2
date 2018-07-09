@@ -130,6 +130,7 @@ namespace D2.MasterData.Facades.Implementation
 
                 var administrationUnitProperty = new AdministrationUnitProperty(parameter, administrationUnit);
                 administrationUnit.AddProperty(administrationUnitProperty);
+                _administrationUnitsRepository.Modify(administrationUnit);
             }
         }
     }

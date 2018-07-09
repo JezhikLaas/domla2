@@ -31,8 +31,10 @@ export class AdminUnitFactory {
           Description: '',
           Value: {
             Tag: '3',
-            Raw: ''
-          }
+            Raw: '',
+          },
+          Version: 0,
+          Id: ''
         }
         ]
     );
