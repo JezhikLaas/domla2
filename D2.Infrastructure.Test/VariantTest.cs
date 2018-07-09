@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace D2.Infrastructure.Test
@@ -84,11 +85,68 @@ namespace D2.Infrastructure.Test
             Assert.Equal("1 meter", target.String);
         }
 
-        [Fact(DisplayName = "Variant get String from DateTime throws Exception")]
-        public void VariantGetDateTimeFromDateTimeThrowsException()
+        [Fact(DisplayName = "Variant get String from DateTime does not throw Exception")]
+        public void VariantGetDateTimeFromDateTimeDoesNotThrowException()
         {
             var target = new Variant(DateTime.Now);
             Assert.Equal(DateTime.Now.ToString(), target.String);
+        }
+
+        [Fact(DisplayName = "Variant can be set to DateTime typed null")]
+        public void VariantCanBeSetToDateTimeNull()
+        {
+            var target = new Variant(VariantTag.DateTime);
+            Assert.Equal(default(DateTime), target.DateTime);
+        }
+
+        [Fact(DisplayName = "Variant can be set to TypedValue typed null")]
+        public void VariantCanBeSetToTypedValueNull()
+        {
+            var target = new Variant(VariantTag.TypedValue);
+            Assert.Equal(default(TypedValue), target.Number);
+        }
+
+        [Fact(DisplayName = "Variant can be set to String typed null")]
+        public void VariantCanBeSetToStringNull()
+        {
+            var target = new Variant(VariantTag.String);
+            Assert.Equal(default(string), target.String);
+        }
+
+        [Fact(DisplayName = "Null String Variant can be serialized and deserialized")]
+        public void SerializeAndDeserializeNullStringVariant()
+        {
+            var target = new Variant(VariantTag.String);
+            var serialized = JsonConvert.SerializeObject(target);
+            var restored = JsonConvert.DeserializeObject<Variant>(serialized);
+            
+            Assert.NotNull(restored);
+            Assert.True(restored.IsNull);
+            Assert.Equal(VariantTag.String, restored.Tag);
+        }
+
+        [Fact(DisplayName = "Null DateTime Variant can be serialized and deserialized")]
+        public void SerializeAndDeserializeNullDateTimeVariant()
+        {
+            var target = new Variant(VariantTag.DateTime);
+            var serialized = JsonConvert.SerializeObject(target);
+            var restored = JsonConvert.DeserializeObject<Variant>(serialized);
+            
+            Assert.NotNull(restored);
+            Assert.True(restored.IsNull);
+            Assert.Equal(VariantTag.DateTime, restored.Tag);
+        }
+
+        [Fact(DisplayName = "Null TypedValue Variant can be serialized and deserialized")]
+        public void SerializeAndDeserializeNullTypedValueVariant()
+        {
+            var target = new Variant(VariantTag.TypedValue);
+            var serialized = JsonConvert.SerializeObject(target);
+            var restored = JsonConvert.DeserializeObject<Variant>(serialized);
+            
+            Assert.NotNull(restored);
+            Assert.True(restored.IsNull);
+            Assert.Equal(VariantTag.TypedValue, restored.Tag);
         }
     }
 }

@@ -52,7 +52,10 @@ namespace D2.Infrastructure
                 }
             }
         }
-        
+
+        [JsonIgnore]
+        public bool IsNull => _storage == null;
+
         public Variant()
         { }
 
@@ -78,6 +81,11 @@ namespace D2.Infrastructure
         {
             Tag = value.Tag;
             _storage = value._storage;
+        }
+
+        public Variant(VariantTag value)
+        {
+            Tag = value;
         }
 
         [JsonConstructor]
@@ -128,7 +136,7 @@ namespace D2.Infrastructure
                 case VariantTag.String:
                     throw RaiseInvalidCast(VariantTag.TypedValue);
                 default:
-                    return (TypedValue) _storage;
+                    return (TypedValue?) _storage ?? default(TypedValue);
             }
         }
 
@@ -148,7 +156,7 @@ namespace D2.Infrastructure
         {
             switch (Tag) {
                 case VariantTag.DateTime:
-                    return (DateTime) _storage;
+                    return (DateTime?) _storage ?? default(DateTime);
                 case VariantTag.String:
                     throw RaiseInvalidCast(VariantTag.DateTime);
                 default:
