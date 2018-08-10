@@ -16,7 +16,6 @@ export class AddressWithPostalcodeComponent implements OnInit {
   @Input() AddressFormGroup: FormGroup;
   @Input() CountryFormGroup: FormGroup;
   @Input() Iso2Control: FormControl;
-  @Input() CountryDefaultIso2;
   @Input() CityControl: FormControl;
   @Input() StreetControl: FormControl;
   @Input() NumberControl: FormControl;
@@ -36,8 +35,8 @@ export class AddressWithPostalcodeComponent implements OnInit {
 
     this.as.getCountries().subscribe(res => {
       this.Countries = res;
-      if (this.CountryDefaultIso2) {
-        const CountryDefault = res.find (countries => countries.Iso2 === this.CountryDefaultIso2);
+      if (this.Iso2Control.value) {
+        const CountryDefault = res.find (countries => countries.Iso2 === this.Iso2Control.value);
         if (CountryDefault) {
           this.CountryDefaultName = CountryDefault.Name;
           this.CountryFormGroup.patchValue( {Name: this.CountryDefaultName });

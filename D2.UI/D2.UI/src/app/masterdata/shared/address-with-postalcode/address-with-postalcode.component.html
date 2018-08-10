@@ -9,7 +9,7 @@
   <div fxFlex="10%">
     <mat-form-field style="width: 100%">
       <mat-label>PLZ</mat-label>
-      <input matInput [formControl] = "PostalCodeControl" (blur)="onPostalCodeSelected($event.target.value, CountryDefaultIso2)" placeholder="PLZ">
+      <input matInput [formControl] = "PostalCodeControl" (blur)="onPostalCodeSelected($event.target.value, Iso2Control.value)" placeholder="PLZ">
     </mat-form-field>
   </div>
   <div fxFlex="25%">

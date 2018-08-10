@@ -5,6 +5,7 @@ import { BaseSettingsRoutingModule } from './base-settings-routing.module';
 import { BaseSettingsListComponent } from './basesettingslist/base-settings-list.component';
 import { BaseSettingEditComponent } from './basesettingedit/base-setting-edit.component';
 import { SharedModule } from '../../shared/shared.module';
+import {AdministrationUnitFeatureSelectedComponent} from '../adminunit/administration-unit-feature-selected/administration-unit-feature-selected.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SharedModule } from '../../shared/shared.module';
 
   declarations: [
     BaseSettingsListComponent,
-    BaseSettingEditComponent
+    BaseSettingEditComponent,
+    AdministrationUnitFeatureSelectedComponent
   ],
 
   schemas: [
@@ -24,7 +26,8 @@ import { SharedModule } from '../../shared/shared.module';
   exports: [
     BaseSettingsListComponent,
     BaseSettingEditComponent,
-    BaseSettingsRoutingModule
+    BaseSettingsRoutingModule,
+    AdministrationUnitFeatureSelectedComponent
   ]
 })
 export class BaseSettingsModule { }

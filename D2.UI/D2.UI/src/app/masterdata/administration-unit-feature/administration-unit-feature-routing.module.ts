@@ -4,13 +4,16 @@ import { BaseSettingsListComponent } from './basesettingslist/base-settings-list
 import { BaseSettingsResolver } from '../shared/base-settings-resolver.service';
 import { BaseSettingEditComponent } from './basesettingedit/base-setting-edit.component';
 import { BaseSettingResolver } from '../shared/base-setting-resolver.service';
+import {AdministrationUnitsListViewComponent} from '../adminunit/administration-units-list-view/administration-units-list-view.component';
+import {AdministrationUnitsResolver} from '../adminunit/shared/administration-units-resolver.service';
 
 const routes: Routes = [
   {
     path: '',
     component: BaseSettingsListComponent,
     resolve: {
-      BaseSettings: BaseSettingsResolver
+      BaseSettings: BaseSettingsResolver,
+      AdministrationUnits: AdministrationUnitsResolver
     }
   },
   {

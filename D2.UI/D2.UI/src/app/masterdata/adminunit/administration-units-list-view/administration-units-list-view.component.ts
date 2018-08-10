@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
@@ -29,6 +29,8 @@ export class AdministrationUnitsListComponent implements OnInit {
   initialSelection = [];
   allowMultiSelect = false;
   selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
+  @Output() administrationUnitSelected = new EventEmitter<any>();
+  @Input() administrationUnitFeatureSelected: boolean;
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,
@@ -41,7 +43,13 @@ export class AdministrationUnitsListComponent implements OnInit {
   }
 
   selectRow (AdminUnit) {
-    this.router.navigate([`administrationUnits/${AdminUnit.Id}`]);
+    this.administrationUnitFeatureSelected ?
+      this.selectRowsOnlyId(AdminUnit) :
+      this.router.navigate([`administrationUnits/${AdminUnit.Id}`]);
+  }
+
+  selectRowsOnlyId (administratinUnit: any) {
+    this.administrationUnitSelected.emit(administratinUnit);
   }
 
 }

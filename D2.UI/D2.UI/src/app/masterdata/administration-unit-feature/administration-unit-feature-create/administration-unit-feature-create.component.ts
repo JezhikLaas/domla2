@@ -44,8 +44,9 @@ export class BaseSettingEditComponent implements OnInit {
 
   onAddBaseControl() {
     this.bsService.createBaseSettings(this.BaseSettingsGroup.value).subscribe(res => this.onRefreshProperty());
-    this.EditForm.controls.BaseSettings.patchValue( {
-      Title: null, Description: null, TypedValueDecimalPlace: 0, TypedValueUnit: null, Tag: 3});
+    this.EditForm.reset();
+    this.BaseSettingsGroup.controls.Tag.setValue(3);
+    this.BaseSettingsGroup.controls.TypedValueDecimalPlace.setValue(0);
   }
 
   onRefreshProperty() {
@@ -64,7 +65,6 @@ export class BaseSettingEditComponent implements OnInit {
       !this.Errors['BaseSettings' + message.forControl]) {
       this.Errors['BaseSettings' + message.forControl] = message.text;
     }
-    console.log(message);
   }
   }
 }

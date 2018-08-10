@@ -1,10 +1,10 @@
 <form [formGroup]="EditForm" xmlns="http://www.w3.org/1999/html">
-  <div style="margin-top: 5em" >
+  <div style="margin-top: 2em" >
       <div formGroupName="BaseSettings"
            fxLayout="row" fxLayout.xs="column"
            fxLayoutWrap
            fxLayoutGap="2%"
-           fxLayoutAlign="left" >
+           fxLayoutAlign="left">
         <div fxFlex="10%">
           <mat-form-field style="width: 100%">
             <mat-label>Bezeichnung</mat-label>
@@ -24,13 +24,13 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div fxFlex="27%">
+        <div fxFlex="27%" *ngIf="BaseSettingsGroup.controls.Tag.value === 2">
           <mat-form-field style="width: 100%">
             <mat-label>Zahl der Nachkommastellen</mat-label>
             <input matInput formControlName="TypedValueDecimalPlace" type="number"  >
           </mat-form-field>
         </div>
-        <div fxFlex="20%">
+        <div fxFlex="20%" *ngIf="BaseSettingsGroup.controls.Tag.value === 2">
           <mat-form-field style="width: 100%">
             <mat-label>Maßeinheit</mat-label>
             <input matInput formControlName="TypedValueUnit" >
