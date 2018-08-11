@@ -22,10 +22,10 @@ import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeDeExtra from '@angular/common/locales/extra/de';
 import {AddressService} from './masterdata/shared/address.service';
-import {BaseSettingResolver} from './masterdata/shared/base-setting-resolver.service';
-import {BaseSettingsResolver} from './masterdata/shared/base-settings-resolver.service';
+import {AdministrationUnitFeatureResolver} from './masterdata/shared/administration-unit-feature-resolver.service';
+import {AdministrationUnitFeaturesResolver} from './masterdata/shared/administration-unit-features-resolver.service';
 import {MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
-import {BaseSettingsService} from './masterdata/shared/basesettings.service';
+import {AdministrationUnitFeatureService} from './masterdata/shared/administration-unit-feature.service';
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
@@ -55,9 +55,9 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     AdministrationUnitResolver,
     AdministrationUnitService,
     AddressService,
-    BaseSettingResolver,
-    BaseSettingsResolver,
-    BaseSettingsService,
+    AdministrationUnitFeatureResolver,
+    AdministrationUnitFeaturesResolver,
+    AdministrationUnitFeatureService,
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},
     {
       provide: LOCALE_ID,

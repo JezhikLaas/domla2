@@ -1,26 +1,25 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BaseSettingsListComponent } from './basesettingslist/base-settings-list.component';
-import { BaseSettingsResolver } from '../shared/base-settings-resolver.service';
-import { BaseSettingEditComponent } from './basesettingedit/base-setting-edit.component';
-import { BaseSettingResolver } from '../shared/base-setting-resolver.service';
-import {AdministrationUnitsListViewComponent} from '../adminunit/administration-units-list-view/administration-units-list-view.component';
+import { AdministrationUnitFeaturesListComponent } from './administration-unit-features-list/administration-unit-features-list.component';
+import { AdministrationUnitFeaturesResolver } from '../shared/administration-unit-features-resolver.service';
+import { AdministrationUnitFeatureCreateComponent } from './administration-unit-feature-create/administration-unit-feature-create.component';
+import { AdministrationUnitFeatureResolver } from '../shared/administration-unit-feature-resolver.service';
 import {AdministrationUnitsResolver} from '../adminunit/shared/administration-units-resolver.service';
+import {DialogAdministrationUnitsListComponent} from './dialog-administration-units-list/dialog-administration-units-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: BaseSettingsListComponent,
+    component: AdministrationUnitFeaturesListComponent,
     resolve: {
-      BaseSettings: BaseSettingsResolver,
-      AdministrationUnits: AdministrationUnitsResolver
+      AdministrationUnitFeatures: AdministrationUnitFeaturesResolver
     }
   },
   {
     path: 'id',
-    component: BaseSettingEditComponent,
+    component: AdministrationUnitFeatureCreateComponent,
     resolve: {
-      BaseSetting : BaseSettingResolver
+      AdministrationUnitFeature : AdministrationUnitFeatureResolver
     }
   }
 ];
@@ -29,4 +28,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class BaseSettingsRoutingModule { }
+export class AdministrationUnitFeatureRoutingModule { }

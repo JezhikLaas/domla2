@@ -92,10 +92,15 @@
               [Title] = "EditForm.get(['AdministrationUnitProperties',i,'Title' ])"
               [Tag] = "EditForm.get(['AdministrationUnitProperties',i,'Value', 'Tag' ])"
               [Raw] = "EditForm.get(['AdministrationUnitProperties',i,'Value', 'Raw' ])"
+              [RawNumber] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber'])"
+              [RawNumberUnit] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_unit'])"
+              [RawNumberValue] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_value'])"
+              [RawNumberDecimalPlaces] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_decimalPlaces'])"
               [Description] = "EditForm.get(['AdministrationUnitProperties',i,'Description' ])"
               [ArrayLastElement] = "l"
               (addPropertiesControl) = "addPropertiesControl()"
-              (removePropertiesControl) = "removePropertiesControl(i)">
+              (removePropertiesControl) = "removePropertiesControl(i)"
+              (selectedValueTag) = "selectedValueTag($event, i)">
             </ui-administration-unit-property>
           </div>
           <div *ngIf="Errors?.PropertyTitle" class="ui negative message">
@@ -127,9 +132,9 @@
         </div>
       </div>
       <div style="margin-top: 2em" *ngIf = "ShowPropertiesForAllAdministrationUnits">
-        <ui-base-setting-edit
+        <ui-administration-unit-feature-create
           (refreshProperty)="refreshProperties()">
-        </ui-base-setting-edit>
+        </ui-administration-unit-feature-create>
         <mat-accordion>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -137,8 +142,8 @@
                 Bereits vorhandene Zusatzfelder aller Objekte anzeigen
               </mat-panel-title>
             </mat-expansion-panel-header>
-                <ui-base-settings-list>
-                </ui-base-settings-list>
+                <ui-administration-unit-features-list>
+                </ui-administration-unit-features-list>
           </mat-expansion-panel>
         </mat-accordion>
       </div>

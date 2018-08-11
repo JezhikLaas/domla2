@@ -1,4 +1,4 @@
-import {Variant} from '../../shared/variant';
+import {Variant} from '../../../shared/variant';
 
 export interface IAdministrationUnitProperty {
   Id: string;

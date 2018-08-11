@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { BasesettingsService } from './basesettings.service';
+import { BasesettingsService } from './administration-unit-feature.service';
 
 describe('BasesettingsService', () => {
   beforeEach(() => {

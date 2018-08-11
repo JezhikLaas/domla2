@@ -1,10 +1,10 @@
-import { BaseSettingsModule } from './basesettings.module';
+import { AdministrationUnitFeatureModule } from './administration-unit-feature.module';
 
 describe('BasesettingsModule', () => {
-  let basesettingsModule: BaseSettingsModule;
+  let basesettingsModule: AdministrationUnitFeatureModule;
 
   beforeEach(() => {
-    basesettingsModule = new BaseSettingsModule();
+    basesettingsModule = new AdministrationUnitFeatureModule();
   });
 
   it('should create an instance', () => {

@@ -1,4 +1,4 @@
-export interface IBaseSetting {
+export interface IAdministrationUnitFeature {
   Title: string;
   Description: string;
   Tag: string;

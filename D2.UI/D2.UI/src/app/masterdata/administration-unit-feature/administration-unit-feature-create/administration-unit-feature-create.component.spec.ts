@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BaseSettingEditComponent } from './base-setting-edit.component';
+import { AdministrationUnitFeatureCreateComponent } from './administration-unit-feature-create.component';
 
-describe('BaseSettingEditComponent', () => {
-  let component: BaseSettingEditComponent;
-  let fixture: ComponentFixture<BaseSettingEditComponent>;
+describe('AdministrationUnitFeatureCreateComponent', () => {
+  let component: AdministrationUnitFeatureCreateComponent;
+  let fixture: ComponentFixture<AdministrationUnitFeatureCreateComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BaseSettingEditComponent ]
+      declarations: [ AdministrationUnitFeatureCreateComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BaseSettingEditComponent);
+    fixture = TestBed.createComponent(AdministrationUnitFeatureCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

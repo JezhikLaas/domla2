@@ -1,22 +1,23 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { BaseSettingsRoutingModule } from './base-settings-routing.module';
-import { BaseSettingsListComponent } from './basesettingslist/base-settings-list.component';
-import { BaseSettingEditComponent } from './basesettingedit/base-setting-edit.component';
-import { SharedModule } from '../../shared/shared.module';
-import {AdministrationUnitFeatureSelectedComponent} from '../adminunit/administration-unit-feature-selected/administration-unit-feature-selected.component';
+import { AdministrationUnitFeatureRoutingModule } from './administration-unit-feature-routing.module';
+import { AdministrationUnitFeaturesListComponent } from './administration-unit-features-list/administration-unit-features-list.component';
+import { AdministrationUnitFeatureCreateComponent } from './administration-unit-feature-create/administration-unit-feature-create.component';
+import { SharedModule} from '../../shared/shared.module';
+import { DialogAdministrationUnitsListComponent} from './dialog-administration-units-list/dialog-administration-units-list.component';
+import { AdministrationUnitsListComponent} from '../adminunit/administration-units-list/administration-units-list.component';
 
 @NgModule({
   imports: [
-    BaseSettingsRoutingModule,
+    AdministrationUnitFeatureRoutingModule,
     SharedModule
   ],
-
+  entryComponents: [DialogAdministrationUnitsListComponent],
   declarations: [
-    BaseSettingsListComponent,
-    BaseSettingEditComponent,
-    AdministrationUnitFeatureSelectedComponent
+    AdministrationUnitFeaturesListComponent,
+    AdministrationUnitFeatureCreateComponent,
+    DialogAdministrationUnitsListComponent
   ],
 
   schemas: [
@@ -24,10 +25,10 @@ import {AdministrationUnitFeatureSelectedComponent} from '../adminunit/administr
   ],
 
   exports: [
-    BaseSettingsListComponent,
-    BaseSettingEditComponent,
-    BaseSettingsRoutingModule,
-    AdministrationUnitFeatureSelectedComponent
+    AdministrationUnitFeaturesListComponent,
+    AdministrationUnitFeatureCreateComponent,
+    AdministrationUnitFeatureRoutingModule,
+    DialogAdministrationUnitsListComponent
   ]
 })
-export class BaseSettingsModule { }
+export class AdministrationUnitFeatureModule { }

@@ -17,7 +17,6 @@ import {
   MatCheckboxModule,
   MatChipsModule,
   MatDatepickerModule,
-  MatDialogModule,
   MatDividerModule,
   MatExpansionModule,
   MatGridListModule,
@@ -42,15 +41,16 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-  MatTreeModule
+  MatTreeModule,
+  MatDialogModule
 } from '@angular/material';
-
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
 import { AddressWithPostalcodeComponent } from '../masterdata/shared/address-with-postalcode/address-with-postalcode.components';
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { OAuthModule} from 'angular-oauth2-oidc';
+import {AdministrationUnitsListViewComponent} from '../masterdata/adminunit/administration-units-list-view/administration-units-list-view.component';
 
 @NgModule({
   exports: [
@@ -100,7 +100,8 @@ export class UiMaterialModule {}
     LoaderComponent,
     ConfirmDialogComponent,
     AddressWithPostalcodeComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    AdministrationUnitsListViewComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -130,7 +131,8 @@ export class UiMaterialModule {}
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    AdministrationUnitsListViewComponent
   ],
 
   schemas: [

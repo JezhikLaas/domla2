@@ -19,14 +19,14 @@ import { DatePipe } from '@angular/common';
 import { AddressService } from '../../shared/address.service';
 import { YearMonth } from '../../shared/year-month';
 import { DataType } from '../../shared/data-type';
-import {AdministrationUnitPropertyValue} from '../../../shared/administration-unit-property-value';
-import {AdministrationUnitPropertyValidator} from './AdministrationUnitPropertyValidator';
+import {Variant} from '../../../shared/variant';
+import {AdministrationUnitPropertyValidator} from '../administration-unit-property/administration-unit-property-validator';
 import {List} from 'linqts';
-import {BaseSettingsListComponent} from '../../basesettings/basesettingslist/base-settings-list.component';
-import {BaseSettingsService} from '../../shared/basesettings.service';
+import {AdministrationUnitFeaturesListComponent} from '../../administration-unit-feature/administration-unit-features-list/administration-unit-features-list.component';
+import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
 import {MatTableDataSource} from '@angular/material';
-import {IBaseSetting} from '../../shared/ibasesetting';
-import {Entrance} from '../../../shared/entrance';
+import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
+
 
 export enum KEY_CODE {
   RIGHT_ARROW = 39,
@@ -38,7 +38,7 @@ export enum KEY_CODE {
   selector: 'ui-administration-unit-edit',
   templateUrl: './administration-unit-edit.component.html',
   styleUrls: [ './administration-unit-edit.component.css'],
-  providers: [DatePipe],
+  providers: [DatePipe]
 })
 
 export class AdministrationUnitEditComponent implements OnInit {
@@ -61,10 +61,9 @@ export class AdministrationUnitEditComponent implements OnInit {
   Value: FormGroup;
   Countries: CountryInfo[];
   CountryDefaultIso2: string;
-  PostalCode: string;
   DataType;
   ShowPropertiesForAllAdministrationUnits: boolean;
-  @ViewChild (BaseSettingsListComponent) BaseSettings: BaseSettingsListComponent;
+  @ViewChild (AdministrationUnitFeaturesListComponent) AdministrationUnitFeatures: AdministrationUnitFeaturesListComponent;
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
@@ -74,7 +73,7 @@ export class AdministrationUnitEditComponent implements OnInit {
               private datepipe: DatePipe,
               private as: AdministrationUnitService,
               private ads: AddressService,
-              private bs: BaseSettingsService) {
+              private bs: AdministrationUnitFeatureService) {
   }
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
@@ -95,20 +94,12 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (id !== '0') {
       this.IsUpdatingAdminUnit = true;
       this.AdminUnit = this.route.snapshot.data['AdministrationUnit'];
-      for (let i = 0; i < this.AdminUnit.Entrances.length; i++) {
-        this.CountryDefaultIso2 = this.AdminUnit.Entrances[i].Address.Country.Iso2;
-        this.PostalCode = this.AdminUnit.Entrances[i].Address.PostalCode;
-      }
-    } else {
-              this.CountryDefaultIso2 = 'DE';
-              this.PostalCode = '';
-            }
+    }
     this.initAdminUnit();
   }
 
   initAdminUnit () {
     this.buildEntrancesArray();
-    this.buildPropertiesArray();
     this.EditForm = this.fb.group({
       UserKey: this.fb.control(
         this.AdminUnit.UserKey,
@@ -127,10 +118,14 @@ export class AdministrationUnitEditComponent implements OnInit {
                     new Date(this.AdminUnit.YearOfConstruction.Year, this.AdminUnit.YearOfConstruction.Month - 1, 1) :
                     this.AdminUnit.YearOfConstruction
       ),
-      Entrances: this.Entrances
+      Entrances: this.Entrances,
+      Id: this.fb.control(this.AdminUnit.Id),
+      Version: this.fb.control(this.AdminUnit.Version),
+      Edit: this.fb.control(this.AdminUnit.Edit)
     });
-    if (this.IsUpdatingAdminUnit) {
-      this.addPropertiesArray();
+    if (this.IsUpdatingAdminUnit && this.AdminUnit.AdministrationUnitProperties.length > 0) {
+      this.buildPropertiesArray();
+      this.EditForm.addControl('AdministrationUnitProperties', this.Properties);
     }
     this.EditForm.statusChanges.subscribe(() => this.updateErrorMessages());
     this.MenuButtons[0].isActive = () => {
@@ -159,49 +154,37 @@ export class AdministrationUnitEditComponent implements OnInit {
               ),
               PostalCode: this.fb.control(t.Address.PostalCode, [Validators.required])
             }
-          )
+          ),
+          Id: this.fb.control(t.Id),
+          Version: this.fb.control(t.Version),
+          Edit: this.fb.control(t.Edit)
         } )
       ),
       AdministrationUnitValidators.atLeastOneEntrance
     );
   }
 
-  addPropertiesArray() {
-    this.EditForm.addControl('AdministrationUnitProperties', this.Properties);
-    if (this.Properties.length === 0 ) {
-      this.addPropertiesControl();
-    }
-  }
-
   buildPropertiesArray() {
-    this.Properties = this.fb.array(
-      this.AdminUnit.AdministrationUnitProperties.map(
-        t => this.fb.group({
-          Title: this.fb.control(t.Title, [Validators.required]),
-          Description: this.fb.control((t.Description)),
-          Value: this.Value =  this.fb.group(
-            {
-              Tag: this.fb.control(this.setDefaultTagValueByNewAdminUnit(t), [Validators.required] ),
-              Raw: this.fb.control(
-                  this.formatRaw(t.Value)
-              )
-            }
-          )
-        }, AdministrationUnitPropertyValidator)
-      )
-    );
-  }
-
-  formatRaw(value: AdministrationUnitPropertyValue) {
-    if (value.Tag === '1') {
-      return new Date(value.Raw);
-    } else { return value.Raw; }
-  }
-
-  setDefaultTagValueByNewAdminUnit (property: any) {
-    if (property.Title === '') {
-      return 3;
-    } else { return property.Value.Tag; }
+      this.Properties = this.fb.array(
+        this.AdminUnit.AdministrationUnitProperties.map(
+          t => this.fb.group({
+            Title: this.fb.control(t.Title, [Validators.required]),
+            Description: this.fb.control((t.Description)),
+            Value: this.fb.group({
+              Tag: this.fb.control(t.Value.Tag),
+              Raw: this.fb.control(t.Value.Raw),
+              RawNumber: this.fb.group({
+                _decimalPlaces: this.fb.control( t.Value.Raw._decimalPlaces),
+                _unit: this.fb.control(t.Value.Raw._unit),
+                _value: this.fb.control(t.Value.Raw._value)
+              })
+            }),
+            Id: this.fb.control(t.Id),
+            Version: this.fb.control(t.Version),
+            Edit: this.fb.control(t.Edit)
+          }, AdministrationUnitPropertyValidator)
+        )
+      );
   }
 
   submitForm() {
@@ -209,31 +192,8 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (this.EditForm.value.AdministrationUnitProperties) {
       this.EditForm.value.AdministrationUnitProperties = this.EditForm.value.AdministrationUnitProperties.filter(properties => properties);
       }
-    const AdminUnit: IAdministrationUnit = AdminUnitFactory.fromObject(this.EditForm.value);
-     if (AdminUnit.YearOfConstruction) {
-       const date: Date = new Date(AdminUnit.YearOfConstruction.toString());
-       const yearMonth: YearMonth = new YearMonth(date.getFullYear(), date.getMonth() + 1);
-       AdminUnit.YearOfConstruction = yearMonth;
-     }
-    const formArray = this.EditForm.get('Entrances') as FormArray;
+    const AdminUnit: IAdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value, this.IsUpdatingAdminUnit);
     if (this.IsUpdatingAdminUnit) {
-      AdminUnit.Id = this.AdminUnit.Id;
-      AdminUnit.Edit = this.AdminUnit.Edit;
-      AdminUnit.Version = this.AdminUnit.Version;
-      for ( let i = 0; i < formArray.length && i < this.AdminUnit.Entrances.length; i++ ) {
-        AdminUnit.Entrances[i].Id = this.AdminUnit.Entrances[i].Id;
-        AdminUnit.Entrances[i].Edit = this.AdminUnit.Entrances[i].Edit;
-        AdminUnit.Entrances[i].Version = this.AdminUnit.Entrances[i].Version;
-      }
-      for (let i = 0; i < AdminUnit.AdministrationUnitProperties.length; i++) {
-        if (AdminUnit.AdministrationUnitProperties[i].Value.Tag === '1'
-          &&  typeof AdminUnit.AdministrationUnitProperties[i].Value.Raw === 'string' ) {
-          AdminUnit.AdministrationUnitProperties[i].Value.Raw =
-            new Date (AdminUnit.AdministrationUnitProperties[i].Value.Raw).toISOString();
-        }
-        AdminUnit.AdministrationUnitProperties[i].Version = this.AdminUnit.AdministrationUnitProperties[i].Version;
-        AdminUnit.AdministrationUnitProperties[i].Id = this.AdminUnit.AdministrationUnitProperties[i].Id;
-      }
       this.as.edit(AdminUnit).subscribe(res => {
         this.router.navigate(['../../administrationUnits']);
       });
@@ -356,28 +316,44 @@ export class AdministrationUnitEditComponent implements OnInit {
         Street: this.fb.control (null, [Validators.required]),
         Number: this.fb.control (null, [Validators.required]),
         Country:
-          this.fb.group({Iso2: null, Name: null}, { validator: Validators.required}),
+          this.fb.group({Iso2: 'DE', Name: null}, { validator: Validators.required}),
         PostalCode: this.fb.control (null, [Validators.required])
       })
     }));
   }
 
+
+  addPropertiesArray() {
+    if (!this.Properties) {
+      this.buildPropertiesArray();
+    }
+    this.addPropertiesControl();
+    this.EditForm.addControl('AdministrationUnitProperties', this.Properties);
+  }
+
   addPropertiesControl() {
     this.Properties.push(this.fb.group({
-        Title: this.fb.control(null, [ Validators.required]),
-        Description: this.fb.control((null)),
-        Value: this.Value =  this.fb.group(
-          {
-            Tag: this.fb.control(3, [Validators.required]),
-            Raw: this.fb.control(null)
-          }
-        )
+      Title: this.fb.control(null, [Validators.required]),
+      Description: this.fb.control((null)),
+      Value: this.fb.group({
+        Tag: this.fb.control(3),
+        Raw: this.fb.control(null),
+        RawNumber: this.fb.group({
+          _decimalPlaces: this.fb.control( 0),
+          _unit: this.fb.control(null),
+          _value: this.fb.control(null)
+        })
+      }),
+      Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
+      Version: this.fb.control(0),
+      Edit: this.fb.control(null)
       }, AdministrationUnitPropertyValidator)
     );
   }
 
   removeEntrancesControl(index: number) {
     this.Entrances.removeAt(index);
+    this.EditForm.markAsTouched();
   }
 
   removePropertiesControl(index: number) {
@@ -385,6 +361,7 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (this.Properties.length === 0 ) {
       this.EditForm.removeControl('AdministrationUnitProperties');
     }
+    this.EditForm.markAsTouched();
   }
 
   onShowPropertiesForAllAdministrationUnits() {
@@ -396,9 +373,10 @@ export class AdministrationUnitEditComponent implements OnInit {
     const id = this.AdminUnit.Id;
     this.as.getSingle(id).subscribe(res => {
       this.refreshNewProperty(res.AdministrationUnitProperties);
-      this.AdminUnit.Version = res.Version;
+      this.EditForm.patchValue({'Version': res.Version});
     });
-    this.bs.listBaseSettings().subscribe(res => this.BaseSettings.dataSource = new MatTableDataSource<IBaseSetting>(res));
+    this.bs.listAdministrationUnitFeature().subscribe(res => this.AdministrationUnitFeatures.dataSource =
+      new MatTableDataSource<IAdministrationUnitFeature>(res));
   }
 
   refreshNewProperty(properties: any) {
@@ -411,18 +389,40 @@ export class AdministrationUnitEditComponent implements OnInit {
       this.Properties.push(this.fb.group({
         Title: this.fb.control(propertyNew.Title, [ Validators.required]),
         Description: this.fb.control(propertyNew.Description),
-        Value: this.Value =  this.fb.group(
-          {
-            Tag: this.fb.control(propertyNew.Value.Tag, [Validators.required]),
-            Raw: this.fb.control(propertyNew.Value.Raw)
-          }
-        )
+        Value: this.fb.group({
+          Tag: this.fb.control(propertyNew.Value.Tag),
+          Raw: this.fb.control(propertyNew.Value.Raw),
+          RawNumber: this.fb.group({
+            _decimalPlaces: this.fb.control( propertyNew.Value.Raw._decimalPlaces),
+            _unit: this.fb.control(propertyNew.Value.Raw._unit),
+            _value: this.fb.control(propertyNew.Value.Raw._value)
+          })
+        }),
+        Id: this.fb.control(propertyNew.Id),
+        Version: this.fb.control(propertyNew.Version),
+        Edit: this.fb.control(propertyNew.Edit)
       }, AdministrationUnitPropertyValidator));
     }
     if (!this.EditForm.get(['AdministrationUnitProperties'])) {
       this.EditForm.addControl('AdministrationUnitProperties', this.Properties);
     }
     this.AdminUnit.AdministrationUnitProperties = properties;
+  }
+
+  selectedValueTag(event: any, i: number) {
+    const valueTag = this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'Tag']) as FormControl;
+    const valueRawNumberValue =
+      this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_value']) as FormControl;
+    const valueRawNumberDecimalPlaces =
+      this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_decimalPlaces']) as FormControl;
+    const valueRawNumberUnit =
+      this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_unit']) as FormControl;
+    const valueRaw =
+      this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'Raw']) as FormControl;
+    if (valueRawNumberValue) { valueRawNumberValue.setValue(null); }
+    if (valueRawNumberDecimalPlaces) { valueRawNumberDecimalPlaces.setValue(null); }
+    if (valueRawNumberUnit) { valueRawNumberUnit.setValue(null); }
+    if (valueRaw) { valueRaw.setValue(null); }
   }
 }
 

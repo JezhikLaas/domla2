@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BaseSettingsService } from './basesettings.service';
-import { IBaseSetting } from './ibasesetting';
+import { AdministrationUnitFeatureService } from './administration-unit-feature.service';
+import { IAdministrationUnitFeature } from './IAdministrationUnitFeature';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable()
-export class BaseSettingsResolver implements Resolve<Array<IBaseSetting>> {
+export class AdministrationUnitFeaturesResolver implements Resolve<Array<IAdministrationUnitFeature>> {
 
-  constructor( private baseSettingsService: BaseSettingsService) { }
+  constructor( private administrationUnitFeatureService: AdministrationUnitFeatureService) { }
 
-  resolve(): Observable<Array<IBaseSetting>> {
-    return this.baseSettingsService.listBaseSettings();
+  resolve(): Observable<Array<IAdministrationUnitFeature>> {
+    return this.administrationUnitFeatureService.listAdministrationUnitFeature();
   }
 }

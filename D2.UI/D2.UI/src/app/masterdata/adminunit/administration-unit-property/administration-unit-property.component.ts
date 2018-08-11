@@ -13,11 +13,16 @@ export class AdministrationUnitPropertyComponent implements OnInit {
   @Input() Value: FormGroup;
   @Input() Title: FormControl;
   @Input() Raw: FormControl;
+  @Input() RawNumber: FormGroup;
+  @Input() RawNumberValue: FormControl;
+  @Input() RawNumberUnit: FormControl;
+  @Input() RawNumberDecimalPlaces: FormControl;
   @Input() Tag: FormControl;
   @Input() Description: FormControl;
   @Input() ArrayLastElement: number;
   @Output() addPropertiesControl = new EventEmitter<any>();
   @Output() removePropertiesControl = new EventEmitter<any>();
+  @Output() selectedValueTag = new EventEmitter<any>();
   DataType = DataType;
 
   constructor(
@@ -34,7 +39,9 @@ export class AdministrationUnitPropertyComponent implements OnInit {
   onRemovePropertiesControl () {
     this.removePropertiesControl.emit();
   }
-  onDataTypeSelected( val: any) {
+
+  onSelectedValueTag (event: any) {
+    this.selectedValueTag.emit(event);
   }
 }
 

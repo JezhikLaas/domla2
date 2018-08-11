@@ -9,6 +9,6 @@ describe('d2.ui App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to ui!');
+    expect(page.getParagraphText()).toEqual('Domla/1');
   });
 });

@@ -1,7 +1,8 @@
 import {Entrance} from '../../../shared/entrance';
 import {IAdministrationUnit} from './iadministration-unit';
 import {YearMonth} from '../../shared/year-month';
-import {AdministrationUnitPropertyValue} from '../../../shared/administration-unit-property-value';
+import {Variant} from '../../../shared/variant';
+import {IAdministrationUnitProperty} from './iadministration-unit-property';
 
 
 export class AdministrationUnit implements IAdministrationUnit {
@@ -13,12 +14,6 @@ export class AdministrationUnit implements IAdministrationUnit {
     public Version: number,
     public Entrances?: Entrance[],
     public YearOfConstruction?: YearMonth,
-    public AdministrationUnitProperties?: {
-      Title: string;
-      Description: string;
-      Value: AdministrationUnitPropertyValue;
-      Version: number;
-      Id: string;
-    }[]
+    public AdministrationUnitProperties?: IAdministrationUnitProperty[]
   ) { }
 }

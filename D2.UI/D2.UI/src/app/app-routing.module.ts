@@ -24,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'baseSettings',
-    loadChildren: 'app/masterdata/basesettings/basesettings.module#BaseSettingsModule'
+    loadChildren: 'app/masterdata/administration-unit-feature/administration-unit-feature.module#AdministrationUnitFeatureModule'
   },
 
 ];

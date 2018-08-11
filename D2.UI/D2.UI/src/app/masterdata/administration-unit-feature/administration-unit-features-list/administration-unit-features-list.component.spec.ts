@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BaseSettingsListComponent } from './base-settings-list.component';
+import { AdministrationUnitFeaturesListComponent } from './administration-unit-features-list.component';
 
-describe('BaseSettingsListComponent', () => {
-  let component: BaseSettingsListComponent;
-  let fixture: ComponentFixture<BaseSettingsListComponent>;
+describe('AdministrationUnitFeaturesListComponent', () => {
+  let component: AdministrationUnitFeaturesListComponent;
+  let fixture: ComponentFixture<AdministrationUnitFeaturesListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BaseSettingsListComponent ]
+      declarations: [ AdministrationUnitFeaturesListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BaseSettingsListComponent);
+    fixture = TestBed.createComponent(AdministrationUnitFeaturesListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

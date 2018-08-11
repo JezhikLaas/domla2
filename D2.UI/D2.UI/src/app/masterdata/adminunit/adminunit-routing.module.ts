@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 import { AdministrationUnitsResolver } from './shared/administration-units-resolver.service';
 import { AdministrationUnitResolver } from './shared/administration-unit-resolver.service';
-import {BaseSettingResolver} from '../shared/base-setting-resolver.service';
-import {BaseSettingsResolver} from '../shared/base-settings-resolver.service';
+import {AdministrationUnitFeaturesResolver} from '../shared/administration-unit-features-resolver.service';
+import {AdministrationUnitsListComponent} from './administration-units-list/administration-units-list.component';
 
 const routes: Routes = [
   {
@@ -20,7 +19,7 @@ const routes: Routes = [
     component: AdministrationUnitEditComponent,
     resolve: {
       AdministrationUnit: AdministrationUnitResolver,
-      BaseSettings: BaseSettingsResolver
+      AdministrationUnitFeatures: AdministrationUnitFeaturesResolver
     }
   }
 ];

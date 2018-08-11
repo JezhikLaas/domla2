@@ -3,13 +3,11 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
 import { IAdministrationUnit } from '../shared/iadministration-unit';
-import { MenuItem } from '../../../shared/menu-item';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdministrationUnitService } from '../shared/administration-unit.service';
 
 @Component({
-  selector: 'ui-administration-units',
-  templateUrl: './administration-units-list.component.html',
+  selector: 'ui-administration-units-view',
+  templateUrl: './administration-units-list-view.component.html',
   styles: [`
     .mat-column-select {
       overflow: initial;
@@ -20,17 +18,13 @@ import { AdministrationUnitService } from '../shared/administration-unit.service
     }
   `]
 })
-export class AdministrationUnitsListComponent implements OnInit {
-  MenuButtons = [
-    new MenuItem('New', () => this.router.navigate([`administrationUnits/0`]), () => true),
-  ];
+export class AdministrationUnitsListViewComponent implements OnInit {
   displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
   dataSource: MatTableDataSource<IAdministrationUnit>;
   initialSelection = [];
   allowMultiSelect = false;
   selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
   @Output() administrationUnitSelected = new EventEmitter<any>();
-  @Input() administrationUnitFeatureSelected: boolean;
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,
@@ -38,18 +32,10 @@ export class AdministrationUnitsListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.menuDisplay.menuNeeded.emit(this.MenuButtons);
     this.dataSource = new MatTableDataSource<IAdministrationUnit>(this.route.snapshot.data['AdministrationUnits']);
   }
 
-  selectRow (AdminUnit) {
-    this.administrationUnitFeatureSelected ?
-      this.selectRowsOnlyId(AdminUnit) :
-      this.router.navigate([`administrationUnits/${AdminUnit.Id}`]);
-  }
-
-  selectRowsOnlyId (administratinUnit: any) {
+  selectRow (administratinUnit: any) {
     this.administrationUnitSelected.emit(administratinUnit);
   }
-
 }

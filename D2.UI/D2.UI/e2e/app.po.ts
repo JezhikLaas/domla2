@@ -6,6 +6,6 @@ export class AppPage {
   }
 
   getParagraphText() {
-    return element(by.css('ui-root h1')).getText();
+    return element(by.className('navigation-header')).getText();
   }
 }

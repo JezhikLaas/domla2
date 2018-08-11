@@ -25,7 +25,7 @@ namespace D2.MasterData.Mappings
             Map(x => x.Value)
                 .Access.BackingField()
                 .CustomType<VariantType>()
-                .Not.Nullable();
+                .Nullable();
             Version(x => x.Version)
                 .Access.BackingField()
                 .Generated.Never()

@@ -10,11 +10,11 @@
           <input matInput [formControl]="Description"  >
         </mat-form-field>
       </div>
-      <div [formGroup]="Value" fxLayout="row" fxLayoutWrap fxLayoutGap="1%" class="container"  fxLayoutAlign="left" fxFlex="100%" fxLayout.xs="column"
+      <div [formGroup]="Value" fxLayout="row" fxLayoutWrap fxLayoutGap="1%" class="container"  fxLayoutAlign="left" fxFlex="50%" fxLayout.xs="column"
            [ngSwitch]="Tag.value">
         <div fxFlex="40">
           <mat-form-field style="width: 100%">
-            <mat-select  (ngModelChange)="onDataTypeSelected($event)" [formControl]="Tag">
+            <mat-select  [formControl]="Tag" (valueChange)="onSelectedValueTag($event)">
               <mat-option *ngFor="let Typ of DataType; let i = index" [value]=i+1>{{Typ}} </mat-option>
             </mat-select>
           </mat-form-field>
@@ -22,15 +22,23 @@
         <div fxFlex="60" *ngSwitchCase="1">
           <mat-form-field  style="width: 100%">
             <mat-label>Wert</mat-label>
-            <input matInput [formControl]="Raw" [matDatepicker]="picker2" placeholder="Angular forms (w/ deserialization)">
+            <input matInput [formControl]="Raw" [matDatepicker]="picker2" >
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
         </div>
-        <div fxFlex="60" *ngSwitchCase="2">
-          <mat-form-field style="width: 100%">
+        <div fxFlex="60" *ngSwitchCase="2" [formGroup]="RawNumber" fxLayout="row" fxLayoutGap="1%" fxFlexAlign="left">
+          <mat-form-field style="width: 33%">
+            <mat-label>Einheit</mat-label>
+            <input matInput [formControl]="RawNumberUnit">
+          </mat-form-field>
+          <mat-form-field style="width: 33%">
+            <mat-label>Nachkommastellen</mat-label>
+            <input matInput [formControl]="RawNumberDecimalPlaces" type="number" >
+          </mat-form-field>
+          <mat-form-field style="width: 33%">
             <mat-label>Wert</mat-label>
-            <input matInput [formControl]="Raw" type="number" >
+            <input matInput [formControl]="RawNumberValue" type="number" >
           </mat-form-field>
         </div>
         <div fxFlex="60" *ngSwitchCase="3">

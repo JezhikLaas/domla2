@@ -1,19 +1,20 @@
 import {AfterViewChecked, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {IBaseSetting} from '../../shared/ibasesetting';
 import {DataType} from '../../shared/data-type';
-import {BaseSettingsService} from '../../shared/basesettings.service';
-import {BaseSettingsErrorMessages} from './base-settings-error-messages';
+import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
+import {AdministrationUnitFeatureCreateErrorMessages} from './administration-unit-feature-create-error-messages';
+import {MatDialog} from '@angular/material';
+import {DialogAdministrationUnitsListComponent} from '../dialog-administration-units-list/dialog-administration-units-list.component';
 
 @Component({
-  selector: 'ui-base-setting-edit',
-  templateUrl: './base-setting-edit.component.html',
+  selector: 'ui-administration-unit-feature-create',
+  templateUrl: './administration-unit-feature-create.component.html',
   styles: []
 })
-export class BaseSettingEditComponent implements OnInit {
+export class AdministrationUnitFeatureCreateComponent implements OnInit {
   EditForm: FormGroup;
-  BaseSettingsGroup: FormGroup;
+  AdministrationUnitFeatureGroup: FormGroup;
   DataType = DataType;
   @Output() refreshProperty = new EventEmitter<any>();
   Errors: { [key: string]: string } = {};
@@ -21,19 +22,20 @@ export class BaseSettingEditComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private bsService: BaseSettingsService) {
+              private bsService: AdministrationUnitFeatureService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit() {
     this.buildBaseSettingsGroup();
     this.EditForm = this.fb.group({
-      BaseSettings: this.BaseSettingsGroup
+      AdministrationUnitFeatures: this.AdministrationUnitFeatureGroup
     });
     this.EditForm.statusChanges.subscribe(() => this.updateErrorMessages());
   }
 
   buildBaseSettingsGroup() {
-    this.BaseSettingsGroup = this.fb.group({
+    this.AdministrationUnitFeatureGroup = this.fb.group({
       Title: this.fb.control(null, [Validators.required]),
       Description: this.fb.control(null),
       Tag: this.fb.control(3, [Validators.required]),
@@ -43,10 +45,10 @@ export class BaseSettingEditComponent implements OnInit {
   }
 
   onAddBaseControl() {
-    this.bsService.createBaseSettings(this.BaseSettingsGroup.value).subscribe(res => this.onRefreshProperty());
+    this.bsService.createAdministrationUnitFeature(this.AdministrationUnitFeatureGroup.value).subscribe(res => this.onRefreshProperty());
     this.EditForm.reset();
-    this.BaseSettingsGroup.controls.Tag.setValue(3);
-    this.BaseSettingsGroup.controls.TypedValueDecimalPlace.setValue(0);
+    this.AdministrationUnitFeatureGroup.controls.Tag.setValue(3);
+    this.AdministrationUnitFeatureGroup.controls.TypedValueDecimalPlace.setValue(0);
   }
 
   onRefreshProperty() {
@@ -55,17 +57,27 @@ export class BaseSettingEditComponent implements OnInit {
 
   updateErrorMessages() {
   this.Errors = {};
-  for (const message of BaseSettingsErrorMessages) {
-    const control = this.EditForm.get(['BaseSettings', message.forControl]);
+  for (const message of AdministrationUnitFeatureCreateErrorMessages) {
+    const control = this.EditForm.get(['AdministrationUnitFeatures', message.forControl]);
     if (control &&
       control.dirty &&
       control.invalid &&
       control.errors &&
       control.errors[message.forValidator] &&
-      !this.Errors['BaseSettings' + message.forControl]) {
-      this.Errors['BaseSettings' + message.forControl] = message.text;
+      !this.Errors['AdministrationUnitFeatures' + message.forControl]) {
+      this.Errors['AdministrationUnitFeatures' + message.forControl] = message.text;
     }
   }
   }
+
+  openDialog (selected: any) {
+    if (selected.value === 'selectedAdministrationUnits') {
+      const dialogRef = this.dialog.open (DialogAdministrationUnitsListComponent, {
+        width: '1000px',
+        height: '800px'
+      });
+    }
+  }
 }
+
 

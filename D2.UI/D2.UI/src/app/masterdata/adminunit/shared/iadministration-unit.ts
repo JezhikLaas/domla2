@@ -1,6 +1,6 @@
 import {Entrance} from './../../../shared/entrance';
 import {YearMonth} from '../../shared/year-month';
-import {AdministrationUnitPropertyValue} from '../../../shared/administration-unit-property-value';
+import {Variant} from '../../../shared/variant';
 
 export interface IAdministrationUnit {
   Id: string;
@@ -13,7 +13,7 @@ export interface IAdministrationUnit {
   AdministrationUnitProperties?: {
     Title: string;
     Description: string;
-    Value?: AdministrationUnitPropertyValue;
+    Value?: Variant;
     Version: number;
     Id: string;
   }[];

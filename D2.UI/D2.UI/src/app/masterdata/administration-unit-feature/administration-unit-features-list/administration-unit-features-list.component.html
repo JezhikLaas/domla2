@@ -1,8 +1,8 @@
 <mat-tab-group>
   <mat-tab label="Zusatzfelder für alle Objekte anlegen">
-    <ui-base-setting-edit
+    <ui-administration-unit-feature-create
       (refreshProperty)="refreshProperties()">
-    </ui-base-setting-edit>
+    </ui-administration-unit-feature-create>
     <h5>Vorhandene Zusatzfelder aller Objekte</h5>
     <mat-table #table [dataSource]="dataSource">
         <ng-container matColumnDef="Title">
@@ -36,7 +36,5 @@
       </mat-table>
   </mat-tab>
   <mat-tab label = "Zusatzfelder für ausgewählte Objekte anlegen">
-    <ui-administration-unit-feature-selected>
-    </ui-administration-unit-feature-selected>
   </mat-tab>
 </mat-tab-group>
