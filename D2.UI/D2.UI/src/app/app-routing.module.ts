@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'administrationUnits',
-    loadChildren: 'app/masterdata/adminunit/adminunit.module#AdminunitModule'
+    loadChildren: 'app/masterdata/administration-unit/administration-unit.module#AdministrationUnitModule'
   },
   {
     path: 'datePicker',

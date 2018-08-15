@@ -52,11 +52,13 @@
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"
-               (click)="selection.toggle(row)">
+               (click)="selection.toggle(row)"
+               [class.selected] = "selection.isSelected(row)">
       </mat-row>
     </mat-table>
   </div>
 </mat-dialog-content>
 <div mat-dialog-actions>
-  <button mat-raised-button (click)="onNoClick()">No Thanks</button>
+  <button mat-raised-button (click)="onNoClick()">Abbrechen</button>
+  <button mat-raised-button [mat-dialog-close]="selection.selected" cdkFocusInitial>Ok</button>
 </div>

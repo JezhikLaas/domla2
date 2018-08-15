@@ -1,5 +1,3 @@
-import {Entrance} from '../../../shared/entrance';
-
 export class ErrorMessage {
   constructor(
     public forControl: string,

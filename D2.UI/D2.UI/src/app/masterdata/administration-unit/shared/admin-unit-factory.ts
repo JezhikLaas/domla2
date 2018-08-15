@@ -1,9 +1,5 @@
-import { IAdministrationUnit } from './iadministration-unit';
 import { AdministrationUnit } from './administration-unit';
 import { AdministrationUnitRaws } from './administration-unit-raws';
-import { Entrance } from '../../../shared/entrance';
-import { Address } from '../../../shared/address';
-import { CountryInfo } from '../../../shared/country-info';
 import {YearMonth} from '../../shared/year-month';
 import {IAdministrationUnitProperty} from './iadministration-unit-property';
 import {Variant} from '../../../shared/variant';
@@ -64,7 +60,7 @@ export class AdminUnitFactory {
     return propertyArray;
   }
 
-  static toObject(rawAdministrationUnit: AdministrationUnitRaws | any, isUpdatingAdminUnit: boolean): AdministrationUnit {
+  static toObject(rawAdministrationUnit: AdministrationUnitRaws | any): AdministrationUnit {
     return new AdministrationUnit(
       rawAdministrationUnit.Id,
       rawAdministrationUnit.UserKey,

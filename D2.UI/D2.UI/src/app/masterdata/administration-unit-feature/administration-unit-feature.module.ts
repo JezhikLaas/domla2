@@ -6,7 +6,8 @@ import { AdministrationUnitFeaturesListComponent } from './administration-unit-f
 import { AdministrationUnitFeatureCreateComponent } from './administration-unit-feature-create/administration-unit-feature-create.component';
 import { SharedModule} from '../../shared/shared.module';
 import { DialogAdministrationUnitsListComponent} from './dialog-administration-units-list/dialog-administration-units-list.component';
-import { AdministrationUnitsListComponent} from '../adminunit/administration-units-list/administration-units-list.component';
+import { AdministrationUnitsListComponent} from '../administration-unit/administration-units-list/administration-units-list.component';
+import { AdministrationUnitFeaturesListViewComponent } from './administration-unit-features-list-view/administration-unit-features-list-view.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { AdministrationUnitsListComponent} from '../adminunit/administration-uni
   declarations: [
     AdministrationUnitFeaturesListComponent,
     AdministrationUnitFeatureCreateComponent,
-    DialogAdministrationUnitsListComponent
+    DialogAdministrationUnitsListComponent,
+    AdministrationUnitFeaturesListViewComponent
   ],
 
   schemas: [
@@ -28,7 +30,8 @@ import { AdministrationUnitsListComponent} from '../adminunit/administration-uni
     AdministrationUnitFeaturesListComponent,
     AdministrationUnitFeatureCreateComponent,
     AdministrationUnitFeatureRoutingModule,
-    DialogAdministrationUnitsListComponent
+    DialogAdministrationUnitsListComponent,
+    AdministrationUnitFeaturesListViewComponent
   ]
 })
 export class AdministrationUnitFeatureModule { }

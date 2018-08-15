@@ -38,7 +38,7 @@
         </div>
         <div fxFlex="20%">
           <mat-form-field style="width: 100%">
-            <mat-select (selectionChange)="openDialog($event)">
+            <mat-select (selectionChange)="openDialog($event)" value = "allAdministrationUnits">>
               <mat-option value="allAdministrationUnits">für alle Objekte</mat-option>
               <mat-option value="selectedAdministrationUnits">für ausgewählte Objekte</mat-option>
             </mat-select>
@@ -50,7 +50,7 @@
                     style="margin-top: 0.25em;" type="button" class="ui button"
                     matTooltip="Beim Anklicken werden alle bestehenden Objekte mit diesem Zusatzfeld versehen"
                     [matTooltipPosition]="'above'"
-                    [disabled]="EditForm.invalid"> + </button>
+                    [disabled]="EditForm.invalid"> Hinzufügen </button>
           </div>
         </div>
     </div>
@@ -60,5 +60,7 @@
     <div *ngIf="Errors?.BaseSettingsTag" class="ui negative message" fxFlex="50%" style="margin-bottom: 1em">
       {{ Errors?.BaseSettingsTag }}
     </div>
+    <h2 class="mat-subheading-1" *ngIf="AdministrationUnits.length>0">Ausgewählte Objekte</h2>
+    <ui-administration-units-view *ngIf="AdministrationUnits.length > 0"></ui-administration-units-view>
   </div>
 </form>

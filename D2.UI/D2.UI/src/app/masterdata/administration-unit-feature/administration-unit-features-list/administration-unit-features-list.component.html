@@ -1,40 +1,9 @@
-<mat-tab-group>
-  <mat-tab label="Zusatzfelder für alle Objekte anlegen">
     <ui-administration-unit-feature-create
       (refreshProperty)="refreshProperties()">
     </ui-administration-unit-feature-create>
-    <h5>Vorhandene Zusatzfelder aller Objekte</h5>
-    <mat-table #table [dataSource]="dataSource">
-        <ng-container matColumnDef="Title">
-          <mat-header-cell *matHeaderCellDef> Titel </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.Title}} </mat-cell>
-        </ng-container>
+    <h2 class="mat-subheading-1" style="margin-top: 2em"
+        matTooltip="Ein neu angelegtes Objekt wird automatisch mit diesen Zusatzfeldern angereichert"
+        [matTooltipPosition]="'above'">Vorhandene Zusatzfelder aller Objekte</h2>
+   <ui-administration-unit-features-list-view>
+   </ui-administration-unit-features-list-view>
 
-        <ng-container matColumnDef="Description">
-          <mat-header-cell *matHeaderCellDef> Beschreibung </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.Description}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="Tag">
-          <mat-header-cell *matHeaderCellDef> Datentyp </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{DataType[element.Tag-1]}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="TypedValueDecimalPlace">
-          <mat-header-cell *matHeaderCellDef> Zahl der Nachkommastellen </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.TypedValueDecimalPlace}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="TypedValueUnit">
-          <mat-header-cell *matHeaderCellDef> Maßeinheit </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.TypedValueUnit}} </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;">
-        </mat-row>
-      </mat-table>
-  </mat-tab>
-  <mat-tab label = "Zusatzfelder für ausgewählte Objekte anlegen">
-  </mat-tab>
-</mat-tab-group>

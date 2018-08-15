@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 
-import { AdminunitRoutingModule } from './adminunit-routing.module';
+import { AdministrationUnitRoutingModule } from './administration-unit-routing.module';
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 import { SharedModule } from '../../shared/shared.module';
 import {
@@ -12,7 +12,7 @@ import { AdministrationUnitsListComponent } from './administration-units-list/ad
 
 @NgModule({
   imports: [
-    AdminunitRoutingModule,
+    AdministrationUnitRoutingModule,
     SharedModule,
     AdministrationUnitFeatureModule
 
@@ -26,4 +26,4 @@ import { AdministrationUnitsListComponent } from './administration-units-list/ad
     CUSTOM_ELEMENTS_SCHEMA
   ],
 })
-export class AdminunitModule { }
+export class AdministrationUnitModule { }

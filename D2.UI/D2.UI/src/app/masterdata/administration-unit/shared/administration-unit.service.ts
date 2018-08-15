@@ -7,6 +7,8 @@ import { AdministrationUnit } from './administration-unit';
 import { AdministrationUnitRaws} from './administration-unit-raws';
 import { AdminUnitFactory } from './admin-unit-factory';
 import { map, switchMap, catchError } from 'rxjs/operators';
+import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
+import {ISelectedAdministrationUnitsPropertyParameter} from './iselected-administration-units-property-parameter';
 
 @Injectable()
 export class AdministrationUnitService {
@@ -94,6 +96,23 @@ export class AdministrationUnitService {
             this.brokerUrl = data.Broker;
             return this.http
               .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
+          }),
+          catchError(error => observableThrowError(error))
+        );
+    }
+  }
+
+  addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter: ISelectedAdministrationUnitsPropertyParameter) {
+    if (this.brokerUrl) {
+      return this.http
+        .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=AddProperty`, selectedAdministrationUnitsPropertyParameter);
+    } else {
+      return this.accountService.fetchServices()
+        .pipe(
+          switchMap(data => {
+            this.brokerUrl = data.Broker;
+            return this.http
+              .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=AddProperty`, selectedAdministrationUnitsPropertyParameter);
           }),
           catchError(error => observableThrowError(error))
         );

@@ -1,15 +1,15 @@
 import {throwError as observableThrowError, Observable} from 'rxjs';
 import { Injectable } from '@angular/core';
-import {AdministrationUnitRaws} from '../adminunit/shared/administration-unit-raws';
+import {AdministrationUnitRaws} from '../administration-unit/shared/administration-unit-raws';
 import {map} from 'rxjs/operators';
-import {AdminUnitFactory} from '../adminunit/shared/admin-unit-factory';
+import {AdminUnitFactory} from '../administration-unit/shared/admin-unit-factory';
 import {AccountService} from '../../shared/account.service';
 import {HttpClient} from '@angular/common/http';
 import {IpostalCodeInfo} from './ipostalcodeinfo';
 import {CountryInfo} from '../../shared/country-info';
 import {catchError, switchMap} from 'rxjs/internal/operators';
 import {IAdministrationUnitFeature} from './IAdministrationUnitFeature';
-import {IAdministrationUnit} from '../adminunit/shared/iadministration-unit';
+import {IAdministrationUnit} from '../administration-unit/shared/iadministration-unit';
 
 @Injectable({
   providedIn: 'root'

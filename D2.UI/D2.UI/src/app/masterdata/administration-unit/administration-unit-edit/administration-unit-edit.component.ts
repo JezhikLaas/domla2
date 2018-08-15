@@ -17,15 +17,13 @@ import {
 import { CountryInfo } from '../../../shared/country-info';
 import { DatePipe } from '@angular/common';
 import { AddressService } from '../../shared/address.service';
-import { YearMonth } from '../../shared/year-month';
 import { DataType } from '../../shared/data-type';
-import {Variant} from '../../../shared/variant';
 import {AdministrationUnitPropertyValidator} from '../administration-unit-property/administration-unit-property-validator';
 import {List} from 'linqts';
-import {AdministrationUnitFeaturesListComponent} from '../../administration-unit-feature/administration-unit-features-list/administration-unit-features-list.component';
 import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
 import {MatTableDataSource} from '@angular/material';
 import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
+import {AdministrationUnitFeaturesListViewComponent} from '../../administration-unit-feature/administration-unit-features-list-view/administration-unit-features-list-view.component';
 
 
 export enum KEY_CODE {
@@ -63,7 +61,7 @@ export class AdministrationUnitEditComponent implements OnInit {
   CountryDefaultIso2: string;
   DataType;
   ShowPropertiesForAllAdministrationUnits: boolean;
-  @ViewChild (AdministrationUnitFeaturesListComponent) AdministrationUnitFeatures: AdministrationUnitFeaturesListComponent;
+  @ViewChild (AdministrationUnitFeaturesListViewComponent) AdministrationUnitFeatures: AdministrationUnitFeaturesListViewComponent;
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
@@ -192,7 +190,7 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (this.EditForm.value.AdministrationUnitProperties) {
       this.EditForm.value.AdministrationUnitProperties = this.EditForm.value.AdministrationUnitProperties.filter(properties => properties);
       }
-    const AdminUnit: IAdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value, this.IsUpdatingAdminUnit);
+    const AdminUnit: IAdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value);
     if (this.IsUpdatingAdminUnit) {
       this.as.edit(AdminUnit).subscribe(res => {
         this.router.navigate(['../../administrationUnits']);
@@ -382,7 +380,7 @@ export class AdministrationUnitEditComponent implements OnInit {
   refreshNewProperty(properties: any) {
     if (this.AdminUnit.AdministrationUnitProperties) {
       const propertiesArrayNew = new List<any>(properties);
-      const propertyArrayCurrent = new List <any>(this.AdminUnit.AdministrationUnitProperties)
+      const propertyArrayCurrent = new List <any>(this.AdminUnit.AdministrationUnitProperties);
       const propertyNew = propertiesArrayNew
         .Where(x => propertyArrayCurrent.Any(y => y.Id === x.Id) === false)
         .FirstOrDefault();

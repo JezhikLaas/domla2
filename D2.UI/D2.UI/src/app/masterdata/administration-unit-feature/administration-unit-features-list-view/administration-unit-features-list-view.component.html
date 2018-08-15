@@ -1,0 +1,30 @@
+<mat-table #table [dataSource]="dataSource" >
+  <ng-container matColumnDef="Title">
+    <mat-header-cell *matHeaderCellDef> Titel </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.Title}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="Description">
+    <mat-header-cell *matHeaderCellDef> Beschreibung </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.Description}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="Tag">
+    <mat-header-cell *matHeaderCellDef> Datentyp </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{DataType[element.Tag-1]}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="TypedValueDecimalPlace">
+    <mat-header-cell *matHeaderCellDef> Zahl der Nachkommastellen </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.TypedValueDecimalPlace}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="TypedValueUnit">
+    <mat-header-cell *matHeaderCellDef> Maßeinheit </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.TypedValueUnit}} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;">
+  </mat-row>
+</mat-table>

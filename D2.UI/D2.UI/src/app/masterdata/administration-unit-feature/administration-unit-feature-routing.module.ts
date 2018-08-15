@@ -4,7 +4,7 @@ import { AdministrationUnitFeaturesListComponent } from './administration-unit-f
 import { AdministrationUnitFeaturesResolver } from '../shared/administration-unit-features-resolver.service';
 import { AdministrationUnitFeatureCreateComponent } from './administration-unit-feature-create/administration-unit-feature-create.component';
 import { AdministrationUnitFeatureResolver } from '../shared/administration-unit-feature-resolver.service';
-import {AdministrationUnitsResolver} from '../adminunit/shared/administration-units-resolver.service';
+import {AdministrationUnitsResolver} from '../administration-unit/shared/administration-units-resolver.service';
 import {DialogAdministrationUnitsListComponent} from './dialog-administration-units-list/dialog-administration-units-list.component';
 
 const routes: Routes = [

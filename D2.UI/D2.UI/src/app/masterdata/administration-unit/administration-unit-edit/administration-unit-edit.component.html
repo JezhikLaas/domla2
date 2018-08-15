@@ -2,7 +2,7 @@
 <mat-tab-group>
   <mat-tab label="Stammdaten">
     <ng-template matTabContent>
-      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 5em">
+      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 3em">
         <div fxFlex="7%">
             <mat-form-field  style="width: 100%">
               <mat-label>Schlüssel</mat-label>
@@ -29,7 +29,7 @@
   </mat-tab>
   <mat-tab label="Eingänge">
     <ng-template matTabContent>
-      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 5em">
+      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 3em">
          <div formArrayName="Entrances" fx="100%">
            <div *ngFor="let control of Entrances.controls; index as i; last as l"
              [formGroupName]="i"
@@ -82,7 +82,7 @@
   </mat-tab>
   <mat-tab label="Zusatzeigenschaften">
     <ng-template matTabContent>
-      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 5em">
+      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 3em">
         <div formArrayName="AdministrationUnitProperties" fx="100%" *ngIf = "EditForm.get(['AdministrationUnitProperties']) !== null">
           <div *ngFor="let control of Properties.controls; index as i; last as l"
                [formGroupName]="i"
@@ -118,13 +118,13 @@
         <div fxFlex="50" *ngIf ="IsUpdatingAdminUnit && !ShowPropertiesForAllAdministrationUnits">
           <button
             mat-raised-button
-            (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle Objekte anlegen
+            (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle/selektierte Objekte anlegen
           </button>
         </div>
         <div fxFlex="50" *ngIf ="IsUpdatingAdminUnit && ShowPropertiesForAllAdministrationUnits">
           <button
             mat-raised-button
-            (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle Objekte verbergen
+            (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle/selektierte Objekte verbergen
           </button>
         </div>
         <div fxFlex="50">
@@ -136,14 +136,16 @@
           (refreshProperty)="refreshProperties()">
         </ui-administration-unit-feature-create>
         <mat-accordion>
-          <mat-expansion-panel>
+          <mat-expansion-panel id="panel">
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                Bereits vorhandene Zusatzfelder aller Objekte anzeigen
+              <mat-panel-title
+                    matTooltip="Ein neu angelegtes Objekt wird automatisch mit diesen Zusatzfeldern angereichert"
+                    [matTooltipPosition]="'above'">
+                Vorhandene Zusatzfelder aller Objekte
               </mat-panel-title>
             </mat-expansion-panel-header>
-                <ui-administration-unit-features-list>
-                </ui-administration-unit-features-list>
+                <ui-administration-unit-features-list-view>
+                </ui-administration-unit-features-list-view>
           </mat-expansion-panel>
         </mat-accordion>
       </div>

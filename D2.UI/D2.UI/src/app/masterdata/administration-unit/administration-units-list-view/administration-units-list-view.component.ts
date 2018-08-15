@@ -25,9 +25,9 @@ export class AdministrationUnitsListViewComponent implements OnInit {
   allowMultiSelect = false;
   selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
   @Output() administrationUnitSelected = new EventEmitter<any>();
+  disableSelectRow = false;
   constructor(
     private menuDisplay: MenuDisplayService,
-    private router: Router,
     private route: ActivatedRoute
   ) { }
 

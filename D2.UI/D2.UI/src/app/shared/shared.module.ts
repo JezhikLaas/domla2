@@ -50,7 +50,7 @@ import { AddressWithPostalcodeComponent } from '../masterdata/shared/address-wit
 import { DateValueAccessorModule } from 'angular-date-value-accessor';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { OAuthModule} from 'angular-oauth2-oidc';
-import {AdministrationUnitsListViewComponent} from '../masterdata/adminunit/administration-units-list-view/administration-units-list-view.component';
+import {AdministrationUnitsListViewComponent} from '../masterdata/administration-unit/administration-units-list-view/administration-units-list-view.component';
 
 @NgModule({
   exports: [

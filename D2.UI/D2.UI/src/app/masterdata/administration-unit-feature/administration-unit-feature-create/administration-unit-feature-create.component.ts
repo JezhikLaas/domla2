@@ -1,29 +1,40 @@
-import {AfterViewChecked, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DataType} from '../../shared/data-type';
 import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
 import {AdministrationUnitFeatureCreateErrorMessages} from './administration-unit-feature-create-error-messages';
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatSnackBar, MatTableDataSource} from '@angular/material';
 import {DialogAdministrationUnitsListComponent} from '../dialog-administration-units-list/dialog-administration-units-list.component';
+import {IAdministrationUnit} from '../../administration-unit/shared/iadministration-unit';
+import {AdministrationUnitsListViewComponent} from '../../administration-unit/administration-units-list-view/administration-units-list-view.component';
+import {AdministrationUnitService} from '../../administration-unit/shared/administration-unit.service';
+import {IAdministrationUnitProperty} from '../../administration-unit/shared/iadministration-unit-property';
+import {forEach} from '@angular/router/src/utils/collection';
+import {ISelectedAdministrationUnitsPropertyParameter} from '../../administration-unit/shared/iselected-administration-units-property-parameter';
 
 @Component({
   selector: 'ui-administration-unit-feature-create',
   templateUrl: './administration-unit-feature-create.component.html',
   styles: []
 })
-export class AdministrationUnitFeatureCreateComponent implements OnInit {
+export class AdministrationUnitFeatureCreateComponent implements OnInit, AfterViewChecked {
   EditForm: FormGroup;
   AdministrationUnitFeatureGroup: FormGroup;
   DataType = DataType;
   @Output() refreshProperty = new EventEmitter<any>();
   Errors: { [key: string]: string } = {};
+  AdministrationUnits: IAdministrationUnit [] = [];
+  @ViewChild (AdministrationUnitsListViewComponent) AdministrationUnitsListView: AdministrationUnitsListViewComponent;
+  Message = String();
 
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private bsService: AdministrationUnitFeatureService,
-              public dialog: MatDialog) {
+              private administrationUnitFeatureService: AdministrationUnitFeatureService,
+              private administrationUnitService: AdministrationUnitService,
+              public dialog: MatDialog,
+              public confirm: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -45,10 +56,34 @@ export class AdministrationUnitFeatureCreateComponent implements OnInit {
   }
 
   onAddBaseControl() {
-    this.bsService.createAdministrationUnitFeature(this.AdministrationUnitFeatureGroup.value).subscribe(res => this.onRefreshProperty());
-    this.EditForm.reset();
-    this.AdministrationUnitFeatureGroup.controls.Tag.setValue(3);
-    this.AdministrationUnitFeatureGroup.controls.TypedValueDecimalPlace.setValue(0);
+    if (this.AdministrationUnits.length > 0 ) {
+      const  ids = [];
+      this.Message = 'Zusatzfeld wurde den ausgewählten Objekten hinzugefügt.';
+      this.AdministrationUnits.forEach((adminUnit) => {
+        ids.push(adminUnit.Id);
+      });
+      let parameter: ISelectedAdministrationUnitsPropertyParameter;
+      parameter = {
+        AdministrationUnitsFeatureParameters: this.AdministrationUnitFeatureGroup.value,
+        AdministrationUnitIds: ids
+      };
+      this.administrationUnitService.addPropertiesSelectedAdministrationUnits(parameter).subscribe(res => this.onRefreshProperty());
+    } else {
+      this.administrationUnitFeatureService.createAdministrationUnitFeature(this.AdministrationUnitFeatureGroup.value).subscribe(res => this.onRefreshProperty());
+      this.Message = 'Zusatzfeld wurden allen Objekte hinzugefügt.';
+    }
+      this.EditForm.reset();
+      this.AdministrationUnitFeatureGroup.controls.Tag.setValue(3);
+      this.AdministrationUnitFeatureGroup.controls.TypedValueDecimalPlace.setValue(0);
+      this.confirm.open(
+        this.Message,
+        null,
+        {
+          duration: 2500,
+          verticalPosition: 'top',
+          horizontalPosition: 'center'
+        },
+        );
   }
 
   onRefreshProperty() {
@@ -74,8 +109,23 @@ export class AdministrationUnitFeatureCreateComponent implements OnInit {
     if (selected.value === 'selectedAdministrationUnits') {
       const dialogRef = this.dialog.open (DialogAdministrationUnitsListComponent, {
         width: '1000px',
-        height: '800px'
+        height: '800px',
+        disableClose: false,
+        hasBackdrop: true
       });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) { this.AdministrationUnits = result; }
+      });
+    }
+    if (selected.value === 'allAdministrationUnits') {
+      this.AdministrationUnits = [];
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (this.AdministrationUnitsListView) {
+      this.AdministrationUnitsListView.dataSource  = new MatTableDataSource<IAdministrationUnit>(this.AdministrationUnits);
+      this.AdministrationUnitsListView.disableSelectRow = true;
     }
   }
 }
