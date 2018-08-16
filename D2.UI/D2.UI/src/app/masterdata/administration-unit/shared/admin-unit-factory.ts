@@ -108,18 +108,4 @@ export class AdminUnitFactory {
       return new Variant (property.Value.Tag, property.Value.RawNumber);
     }
   }
-
-  static convertPropertyValueRaw (properties: IAdministrationUnitProperty[], isUpdatingAdminUnit: boolean): IAdministrationUnitProperty[] {
-    const auProperties = properties;
-    if (isUpdatingAdminUnit) {
-      for (let i = 0; i < properties.length; i++) {
-        if (properties[i].Value.Tag === 1
-          && typeof properties[i].Value.Raw === 'string') {
-          auProperties[i].Value.Raw =
-            new Date(properties[i].Value.Raw).toISOString();
-        }
-      }
-    }
-    return auProperties;
-  }
 }

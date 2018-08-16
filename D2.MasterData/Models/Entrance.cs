@@ -10,7 +10,7 @@ namespace D2.MasterData.Models
     {
         protected Entrance()
         {
-            _subUnits = new List<SubUnit>();
+            _subUnits = new List<BoundSubUnit>();
         }
 
         public Entrance(EntranceParameters argument, AdministrationUnit unit)
@@ -20,14 +20,11 @@ namespace D2.MasterData.Models
             Address = new Address(argument.Address);
             Version = argument.Version;
             AdministrationUnit = unit;
-            AdministrationUnitId = unit.Id;
-            
-            _subUnits = new List<SubUnit>();
-            if (argument.SubUnits != null) {
-                var items = from subUnitParameter in argument.SubUnits
-                            select new SubUnit(subUnitParameter, this);
-
-                _subUnits = new List<SubUnit>(items);
+            if (argument.BoundSubUnits != null)
+            {
+                var parameter = from subUnitParameters in argument.BoundSubUnits
+                                 select new BoundSubUnit(subUnitParameters, this);
+                _subUnits = new List<BoundSubUnit>(parameter);
             }
         }
 
@@ -43,28 +40,24 @@ namespace D2.MasterData.Models
             protected set;
         }
 
-        public virtual Guid AdministrationUnitId
-        {
-            get;
-            protected set;
-        }
-
         public virtual AdministrationUnit AdministrationUnit
         {
             get;
             protected set;
         }
 
-        private IList<SubUnit> _subUnits;
-        public virtual IEnumerable<SubUnit> SubUnits
-        {
-            get { return _subUnits; }
-        }
 
         public virtual int Version
         {
             get;
             protected set;
+        }
+
+        private IList<BoundSubUnit> _subUnits;
+
+        public virtual IEnumerable<BoundSubUnit> SubUnits
+        {
+            get { return _subUnits; }
         }
     }
 }

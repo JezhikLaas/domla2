@@ -126,5 +126,53 @@ namespace D2.MasterData.Facades.Implementation
 
             return new ValidationResponse(State.ExternalFailure, errors);
         }
+        public ValidationResponse ValidateAddProperty (SelectedAdministrationUnitPropertyParameters value)
+        {
+            var result = _parameterValidator.Validate(value, RequestType.Put);
+
+            if (result.IsValid)
+            {
+                return new ValidationResponse(State.NoError, new Error[0]);
+            }
+
+            var errors = result
+                            .Errors
+                            .Select(error => new Error(error.Property, error.Error))
+                            .ToArray();
+
+            return new ValidationResponse(State.ExternalFailure, errors);
+        }
+
+        public void AddAdministrationUnitProperty(SelectedAdministrationUnitPropertyParameters value)
+        {
+            foreach (var id in value.AdministrationUnitIds)
+            {
+                var parameter = new AdministrationUnitPropertyParameters
+                {
+                    Title = value.AdministrationUnitsFeatureParameters.Title,
+                    Description = value.AdministrationUnitsFeatureParameters.Description
+                };
+                switch (value.AdministrationUnitsFeatureParameters.Tag)
+                {
+                    case VariantTag.DateTime:
+                        parameter.Value = new Variant(new DateTime());
+                        break;
+                    case VariantTag.String:
+                        parameter.Value = new Variant(string.Empty);
+                        break;
+                    case VariantTag.TypedValue:
+                        parameter.Value = new Variant(new TypedValue(0, value.AdministrationUnitsFeatureParameters.TypedValueUnit,
+                            value.AdministrationUnitsFeatureParameters.TypedValueDecimalPlace));
+                        break;
+                    case VariantTag.None:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                var administrationUnit = _repository.Load(id);
+                administrationUnit.AddProperty(new AdministrationUnitProperty(parameter, administrationUnit));
+                _repository.Modify(administrationUnit);
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ using D2.Service.Contracts.Execution;
 using D2.Service.Contracts.Validation;
 using D2.Service.Controller;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace D2.MasterData.Controllers
 {
@@ -68,6 +69,20 @@ namespace D2.MasterData.Controllers
         public ExecutionResponse Load(string id)
         {
             return _administrationUnitFacade.LoadAdministrationUnit(id);
+        }
+
+
+        [Routing("Put", "Validate_AddProperty")]
+        public ValidationResponse ValidateAddProperty([FromBody]SelectedAdministrationUnitPropertyParameters value)
+        {
+            return _administrationUnitFacade.ValidateAddProperty(value);
+        }
+
+        [Routing("Put", "AddProperty")]
+        public ExecutionResponse AddProperty([FromBody]SelectedAdministrationUnitPropertyParameters value)
+        {
+            _administrationUnitFacade.AddAdministrationUnitProperty(value);
+            return new ExecutionResponse(StatusCodes.Status201Created, null, new Error[0]);
         }
     }
 }

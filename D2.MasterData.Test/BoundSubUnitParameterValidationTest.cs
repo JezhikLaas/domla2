@@ -6,13 +6,13 @@ namespace D2.MasterData.Test
 {
     public class ApartmentParameterValidationTest
     {
-        [Fact(DisplayName = "Validation of SubUnitParameters succeeds for valid post")]
+        [Fact(DisplayName = "Validation of BoundSubUnitParameters succeeds for valid post")]
         public void Validation_of_SubUnitParameters_succeeds_for_valid_post()
         {
-            var parameters = new SubUnitParameters
+            var parameters = new BoundSubUnitParameters
             {
                 Title = "Apartment 1",
-                Floor = 0,
+                Floor = "EG",
                 Number = 1,
                 Usage = "Wohnung"
 
@@ -27,7 +27,7 @@ namespace D2.MasterData.Test
         [Fact(DisplayName = "Validation of SubUnitParameters fails for invalid post")]
         public void Validation_of_SubUnitParameters_fails_for_invalid_post()
         {
-            var parameters = new SubUnitParameters
+            var parameters = new BoundSubUnitParameters
             {
                 Number = 1
             };
@@ -42,7 +42,7 @@ namespace D2.MasterData.Test
         [Fact(DisplayName = "Validation of SubUnitParameters for post succeeds w/o floor")]
         public void Validation_of_SubUnitParameters_for_post_succeeds_wo_floor()
         {
-            var parameters = new SubUnitParameters
+            var parameters = new BoundSubUnitParameters
             {
                 Title = "ABC",
                 Number = 1

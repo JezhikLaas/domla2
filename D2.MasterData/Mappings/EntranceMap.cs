@@ -21,6 +21,10 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .Generated.Never()
                 .Not.Nullable();
+            HasMany(x => x.SubUnits)
+                .Cascade.AllDeleteOrphan()
+                .Cascade.Merge()
+                .Inverse();
             OptimisticLock.Version();
             References(x => x.AdministrationUnit)
                 .Access.BackingField()
@@ -29,10 +33,6 @@ namespace D2.MasterData.Mappings
             // ReSharper disable once VirtualMemberCallInConstructor
             // member is not overwritten in descendents
             Component(x => x.Address);
-            HasMany(x => x.SubUnits)
-                .Cascade.AllDeleteOrphan()
-                .Cascade.Merge()
-                .Inverse();
         }
     }
 }

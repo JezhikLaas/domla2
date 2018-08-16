@@ -14,8 +14,8 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public AddressParameters Address { get; set; }
 
-        public List<SubUnitParameters> SubUnits { get; set; }
-
         public int Version { get; set; }
+
+        public List<BoundSubUnitParameters> BoundSubUnits { get; set; }
     }
 }

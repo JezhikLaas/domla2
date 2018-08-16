@@ -15,5 +15,7 @@ namespace D2.MasterData.Facades
         ExecutionResponse LoadAdministrationUnit(string id);
         ValidationResponse ValidateCreate(AdministrationUnitParameters value);
         ValidationResponse ValidateEdit(AdministrationUnitParameters value);
+        void AddAdministrationUnitProperty(SelectedAdministrationUnitPropertyParameters value);
+        ValidationResponse ValidateAddProperty(SelectedAdministrationUnitPropertyParameters value);
     }
 }

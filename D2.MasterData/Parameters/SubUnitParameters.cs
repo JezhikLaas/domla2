@@ -11,7 +11,6 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public string Title { get; set; }
 
-        public int? Floor { get; set; }
 
         [NotNullOrEmpty(RequestType.Put, RequestType.Post)]
         public int?  Number { get; set; }

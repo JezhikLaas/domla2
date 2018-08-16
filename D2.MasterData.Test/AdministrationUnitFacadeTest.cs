@@ -110,5 +110,31 @@ namespace D2.MasterData.Test
 
             Assert.True(hasProperties);
         }
+
+        [Fact(DisplayName = "AdministrationUnitsFeature AddProperty can add properties to two AdminUnits")]
+        public void AdministrationUnitsFeature_AddProperty_can_add_properties_to_two_AdminUnits()
+        {
+            var validator = Substitute.For<IParameterValidator>();
+            var repository = Substitute.For<IAdministrationUnitsRepository>();
+            var baseSettingsRepository = Substitute.For<IBaseSettingsRepository>();
+
+            var facade = new AdministrationUnitFacade(repository, baseSettingsRepository, validator);
+            AdministrationUnit adminUnit1 = AdministrationUnitBuilder.New.WithId(Guid.NewGuid()).Build();
+            AdministrationUnit adminUnit2 = AdministrationUnitBuilder.New.WithId(Guid.NewGuid()).Build();
+            Guid [] adminisstrationUnitIds = { adminUnit1.Id, adminUnit2.Id };
+
+            repository.Load(adminUnit1.Id).Returns(adminUnit1);
+            repository.Load(adminUnit2.Id).Returns(adminUnit2);
+            var parameters = new SelectedAdministrationUnitPropertyParameters();
+            parameters.AdministrationUnitIds = adminisstrationUnitIds;
+
+            AdministrationUnitsFeatureParameters featureParameters = AdministrationUnitsFeatureParametersBuilder.New.Build();
+            parameters.AdministrationUnitsFeatureParameters = featureParameters;
+            facade.AddAdministrationUnitProperty(parameters);
+
+            Assert.True(adminUnit1.AdministrationUnitProperties.Any());
+            Assert.True(adminUnit2.AdministrationUnitProperties.Any());
+
+        }
     }
 }

@@ -17,9 +17,6 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .Length(256)
                 .Nullable();
-            Map(x => x.Floor)
-                .Access.BackingField()
-                .Nullable();
             Map(x => x.Number)
                 .Access.BackingField()
                 .Not.Nullable();
@@ -32,10 +29,7 @@ namespace D2.MasterData.Mappings
                 .Generated.Never()
                 .Nullable();
             OptimisticLock.Version();
-            References(x => x.Entrance)
-                .Access.BackingField()
-                .Cascade.SaveUpdate()
-                .Not.Nullable();
+
         }
     }
 }

@@ -129,5 +129,21 @@ namespace D2.MasterData.Test
                 Assert.Equal("Drachenhöhle", modified.Title);
             }
         }
+
+        [Fact(DisplayName = "AdministrationUnitRepository can insert BoundSubUnit")]
+        public void AdministrationUnitRepository_can_insert_BoundSubUnit()
+        {
+            InsertAdministrationUnit();
+
+            using (var context = GetContext())
+            {
+                var repository = new AdministrationUnitsRepository(context);
+                var stored = repository.List().ToList();
+
+                Assert.Collection(stored,
+                    u => Assert.Collection(u.Entrances, 
+                        e => Assert.Collection(e.SubUnits, b => Assert.Equal("Wohnung1", b.Title))));
+            }
+        }
     }
 }

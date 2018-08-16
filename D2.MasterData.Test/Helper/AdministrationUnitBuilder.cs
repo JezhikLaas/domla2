@@ -32,6 +32,10 @@ namespace D2.MasterData.Test.Helper
                                 Iso2 = "DE",
                                 Name = "Deutschland"
                             }
+                        },
+                        BoundSubUnits =  new List<BoundSubUnitParameters>
+                        {
+                           BoundSubUnitParametersBuilder.New.Build()
                         }
                     }
                 }
