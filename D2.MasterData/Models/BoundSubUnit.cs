@@ -10,7 +10,7 @@ namespace D2.MasterData.Models
     {
         protected BoundSubUnit() { }
 
-        public BoundSubUnit(BoundSubUnitParameters argument, Entrance entrance)
+        public BoundSubUnit(BoundSubUnitParameters argument, Entrance entrance, AdministrationUnit administrationUnit)
         {
             Floor = argument.Floor;
             Id = argument.Id;
@@ -19,6 +19,7 @@ namespace D2.MasterData.Models
             Usage = argument.Usage;
             Version = argument.Version;
             Entrance = entrance;
+            AdministrationUnit = administrationUnit;
         }
 
         public virtual string Floor

@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
 using NSubstitute;
+using D2.MasterData.Models;
+using D2.MasterData.Parameters;
 
 namespace D2.MasterData.Test
 {
@@ -143,6 +145,38 @@ namespace D2.MasterData.Test
                 Assert.Collection(stored,
                     u => Assert.Collection(u.Entrances, 
                         e => Assert.Collection(e.SubUnits, b => Assert.Equal("Wohnung1", b.Title))));
+            }
+        }
+
+        [Fact(DisplayName = "AdministrationUnitRepository can insert SubUnit")]
+        public void AdministrationUnitRepository_can_insert_SubUnit()
+        {
+            InsertAdministrationUnit();
+
+            using (var context = GetContext())
+            {
+                var repository = new AdministrationUnitsRepository(context);
+                var stored = repository.List().ToList();
+
+                Assert.Collection(stored,
+                    u => Assert.Collection(u.SubUnits.OfType<UnboundSubUnit>(),
+                        un => Assert.Equal(UnboundSubUnitType.Antenna, ((UnboundSubUnit)un).Type)));
+            }
+        }
+
+        [Fact(DisplayName = "AdministrationUnitRepository can insert UnboundSubUnit")]
+        public void AdministrationUnitRepository_can_insert_UnboundSubUnit()
+        {
+            InsertAdministrationUnit();
+
+            using (var context = GetContext())
+            {
+                var repository = new AdministrationUnitsRepository(context);
+                var stored = repository.List().ToList();
+
+                Assert.Collection(stored,
+                    u => Assert.Collection(u.UnboundSubUnits,
+                        un => Assert.Equal(UnboundSubUnitType.Antenna, un.Type)));
             }
         }
     }

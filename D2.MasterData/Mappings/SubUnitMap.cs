@@ -29,6 +29,10 @@ namespace D2.MasterData.Mappings
                 .Generated.Never()
                 .Nullable();
             OptimisticLock.Version();
+            References(x => x.AdministrationUnit)
+                .Access.BackingField()
+                .Cascade.SaveUpdate()
+                .Not.Nullable();
 
         }
     }

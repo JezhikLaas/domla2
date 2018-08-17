@@ -46,7 +46,7 @@ namespace D2.MasterData.Test.Helper
                 .Build();
             var entrance = from entrances in unit.Entrances
                            select entrances;
-            return new BoundSubUnit(_boundSubUnitParameters, entrance.First());
+            return new BoundSubUnit(_boundSubUnitParameters, entrance.First(), entrance.First().AdministrationUnit);
         }
     }
 }

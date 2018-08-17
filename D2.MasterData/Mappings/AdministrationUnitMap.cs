@@ -40,6 +40,10 @@ namespace D2.MasterData.Mappings
                 .Cascade.AllDeleteOrphan()
                 .Cascade.Merge()
                 .Inverse();
+            HasMany(x => x.UnboundSubUnits)
+                .Cascade.AllDeleteOrphan()
+                .Cascade.Merge()
+                .Inverse();
         }
     }
 }

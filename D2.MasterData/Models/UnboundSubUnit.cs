@@ -9,13 +9,23 @@ namespace D2.MasterData.Models
     public class UnboundSubUnit: SubUnit
     {
         protected UnboundSubUnit() { }
-        public UnboundSubUnit(UnboundSubUnitParameters argument)
+
+        public UnboundSubUnit(UnboundSubUnitParameters argument, AdministrationUnit administrationUnit)
         {
             Id = argument.Id;
             Title = argument.Title;
             Number = argument.Number;
             Usage = argument.Usage;
             Version = argument.Version;
+            AdministrationUnit = administrationUnit;
+            Type = argument.Type;
+        }
+
+
+        public virtual UnboundSubUnitType Type
+        {
+            get;
+            protected set;
         }
     }
 }

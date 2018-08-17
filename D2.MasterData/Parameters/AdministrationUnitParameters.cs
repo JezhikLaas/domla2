@@ -24,5 +24,7 @@ namespace D2.MasterData.Parameters
         public int Version { get; set; }
 
         public List<AdministrationUnitPropertyParameters> AdministrationUnitProperties { get; set; }
+
+        public List<UnboundSubUnitParameters> UnboundSubUnits { get; set; }
     }
 }

@@ -38,6 +38,10 @@ namespace D2.MasterData.Test.Helper
                            BoundSubUnitParametersBuilder.New.Build()
                         }
                     }
+                },
+                UnboundSubUnits = new List<UnboundSubUnitParameters>
+                {
+                    UnboundSubUnitParametersBuilder.New.Build()
                 }
             };
         }

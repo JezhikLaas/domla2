@@ -13,6 +13,7 @@ namespace D2.MasterData.Models
         {
             _entrances = new List<Entrance>();
             _administrationUnitProperties = new List<AdministrationUnitProperty>();
+            _unboundSubUnits = new List<UnboundSubUnit>();
         }
 
         public AdministrationUnit(AdministrationUnitParameters argument)
@@ -31,6 +32,12 @@ namespace D2.MasterData.Models
                 var properties = from propertiesParameter in argument.AdministrationUnitProperties
                                  select new AdministrationUnitProperty(propertiesParameter, this);
                 _administrationUnitProperties = new List<AdministrationUnitProperty>(properties);
+            }
+            if (argument.UnboundSubUnits != null)
+            {
+                var unboundSubUnits = from subUnitParameter in argument.UnboundSubUnits
+                                        select new UnboundSubUnit(subUnitParameter, this);
+                _unboundSubUnits = new List<UnboundSubUnit>(unboundSubUnits);
             }
         }
 
@@ -53,6 +60,20 @@ namespace D2.MasterData.Models
             get { return _entrances; }
         }
 
+        private IList<UnboundSubUnit> _unboundSubUnits;
+
+        public virtual IEnumerable<UnboundSubUnit> UnboundSubUnits
+        {
+            get { return _unboundSubUnits; }
+        }
+
+        public virtual IEnumerable<SubUnit> SubUnits
+        {
+            get {
+                var subUnits = _entrances.SelectMany(x => x.SubUnits).Cast<SubUnit>();
+                return subUnits.Concat(_unboundSubUnits.Cast<SubUnit>());
+            }
+        }
         private IList<AdministrationUnitProperty> _administrationUnitProperties;
 
         public virtual IEnumerable<AdministrationUnitProperty> AdministrationUnitProperties

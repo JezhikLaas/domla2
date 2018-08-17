@@ -18,5 +18,5 @@ namespace D2.MasterData.Parameters
         public string Usage { get; set; }
 
         public int Version { get; set; }
-    }
+   }
 }

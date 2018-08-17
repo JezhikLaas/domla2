@@ -72,6 +72,7 @@ namespace D2.MasterData.Mappings
                                 .Add<AdministrationUnitsFeatureMap>()
                                 .Add<AdministrationUnitPropertyMap>()
                                 .Add<SubUnitMap>()
+                                .Add<UnboundSubUnitMap>()
                         )
                         .ExposeConfiguration(BuildSchema)
                         .BuildConfiguration()
@@ -115,6 +116,7 @@ namespace D2.MasterData.Mappings
                         .Add<AdministrationUnitsFeatureMap>()
                         .Add<AdministrationUnitPropertyMap>()
                         .Add<SubUnitMap>()
+                        .Add<UnboundSubUnitMap>()
                 )
                 .ExposeConfiguration(BuildSchema)
                 .BuildConfiguration()
@@ -173,6 +175,7 @@ namespace D2.MasterData.Mappings
                         .Add<AdministrationUnitsFeatureMap>()
                         .Add<AdministrationUnitPropertyMap>()
                         .Add<SubUnitMap>()
+                        .Add<UnboundSubUnitMap>()
                 )
                 .BuildConfiguration()
                 .BuildSessionFactory();

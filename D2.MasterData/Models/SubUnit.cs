@@ -15,8 +15,6 @@ namespace D2.MasterData.Models
             protected set;
         }
 
-
-
         public virtual int? Number
         {
             get;
@@ -30,6 +28,12 @@ namespace D2.MasterData.Models
         }
 
         public virtual int Version
+        {
+            get;
+            protected set;
+        }
+
+        public virtual AdministrationUnit AdministrationUnit
         {
             get;
             protected set;

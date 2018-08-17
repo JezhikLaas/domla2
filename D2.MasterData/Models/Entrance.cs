@@ -23,7 +23,7 @@ namespace D2.MasterData.Models
             if (argument.BoundSubUnits != null)
             {
                 var parameter = from subUnitParameters in argument.BoundSubUnits
-                                 select new BoundSubUnit(subUnitParameters, this);
+                                 select new BoundSubUnit(subUnitParameters, this, unit);
                 _subUnits = new List<BoundSubUnit>(parameter);
             }
         }
