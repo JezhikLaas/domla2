@@ -1,4 +1,5 @@
 import {Address} from './address';
+import {IBoundSubunit} from '../masterdata/subunit/iboundsubunit';
 
 export class Entrance {
   Id: string;
@@ -6,6 +7,6 @@ export class Entrance {
   Address: Address;
   Edit: string;
   Version: number;
-  SubUnits?: string;
+  SubUnits?: IBoundSubunit[];
   AdministrationUnitId: string;
 }

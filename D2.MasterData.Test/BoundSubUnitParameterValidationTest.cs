@@ -13,8 +13,7 @@ namespace D2.MasterData.Test
             {
                 Title = "Apartment 1",
                 Floor = "EG",
-                Number = 1,
-                Usage = "Wohnung"
+                Number = 1
 
             };            
 

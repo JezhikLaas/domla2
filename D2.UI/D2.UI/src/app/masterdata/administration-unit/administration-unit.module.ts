@@ -8,6 +8,9 @@ import {
 } from './administration-unit-property/administration-unit-property.component';
 import { AdministrationUnitFeatureModule} from '../administration-unit-feature/administration-unit-feature.module';
 import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
+import {SubunitCreateComponent} from '../subunit/subunit-create/subunit-create.component';
+import {SubunitListComponent} from '../subunit/subunit-list/subunit-list.component';
+import {SubunitListViewComponent} from '../subunit/subunit-list-view/subunit-list-view.component';
 
 
 @NgModule({
@@ -20,7 +23,10 @@ import { AdministrationUnitsListComponent } from './administration-units-list/ad
   declarations: [
     AdministrationUnitEditComponent,
     AdministrationUnitPropertyComponent,
-    AdministrationUnitsListComponent
+    AdministrationUnitsListComponent,
+    SubunitCreateComponent,
+    SubunitListComponent,
+    SubunitListViewComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

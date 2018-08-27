@@ -4,6 +4,10 @@ import {YearMonth} from '../../shared/year-month';
 import {IAdministrationUnitProperty} from './iadministration-unit-property';
 import {Variant} from '../../../shared/variant';
 import {AdministrationUnitProperty} from './administration-unit-property';
+import {BoundSubunit} from '../../subunit/boundsubunit';
+import {IAdministrationUnitSubunit} from './i-administration-unit-subunit';
+import {AdministrationUnitSubunit} from './administration-unit-subunit';
+import {Entrance} from '../../../shared/entrance';
 
 export class AdminUnitFactory {
   static empty(): AdministrationUnit {
@@ -21,9 +25,12 @@ export class AdminUnitFactory {
             PostalCode: ''
           },
           Edit: '',
-          AdministrationUnitId: ''
+          AdministrationUnitId: '',
+          SubUnits: []
         }],
       null,
+      [],
+      [],
       []
     );
   }
@@ -40,8 +47,27 @@ export class AdminUnitFactory {
       typeof (rawAdministrationUnit.YearOfConstruction) === 'string' ?
         new YearMonth(rawAdministrationUnit.YearOfConstruction.Year, rawAdministrationUnit.YearOfConstruction.Month) :
         rawAdministrationUnit.YearOfConstruction,
-      this.fromObjectBuildAdministrationUnitProperty(rawAdministrationUnit.AdministrationUnitProperties)
+      this.fromObjectBuildAdministrationUnitProperty(rawAdministrationUnit.AdministrationUnitProperties),
+      rawAdministrationUnit.UnboundSubUnits,
+      this.fromObjectBuildSubUnits(rawAdministrationUnit.SubUnits),
     );
+  }
+
+  static fromObjectBuildSubUnits(subunits: any[]): IAdministrationUnitSubunit[] {
+    const subUnitsArr = new Array<IAdministrationUnitSubunit>();
+    for (let i = 0; i < subunits.length; i++ ) {
+      const subUnit =  new AdministrationUnitSubunit(
+        subunits[i].Id,
+        subunits[i].Title,
+        subunits[i].Version,
+        subunits[i].Number,
+        subunits[i].Floor ? subunits[i].Floor : '',
+        subunits[i].Type ? subunits[i].Type : '',
+        subunits[i].SubUnitEntrance ? subunits[i].SubUnitEntrance :
+          new Entrance());
+      subUnitsArr.push(subUnit);
+    }
+    return subUnitsArr;
   }
 
   static fromObjectBuildAdministrationUnitProperty(properties: any []): IAdministrationUnitProperty[] {
@@ -73,7 +99,8 @@ export class AdminUnitFactory {
         this.toObjectBuildYearOfConstruction(rawAdministrationUnit.YearOfConstruction) : rawAdministrationUnit.YearOfConstruction,
       rawAdministrationUnit.AdministrationUnitProperties ?
         this.toObjectBuildProperties(rawAdministrationUnit.AdministrationUnitProperties) :
-        rawAdministrationUnit.AdministrationUnitProperties
+        rawAdministrationUnit.AdministrationUnitProperties,
+      rawAdministrationUnit.UnboundSubUnits
     );
   }
 

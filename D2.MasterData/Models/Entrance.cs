@@ -20,9 +20,9 @@ namespace D2.MasterData.Models
             Address = new Address(argument.Address);
             Version = argument.Version;
             AdministrationUnit = unit;
-            if (argument.BoundSubUnits != null)
+            if (argument.SubUnits != null)
             {
-                var parameter = from subUnitParameters in argument.BoundSubUnits
+                var parameter = from subUnitParameters in argument.SubUnits
                                  select new BoundSubUnit(subUnitParameters, this, unit);
                 _subUnits = new List<BoundSubUnit>(parameter);
             }

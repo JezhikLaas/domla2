@@ -16,7 +16,6 @@ namespace D2.MasterData.Models
             Id = argument.Id;
             Title = argument.Title;
             Number = argument.Number;
-            Usage = argument.Usage;
             Version = argument.Version;
             Entrance = entrance;
             AdministrationUnit = administrationUnit;

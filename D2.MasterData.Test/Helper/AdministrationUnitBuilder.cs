@@ -33,7 +33,7 @@ namespace D2.MasterData.Test.Helper
                                 Name = "Deutschland"
                             }
                         },
-                        BoundSubUnits =  new List<BoundSubUnitParameters>
+                        SubUnits =  new List<BoundSubUnitParameters>
                         {
                            BoundSubUnitParametersBuilder.New.Build()
                         }

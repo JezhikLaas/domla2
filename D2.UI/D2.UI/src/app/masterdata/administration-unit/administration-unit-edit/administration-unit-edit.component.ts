@@ -24,6 +24,9 @@ import {AdministrationUnitFeatureService} from '../../shared/administration-unit
 import {MatTableDataSource} from '@angular/material';
 import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
 import {AdministrationUnitFeaturesListViewComponent} from '../../administration-unit-feature/administration-unit-features-list-view/administration-unit-features-list-view.component';
+import {ISubunit} from '../../subunit/isubunit';
+import {promise} from 'selenium-webdriver';
+import controlFlow = promise.controlFlow;
 
 
 export enum KEY_CODE {
@@ -42,7 +45,8 @@ export enum KEY_CODE {
 export class AdministrationUnitEditComponent implements OnInit {
   MenuButtons = [
     new MenuItem('Speichern', () => this.submitForm(), () => {
-      if (this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty) ) {
+      if (this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty ) &&
+        (this.SubUnitsArray.valid && ( this.SubUnitsArray.touched || this.SubUnitsArray.dirty)) ) {
         return true;
       } else { return false; }
     }),
@@ -53,6 +57,8 @@ export class AdministrationUnitEditComponent implements OnInit {
   AdminUnit = AdminUnitFactory.empty();
   Errors: { [key: string]: string } = {};
   Entrances: FormArray;
+  SubUnitsArray: FormArray;
+  SubUnits: ISubunit[];
   Properties: FormArray;
   Address: FormGroup;
   Country: FormGroup;
@@ -98,6 +104,7 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   initAdminUnit () {
     this.buildEntrancesArray();
+    this.buildSubUnitsArray();
     this.EditForm = this.fb.group({
       UserKey: this.fb.control(
         this.AdminUnit.UserKey,
@@ -117,6 +124,8 @@ export class AdministrationUnitEditComponent implements OnInit {
                     this.AdminUnit.YearOfConstruction
       ),
       Entrances: this.Entrances,
+      UnboundSubUnits: this.fb.array(this.AdminUnit.UnboundSubUnits),
+      SubUnitsControls: this.SubUnitsArray,
       Id: this.fb.control(this.AdminUnit.Id),
       Version: this.fb.control(this.AdminUnit.Version),
       Edit: this.fb.control(this.AdminUnit.Edit)
@@ -127,12 +136,14 @@ export class AdministrationUnitEditComponent implements OnInit {
     }
     this.EditForm.statusChanges.subscribe(() => this.updateErrorMessages());
     this.MenuButtons[0].isActive = () => {
-      if (this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty)) {
+      if (this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty ) &&
+          (this.SubUnitsArray.valid && ( this.SubUnitsArray.touched || this.SubUnitsArray.dirty))) {
         return true;
       } else { return false; }
     };
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
     this.DataType = DataType;
+    this.SubUnits = this.AdminUnit.SubUnits;
   }
 
   buildEntrancesArray() {
@@ -155,7 +166,8 @@ export class AdministrationUnitEditComponent implements OnInit {
           ),
           Id: this.fb.control(t.Id),
           Version: this.fb.control(t.Version),
-          Edit: this.fb.control(t.Edit)
+          Edit: this.fb.control(t.Edit),
+          SubUnits: this.fb.array(t.SubUnits)
         } )
       ),
       AdministrationUnitValidators.atLeastOneEntrance
@@ -184,13 +196,29 @@ export class AdministrationUnitEditComponent implements OnInit {
         )
       );
   }
+  buildSubUnitsArray() {
+    this.SubUnitsArray = this.fb.array([
+      this.fb.group({
+        Type: this.fb.control(1, [Validators.required]),
+        Title: this.fb.control(null, [Validators.required]),
+        Number: this.fb.control(null, [Validators.required]),
+        Version: this.fb.control(0),
+        Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
+        Entrance: this.fb.control(null),
+        Floor: this.fb.control(null)
+
+      })]
+    );
+  }
 
   submitForm() {
     this.EditForm.value.Entrances = this.EditForm.value.Entrances.filter(entrance => entrance);
     if (this.EditForm.value.AdministrationUnitProperties) {
       this.EditForm.value.AdministrationUnitProperties = this.EditForm.value.AdministrationUnitProperties.filter(properties => properties);
       }
+    this.addFormValueFromSunUnit();
     const AdminUnit: IAdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value);
+    AdminUnit.SubUnits = this.AdminUnit.SubUnits;
     if (this.IsUpdatingAdminUnit) {
       this.as.edit(AdminUnit).subscribe(res => {
         this.router.navigate(['../../administrationUnits']);
@@ -203,6 +231,26 @@ export class AdministrationUnitEditComponent implements OnInit {
       });
     }
   }
+
+  addFormValueFromSunUnit() {
+    const unboundSubUnitsArray: FormArray = this.EditForm.get(['UnboundSubUnits']) as FormArray;
+    for (const i of this.SubUnitsArray.controls) {
+      const subUnitFormGroup: FormGroup = i as FormGroup;
+      if (!subUnitFormGroup.controls.Entrance.value) {
+        unboundSubUnitsArray.push(i);
+      }
+      if (subUnitFormGroup.controls.Entrance.value) {
+        const entry = subUnitFormGroup.controls.Entrance.value;
+        const entries = new List<any>(this.EditForm.value.Entrances);
+        const result = entries
+          .Where( x => entry === x)
+          .FirstOrDefault();
+        subUnitFormGroup.removeControl('SubUnitEntrance');
+        result.SubUnits.push(subUnitFormGroup.value);
+      }
+    }
+  }
+
   updateErrorMessages() {
     this.Errors = {};
     for (const message of AdministrationUnitFormErrorMessages) {
@@ -234,8 +282,8 @@ export class AdministrationUnitEditComponent implements OnInit {
           control.invalid &&
           control.errors &&
           control.errors[message.forValidator] &&
-          !this.Errors['Entrance' + message.forControl]) {
-          this.Errors['Entrance' + message.forControl] = message.text;
+          !this.Errors['SubUnitEntrance' + message.forControl]) {
+          this.Errors['SubUnitEntrance' + message.forControl] = message.text;
         }
       }
     }
@@ -349,6 +397,19 @@ export class AdministrationUnitEditComponent implements OnInit {
     );
   }
 
+  addSubUnitsArrayControl() {
+    this.SubUnitsArray.push(this.fb.group({
+      Type: this.fb.control(1, [Validators.required]),
+      Title: this.fb.control(null, [Validators.required]),
+      Number: this.fb.control(null, [Validators.required]),
+      Version: this.fb.control(0),
+      Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
+      Entrance: this.fb.control(null),
+      Floor: this.fb.control(null)
+      })
+    );
+  }
+
   removeEntrancesControl(index: number) {
     this.Entrances.removeAt(index);
     this.EditForm.markAsTouched();
@@ -359,6 +420,11 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (this.Properties.length === 0 ) {
       this.EditForm.removeControl('AdministrationUnitProperties');
     }
+    this.EditForm.markAsTouched();
+  }
+
+  removeSubUnitsArryControl(index: number) {
+    this.SubUnitsArray.removeAt(index);
     this.EditForm.markAsTouched();
   }
 

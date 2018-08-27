@@ -1,0 +1,34 @@
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder=""Filter>
+</mat-form-field>
+<table mat-table [dataSource]="dataSource" matSort style="width: 100%">
+  <ng-container matColumnDef="Title">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Titel </th>
+    <td mat-cell *matCellDef="let element"> {{element.Title}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nummer </th>
+    <td mat-cell *matCellDef="let element"> {{element.Number}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Floor">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Stockwerk </th>
+    <td mat-cell *matCellDef="let element"> {{element.Floor}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Entrance" >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Eingang</th>
+    <td mat-cell *matCellDef="let element"> {{element.SubUnitEntrance?.Title}}
+      {{element.SubUnitEntrance.Address?.Street}} {{element.SubUnitEntrance.Address?.Number}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Type" >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Typ</th>
+    <td mat-cell *matCellDef="let element"> {{InboundSubUnitType[element.Type-1]}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"> </tr>
+</table>

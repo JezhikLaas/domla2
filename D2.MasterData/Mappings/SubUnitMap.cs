@@ -19,11 +19,7 @@ namespace D2.MasterData.Mappings
                 .Nullable();
             Map(x => x.Number)
                 .Access.BackingField()
-                .Not.Nullable();
-            Map(x => x.Usage)
-                .Access.BackingField()
-                .Length(256)
-                .Not.Nullable();
+                .Nullable();
             Version(x => x.Version)
                 .Access.BackingField()
                 .Generated.Never()

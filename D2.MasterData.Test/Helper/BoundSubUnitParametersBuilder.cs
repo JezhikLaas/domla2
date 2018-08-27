@@ -32,7 +32,6 @@ namespace D2.MasterData.Test.Helper
             {
                 Title = _title,
                 Number = _number,
-                Usage = _usage,
                 Floor = _floor
             };
         }

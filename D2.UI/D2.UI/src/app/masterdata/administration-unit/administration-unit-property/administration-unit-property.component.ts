@@ -25,9 +25,7 @@ export class AdministrationUnitPropertyComponent implements OnInit {
   @Output() selectedValueTag = new EventEmitter<any>();
   DataType = DataType;
 
-  constructor(
-    private fb: FormBuilder
-  ) { }
+  constructor() { }
 
   ngOnInit() {
   }

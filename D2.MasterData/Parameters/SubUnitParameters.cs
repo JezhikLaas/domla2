@@ -11,11 +11,7 @@ namespace D2.MasterData.Parameters
         [NotNullOrEmpty]
         public string Title { get; set; }
 
-
-        [NotNullOrEmpty(RequestType.Put, RequestType.Post)]
         public int?  Number { get; set; }
-
-        public string Usage { get; set; }
 
         public int Version { get; set; }
    }

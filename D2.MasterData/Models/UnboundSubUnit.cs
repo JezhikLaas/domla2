@@ -15,14 +15,13 @@ namespace D2.MasterData.Models
             Id = argument.Id;
             Title = argument.Title;
             Number = argument.Number;
-            Usage = argument.Usage;
             Version = argument.Version;
             AdministrationUnit = administrationUnit;
             Type = argument.Type;
         }
 
 
-        public virtual UnboundSubUnitType Type
+        public virtual UnboundSubUnitType? Type
         {
             get;
             protected set;

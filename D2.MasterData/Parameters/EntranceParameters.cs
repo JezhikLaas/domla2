@@ -16,6 +16,6 @@ namespace D2.MasterData.Parameters
 
         public int Version { get; set; }
 
-        public List<BoundSubUnitParameters> BoundSubUnits { get; set; }
+        public List<BoundSubUnitParameters> SubUnits { get; set; }
     }
 }

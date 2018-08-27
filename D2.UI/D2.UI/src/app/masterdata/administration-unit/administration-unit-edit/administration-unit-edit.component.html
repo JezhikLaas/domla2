@@ -80,6 +80,39 @@
       </div>
     </ng-template>
   </mat-tab>
+  <mat-tab label="Verwaltungseinheiten">
+    <ng-template matTabContent>
+      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 3em">
+        <div formArrayName="SubUnitsControls" fx="100%" *ngIf="SubUnitsArray">
+          <div *ngFor="let control of SubUnitsArray.controls; index as i; last as l"
+               [formGroupName]="i"
+               class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+            <ui-subinit-create class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left"
+            [Title]="SubUnitsArray.get([i,'Title'])"
+            [Number]="SubUnitsArray.get([i,'Number'])"
+            [Type]="SubUnitsArray.get([i,'Type'])"
+            [Entrances] = "EditForm.value.Entrances"
+            [Floor] = "SubUnitsArray.get([i,'Floor'])"
+            [ArrayLastElement] = "l"
+            [Entrance] = "SubUnitsArray.get([i,'SubUnitEntrance'])"
+            (addSubUnit) = "addSubUnitsArrayControl()"
+            (removeSubUnitControl) = "removeSubUnitsArryControl(i)">
+            </ui-subinit-create>
+          </div>
+        </div>
+      </div>
+      <mat-accordion style="margin-top: 3em;">
+        <mat-expansion-panel id="SubUnitsPanel">
+          <mat-expansion-panel-header>
+              Vorhandene Verwaltungseinheiten
+          </mat-expansion-panel-header>
+            <ui-subinit-list-view
+              [SubUnits] = "SubUnits">
+            </ui-subinit-list-view>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-template>
+  </mat-tab>
   <mat-tab label="Zusatzeigenschaften">
     <ng-template matTabContent>
       <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 3em">
@@ -136,7 +169,7 @@
           (refreshProperty)="refreshProperties()">
         </ui-administration-unit-feature-create>
         <mat-accordion>
-          <mat-expansion-panel id="panel">
+          <mat-expansion-panel id="AdmiUnitsFeaturesPanel">
             <mat-expansion-panel-header>
               <mat-panel-title
                     matTooltip="Ein neu angelegtes Objekt wird automatisch mit diesen Zusatzfeldern angereichert"

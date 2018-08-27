@@ -1,8 +1,4 @@
-﻿using D2.MasterData.Parameters;
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace D2.MasterData.Models
+﻿namespace D2.MasterData.Models
 {
     public class SubUnit : BaseModel
     {
@@ -16,12 +12,6 @@ namespace D2.MasterData.Models
         }
 
         public virtual int? Number
-        {
-            get;
-            protected set;
-        }
-
-        public virtual string Usage
         {
             get;
             protected set;
