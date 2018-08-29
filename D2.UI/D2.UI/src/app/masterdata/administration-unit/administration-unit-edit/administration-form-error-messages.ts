@@ -10,18 +10,25 @@ export const AdministrationUnitFormErrorMessages = [
   new ErrorMessage('Title', 'required', 'Es muss ein Objektname angegeben werden'),
   new ErrorMessage('UserKey', 'required', 'Es muss ein Benutzerschlüssel angegeben werden'),
   new ErrorMessage('Entrances', 'atLeastOneEntrance', 'Es muss mindestens ein Eingang mit einer vollständigen Addresse angegeben werden'),
+  new ErrorMessage('UserKey', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
+  new ErrorMessage('Title', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
 
 ];
 
 export const AddressErrorMessages = [
   new ErrorMessage('Street', 'required', 'Geben Sie bitte eine Straße ein'),
+  new ErrorMessage('Street', 'maxLength', 'Es dürfen maximal 150 Zeichen eingegeben werden'),
   new ErrorMessage('City', 'required', 'Geben Sie bitte ein Ort ein'),
+  new ErrorMessage('City', 'maxlength', 'Es dürfen maximal 100 Zeichen eingegeben werden'),
   new ErrorMessage('PostalCode', 'required', 'Geben Sie bitte eine PLZ ein'),
   new ErrorMessage('Number', 'required', 'Geben Sie bitte eine Hausnummer ein'),
+  new ErrorMessage('Number', 'maxlength', 'Es dürfen maximal 10 Zeichen eingegeben werden'),
 ];
 
 export const PropertiesErrorMessages = [
   new ErrorMessage('Title', 'required', 'Geben Sie bitte eine Zusatzfeld-Bezeichnung ein'),
+  new ErrorMessage('Title', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
+  new ErrorMessage('Description', 'maxlength', 'Es dürfen maximal 1024 Zeichen eingegeben werden'),
 ];
 
 export const PropertyValueErrorMessages = [
@@ -31,4 +38,5 @@ export const PropertyValueErrorMessages = [
 
 export const EntranceErrorMessages = [
   new ErrorMessage('Title', 'required', 'Es muss ein Eingangsname angegeben werden'),
+  new ErrorMessage('Title', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
 ];

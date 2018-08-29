@@ -7,7 +7,7 @@
 <div fxFlex="50%">
   <mat-form-field  style="width: 100%">
     <mat-label>Nummer</mat-label>
-    <input matInput [formControl]="Number"  >
+    <input matInput [formControl]="Number"  type="number">
   </mat-form-field>
 </div>
 <div fxFlex="50%" *ngIf="Entrance">
@@ -28,7 +28,7 @@
 <div fxFlex="50%" *ngIf="Entrance && Entrance.value">
   <mat-form-field  style="width: 100%">
     <mat-label>Stockwerk</mat-label>
-    <input matInput [formControl]="Floor"  >
+    <input matInput [formControl]="Floor">
   </mat-form-field>
 </div>
 <div fxLayout="row" fxLayoutWrap fxLayoutGap="2%" class="container"  fxLayoutAlign="left" fxFlex="100%" fxLayout.xs="column">

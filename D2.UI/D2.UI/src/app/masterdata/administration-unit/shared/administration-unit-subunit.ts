@@ -9,6 +9,6 @@ export class AdministrationUnitSubunit implements IAdministrationUnitSubunit {
     public Number?: number,
     public Floor?: string,
     public Type?: number,
-    public SubUnitEntrance?: Entrance
+    public Entrance?: Entrance
   ) {}
 }
