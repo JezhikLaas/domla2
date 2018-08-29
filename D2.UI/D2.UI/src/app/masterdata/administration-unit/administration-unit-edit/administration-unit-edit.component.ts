@@ -12,7 +12,7 @@ import {
   AdministrationUnitFormErrorMessages,
   AddressErrorMessages,
   EntranceErrorMessages,
-  PropertiesErrorMessages, PropertyValueErrorMessages
+  PropertiesErrorMessages, PropertyValueErrorMessages, SubUnitsErrorMessages
 } from './administration-form-error-messages';
 import { CountryInfo } from '../../../shared/country-info';
 import { DatePipe } from '@angular/common';
@@ -168,7 +168,7 @@ export class AdministrationUnitEditComponent implements OnInit {
                   Iso2: this.fb.control(t.Address.Country.Iso2), Name: this.fb.control(t.Address.Country.Name)
                 }, { validator: Validators.required}
               ),
-              PostalCode: this.fb.control(t.Address.PostalCode, [Validators.required])
+              PostalCode: this.fb.control(t.Address.PostalCode, [Validators.required, Validators.maxLength(20)])
             }
           ),
           Id: this.fb.control(t.Id),
@@ -195,7 +195,7 @@ export class AdministrationUnitEditComponent implements OnInit {
         this.AdminUnit.AdministrationUnitProperties.map(
           t => this.fb.group({
             Title: this.fb.control(t.Title, [Validators.required, Validators.maxLength(256)]),
-            Description: this.fb.control((t.Description, [Validators.maxLength(1024)])),
+            Description: this.fb.control(t.Description, [Validators.maxLength(1024)]),
             Value: this.fb.group({
               Tag: this.fb.control(t.Value.Tag),
               Raw: this.fb.control(t.Value.Raw),
@@ -217,13 +217,12 @@ export class AdministrationUnitEditComponent implements OnInit {
     this.SubUnitsArray = this.fb.array([
       this.fb.group({
         Type: this.fb.control(1, [Validators.required]),
-        Title: this.fb.control(null, [Validators.required]),
+        Title: this.fb.control(null, [Validators.required, Validators.maxLength(256)]),
         Number: this.fb.control(null, [Validators.required]),
         Version: this.fb.control(0),
         Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
         Entrance: this.fb.control(null),
         Floor: this.fb.control(null)
-
       })]
     );
   }
@@ -283,12 +282,12 @@ export class AdministrationUnitEditComponent implements OnInit {
     this.Entrances.push(this.fb.group({
       Title: this.fb.control (null, [Validators.required, Validators.maxLength(256)]),
       Address: this.fb.group({
-        City: this.fb.control (null, [Validators.required]),
-        Street: this.fb.control (null, [Validators.required]),
-        Number: this.fb.control (null, [Validators.required]),
+        City: this.fb.control (null, [Validators.required, Validators.maxLength(100)]),
+        Street: this.fb.control (null, [Validators.required, Validators.maxLength(150)]),
+        Number: this.fb.control (null, [Validators.required, Validators.maxLength(10)]),
         Country:
           this.fb.group({Iso2: 'DE', Name: null}, { validator: Validators.required}),
-        PostalCode: this.fb.control (null, [Validators.required])
+        PostalCode: this.fb.control (null, [Validators.required, Validators.maxLength(20)])
       }),
       Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
       Version: this.fb.control(0),
@@ -306,8 +305,8 @@ export class AdministrationUnitEditComponent implements OnInit {
 
   addPropertiesControl() {
     this.Properties.push(this.fb.group({
-      Title: this.fb.control(null, [Validators.required]),
-      Description: this.fb.control((null)),
+      Title: this.fb.control(null, [Validators.required, Validators.maxLength(256)]),
+      Description: this.fb.control(null, [Validators.maxLength(1024)]),
       Value: this.fb.group({
         Tag: this.fb.control(3),
         Raw: this.fb.control(null),
@@ -327,7 +326,7 @@ export class AdministrationUnitEditComponent implements OnInit {
   addSubUnitsArrayControl() {
     this.SubUnitsArray.push(this.fb.group({
       Type: this.fb.control(1, [Validators.required]),
-      Title: this.fb.control(null, [Validators.required]),
+      Title: this.fb.control(null, [Validators.required, Validators.maxLength(256)]),
       Number: this.fb.control(null, [Validators.required]),
       Version: this.fb.control(0),
       Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
@@ -431,6 +430,7 @@ export class AdministrationUnitEditComponent implements OnInit {
     }
     this.updateErrorMessagesEntrance();
     this.updateErrorMessagesAddress();
+    this.updateErrorMessagesSubUnit();
     if (this.EditForm.controls.AdministrationUnitProperties) {
       this.updateErrorMessagesProperties();
       this.updateErrorMessagesPropertyValue();
@@ -505,6 +505,22 @@ export class AdministrationUnitEditComponent implements OnInit {
     }
   }
 
+  updateErrorMessagesSubUnit() {
+    const formArray = this.EditForm.get('SubUnitsControls') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of SubUnitsErrorMessages) {
+        const control = this.EditForm.get(['SubUnitsControls', i, message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.Errors['SubUnit' + message.forControl + message.forValidator]) {
+          this.Errors['SubUnit' + message.forControl + message.forValidator] = message.text;
+        }
+      }
+    }
+  }
 
   doCancel() {
     this.confirmDialog.show(

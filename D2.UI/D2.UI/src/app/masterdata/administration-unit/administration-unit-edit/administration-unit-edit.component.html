@@ -72,8 +72,11 @@
            <div *ngIf="Errors?.EntranceTitlemaxlength" class="ui negative message">
              {{ Errors?.EntranceTitlemaxlength }}
            </div>
-           <div *ngIf="Errors?.AddressPostalCode" class="ui negative message">
-             {{ Errors?.AddressPostalCode }}
+           <div *ngIf="Errors?.AddressPostalCoderequired" class="ui negative message">
+             {{ Errors?.AddressPostalCoderequired }}
+           </div>
+           <div *ngIf="Errors?.AddressPostalCodemaxlength" class="ui negative message">
+             {{ Errors?.AddressPostalCodemaxlength }}
            </div>
            <div *ngIf="Errors?.AddressCityrequired" class="ui negative message">
              {{ Errors?.AddressCityrequired }}
@@ -117,6 +120,15 @@
             </ui-subinit-create>
           </div>
         </div>
+      </div>
+      <div *ngIf="Errors?.SubUnitTitlemaxlength" class="ui negative message">
+        {{ Errors?.SubUnitTitlemaxlength }}
+      </div>
+      <div *ngIf="Errors?.SubUnitTitlerequired" class="ui negative message">
+        {{ Errors?.SubUnitTitlerequired }}
+      </div>
+      <div *ngIf="Errors?.SubUnitNumberrequired" class="ui negative message">
+        {{ Errors?.SubUnitNumberrequired }}
       </div>
       <mat-accordion style="margin-top: 3em;">
         <mat-expansion-panel id="SubUnitsPanel">
