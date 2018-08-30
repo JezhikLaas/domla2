@@ -1,6 +1,6 @@
 import {throwError as observableThrowError, Observable} from 'rxjs';
 import { Injectable } from '@angular/core';
-import {AdministrationUnitRaws} from '../administration-unit/shared/administration-unit-raws';
+import {IAdministrationUnitRaws} from '../administration-unit/shared/iadministration-unit-raws';
 import {map} from 'rxjs/operators';
 import {AdminUnitFactory} from '../administration-unit/shared/admin-unit-factory';
 import {AccountService} from '../../shared/account.service';

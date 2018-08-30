@@ -1,13 +1,13 @@
 
-export interface AdministrationUnitRaws {
+export interface IAdministrationUnitRaws {
   Id: string;
   UserKey: string;
   Title: string;
   Edit: string;
   Version: number;
   YearOfConstruction?: {
-    Year: string;
-    Month: string;
+    Year: number;
+    Month: number;
   };
   Entrances?: {
     Id: string;
@@ -15,7 +15,6 @@ export interface AdministrationUnitRaws {
     Address: {
       Country?: {
         Iso2: string;
-        Iso3: string;
         Name: string;
       };
       City: string;
@@ -24,18 +23,27 @@ export interface AdministrationUnitRaws {
       PostalCode: string;
     }
     Edit: string;
-    SubUnits?: string;
-    AdministrationUnitId: string;
+    Version: number;
+    SubUnits?:
+      {
+        Floor: string,
+        Title: string
+        Number: number,
+        Version: number,
+        Id: string,
+        Edit: string
+      }[];
   }[];
   AdministrationUnitProperties?: {
     Title: string;
     Description: string;
     Value?: {
-      Tag: string;
+      Tag: number;
       Raw: string;
     },
     Version: number,
     Id: string;
+    Edit: string;
   }[];
   SubUnits?: {
     Id: string;
@@ -44,13 +52,13 @@ export interface AdministrationUnitRaws {
     Version: number;
     Type?: number;
     Floor?: string;
+    Edit: string;
     Entrance?: {
       Id: string;
       Title: string;
       Address: {
         Country?: {
           Iso2: string;
-          Iso3: string;
           Name: string;
         };
         City: string;
@@ -59,16 +67,24 @@ export interface AdministrationUnitRaws {
         PostalCode: string;
       }
       Edit: string;
-      SubUnits?: string;
-      AdministrationUnitId: string;
+      Version: number;
+      SubUnits?:
+        {
+          Floor: string,
+          Title: string
+          Number: number,
+          Version: number,
+          Id: string,
+          Edit: string
+        }[];
     }
   }[];
   UnboundSubUnits?: {
     Id: string;
     Title: string;
     Number: number;
-    Usage: string;
     Version: number;
-    Type: string;
+    Type: number;
+    Edit: string;
   }[];
 }

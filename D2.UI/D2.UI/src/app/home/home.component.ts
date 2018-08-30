@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'ui-home',
   template: `
     <p>
-      home works!
+      home works! Test Dynamic
     </p>
   `,
   styles: []

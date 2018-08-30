@@ -26,15 +26,13 @@ import {AdministrationUnitFeatureResolver} from './masterdata/shared/administrat
 import {AdministrationUnitFeaturesResolver} from './masterdata/shared/administration-unit-features-resolver.service';
 import {MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
 import {AdministrationUnitFeatureService} from './masterdata/shared/administration-unit-feature.service';
-import { TabContainerComponent } from './home/tab-container/tab-container.component';
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    TabContainerComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
