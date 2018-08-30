@@ -7,19 +7,25 @@
             <mat-form-field  style="width: 100%">
               <mat-label>Schlüssel</mat-label>
               <input matInput formControlName="UserKey" placeholder="Bezeichnung"  >
-                <mat-error *ngIf="Errors?.AdminUnitUserKey" >
-                  {{ Errors?.AdminUnitUserKey }}
-                </mat-error>
             </mat-form-field>
+          <mat-error *ngIf="Errors?.AdminUnitUserKeyrequired" >
+            {{ Errors?.AdminUnitUserKeyrequired }}
+          </mat-error>
+          <mat-error *ngIf="Errors?.AdminUnitUserKeymaxlength" >
+            {{ Errors?.AdminUnitUserKeymaxlength }}
+          </mat-error>
         </div>
         <div fxFlex="46%">
             <mat-form-field style="width: 100%">
               <mat-label>Bezeichnung</mat-label>
               <input matInput formControlName="Title" type="text">
-                <mat-error *ngIf="Errors?.AdminUnitTitle" >
-                  {{ Errors?.AdminUnitTitle }}
-                </mat-error>
             </mat-form-field>
+          <mat-error *ngIf="Errors?.AdminUnitTitlerequired" >
+            {{ Errors?.AdminUnitTitlerequired }}
+          </mat-error>
+          <mat-error *ngIf="Errors?.AdminUnitTitlemaxlength" >
+            {{ Errors?.AdminUnitTitlemaxlength }}
+          </mat-error>
           </div>
         <div fxFlex="33%">
             <ui-datepicker [YearOfConstruction]="EditForm.get(['YearOfConstruction'])" ></ui-datepicker>
@@ -45,7 +51,6 @@
                   [AddressFormGroup] = "EditForm.get(['Entrances',i,'Address' ])"
                   [CountryFormGroup] = "EditForm.get(['Entrances',i, 'Address','Country'])"
                   [Iso2Control] = "EditForm.get(['Entrances',i,'Address','Country','Iso2'])"
-                  [CountryDefaultIso2]="CountryDefaultIso2"
                   [CityControl] = "EditForm.get(['Entrances',i,'Address','City'])"
                   [StreetControl] = "EditForm.get(['Entrances',i,'Address','Street'])"
                   [NumberControl] = "EditForm.get(['Entrances',i,'Address','Number'])"
@@ -61,20 +66,35 @@
               </div>
              </div>
            </div>
-           <div *ngIf="Errors?.EntranceTitle" class="ui negative message">
-             {{ Errors?.EntranceTitle }}
+           <div *ngIf="Errors?.EntranceTitlerequired" class="ui negative message">
+             {{ Errors?.EntranceTitlerequired }}
            </div>
-           <div *ngIf="Errors?.AddressPostalCode" class="ui negative message">
-             {{ Errors?.AddressPostalCode }}
+           <div *ngIf="Errors?.EntranceTitlemaxlength" class="ui negative message">
+             {{ Errors?.EntranceTitlemaxlength }}
            </div>
-           <div *ngIf="Errors?.AddressCity" class="ui negative message">
-             {{ Errors?.AddressCity }}
+           <div *ngIf="Errors?.AddressPostalCoderequired" class="ui negative message">
+             {{ Errors?.AddressPostalCoderequired }}
            </div>
-           <div *ngIf="Errors?.AddressStreet" class="ui negative message">
-             {{ Errors?.AddressStreet }}
+           <div *ngIf="Errors?.AddressPostalCodemaxlength" class="ui negative message">
+             {{ Errors?.AddressPostalCodemaxlength }}
            </div>
-           <div *ngIf="Errors?.AddressNumber" class="ui negative message">
-             {{ Errors?.AddressNumber }}
+           <div *ngIf="Errors?.AddressCityrequired" class="ui negative message">
+             {{ Errors?.AddressCityrequired }}
+           </div>
+           <div *ngIf="Errors?.AddressCitymaxlength" class="ui negative message">
+             {{ Errors?.AddressCitymaxlength }}
+           </div>
+           <div *ngIf="Errors?.AddressStreetrequired" class="ui negative message">
+             {{ Errors?.AddressStreetrequired }}
+           </div>
+           <div *ngIf="Errors?.AddressStreetmaxlength" class="ui negative message">
+             {{ Errors?.AddressStreetmaxlength }}
+           </div>
+           <div *ngIf="Errors?.AddressNumberrequired" class="ui negative message">
+             {{ Errors?.AddressNumberrequired }}
+           </div>
+           <div *ngIf="Errors?.AddressNumbermaxlength" class="ui negative message">
+             {{ Errors?.AddressNumbermaxlength }}
            </div>
          </div>
       </div>
@@ -94,12 +114,21 @@
             [Entrances] = "EditForm.value.Entrances"
             [Floor] = "SubUnitsArray.get([i,'Floor'])"
             [ArrayLastElement] = "l"
-            [Entrance] = "SubUnitsArray.get([i,'SubUnitEntrance'])"
+            [Entrance] = "SubUnitsArray.get([i,'Entrance'])"
             (addSubUnit) = "addSubUnitsArrayControl()"
             (removeSubUnitControl) = "removeSubUnitsArryControl(i)">
             </ui-subinit-create>
           </div>
         </div>
+      </div>
+      <div *ngIf="Errors?.SubUnitTitlemaxlength" class="ui negative message">
+        {{ Errors?.SubUnitTitlemaxlength }}
+      </div>
+      <div *ngIf="Errors?.SubUnitTitlerequired" class="ui negative message">
+        {{ Errors?.SubUnitTitlerequired }}
+      </div>
+      <div *ngIf="Errors?.SubUnitNumberrequired" class="ui negative message">
+        {{ Errors?.SubUnitNumberrequired }}
       </div>
       <mat-accordion style="margin-top: 3em;">
         <mat-expansion-panel id="SubUnitsPanel">
@@ -136,14 +165,14 @@
               (selectedValueTag) = "selectedValueTag($event, i)">
             </ui-administration-unit-property>
           </div>
-          <div *ngIf="Errors?.PropertyTitle" class="ui negative message">
-            {{ Errors?.PropertyTitle }}
+          <div *ngIf="Errors?.PropertyTitlerequired" class="ui negative message">
+            {{ Errors?.PropertyTitlerequired }}
           </div>
-          <div *ngIf="Errors?.PropertyValueTag" class="ui negative message">
-            {{ Errors?.PropertyValueTag }}
+          <div *ngIf="Errors?.PropertyValueTagrequired" class="ui negative message">
+            {{ Errors?.PropertyValueTagrequired }}
           </div>
-          <div *ngIf="Errors?.PropertyValueRaw" class="ui negative message">
-            {{ Errors?.PropertyValueRaw }}
+          <div *ngIf="Errors?.PropertyValueRawrequired" class="ui negative message">
+            {{ Errors?.PropertyValueRawrequired }}
           </div>
         </div>
       </div>

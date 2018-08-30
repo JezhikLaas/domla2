@@ -12,7 +12,7 @@ import {
   AdministrationUnitFormErrorMessages,
   AddressErrorMessages,
   EntranceErrorMessages,
-  PropertiesErrorMessages, PropertyValueErrorMessages
+  PropertiesErrorMessages, PropertyValueErrorMessages, SubUnitsErrorMessages
 } from './administration-form-error-messages';
 import { CountryInfo } from '../../../shared/country-info';
 import { DatePipe } from '@angular/common';
@@ -27,6 +27,10 @@ import {AdministrationUnitFeaturesListViewComponent} from '../../administration-
 import {ISubunit} from '../../subunit/isubunit';
 import {promise} from 'selenium-webdriver';
 import controlFlow = promise.controlFlow;
+import {SubunitListViewComponent} from '../../subunit/subunit-list-view/subunit-list-view.component';
+import {IAdministrationUnitSubunit} from '../shared/i-administration-unit-subunit';
+import {Observable} from 'rxjs/internal/Observable';
+import {newId} from '@ng-select/ng-select/ng-select/id';
 
 
 export enum KEY_CODE {
@@ -59,15 +63,16 @@ export class AdministrationUnitEditComponent implements OnInit {
   Entrances: FormArray;
   SubUnitsArray: FormArray;
   SubUnits: ISubunit[];
-  Properties: FormArray;
+  Properties: FormArray = this.fb.array([]);
   Address: FormGroup;
   Country: FormGroup;
   Value: FormGroup;
   Countries: CountryInfo[];
-  CountryDefaultIso2: string;
   DataType;
   ShowPropertiesForAllAdministrationUnits: boolean;
   @ViewChild (AdministrationUnitFeaturesListViewComponent) AdministrationUnitFeatures: AdministrationUnitFeaturesListViewComponent;
+  @ViewChild (SubunitListViewComponent) SubUnitList: SubunitListViewComponent;
+  private CounterEntrance = 0;
 
   constructor(private fb: FormBuilder,
               private menuDisplay: MenuDisplayService,
@@ -109,13 +114,15 @@ export class AdministrationUnitEditComponent implements OnInit {
       UserKey: this.fb.control(
         this.AdminUnit.UserKey,
         [
-          Validators.required
+          Validators.required,
+          Validators.maxLength(256)
         ]
       ),
       Title: this.fb.control(
         this.AdminUnit.Title,
         [
-          Validators.required
+          Validators.required,
+          Validators.maxLength(256)
         ]
       ),
       YearOfConstruction: this.fb.control(
@@ -150,36 +157,45 @@ export class AdministrationUnitEditComponent implements OnInit {
     this.Entrances = this.fb.array(
       this.AdminUnit.Entrances.map(
         t => this.fb.group({
-          Title: this.fb.control(t.Title, [ Validators.required]),
+          Title: this.fb.control(t.Title, [ Validators.required, Validators.maxLength(256)]),
           Address: this.Address = this.fb.group(
             {
-              City: this.fb.control(t.Address.City, [Validators.required]),
-              Street: this.fb.control(t.Address.Street, [Validators.required]),
-              Number: this.fb.control(t.Address.Number, [Validators.required]),
+              City: this.fb.control(t.Address.City, [Validators.required, Validators.maxLength(100)]),
+              Street: this.fb.control(t.Address.Street, [Validators.required, Validators.maxLength(150)]),
+              Number: this.fb.control(t.Address.Number, [Validators.required, Validators.maxLength(10)]),
               Country: this.Country = this.fb.group(
                 {
                   Iso2: this.fb.control(t.Address.Country.Iso2), Name: this.fb.control(t.Address.Country.Name)
                 }, { validator: Validators.required}
               ),
-              PostalCode: this.fb.control(t.Address.PostalCode, [Validators.required])
+              PostalCode: this.fb.control(t.Address.PostalCode, [Validators.required, Validators.maxLength(20)])
             }
           ),
           Id: this.fb.control(t.Id),
           Version: this.fb.control(t.Version),
           Edit: this.fb.control(t.Edit),
-          SubUnits: this.fb.array(t.SubUnits)
+          SubUnits: this.fb.array(t.SubUnits),
+          InternID: this.fb.control(0)
         } )
       ),
       AdministrationUnitValidators.atLeastOneEntrance
     );
+    for (const entrance of this.Entrances.controls) {
+      entrance.patchValue(  { 'InternID': this.getCounterEntrance()} ) ;
+    }
+  }
+
+  getCounterEntrance(): number {
+    this.CounterEntrance = this.CounterEntrance + 1;
+    return this.CounterEntrance;
   }
 
   buildPropertiesArray() {
       this.Properties = this.fb.array(
         this.AdminUnit.AdministrationUnitProperties.map(
           t => this.fb.group({
-            Title: this.fb.control(t.Title, [Validators.required]),
-            Description: this.fb.control((t.Description)),
+            Title: this.fb.control(t.Title, [Validators.required, Validators.maxLength(256)]),
+            Description: this.fb.control(t.Description, [Validators.maxLength(1024)]),
             Value: this.fb.group({
               Tag: this.fb.control(t.Value.Tag),
               Raw: this.fb.control(t.Value.Raw),
@@ -196,27 +212,27 @@ export class AdministrationUnitEditComponent implements OnInit {
         )
       );
   }
+
   buildSubUnitsArray() {
     this.SubUnitsArray = this.fb.array([
       this.fb.group({
         Type: this.fb.control(1, [Validators.required]),
-        Title: this.fb.control(null, [Validators.required]),
+        Title: this.fb.control(null, [Validators.required, Validators.maxLength(256)]),
         Number: this.fb.control(null, [Validators.required]),
         Version: this.fb.control(0),
         Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
         Entrance: this.fb.control(null),
         Floor: this.fb.control(null)
-
       })]
     );
   }
 
   submitForm() {
-    this.EditForm.value.Entrances = this.EditForm.value.Entrances.filter(entrance => entrance);
+    this.addFormValueFromSunUnit();
     if (this.EditForm.value.AdministrationUnitProperties) {
       this.EditForm.value.AdministrationUnitProperties = this.EditForm.value.AdministrationUnitProperties.filter(properties => properties);
-      }
-    this.addFormValueFromSunUnit();
+    }
+    this.EditForm.value.Entrances = this.EditForm.value.Entrances.filter(entrance => entrance);
     const AdminUnit: IAdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value);
     AdminUnit.SubUnits = this.AdminUnit.SubUnits;
     if (this.IsUpdatingAdminUnit) {
@@ -226,8 +242,9 @@ export class AdministrationUnitEditComponent implements OnInit {
     } else {
       this.as.create(AdminUnit).subscribe(res => {
         this.router.navigate([`administrationUnits/${res.newId}`]);
-        this.as.getSingle(res.newId).subscribe(au => this.AdminUnit = au);
+        this.as.getSingle(res.newId).subscribe(au => this.afterCreateNewAdministrationUnit(au));
         this.IsUpdatingAdminUnit = true;
+        this.buildSubUnitsArray();
       });
     }
   }
@@ -240,147 +257,56 @@ export class AdministrationUnitEditComponent implements OnInit {
         unboundSubUnitsArray.push(i);
       }
       if (subUnitFormGroup.controls.Entrance.value) {
-        const entry = subUnitFormGroup.controls.Entrance.value;
+        const entranceValue = subUnitFormGroup.controls.Entrance.value;
         const entries = new List<any>(this.EditForm.value.Entrances);
         const result = entries
-          .Where( x => entry === x)
+          .Where( x => entranceValue.InternID === x.InternID)
           .FirstOrDefault();
-        subUnitFormGroup.removeControl('SubUnitEntrance');
+        const entranceControl = subUnitFormGroup.get('Entrance');
+        subUnitFormGroup.removeControl('Entrance');
         result.SubUnits.push(subUnitFormGroup.value);
+        subUnitFormGroup.addControl('Entrance', entranceControl);
       }
     }
   }
 
-  updateErrorMessages() {
-    this.Errors = {};
-    for (const message of AdministrationUnitFormErrorMessages) {
-      const control = this.EditForm.get(message.forControl);
-      if (control &&
-        control.dirty &&
-        control.invalid &&
-        control.errors &&
-        control.errors[message.forValidator] &&
-        !this.Errors['AdminUnit' + message.forControl]) {
-        this.Errors['AdminUnit' + message.forControl] = message.text;
-      }
-    }
-    this.updateErrorMessagesEntrance();
-    this.updateErrorMessagesAddress();
-    if (this.EditForm.controls.AdministrationUnitProperties) {
-      this.updateErrorMessagesProperties();
-      this.updateErrorMessagesPropertyValue();
+  afterCreateNewAdministrationUnit(adminUnit: any) {
+    this.AdminUnit = adminUnit;
+    if (this.AdminUnit.SubUnits) {
+      this.SubUnits = this.AdminUnit.SubUnits;
+      this.SubUnitList.dataSource = new MatTableDataSource<IAdministrationUnitSubunit>(this.SubUnits);
     }
   }
-
-  updateErrorMessagesEntrance() {
-    const formArray = this.EditForm.get('Entrances') as FormArray;
-    for (let i = 0; i < formArray.length; i++) {
-      for (const message of EntranceErrorMessages) {
-        const control = this.EditForm.get(['Entrances', i, message.forControl]);
-        if (control &&
-          control.dirty &&
-          control.invalid &&
-          control.errors &&
-          control.errors[message.forValidator] &&
-          !this.Errors['SubUnitEntrance' + message.forControl]) {
-          this.Errors['SubUnitEntrance' + message.forControl] = message.text;
-        }
-      }
-    }
-  }
-
-  updateErrorMessagesProperties() {
-    const formArray = this.EditForm.get('AdministrationUnitProperties') as FormArray;
-    for (let i = 0; i < formArray.length; i++) {
-      for (const message of PropertiesErrorMessages) {
-        const control = this.EditForm.get(['AdministrationUnitProperties', i, message.forControl]);
-        if (control &&
-          control.dirty &&
-          control.invalid &&
-          control.errors &&
-          control.errors[message.forValidator] &&
-          !this.Errors['Property' + message.forControl]) {
-          this.Errors['Property' + message.forControl] = message.text;
-        }
-      }
-    }
-  }
-
-  updateErrorMessagesPropertyValue() {
-    const formArray = this.EditForm.get('AdministrationUnitProperties') as FormArray;
-    for (let i = 0; i < formArray.length; i++) {
-      for (const message of PropertyValueErrorMessages) {
-        const control = this.EditForm.get(['AdministrationUnitProperties', i, 'Value', message.forControl]);
-        if (control &&
-          control.dirty &&
-          control.invalid &&
-          control.errors &&
-          control.errors[message.forValidator] &&
-          !this.Errors['PropertyValue' + message.forControl]) {
-          this.Errors['PropertyValue' + message.forControl] = message.text;
-        }
-      }
-    }
-  }
-
-  updateErrorMessagesAddress() {
-    const formArray = this.EditForm.get('Entrances') as FormArray;
-    for (let i = 0; i < formArray.length; i++) {
-      for (const message of AddressErrorMessages) {
-        const control = this.EditForm.get(['Entrances', i, 'Address', message.forControl]);
-        if (control &&
-          control.dirty &&
-          control.invalid &&
-          control.errors &&
-          control.errors[message.forValidator] &&
-          !this.Errors['Address' + message.forControl]) {
-          this.Errors['Address' + message.forControl] = message.text;
-        }
-      }
-    }
-  }
-
-
-  doCancel() {
-    this.confirmDialog.show(
-      'Bestätigung',
-      'Möchten Sie wirklich abbrechen?',
-      value => {
-        if (value) {
-          this.router.navigate(['administrationUnits']);
-        }
-      }
-    );
-  }
-
 
   addEntrancesControl() {
     this.Entrances.push(this.fb.group({
-      Title: this.fb.control (null, [Validators.required]),
+      Title: this.fb.control (null, [Validators.required, Validators.maxLength(256)]),
       Address: this.fb.group({
-        City: this.fb.control (null, [Validators.required]),
-        Street: this.fb.control (null, [Validators.required]),
-        Number: this.fb.control (null, [Validators.required]),
+        City: this.fb.control (null, [Validators.required, Validators.maxLength(100)]),
+        Street: this.fb.control (null, [Validators.required, Validators.maxLength(150)]),
+        Number: this.fb.control (null, [Validators.required, Validators.maxLength(10)]),
         Country:
           this.fb.group({Iso2: 'DE', Name: null}, { validator: Validators.required}),
-        PostalCode: this.fb.control (null, [Validators.required])
-      })
+        PostalCode: this.fb.control (null, [Validators.required, Validators.maxLength(20)])
+      }),
+      Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
+      Version: this.fb.control(0),
+      Edit: this.fb.control(''),
+      SubUnits: this.fb.array([]),
+      InternID: this.fb.control(this.CounterEntrance + 1)
     }));
+    this.getCounterEntrance();
   }
 
-
   addPropertiesArray() {
-    if (!this.Properties) {
-      this.buildPropertiesArray();
-    }
     this.addPropertiesControl();
     this.EditForm.addControl('AdministrationUnitProperties', this.Properties);
   }
 
   addPropertiesControl() {
     this.Properties.push(this.fb.group({
-      Title: this.fb.control(null, [Validators.required]),
-      Description: this.fb.control((null)),
+      Title: this.fb.control(null, [Validators.required, Validators.maxLength(256)]),
+      Description: this.fb.control(null, [Validators.maxLength(1024)]),
       Value: this.fb.group({
         Tag: this.fb.control(3),
         Raw: this.fb.control(null),
@@ -400,7 +326,7 @@ export class AdministrationUnitEditComponent implements OnInit {
   addSubUnitsArrayControl() {
     this.SubUnitsArray.push(this.fb.group({
       Type: this.fb.control(1, [Validators.required]),
-      Title: this.fb.control(null, [Validators.required]),
+      Title: this.fb.control(null, [Validators.required, Validators.maxLength(256)]),
       Number: this.fb.control(null, [Validators.required]),
       Version: this.fb.control(0),
       Id: this.fb.control('00000000-0000-0000-0000-000000000000'),
@@ -487,6 +413,125 @@ export class AdministrationUnitEditComponent implements OnInit {
     if (valueRawNumberDecimalPlaces) { valueRawNumberDecimalPlaces.setValue(null); }
     if (valueRawNumberUnit) { valueRawNumberUnit.setValue(null); }
     if (valueRaw) { valueRaw.setValue(null); }
+  }
+
+  updateErrorMessages() {
+    this.Errors = {};
+    for (const message of AdministrationUnitFormErrorMessages) {
+      const control = this.EditForm.get(message.forControl);
+      if (control &&
+        control.dirty &&
+        control.invalid &&
+        control.errors &&
+        control.errors[message.forValidator] &&
+        !this.Errors['AdminUnit' + message.forControl + message.forValidator]) {
+        this.Errors['AdminUnit' + message.forControl + message.forValidator] = message.text;
+      }
+    }
+    this.updateErrorMessagesEntrance();
+    this.updateErrorMessagesAddress();
+    this.updateErrorMessagesSubUnit();
+    if (this.EditForm.controls.AdministrationUnitProperties) {
+      this.updateErrorMessagesProperties();
+      this.updateErrorMessagesPropertyValue();
+    }
+  }
+
+  updateErrorMessagesEntrance() {
+    const formArray = this.EditForm.get('Entrances') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of EntranceErrorMessages) {
+        const control = this.EditForm.get(['Entrances', i, message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.Errors['Entrance' + message.forControl +  message.forValidator]) {
+          this.Errors['Entrance' + message.forControl + message.forValidator] = message.text;
+        }
+      }
+    }
+  }
+
+  updateErrorMessagesProperties() {
+    const formArray = this.EditForm.get('AdministrationUnitProperties') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of PropertiesErrorMessages) {
+        const control = this.EditForm.get(['AdministrationUnitProperties', i, message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.Errors['Property' + message.forControl + message.forValidator]) {
+          this.Errors['Property' + message.forControl + message.forValidator] = message.text;
+        }
+      }
+    }
+  }
+
+  updateErrorMessagesPropertyValue() {
+    const formArray = this.EditForm.get('AdministrationUnitProperties') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of PropertyValueErrorMessages) {
+        const control = this.EditForm.get(['AdministrationUnitProperties', i, 'Value', message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.Errors['PropertyValue' + message.forControl + message.forValidator]) {
+          this.Errors['PropertyValue' + message.forControl + message.forValidator] = message.text;
+        }
+      }
+    }
+  }
+
+  updateErrorMessagesAddress() {
+    const formArray = this.EditForm.get('Entrances') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of AddressErrorMessages) {
+        const control = this.EditForm.get(['Entrances', i, 'Address', message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.Errors['Address' + message.forControl + message.forValidator]) {
+          this.Errors['Address' + message.forControl + message.forValidator] = message.text;
+        }
+      }
+    }
+  }
+
+  updateErrorMessagesSubUnit() {
+    const formArray = this.EditForm.get('SubUnitsControls') as FormArray;
+    for (let i = 0; i < formArray.length; i++) {
+      for (const message of SubUnitsErrorMessages) {
+        const control = this.EditForm.get(['SubUnitsControls', i, message.forControl]);
+        if (control &&
+          control.dirty &&
+          control.invalid &&
+          control.errors &&
+          control.errors[message.forValidator] &&
+          !this.Errors['SubUnit' + message.forControl + message.forValidator]) {
+          this.Errors['SubUnit' + message.forControl + message.forValidator] = message.text;
+        }
+      }
+    }
+  }
+
+  doCancel() {
+    this.confirmDialog.show(
+      'Bestätigung',
+      'Möchten Sie wirklich abbrechen?',
+      value => {
+        if (value) {
+          this.router.navigate(['administrationUnits']);
+        }
+      }
+    );
   }
 }
 

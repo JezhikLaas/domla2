@@ -63,7 +63,7 @@ export class AdminUnitFactory {
         subunits[i].Number,
         subunits[i].Floor ? subunits[i].Floor : '',
         subunits[i].Type ? subunits[i].Type : '',
-        subunits[i].SubUnitEntrance ? subunits[i].SubUnitEntrance :
+        subunits[i].Entrance ? subunits[i].Entrance :
           new Entrance());
       subUnitsArr.push(subUnit);
     }

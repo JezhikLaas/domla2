@@ -13,7 +13,7 @@ namespace D2.MasterData.Mappings
             Schema("md");
             Map(x => x.UserKey)
                 .Access.BackingField()
-                .Length(10)
+                .Length(256)
                 .Not
                 .Nullable();
             Map(x => x.Edit)

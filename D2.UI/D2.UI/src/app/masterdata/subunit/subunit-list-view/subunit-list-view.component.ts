@@ -9,7 +9,7 @@ import {UnboundSubUnitType} from '../iunboundsubunit';
   styles: []
 })
 export class SubunitListViewComponent implements OnInit {
-  displayedColumns = ['Title', 'Number', 'Floor', 'SubUnitEntrance', 'Type'];
+  displayedColumns = ['Title', 'Number', 'Floor', 'Entrance', 'Type'];
   InboundSubUnitType = UnboundSubUnitType;
   @Input() SubUnits: IAdministrationUnitSubunit[];
   dataSource: MatTableDataSource<IAdministrationUnitSubunit>;
@@ -22,7 +22,7 @@ export class SubunitListViewComponent implements OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
-        case 'SubUnitEntrance':
+        case 'Entrance':
           if (item.Entrance.Address) {
             return item.Entrance.Title + ' ' + item.Entrance.Address.Street + ' ' + item.Entrance.Address.Number;
           } else {
