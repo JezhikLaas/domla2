@@ -10,10 +10,14 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
 import {ISelectedAdministrationUnitsPropertyParameter} from './iselected-administration-units-property-parameter';
 import {forEach} from '@angular/router/src/utils/collection';
+import { of } from 'rxjs';
+import { Guid } from 'guid-typescript';
+import { List } from 'linqts';
+import { ISubunit } from '../../subunit/isubunit';
 
 @Injectable()
 export class AdministrationUnitService {
-  administrationUnits:  IAdministrationUnitRaws[];
+  administrationUnits:  any[];
   private topic = 'AdministrationUnit';
   private brokerUrl:  string;
 
@@ -266,6 +270,256 @@ export class AdministrationUnitService {
         }],
       YearOfConstruction: {Year: 2011, Month: 11},
       Version: 1,
+      Id: '28FB737F-B006-4E36-99A6-2F0CACDABE2B',
+      Edit: '0001-01-01T00: 00: 00'
+    },
+    {
+      UserKey: 'Ramker Weg 20',
+      Title: 'Ramker Weg 20',
+      Entrances: [
+        {
+          Title: '20a',
+          Address:
+            {
+              Street: 'Ramker Weg',
+              Number: '20a',
+              Country:
+                {
+                  Iso2: 'DE',
+                  Name: 'GERMANY'
+                },
+              PostalCode: '32051',
+              City: 'Herford'
+            },
+          Version: 1,
+          SubUnits: [
+            {
+              Floor: 'EG/OG',
+              Title: '20a EG/OG',
+              Number: 1,
+              Version: 1,
+              Id: '31a02109-4ce5-48bf-bcae-a94c006b6759',
+              Edit: '0001-01-01T00: 00: 00'
+            },
+            {
+              Floor: 'UG',
+              Title: '20a UG',
+              Number: 3,
+              Version: 1,
+              Id: 'b06264d1-d354-47fb-bec1-a94c006b675a',
+              Edit: '0001-01-01T00: 00: 00'
+            }],
+          Id: 'a9534940-d406-46c1-8e32-a94c006b6757',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Title: '20b',
+          Address:
+            {
+              Street: 'Ramker Weg',
+              Number: '20b',
+              Country:
+                {
+                  Iso2: 'DE',
+                  Name: 'GERMANY'
+                },
+              PostalCode: '32051',
+              City: 'Herford'
+            },
+          Version: 1,
+          SubUnits: [
+            {
+              Floor: 'EG/OG',
+              Title: '20b EG/OG',
+              Number: 2,
+              Version: 1,
+              Id: '5179c2d9-49d3-4316-a54f-a94c006b675a',
+              Edit: '0001-01-01T00: 00: 00'
+            },
+            {
+              Floor: 'UG',
+              Title: '20b UG',
+              Number: 4,
+              Version: 1,
+              Id: '39d9765c-0788-42ef-a434-a94c006b675a',
+              Edit: '0001-01-01T00: 00: 00'
+            }],
+          Id: '55502094-2ce4-4b1a-9cf4-a94c006b675a',
+          Edit: '0001-01-01T00: 00: 00'
+        }],
+      UnboundSubUnits: [
+        {
+          Type: 1,
+          Title: 'Parkplatz 20a',
+          Number: 5,
+          Version: 1,
+          Id: '587fd66d-7222-41bc-8211-a94c006b675b',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Type: 1,
+          Title: 'Parkplatz 20b',
+          Number: 6,
+          Version: 1,
+          Id: '969c81b5-43a4-4a78-952f-a94c006b675b',
+          Edit: '0001-01-01T00: 00: 00'
+        }],
+      SubUnits: [
+        {
+          Floor: 'EG/OG',
+          Entrance:
+            {
+              Title: '20a',
+              Address:
+                {
+                  Street: 'Ramker Weg',
+                  Number: '20a',
+                  Country: {Iso2: 'DE', Name: 'GERMANY'},
+                  PostalCode: '32051',
+                  City: 'Herford'
+                },
+              Version: 1,
+              SubUnits: [
+                {
+                  Floor: 'UG',
+                  Title: '20a UG',
+                  Number: 3,
+                  Version: 1,
+                  Id: 'b06264d1-d354-47fb-bec1-a94c006b675a',
+                  Edit: '0001-01-01T00: 00: 00'
+                }],
+              Id: 'a9534940-d406-46c1-8e32-a94c006b6757',
+              Edit: '0001-01-01T00: 00: 00'
+            },
+          Title: '20a EG/OG',
+          Number: 1,
+          Version: 1,
+          Id: '31a02109-4ce5-48bf-bcae-a94c006b6759',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Floor: 'UG',
+          Entrance:
+            {
+              Title: '20a',
+              Address:
+                {
+                  Street: 'Ramker Weg',
+                  Number: '20a',
+                  Country: {Iso2: 'DE', Name: 'GERMANY'},
+                  PostalCode: '32051',
+                  City: 'Herford'
+                },
+              Version: 1,
+              SubUnits: [
+                {
+                  Floor: 'EG/OG',
+                  Title: '20a EG/OG',
+                  Number: 1,
+                  Version: 1,
+                  Id: '31a02109-4ce5-48bf-bcae-a94c006b6759',
+                  Edit: '0001-01-01T00: 00: 00'
+                }],
+              Id: 'a9534940-d406-46c1-8e32-a94c006b6757',
+              Edit: '0001-01-01T00: 00: 00'
+            },
+          Title: '20a UG',
+          Number: 3,
+          Version: 1,
+          Id: 'b06264d1-d354-47fb-bec1-a94c006b675a',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Floor: 'EG/OG',
+          Entrance:
+            {
+              Title: '20b',
+              Address:
+                {
+                  Street: 'Ramker Weg',
+                  Number: '20b',
+                  Country: {Iso2: 'DE', Name: 'GERMANY'},
+                  PostalCode: '32051',
+                  City: 'Herford'
+                },
+              Version: 1,
+              SubUnits: [
+                {
+                  Floor: 'UG',
+                  Title: '20b UG',
+                  Number: 4,
+                  Version: 1,
+                  Id: '39d9765c-0788-42ef-a434-a94c006b675a',
+                  Edit: '0001-01-01T00: 00: 00'
+                }],
+              Id: '55502094-2ce4-4b1a-9cf4-a94c006b675a',
+              Edit: '0001-01-01T00: 00: 00'
+            },
+          Title: '20b EG/OG',
+          Number: 2,
+          Version: 1,
+          Id: '5179c2d9-49d3-4316-a54f-a94c006b675a',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Floor: 'UG',
+          Entrance:
+            {
+              Title: '20b',
+              Address:
+                {
+                  Street: 'Ramker Weg',
+                  Number: '20b',
+                  Country: {Iso2: 'DE', Name: 'GERMANY'},
+                  PostalCode: '32051',
+                  City: 'Herford'
+                },
+              Version: 1,
+              SubUnits: [
+                {
+                  Floor: 'EG/OG',
+                  Title: '20b EG/OG',
+                  Number: 2,
+                  Version: 1,
+                  Id: '5179c2d9-49d3-4316-a54f-a94c006b675a',
+                  Edit: '0001-01-01T00: 00: 00'
+                }],
+              Id: '55502094-2ce4-4b1a-9cf4-a94c006b675a',
+              Edit: '0001-01-01T00: 00: 00'
+            },
+          Title: '20b UG',
+          Number: 4,
+          Version: 1,
+          Id: '39d9765c-0788-42ef-a434-a94c006b675a',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Type: 1,
+          Title: 'Parkplatz 20a',
+          Number: 5,
+          Version: 1,
+          Id: '587fd66d-7222-41bc-8211-a94c006b675b',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Type: 1,
+          Title: 'Parkplatz 20b',
+          Number: 6,
+          Version: 1,
+          Id: '969c81b5-43a4-4a78-952f-a94c006b675b',
+          Edit: '0001-01-01T00: 00: 00'
+        }],
+      AdministrationUnitProperties: [
+        {
+          Title: 'Heizung',
+          Description: null,
+          Value: {Tag: 3, Raw: 'Erdwärme'},
+          Version: 2,
+          Id: '124969df-e174-4fff-9eb0-a94c006b675a',
+          Edit: '0001-01-01T00: 00: 00'
+        }],
+      YearOfConstruction: {Year: 2011, Month: 11},
+      Version: 1,
       Id: '567baf97-ab82-4681-847c-a94c006b674e',
       Edit: '0001-01-01T00: 00: 00'
     }
@@ -273,72 +527,53 @@ export class AdministrationUnitService {
   }
 
   listAdministrationUnits():  Observable<Array<AdministrationUnit>> {
-    const observable = Observable.create(observer => {
-      setTimeout(() => {
-        const adminUnits = this.administrationUnits;
-        observer.next(adminUnits);
-        observer.complete()();
-      }, 2000);
-    })
-    return observable;
+    return of(this.administrationUnits)
+      .pipe(
+        map(rawAdministrationUnits => rawAdministrationUnits
+          .map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit)))
+      );
   }
 
   getSingle(id:  string):  Observable<AdministrationUnit> {
     if (id !== '0') {
-      if (this.brokerUrl) {
-        return this.http
-          .get<IAdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
-          .pipe(
-            map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
-          );
-      } else {
-        return this.accountService.fetchServices()
-          .pipe(
-            switchMap(data => {
-              this.brokerUrl = data.Broker;
-              return this.http
-                .get<IAdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
-                .pipe(
-                  map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
-                );
-            }),
-            catchError(error => observableThrowError(error))
-          );
-      }
-    }
-  }
-  create(AdminUnit:  IAdministrationUnit):  Observable<any> {
-    if (this.brokerUrl) {
-      return this.http
-        .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
-    } else {
-      return this.accountService.fetchServices()
+      const list = new List <any>(this.administrationUnits) ;
+      const adminUnit = list
+        .Where(x  => x.Id === id )
+        .FirstOrDefault();
+      return of(adminUnit)
         .pipe(
-          switchMap(data => {
-            this.brokerUrl = data.Broker;
-            return this.http
-              .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
-          }),
-          catchError(error => observableThrowError(error))
+          map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
         );
     }
   }
 
+  create(AdminUnit:  IAdministrationUnit):  Observable<any> {
+    const administrationUnit = AdminUnit;
+    administrationUnit.Id = Guid.create().toString();
+    this.pushSubUnits(administrationUnit);
+    this.administrationUnits.push(administrationUnit);
+    return of({newId: administrationUnit.Id});
+  }
+
   edit (AdminUnit:  IAdministrationUnit):  Observable<any> {
-    if (this.brokerUrl) {
-      return this.http
-        .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
-    } else {
-      return this.accountService.fetchServices()
+    const adminUnitIndex = this.administrationUnits.findIndex(item => item.Id === AdminUnit.Id);
+    this.pushSubUnits(AdminUnit);
+    this.administrationUnits[adminUnitIndex] = AdminUnit;
+    return of([])
         .pipe(
-          switchMap(data => {
-            this.brokerUrl = data.Broker;
-            return this.http
-              .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
-          }),
           catchError(error => observableThrowError(error))
         );
+  }
+
+  pushSubUnits (AdminUnit: IAdministrationUnit | any) {
+    const boundSubUnits = [];
+    for (const entrance of AdminUnit.Entrances) {
+      for ( const subUnit of entrance.SubUnits) {
+      boundSubUnits.push(subUnit);
+      }
     }
+    AdminUnit.SubUnits = AdminUnit.UnboundSubUnits
+      .concat(boundSubUnits);
   }
 
   addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter:  ISelectedAdministrationUnitsPropertyParameter) {

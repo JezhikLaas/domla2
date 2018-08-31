@@ -47,7 +47,8 @@ export class AdminUnitFactory {
       typeof (rawAdministrationUnit.YearOfConstruction) === 'string' ?
         new YearMonth(rawAdministrationUnit.YearOfConstruction.Year, rawAdministrationUnit.YearOfConstruction.Month) :
         rawAdministrationUnit.YearOfConstruction,
-      this.fromObjectBuildAdministrationUnitProperty(rawAdministrationUnit.AdministrationUnitProperties),
+      rawAdministrationUnit.AdministrationUnitProperties ? this.fromObjectBuildAdministrationUnitProperty(rawAdministrationUnit.AdministrationUnitProperties) :
+                                rawAdministrationUnit.AdministrationUnitProperties,
       rawAdministrationUnit.UnboundSubUnits,
       this.fromObjectBuildSubUnits(rawAdministrationUnit.SubUnits),
     );

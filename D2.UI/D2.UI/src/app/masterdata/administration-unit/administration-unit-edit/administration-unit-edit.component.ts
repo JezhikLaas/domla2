@@ -25,12 +25,8 @@ import {MatTableDataSource} from '@angular/material';
 import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
 import {AdministrationUnitFeaturesListViewComponent} from '../../administration-unit-feature/administration-unit-features-list-view/administration-unit-features-list-view.component';
 import {ISubunit} from '../../subunit/isubunit';
-import {promise} from 'selenium-webdriver';
-import controlFlow = promise.controlFlow;
 import {SubunitListViewComponent} from '../../subunit/subunit-list-view/subunit-list-view.component';
 import {IAdministrationUnitSubunit} from '../shared/i-administration-unit-subunit';
-import {Observable} from 'rxjs/internal/Observable';
-import {newId} from '@ng-select/ng-select/ng-select/id';
 
 
 export enum KEY_CODE {
@@ -137,7 +133,7 @@ export class AdministrationUnitEditComponent implements OnInit {
       Version: this.fb.control(this.AdminUnit.Version),
       Edit: this.fb.control(this.AdminUnit.Edit)
     });
-    if (this.IsUpdatingAdminUnit && this.AdminUnit.AdministrationUnitProperties.length > 0) {
+    if (this.IsUpdatingAdminUnit && this.AdminUnit.AdministrationUnitProperties && this.AdminUnit.AdministrationUnitProperties.length > 0) {
       this.buildPropertiesArray();
       this.EditForm.addControl('AdministrationUnitProperties', this.Properties);
     }
