@@ -1,11 +1,8 @@
 import { AdministrationUnit } from './administration-unit';
-import { AdministrationUnitRaws } from './administration-unit-raws';
+import { IAdministrationUnitRaws } from './iadministration-unit-raws';
 import {YearMonth} from '../../shared/year-month';
-import {IAdministrationUnitProperty} from './iadministration-unit-property';
 import {Variant} from '../../../shared/variant';
 import {AdministrationUnitProperty} from './administration-unit-property';
-import {BoundSubunit} from '../../subunit/boundsubunit';
-import {IAdministrationUnitSubunit} from './i-administration-unit-subunit';
 import {AdministrationUnitSubunit} from './administration-unit-subunit';
 import {Entrance} from '../../../shared/entrance';
 
@@ -35,7 +32,7 @@ export class AdminUnitFactory {
     );
   }
 
-  static fromObject(rawAdministrationUnit: AdministrationUnitRaws | any): AdministrationUnit {
+  static fromObject(rawAdministrationUnit: IAdministrationUnitRaws | any): AdministrationUnit {
     return new AdministrationUnit(
       rawAdministrationUnit.Id,
       rawAdministrationUnit.UserKey,
@@ -44,17 +41,15 @@ export class AdminUnitFactory {
         new Date(rawAdministrationUnit.Edit) : rawAdministrationUnit.Edit,
       rawAdministrationUnit.Version,
       rawAdministrationUnit.Entrances,
-      typeof (rawAdministrationUnit.YearOfConstruction) === 'string' ?
-        new YearMonth(rawAdministrationUnit.YearOfConstruction.Year, rawAdministrationUnit.YearOfConstruction.Month) :
-        rawAdministrationUnit.YearOfConstruction,
+      rawAdministrationUnit.YearOfConstruction,
       this.fromObjectBuildAdministrationUnitProperty(rawAdministrationUnit.AdministrationUnitProperties),
       rawAdministrationUnit.UnboundSubUnits,
       this.fromObjectBuildSubUnits(rawAdministrationUnit.SubUnits),
     );
   }
 
-  static fromObjectBuildSubUnits(subunits: any[]): IAdministrationUnitSubunit[] {
-    const subUnitsArr = new Array<IAdministrationUnitSubunit>();
+  static fromObjectBuildSubUnits(subunits: any[]): AdministrationUnitSubunit[] {
+    const subUnitsArr = new Array<AdministrationUnitSubunit>();
     for (let i = 0; i < subunits.length; i++ ) {
       const subUnit =  new AdministrationUnitSubunit(
         subunits[i].Id,
@@ -70,8 +65,8 @@ export class AdminUnitFactory {
     return subUnitsArr;
   }
 
-  static fromObjectBuildAdministrationUnitProperty(properties: any []): IAdministrationUnitProperty[] {
-    const propertyArray = new Array <IAdministrationUnitProperty> ();
+  static fromObjectBuildAdministrationUnitProperty(properties: any []): AdministrationUnitProperty[] {
+    const propertyArray = new Array <AdministrationUnitProperty> ();
     for (let i = 0; i < properties.length; i++ ) {
       const property =  new AdministrationUnitProperty (
         properties[i].Id,
@@ -86,7 +81,7 @@ export class AdminUnitFactory {
     return propertyArray;
   }
 
-  static toObject(rawAdministrationUnit: AdministrationUnitRaws | any): AdministrationUnit {
+  static toObject(rawAdministrationUnit: IAdministrationUnitRaws | any): AdministrationUnit {
     return new AdministrationUnit(
       rawAdministrationUnit.Id,
       rawAdministrationUnit.UserKey,
@@ -107,13 +102,12 @@ export class AdminUnitFactory {
   static  toObjectBuildYearOfConstruction (yearOfConstruction: YearMonth | any): YearMonth {
     if (yearOfConstruction) {
       const date: Date = new Date(yearOfConstruction.toString());
-      const yearMonth: YearMonth = new YearMonth(date.getFullYear(), date.getMonth() + 1);
-      return yearMonth;
+      return new YearMonth(date.getFullYear(), date.getMonth() + 1);
     }
   }
 
-  static toObjectBuildProperties (properties: IAdministrationUnitProperty []): IAdministrationUnitProperty [] {
-    const propertyArray = new Array <IAdministrationUnitProperty> ();
+  static toObjectBuildProperties (properties: AdministrationUnitProperty []): AdministrationUnitProperty [] {
+    const propertyArray = new Array <AdministrationUnitProperty> ();
     for (let i = 0; i < properties.length; i++ ) {
        const property =  new AdministrationUnitProperty (
         properties[i].Id,

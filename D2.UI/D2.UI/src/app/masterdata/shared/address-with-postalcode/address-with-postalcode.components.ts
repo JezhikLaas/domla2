@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AddressService } from '../address.service';
-import { IpostalCodeInfo } from '../ipostalcodeinfo';
+import { PostalCodeInfo } from '../postal-code-info';
 import { CountryInfo } from '../../../shared/country-info';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { List } from 'linqts';
 
 @Component({
@@ -11,7 +11,7 @@ import { List } from 'linqts';
   styleUrls: ['./address-with-postalcode.component.css']
 })
 export class AddressWithPostalcodeComponent implements OnInit {
-  PostalCodeInfo: IpostalCodeInfo [];
+  PostalCodeInfo: PostalCodeInfo [];
   @Output() PostalCodeSelected = new EventEmitter<any>();
   @Input() AddressFormGroup: FormGroup;
   @Input() CountryFormGroup: FormGroup;
@@ -74,7 +74,7 @@ export class AddressWithPostalcodeComponent implements OnInit {
 
   cityRefresh(postcode: any, country: any ) {
     if (this.PostalCodeInfo) {
-      const postalCodeArray = new List<IpostalCodeInfo>(this.PostalCodeInfo);
+      const postalCodeArray = new List<PostalCodeInfo>(this.PostalCodeInfo);
       const postalCodeInfo = postalCodeArray
         .FirstOrDefault(pc => pc.PostalCode === postcode && pc.Iso2 === country );
       if (postalCodeInfo) {

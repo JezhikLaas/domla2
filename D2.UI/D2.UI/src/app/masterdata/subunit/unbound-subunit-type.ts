@@ -1,9 +1,3 @@
-import {ISubunit} from './isubunit';
-
-export interface IUnboundSubunit extends ISubunit {
-  Type?: UnboundSubUnitType;
-}
-
 export enum UnboundSubUnitType {
   Parkplatz, Antenne
 }

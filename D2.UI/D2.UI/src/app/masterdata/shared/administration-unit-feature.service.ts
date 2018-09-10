@@ -1,15 +1,9 @@
 import {throwError as observableThrowError, Observable} from 'rxjs';
 import { Injectable } from '@angular/core';
-import {AdministrationUnitRaws} from '../administration-unit/shared/administration-unit-raws';
-import {map} from 'rxjs/operators';
-import {AdminUnitFactory} from '../administration-unit/shared/admin-unit-factory';
 import {AccountService} from '../../shared/account.service';
 import {HttpClient} from '@angular/common/http';
-import {IpostalCodeInfo} from './ipostalcodeinfo';
-import {CountryInfo} from '../../shared/country-info';
 import {catchError, switchMap} from 'rxjs/internal/operators';
-import {IAdministrationUnitFeature} from './IAdministrationUnitFeature';
-import {IAdministrationUnit} from '../administration-unit/shared/iadministration-unit';
+import {AdministrationUnitFeature} from './administration-unit-feature';
 
 @Injectable({
   providedIn: 'root'
@@ -22,35 +16,35 @@ export class AdministrationUnitFeatureService {
   constructor( private http: HttpClient,
                private accountService: AccountService ) { }
 
-  listAdministrationUnitFeature(): Observable<Array<IAdministrationUnitFeature>> {
+  listAdministrationUnitFeature(): Observable<Array<AdministrationUnitFeature>> {
     if (this.brokerUrl) {
       return this.http
-        .get<IAdministrationUnitFeature []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+        .get<AdministrationUnitFeature []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
     } else {
       return this.accountService.fetchServices()
         .pipe(
           switchMap(data => {
             this.brokerUrl = data.Broker;
             return this.http
-              .get<IAdministrationUnitFeature []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+              .get<AdministrationUnitFeature []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
           }),
           catchError(error => observableThrowError(error))
         );
     }
   }
 
-  getSingleAdministrationUnitFeature (id: string): Observable <IAdministrationUnitFeature> {
+  getSingleAdministrationUnitFeature (id: string): Observable <AdministrationUnitFeature> {
     if (id !== '0') {
       if (this.brokerUrl) {
         return this.http
-          .get<IAdministrationUnitFeature>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
+          .get<AdministrationUnitFeature>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
       } else {
         return this.accountService.fetchServices()
           .pipe(
             switchMap(data => {
               this.brokerUrl = data.Broker;
               return this.http
-                .get<IAdministrationUnitFeature>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
+                .get<AdministrationUnitFeature>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`);
             }),
             catchError(error => observableThrowError(error))
           );
@@ -58,7 +52,7 @@ export class AdministrationUnitFeatureService {
     }
   }
 
-  createAdministrationUnitFeature(BaseSettings: IAdministrationUnitFeature): Observable<any> {
+  createAdministrationUnitFeature(BaseSettings: AdministrationUnitFeature): Observable<any> {
     if (this.brokerUrl) {
       return this.http
         .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, BaseSettings);
@@ -75,7 +69,7 @@ export class AdministrationUnitFeatureService {
     }
   }
 
-  editAdministrationUnitFeature (BaseSettings: IAdministrationUnitFeature): Observable<any> {
+  editAdministrationUnitFeature (BaseSettings: AdministrationUnitFeature): Observable<any> {
     if (this.brokerUrl) {
       return this.http
         .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, BaseSettings);

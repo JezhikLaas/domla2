@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormArray, FormControl} from '@angular/forms';
-import {UnboundSubUnitType} from '../iunboundsubunit';
+import {FormControl} from '@angular/forms';
+import {UnboundSubUnitType} from '../unbound-subunit-type';
 import {Entrance} from '../../../shared/entrance';
 
 @Component({

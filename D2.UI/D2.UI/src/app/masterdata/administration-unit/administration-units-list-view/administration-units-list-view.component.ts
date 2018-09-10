@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
-import { IAdministrationUnit } from '../shared/iadministration-unit';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AdministrationUnit } from '../shared/administration-unit';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ui-administration-units-view',
@@ -20,10 +20,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AdministrationUnitsListViewComponent implements OnInit {
   displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
-  dataSource: MatTableDataSource<IAdministrationUnit>;
+  dataSource: MatTableDataSource<AdministrationUnit>;
   initialSelection = [];
   allowMultiSelect = false;
-  selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
+  selection = new SelectionModel<AdministrationUnit>(this.allowMultiSelect, this.initialSelection);
   @Output() administrationUnitSelected = new EventEmitter<any>();
   disableSelectRow = false;
   constructor(
@@ -32,7 +32,7 @@ export class AdministrationUnitsListViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<IAdministrationUnit>(this.route.snapshot.data['AdministrationUnits']);
+    this.dataSource = new MatTableDataSource<AdministrationUnit>(this.route.snapshot.data['AdministrationUnits']);
   }
 
   selectRow (administratinUnit: any) {

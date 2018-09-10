@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
+import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
-import { IAdministrationUnit } from './iadministration-unit';
+import { AdministrationUnit } from './administration-unit';
 import { AdministrationUnitService } from './administration-unit.service';
 
 @Injectable()
-export class AdministrationUnitsResolver implements Resolve<Array<IAdministrationUnit>> {
+export class AdministrationUnitsResolver implements Resolve<Array<AdministrationUnit>> {
 
   constructor( private as: AdministrationUnitService) { }
-  resolve(): Observable<Array<IAdministrationUnit>> {
+  resolve(): Observable<Array<AdministrationUnit>> {
     return this.as.listAdministrationUnits();
   }
 

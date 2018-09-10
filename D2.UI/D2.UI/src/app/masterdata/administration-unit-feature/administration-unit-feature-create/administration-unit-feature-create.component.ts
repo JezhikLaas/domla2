@@ -1,17 +1,15 @@
-import {AfterViewChecked, AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AfterViewChecked, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DataType} from '../../shared/data-type';
 import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
 import {AdministrationUnitFeatureCreateErrorMessages} from './administration-unit-feature-create-error-messages';
 import {MatDialog, MatSnackBar, MatTableDataSource} from '@angular/material';
 import {DialogAdministrationUnitsListComponent} from '../dialog-administration-units-list/dialog-administration-units-list.component';
-import {IAdministrationUnit} from '../../administration-unit/shared/iadministration-unit';
+import {AdministrationUnit} from '../../administration-unit/shared/administration-unit';
 import {AdministrationUnitsListViewComponent} from '../../administration-unit/administration-units-list-view/administration-units-list-view.component';
 import {AdministrationUnitService} from '../../administration-unit/shared/administration-unit.service';
-import {IAdministrationUnitProperty} from '../../administration-unit/shared/iadministration-unit-property';
-import {forEach} from '@angular/router/src/utils/collection';
-import {ISelectedAdministrationUnitsPropertyParameter} from '../../administration-unit/shared/iselected-administration-units-property-parameter';
+import {SelectedAdministrationUnitsPropertyParameter} from '../../administration-unit/shared/selected-administration-units-property-parameter';
 
 @Component({
   selector: 'ui-administration-unit-feature-create',
@@ -24,7 +22,7 @@ export class AdministrationUnitFeatureCreateComponent implements OnInit, AfterVi
   DataType = DataType;
   @Output() refreshProperty = new EventEmitter<any>();
   Errors: { [key: string]: string } = {};
-  AdministrationUnits: IAdministrationUnit [] = [];
+  AdministrationUnits: AdministrationUnit [] = [];
   @ViewChild (AdministrationUnitsListViewComponent) AdministrationUnitsListView: AdministrationUnitsListViewComponent;
   Message = String();
 
@@ -62,7 +60,7 @@ export class AdministrationUnitFeatureCreateComponent implements OnInit, AfterVi
       this.AdministrationUnits.forEach((adminUnit) => {
         ids.push(adminUnit.Id);
       });
-      let parameter: ISelectedAdministrationUnitsPropertyParameter;
+      let parameter: SelectedAdministrationUnitsPropertyParameter;
       parameter = {
         AdministrationUnitsFeatureParameters: this.AdministrationUnitFeatureGroup.value,
         AdministrationUnitIds: ids
@@ -124,7 +122,7 @@ export class AdministrationUnitFeatureCreateComponent implements OnInit, AfterVi
 
   ngAfterViewChecked() {
     if (this.AdministrationUnitsListView) {
-      this.AdministrationUnitsListView.dataSource  = new MatTableDataSource<IAdministrationUnit>(this.AdministrationUnits);
+      this.AdministrationUnitsListView.dataSource  = new MatTableDataSource<AdministrationUnit>(this.AdministrationUnits);
       this.AdministrationUnitsListView.disableSelectRow = true;
     }
   }

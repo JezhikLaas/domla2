@@ -1,12 +1,12 @@
-import {Component, OnInit, HostListener, Output, AfterViewInit,  AfterContentInit, ViewChild} from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MenuItem } from '../../../shared/menu-item';
 import { MenuDisplayService } from '../../../shared/menu-display.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { AdministrationUnitService } from '../shared/administration-unit.service';
-import { IAdministrationUnit } from '../shared/iadministration-unit';
-import { AdminUnitFactory} from '../shared/admin-unit-factory';
+import { AdministrationUnit } from '../shared/administration-unit';
+import { AdminUnitFactory } from '../shared/admin-unit-factory';
 import { AdministrationUnitValidators } from '../shared/administration-unit.validators';
 import {
   AdministrationUnitFormErrorMessages,
@@ -18,19 +18,15 @@ import { CountryInfo } from '../../../shared/country-info';
 import { DatePipe } from '@angular/common';
 import { AddressService } from '../../shared/address.service';
 import { DataType } from '../../shared/data-type';
-import {AdministrationUnitPropertyValidator} from '../administration-unit-property/administration-unit-property-validator';
-import {List} from 'linqts';
-import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
-import {MatTableDataSource} from '@angular/material';
-import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
-import {AdministrationUnitFeaturesListViewComponent} from '../../administration-unit-feature/administration-unit-features-list-view/administration-unit-features-list-view.component';
-import {ISubunit} from '../../subunit/isubunit';
-import {promise} from 'selenium-webdriver';
-import controlFlow = promise.controlFlow;
-import {SubunitListViewComponent} from '../../subunit/subunit-list-view/subunit-list-view.component';
-import {IAdministrationUnitSubunit} from '../shared/i-administration-unit-subunit';
-import {Observable} from 'rxjs/internal/Observable';
-import {newId} from '@ng-select/ng-select/ng-select/id';
+import { AdministrationUnitPropertyValidator } from '../administration-unit-property/administration-unit-property-validator';
+import { List } from 'linqts';
+import { AdministrationUnitFeatureService } from '../../shared/administration-unit-feature.service';
+import { MatTableDataSource } from '@angular/material';
+import { AdministrationUnitFeature } from '../../shared/administration-unit-feature';
+import { AdministrationUnitFeaturesListViewComponent } from '../../administration-unit-feature/administration-unit-features-list-view/administration-unit-features-list-view.component';
+import { SubUnit } from '../../subunit/subunit';
+import { SubunitListViewComponent } from '../../subunit/subunit-list-view/subunit-list-view.component';
+import { AdministrationUnitSubunit } from '../shared/administration-unit-subunit';
 
 
 export enum KEY_CODE {
@@ -49,10 +45,8 @@ export enum KEY_CODE {
 export class AdministrationUnitEditComponent implements OnInit {
   MenuButtons = [
     new MenuItem('Speichern', () => this.submitForm(), () => {
-      if (this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty ) &&
-        (this.SubUnitsArray.valid && ( this.SubUnitsArray.touched || this.SubUnitsArray.dirty)) ) {
-        return true;
-      } else { return false; }
+      return this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty) &&
+        (this.SubUnitsArray.valid && (this.SubUnitsArray.touched || this.SubUnitsArray.dirty));
     }),
     new MenuItem('Schließen', () => this.doCancel(), () => true)
   ];
@@ -62,7 +56,7 @@ export class AdministrationUnitEditComponent implements OnInit {
   Errors: { [key: string]: string } = {};
   Entrances: FormArray;
   SubUnitsArray: FormArray;
-  SubUnits: ISubunit[];
+  SubUnits: SubUnit[];
   Properties: FormArray = this.fb.array([]);
   Address: FormGroup;
   Country: FormGroup;
@@ -143,10 +137,8 @@ export class AdministrationUnitEditComponent implements OnInit {
     }
     this.EditForm.statusChanges.subscribe(() => this.updateErrorMessages());
     this.MenuButtons[0].isActive = () => {
-      if (this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty ) &&
-          (this.SubUnitsArray.valid && ( this.SubUnitsArray.touched || this.SubUnitsArray.dirty))) {
-        return true;
-      } else { return false; }
+      return this.EditForm.valid && (this.EditForm.touched || this.EditForm.dirty) &&
+        (this.SubUnitsArray.valid && (this.SubUnitsArray.touched || this.SubUnitsArray.dirty));
     };
     this.menuDisplay.menuNeeded.emit(this.MenuButtons);
     this.DataType = DataType;
@@ -233,7 +225,7 @@ export class AdministrationUnitEditComponent implements OnInit {
       this.EditForm.value.AdministrationUnitProperties = this.EditForm.value.AdministrationUnitProperties.filter(properties => properties);
     }
     this.EditForm.value.Entrances = this.EditForm.value.Entrances.filter(entrance => entrance);
-    const AdminUnit: IAdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value);
+    const AdminUnit: AdministrationUnit = AdminUnitFactory.toObject(this.EditForm.value);
     AdminUnit.SubUnits = this.AdminUnit.SubUnits;
     if (this.IsUpdatingAdminUnit) {
       this.as.edit(AdminUnit).subscribe(res => {
@@ -274,7 +266,7 @@ export class AdministrationUnitEditComponent implements OnInit {
     this.AdminUnit = adminUnit;
     if (this.AdminUnit.SubUnits) {
       this.SubUnits = this.AdminUnit.SubUnits;
-      this.SubUnitList.dataSource = new MatTableDataSource<IAdministrationUnitSubunit>(this.SubUnits);
+      this.SubUnitList.dataSource = new MatTableDataSource<AdministrationUnitSubunit>(this.SubUnits);
     }
   }
 
@@ -366,7 +358,7 @@ export class AdministrationUnitEditComponent implements OnInit {
       this.EditForm.patchValue({'Version': res.Version});
     });
     this.bs.listAdministrationUnitFeature().subscribe(res => this.AdministrationUnitFeatures.dataSource =
-      new MatTableDataSource<IAdministrationUnitFeature>(res));
+      new MatTableDataSource<AdministrationUnitFeature>(res));
   }
 
   refreshNewProperty(properties: any) {
@@ -400,7 +392,6 @@ export class AdministrationUnitEditComponent implements OnInit {
   }
 
   selectedValueTag(event: any, i: number) {
-    const valueTag = this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'Tag']) as FormControl;
     const valueRawNumberValue =
       this.EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_value']) as FormControl;
     const valueRawNumberDecimalPlaces =

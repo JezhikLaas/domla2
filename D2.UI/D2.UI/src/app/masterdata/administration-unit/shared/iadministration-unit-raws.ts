@@ -1,5 +1,5 @@
 
-export interface AdministrationUnitRaws {
+export interface IAdministrationUnitRaws {
   Id: string;
   UserKey: string;
   Title: string;

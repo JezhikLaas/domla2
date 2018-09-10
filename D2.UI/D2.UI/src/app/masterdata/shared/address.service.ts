@@ -1,12 +1,9 @@
 
 import {throwError as observableThrowError, Observable} from 'rxjs';
 import { Injectable } from '@angular/core';
-import {AdministrationUnitRaws} from '../administration-unit/shared/administration-unit-raws';
-import {map} from 'rxjs/operators';
-import {AdminUnitFactory} from '../administration-unit/shared/admin-unit-factory';
 import {AccountService} from '../../shared/account.service';
 import {HttpClient} from '@angular/common/http';
-import {IpostalCodeInfo} from './ipostalcodeinfo';
+import {PostalCodeInfo} from './postal-code-info';
 import {CountryInfo} from '../../shared/country-info';
 import {catchError, switchMap} from 'rxjs/internal/operators';
 
@@ -19,17 +16,17 @@ export class AddressService {
   constructor( private http: HttpClient,
               private accountService: AccountService ) { }
 
-  listPostalCodeInfo(): Observable<Array<IpostalCodeInfo>> {
+  listPostalCodeInfo(): Observable<Array<PostalCodeInfo>> {
     if (this.brokerUrl) {
       return this.http
-        .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+        .get<PostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
     } else {
       return this.accountService.fetchServices()
         .pipe(
           switchMap(data => {
             this.brokerUrl = data.Broker;
             return this.http
-              .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
+              .get<PostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
           }),
           catchError(error => observableThrowError(error))
         );

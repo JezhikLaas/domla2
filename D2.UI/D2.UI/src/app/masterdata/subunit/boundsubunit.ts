@@ -1,7 +1,6 @@
 import {SubUnit} from './subunit';
-import {IBoundSubunit} from './iboundsubunit';
 
-export class BoundSubunit extends SubUnit implements IBoundSubunit {
+export class BoundSubunit extends SubUnit {
   public Floor?; string;
   constructor (id: string, title: string, version: number, usage: string, number: number, floor: string) {
     super();

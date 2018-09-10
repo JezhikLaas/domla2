@@ -1,14 +1,12 @@
-import {throwError as observableThrowError,  Observable } from 'rxjs';
+import { throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AccountService } from '../../../shared/account.service';
-import { IAdministrationUnit } from './iadministration-unit';
 import { AdministrationUnit } from './administration-unit';
-import { AdministrationUnitRaws} from './administration-unit-raws';
+import { IAdministrationUnitRaws} from './iadministration-unit-raws';
 import { AdminUnitFactory } from './admin-unit-factory';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
-import {ISelectedAdministrationUnitsPropertyParameter} from './iselected-administration-units-property-parameter';
+import { SelectedAdministrationUnitsPropertyParameter } from './selected-administration-units-property-parameter';
 
 @Injectable()
 export class AdministrationUnitService {
@@ -22,7 +20,7 @@ export class AdministrationUnitService {
   listAdministrationUnits(): Observable<Array<AdministrationUnit>> {
     if (this.brokerUrl) {
       return this.http
-        .get<AdministrationUnitRaws []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`)
+        .get<IAdministrationUnitRaws []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`)
         .pipe(
           map(rawAdministrationUnits => rawAdministrationUnits
             .map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit)))
@@ -33,7 +31,7 @@ export class AdministrationUnitService {
           switchMap(data => {
             this.brokerUrl = data.Broker;
             return this.http
-              .get<AdministrationUnitRaws []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`)
+              .get<IAdministrationUnitRaws []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`)
               .pipe(
                 map(rawAdministrationUnits => rawAdministrationUnits
                   .map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit)))
@@ -48,7 +46,7 @@ export class AdministrationUnitService {
     if (id !== '0') {
       if (this.brokerUrl) {
         return this.http
-          .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
+          .get<IAdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
           .pipe(
             map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
           );
@@ -58,7 +56,7 @@ export class AdministrationUnitService {
             switchMap(data => {
               this.brokerUrl = data.Broker;
               return this.http
-                .get<AdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
+                .get<IAdministrationUnitRaws>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Load&id=${id}`)
                 .pipe(
                   map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
                 );
@@ -68,7 +66,7 @@ export class AdministrationUnitService {
       }
     }
   }
-  create(AdminUnit: IAdministrationUnit): Observable<any> {
+  create(AdminUnit: AdministrationUnit): Observable<any> {
     if (this.brokerUrl) {
       return this.http
         .post(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Create`, AdminUnit);
@@ -85,7 +83,7 @@ export class AdministrationUnitService {
     }
   }
 
-  edit (AdminUnit: IAdministrationUnit): Observable<any> {
+  edit (AdminUnit: AdministrationUnit): Observable<any> {
     if (this.brokerUrl) {
       return this.http
         .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=Edit`, AdminUnit);
@@ -102,7 +100,7 @@ export class AdministrationUnitService {
     }
   }
 
-  addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter: ISelectedAdministrationUnitsPropertyParameter) {
+  addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter: SelectedAdministrationUnitsPropertyParameter) {
     if (this.brokerUrl) {
       return this.http
         .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=AddProperty`, selectedAdministrationUnitsPropertyParameter);

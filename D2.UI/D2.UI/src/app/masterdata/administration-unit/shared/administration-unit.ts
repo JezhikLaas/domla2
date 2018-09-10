@@ -1,14 +1,11 @@
-import {Entrance} from '../../../shared/entrance';
-import {IAdministrationUnit} from './iadministration-unit';
-import {YearMonth} from '../../shared/year-month';
-import {Variant} from '../../../shared/variant';
-import {IAdministrationUnitProperty} from './iadministration-unit-property';
-import {IUnboundSubunit} from '../../subunit/iunboundsubunit';
-import {ISubunit} from '../../subunit/isubunit';
-import {IAdministrationUnitSubunit} from './i-administration-unit-subunit';
+import { Entrance } from '../../../shared/entrance';
+import { YearMonth } from '../../shared/year-month';
+import { AdministrationUnitProperty } from './administration-unit-property';
+import { UnboundSubunit } from '../../subunit/unbound-subunit';
+import { AdministrationUnitSubunit } from './administration-unit-subunit';
 
 
-export class AdministrationUnit implements IAdministrationUnit {
+export class AdministrationUnit {
   constructor(
     public Id: string,
     public UserKey: string,
@@ -17,8 +14,8 @@ export class AdministrationUnit implements IAdministrationUnit {
     public Version: number,
     public Entrances?: Entrance[],
     public YearOfConstruction?: YearMonth,
-    public AdministrationUnitProperties?: IAdministrationUnitProperty[],
-    public UnboundSubUnits?: IUnboundSubunit[],
-    public SubUnits?: IAdministrationUnitSubunit[]
+    public AdministrationUnitProperties?: AdministrationUnitProperty[],
+    public UnboundSubUnits?: UnboundSubunit[],
+    public SubUnits?: AdministrationUnitSubunit[]
   ) { }
 }
