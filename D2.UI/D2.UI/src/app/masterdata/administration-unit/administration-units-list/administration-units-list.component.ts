@@ -1,10 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component,  OnInit} from '@angular/core';
 import {MenuItem} from '../../../shared/menu-item';
-import {MatTableDataSource} from '@angular/material';
-import {IAdministrationUnit} from '../shared/iadministration-unit';
-import {SelectionModel} from '@angular/cdk/collections';
 import {MenuDisplayService} from '../../../shared/menu-display.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'ui-administration-units-list',

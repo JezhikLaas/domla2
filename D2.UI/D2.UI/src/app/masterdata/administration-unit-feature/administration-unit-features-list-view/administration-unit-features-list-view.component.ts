@@ -1,11 +1,9 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
-import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
+import {AdministrationUnitFeature} from '../../shared/administration-unit-feature';
 import {DataType} from '../../shared/data-type';
 import {MenuDisplayService} from '../../../shared/menu-display.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AdministrationUnitFeatureService} from '../../shared/administration-unit-feature.service';
-import {OuterSubscriber} from 'rxjs/internal-compatibility';
 
 @Component({
   selector: 'ui-administration-unit-features-list-view',
@@ -15,17 +13,16 @@ import {OuterSubscriber} from 'rxjs/internal-compatibility';
 export class AdministrationUnitFeaturesListViewComponent implements OnInit {
 
   displayedColumns = ['Title', 'Description', 'Tag', 'TypedValueDecimalPlace', 'TypedValueUnit'];
-  dataSource: MatTableDataSource<IAdministrationUnitFeature>;
+  dataSource: MatTableDataSource<AdministrationUnitFeature>;
   DataType = DataType;
 
   constructor(
     private menuDisplay: MenuDisplayService,
     private router: Router,
-    private route: ActivatedRoute,
-    private bs: AdministrationUnitFeatureService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<IAdministrationUnitFeature>(this.route.snapshot.data['AdministrationUnitFeatures']);
+    this.dataSource = new MatTableDataSource<AdministrationUnitFeature>(this.route.snapshot.data['AdministrationUnitFeatures']);
   }
 }

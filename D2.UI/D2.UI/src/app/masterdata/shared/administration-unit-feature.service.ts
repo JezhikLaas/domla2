@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { AccountService } from '../../shared/account.service';
 import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap } from 'rxjs/internal/operators';
-import { IAdministrationUnitFeature } from './IAdministrationUnitFeature';
+import { AdministrationUnitFeature } from './administration-unit-feature';
 import { List } from 'linqts';
 import { map } from 'rxjs/operators';
 import { AdminUnitFactory } from '../administration-unit/shared/admin-unit-factory';
 import { Guid } from 'guid-typescript';
 import { AdministrationUnitService } from '../administration-unit/shared/administration-unit.service';
 import { AdministrationUnitProperty } from '../administration-unit/shared/administration-unit-property';
-import { IAdministrationUnit } from '../administration-unit/shared/iadministration-unit';
+
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +35,8 @@ export class AdministrationUnitFeatureService {
         Edit: '0001-01-01T00:00:00'
       },
       {
-        Title: 'Wohnfl√§che',
-        Description: 'Wohnfl√§che',
+        Title: 'Wohnfl‰che',
+        Description: 'Wohnfl‰che',
         Tag: 2,
         TypedValueDecimalPlace: 2,
         TypedValueUnit: 'qm',
@@ -47,11 +47,11 @@ export class AdministrationUnitFeatureService {
     ];
   }
 
-  listAdministrationUnitFeature(): Observable<Array<IAdministrationUnitFeature>> {
+  listAdministrationUnitFeature(): Observable<Array<AdministrationUnitFeature>> {
     return of (this.administrationUnitsFeatures);
   }
 
-  getSingleAdministrationUnitFeature (id: string): Observable <IAdministrationUnitFeature> {
+  getSingleAdministrationUnitFeature (id: string): Observable <AdministrationUnitFeature> {
     if (id !== '0') {
       const list = new List <any>(this.administrationUnitsFeatures) ;
       const feature = list
@@ -61,7 +61,7 @@ export class AdministrationUnitFeatureService {
     }
   }
 
-  createAdministrationUnitFeature(baseSettings: IAdministrationUnitFeature): Observable<any> {
+  createAdministrationUnitFeature(baseSettings: AdministrationUnitFeature): Observable<any> {
     const baseSetting = baseSettings;
     baseSetting.Id = Guid.create().toString();
     this.administrationUnitsFeatures.push(baseSetting);
@@ -79,7 +79,7 @@ export class AdministrationUnitFeatureService {
     return of([]);
   }
 
-  editAdministrationUnitFeature (baseSettings: IAdministrationUnitFeature): Observable<any> {
+  editAdministrationUnitFeature (baseSettings: AdministrationUnitFeature): Observable<any> {
     const featureIndex = this.administrationUnitsFeatures.findIndex(item => item.Id === baseSettings.Id);
     this.administrationUnitsFeatures[featureIndex] = baseSettings;
     return of([])

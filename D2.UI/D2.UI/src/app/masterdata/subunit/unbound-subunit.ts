@@ -1,7 +1,7 @@
-import {SubUnit} from './subunit';
-import {IUnboundSubunit, UnboundSubUnitType} from './iunboundsubunit';
+import { SubUnit } from './subunit';
+import { UnboundSubUnitType } from './unbound-subunit-type';
 
-export class UnboundSubunit extends SubUnit implements IUnboundSubunit {
+export class UnboundSubunit extends SubUnit {
   public Type?: UnboundSubUnitType;
   constructor (id: string, title: string, version: number, usage: string, number: number, type: UnboundSubUnitType) {
     super();

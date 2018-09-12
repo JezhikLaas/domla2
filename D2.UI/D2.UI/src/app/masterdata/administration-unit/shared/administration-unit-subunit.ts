@@ -1,7 +1,6 @@
-import {IAdministrationUnitSubunit} from './i-administration-unit-subunit';
 import {Entrance} from '../../../shared/entrance';
 
-export class AdministrationUnitSubunit implements IAdministrationUnitSubunit {
+export class AdministrationUnitSubunit {
   constructor (
     public Id: string,
     public Title: string,

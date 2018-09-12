@@ -1,11 +1,11 @@
 
 import { throwError as observableThrowError, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { AccountService } from '../../shared/account.service';
-import { HttpClient } from '@angular/common/http';
-import { IpostalCodeInfo } from './ipostalcodeinfo';
-import { CountryInfo } from '../../shared/country-info';
-import { catchError } from 'rxjs/internal/operators';
+import {AccountService} from '../../shared/account.service';
+import {HttpClient} from '@angular/common/http';
+import {PostalCodeInfo} from './postal-code-info';
+import {CountryInfo} from '../../shared/country-info';
+import {catchError} from 'rxjs/internal/operators';
 
 @Injectable()
 export class AddressService {
@@ -34,7 +34,7 @@ export class AddressService {
       ];
   }
 
-  listPostalCodeInfo(): Observable<Array<IpostalCodeInfo>> {
+  listPostalCodeInfo(): Observable<Array<PostalCodeInfo>> {
     return of(this.postalCodes);
   }
 

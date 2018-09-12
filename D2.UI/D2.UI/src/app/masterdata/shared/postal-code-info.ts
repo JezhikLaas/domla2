@@ -1,4 +1,4 @@
-export interface IpostalCodeInfo {
+export class PostalCodeInfo {
   Id: string;
   Iso2: string;
   PostalCode: string;

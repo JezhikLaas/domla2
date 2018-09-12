@@ -1,7 +1,7 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatSort, MatTableDataSource} from '@angular/material';
-import {IAdministrationUnitSubunit} from '../../administration-unit/shared/i-administration-unit-subunit';
-import {UnboundSubUnitType} from '../iunboundsubunit';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource } from '@angular/material';
+import { AdministrationUnitSubunit } from '../../administration-unit/shared/administration-unit-subunit';
+import { UnboundSubUnitType } from '../unbound-subunit-type';
 
 @Component({
   selector: 'ui-subinit-list-view',
@@ -11,14 +11,14 @@ import {UnboundSubUnitType} from '../iunboundsubunit';
 export class SubunitListViewComponent implements OnInit {
   displayedColumns = ['Title', 'Number', 'Floor', 'Entrance', 'Type'];
   InboundSubUnitType = UnboundSubUnitType;
-  @Input() SubUnits: IAdministrationUnitSubunit[];
-  dataSource: MatTableDataSource<IAdministrationUnitSubunit>;
+  @Input() SubUnits: AdministrationUnitSubunit[];
+  dataSource: MatTableDataSource<AdministrationUnitSubunit>;
   @ViewChild(MatSort) sort: MatSort;
   constructor() {
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<IAdministrationUnitSubunit>(this.SubUnits);
+    this.dataSource = new MatTableDataSource<AdministrationUnitSubunit>(this.SubUnits);
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {

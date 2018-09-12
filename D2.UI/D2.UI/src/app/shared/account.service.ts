@@ -1,13 +1,12 @@
 
 import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 
 
 
 import {StorageService} from './storage.service';
-import {environment} from '../../environments/environment';
 import {catchError, switchMap} from 'rxjs/internal/operators';
 
 

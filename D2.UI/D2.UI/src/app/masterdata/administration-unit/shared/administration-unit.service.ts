@@ -1,14 +1,12 @@
-import {throwError as observableThrowError,  Observable } from 'rxjs';
+import { throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AccountService } from '../../../shared/account.service';
-import { IAdministrationUnit } from './iadministration-unit';
 import { AdministrationUnit } from './administration-unit';
-import {IAdministrationUnitRaws} from './iadministration-unit-raws';
+import { IAdministrationUnitRaws} from './iadministration-unit-raws';
 import { AdminUnitFactory } from './admin-unit-factory';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import {IAdministrationUnitFeature} from '../../shared/IAdministrationUnitFeature';
-import {ISelectedAdministrationUnitsPropertyParameter} from './iselected-administration-units-property-parameter';
+import { SelectedAdministrationUnitsPropertyParameter } from './selected-administration-units-property-parameter';
 import {forEach} from '@angular/router/src/utils/collection';
 import { of } from 'rxjs';
 import { Guid } from 'guid-typescript';
@@ -266,7 +264,7 @@ export class AdministrationUnitService {
         {
           Title: 'Heizung',
           Description: null,
-          Value: {Tag: 3, Raw: 'Erdw√§rme'},
+          Value: {Tag: 3, Raw: 'Erdw‰rme'},
           Version: 2,
           Id: '124969df-e174-4fff-9eb0-a94c006b675a',
           Edit: '0001-01-01T00: 00: 00'
@@ -516,7 +514,7 @@ export class AdministrationUnitService {
         {
           Title: 'Heizung',
           Description: null,
-          Value: {Tag: 3, Raw: 'Erdw√§rme'},
+          Value: {Tag: 3, Raw: 'Erdw‰rme'},
           Version: 2,
           Id: '124969df-e174-4fff-9eb0-a94c006b675a',
           Edit: '0001-01-01T00: 00: 00'
@@ -553,7 +551,7 @@ export class AdministrationUnitService {
     }
   }
 
-  create(AdminUnit:  IAdministrationUnit):  Observable<any> {
+  create(AdminUnit: AdministrationUnit): Observable<any> {
     const administrationUnit = AdminUnit;
     administrationUnit.Id = Guid.create().toString();
     this.pushSubUnits(administrationUnit);
@@ -561,7 +559,7 @@ export class AdministrationUnitService {
     return of({newId: administrationUnit.Id});
   }
 
-  edit (AdminUnit:  IAdministrationUnit):  Observable<any> {
+  edit (AdminUnit: AdministrationUnit): Observable<any> {
     const adminUnitIndex = this.administrationUnits.findIndex(item => item.Id === AdminUnit.Id);
     this.pushSubUnits(AdminUnit);
     this.administrationUnits[adminUnitIndex] = AdminUnit;
@@ -583,7 +581,7 @@ export class AdministrationUnitService {
       .concat(boundSubUnits);
   }
 
-  addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter:  ISelectedAdministrationUnitsPropertyParameter) {
+  addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter: SelectedAdministrationUnitsPropertyParameter) {
     for (const adminUnitId of selectedAdministrationUnitsPropertyParameter.AdministrationUnitIds ) {
       const adminUnitProperty = new AdministrationUnitProperty(
         Guid.create().toString(),

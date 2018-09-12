@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA,  MatDialogRef, MatTableDataSource} from '@angular/material';
-import {IAdministrationUnit} from '../../administration-unit/shared/iadministration-unit';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MenuDisplayService} from '../../../shared/menu-display.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AdministrationUnitService} from '../../administration-unit/shared/administration-unit.service';
+import { Component, OnInit} from '@angular/core';
+import { MatDialogRef, MatTableDataSource } from '@angular/material';
+import { AdministrationUnit } from '../../administration-unit/shared/administration-unit';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MenuDisplayService } from '../../../shared/menu-display.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AdministrationUnitService } from '../../administration-unit/shared/administration-unit.service';
 
 @Component({
   selector: 'ui-dialog-administration-units-list',
@@ -21,10 +21,10 @@ import {AdministrationUnitService} from '../../administration-unit/shared/admini
 })
 export class DialogAdministrationUnitsListComponent implements OnInit {
   displayedColumns = ['select', 'userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
-  dataSource: MatTableDataSource<IAdministrationUnit>;
+  dataSource: MatTableDataSource<AdministrationUnit>;
   initialSelection = [];
   allowMultiSelect = true;
-  selection = new SelectionModel<IAdministrationUnit>(this.allowMultiSelect, this.initialSelection);
+  selection = new SelectionModel<AdministrationUnit>(this.allowMultiSelect, this.initialSelection);
   constructor(
     public dialogRef: MatDialogRef<DialogAdministrationUnitsListComponent>,
     private menuDisplay: MenuDisplayService,
@@ -35,7 +35,7 @@ export class DialogAdministrationUnitsListComponent implements OnInit {
 
   ngOnInit() {
     this.as.listAdministrationUnits().subscribe(res => this.dataSource =
-      new MatTableDataSource<IAdministrationUnit>(res));
+      new MatTableDataSource<AdministrationUnit>(res));
   }
 
   onNoClick(): void {

@@ -1,6 +1,4 @@
-import {ISubunit} from './isubunit';
-
-export abstract class SubUnit implements ISubunit {
+export abstract class SubUnit {
   public Id: string;
   public Title: string;
   public Version: number;

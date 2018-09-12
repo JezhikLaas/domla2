@@ -29,7 +29,6 @@ namespace D2.MasterData.Mappings
                 .Access.BackingField()
                 .Cascade.SaveUpdate()
                 .Not.Nullable();
-
         }
     }
 }
