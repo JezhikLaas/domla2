@@ -196,9 +196,9 @@ export class AdministrationUnitEditComponent implements OnInit {
               Tag: this.fb.control(t.Value.Tag),
               Raw: this.fb.control(t.Value.Raw),
               RawNumber: this.fb.group({
-                _decimalPlaces: this.fb.control( t.Value.Raw._decimalPlaces),
-                _unit: this.fb.control(t.Value.Raw._unit),
-                _value: this.fb.control(t.Value.Raw._value)
+                _decimalPlaces: this.fb.control( t.Value.Raw ? t.Value.Raw._decimalPlaces : null),
+                _unit: this.fb.control(t.Value.Raw ? t.Value.Raw._unit : null),
+                _value: this.fb.control(t.Value.Raw ? t.Value.Raw._value : null)
               })
             }),
             Id: this.fb.control(t.Id),
@@ -259,9 +259,12 @@ export class AdministrationUnitEditComponent implements OnInit {
           .Where( x => entranceValue.InternID === x.InternID)
           .FirstOrDefault();
         const entranceControl = subUnitFormGroup.get('Entrance');
+        const typeControl = subUnitFormGroup.get('Type');
         subUnitFormGroup.removeControl('Entrance');
+        subUnitFormGroup.removeControl('Type');
         result.SubUnits.push(subUnitFormGroup.value);
         subUnitFormGroup.addControl('Entrance', entranceControl);
+        subUnitFormGroup.addControl('Type', typeControl );
       }
     }
   }

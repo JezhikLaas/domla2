@@ -14,6 +14,9 @@ import { of } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { List } from 'linqts';
 import { ISubunit } from '../../subunit/isubunit';
+import { AdministrationUnitProperty } from './administration-unit-property';
+import { getLocaleDateFormat } from '@angular/common';
+import { Variant } from '../../../shared/variant';
 
 @Injectable()
 export class AdministrationUnitService {
@@ -534,6 +537,9 @@ export class AdministrationUnitService {
       );
   }
 
+  getListNoObservable(): IAdministrationUnit[]  {
+    return this.administrationUnits;
+}
   getSingle(id:  string):  Observable<AdministrationUnit> {
     if (id !== '0') {
       const list = new List <any>(this.administrationUnits) ;
@@ -569,7 +575,8 @@ export class AdministrationUnitService {
     const boundSubUnits = [];
     for (const entrance of AdminUnit.Entrances) {
       for ( const subUnit of entrance.SubUnits) {
-      boundSubUnits.push(subUnit);
+        subUnit.Entrance = entrance;
+        boundSubUnits.push(subUnit);
       }
     }
     AdminUnit.SubUnits = AdminUnit.UnboundSubUnits
@@ -577,19 +584,32 @@ export class AdministrationUnitService {
   }
 
   addPropertiesSelectedAdministrationUnits(selectedAdministrationUnitsPropertyParameter:  ISelectedAdministrationUnitsPropertyParameter) {
-    if (this.brokerUrl) {
-      return this.http
-        .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=AddProperty`, selectedAdministrationUnitsPropertyParameter);
-    } else {
-      return this.accountService.fetchServices()
-        .pipe(
-          switchMap(data => {
-            this.brokerUrl = data.Broker;
-            return this.http
-              .put(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=AddProperty`, selectedAdministrationUnitsPropertyParameter);
-          }),
-          catchError(error => observableThrowError(error))
-        );
+    for (const adminUnitId of selectedAdministrationUnitsPropertyParameter.AdministrationUnitIds ) {
+      const adminUnitProperty = new AdministrationUnitProperty(
+        Guid.create().toString(),
+        new Date(),
+        1,
+        selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters.Title,
+        selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters.Description,
+        this.buildPropertyValue(selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters)
+      );
+      const list = new List <any>(this.administrationUnits);
+      const adminUnit: IAdministrationUnit = list
+        .Where(x  => x.Id === adminUnitId )
+        .FirstOrDefault();
+      adminUnit.AdministrationUnitProperties.push(adminUnitProperty);
+    }
+    return of([])
+      .pipe(
+        catchError(error => observableThrowError(error))
+      );
+  }
+
+ buildPropertyValue (feature: any): Variant {
+    if (feature.Tag === 3 || feature.Tag === 1) {
+      return new Variant (feature.Tag, null);
+    } else if (feature.Tag === 2) {
+      return new Variant (feature.Tag, { _value: null, _unit: feature.TypedValueUnit, _decimalPlaces: feature.TypedValueDecimalPlace });
     }
   }
 }

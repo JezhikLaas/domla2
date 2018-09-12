@@ -1,39 +1,41 @@
 
-import {throwError as observableThrowError, Observable} from 'rxjs';
+import { throwError as observableThrowError, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import {IAdministrationUnitRaws} from '../administration-unit/shared/iadministration-unit-raws';
-import {map} from 'rxjs/operators';
-import {AdminUnitFactory} from '../administration-unit/shared/admin-unit-factory';
-import {AccountService} from '../../shared/account.service';
-import {HttpClient} from '@angular/common/http';
-import {IpostalCodeInfo} from './ipostalcodeinfo';
-import {CountryInfo} from '../../shared/country-info';
-import {catchError, switchMap} from 'rxjs/internal/operators';
+import { AccountService } from '../../shared/account.service';
+import { HttpClient } from '@angular/common/http';
+import { IpostalCodeInfo } from './ipostalcodeinfo';
+import { CountryInfo } from '../../shared/country-info';
+import { catchError } from 'rxjs/internal/operators';
 
 @Injectable()
 export class AddressService {
-
-  private topic = 'PostalCodeInfo';
-  private brokerUrl: string;
+  private postalCodes: any [];
 
   constructor( private http: HttpClient,
-              private accountService: AccountService ) { }
+              private accountService: AccountService ) {
+    this.postalCodes =
+      [
+        {
+          Iso2: 'DE',
+          PostalCode: '32051',
+          City: 'Herford',
+          Version: 1,
+          Id: '21ca0e73-50ea-4c3f-9df8-a94300d2a26e',
+          Edit: '0001-01-01T00:00:00'
+        },
+        {
+          Iso2: 'DE',
+          PostalCode: '32602',
+          City: 'Vlotho',
+          Version: 1,
+          Id: '55d8a3ea-104c-447c-becd-a94a00ac6c61',
+          Edit: '0001-01-01T00:00:00'
+        }
+      ];
+  }
 
   listPostalCodeInfo(): Observable<Array<IpostalCodeInfo>> {
-    if (this.brokerUrl) {
-      return this.http
-        .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
-    } else {
-      return this.accountService.fetchServices()
-        .pipe(
-          switchMap(data => {
-            this.brokerUrl = data.Broker;
-            return this.http
-              .get<IpostalCodeInfo []>(`${this.brokerUrl}/Dispatch?groups=md&topic=${this.topic}&call=List`);
-          }),
-          catchError(error => observableThrowError(error))
-        );
-    }
+    return of(this.postalCodes);
   }
 
   getCountries (): Observable <Array<CountryInfo>> {

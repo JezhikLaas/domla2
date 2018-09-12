@@ -1,4 +1,5 @@
 export interface IAdministrationUnitFeature {
+  Id: string;
   Title: string;
   Description: string;
   Tag: string;
