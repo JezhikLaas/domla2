@@ -12,27 +12,27 @@
 
     <ng-container matColumnDef="country">
       <mat-header-cell *matHeaderCellDef> Land </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Country?.Iso2}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Country?.Iso2}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="postalCode">
       <mat-header-cell *matHeaderCellDef> PLZ </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.PostalCode}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.PostalCode}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="city">
       <mat-header-cell *matHeaderCellDef> Stadt </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.City}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.City}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="street">
       <mat-header-cell *matHeaderCellDef> Straße </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Street}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Street}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="number">
       <mat-header-cell *matHeaderCellDef> Nr. </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Number}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Number}}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

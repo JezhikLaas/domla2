@@ -35,8 +35,8 @@ export class AdministrationUnitFeatureService {
         Edit: '0001-01-01T00:00:00'
       },
       {
-        Title: 'Wohnfl‰che',
-        Description: 'Wohnfl‰che',
+        Title: 'Wohnfl√§che',
+        Description: 'Wohnfl√§che',
         Tag: 2,
         TypedValueDecimalPlace: 2,
         TypedValueUnit: 'qm',

@@ -9,7 +9,7 @@ export class ErrorMessage {
 export const AdministrationUnitFormErrorMessages = [
   new ErrorMessage('Title', 'required', 'Es muss ein Objektname eingegeben werden'),
   new ErrorMessage('UserKey', 'required', 'Es muss ein Benutzerschlüssel eingegeben werden'),
-  new ErrorMessage('Entrances', 'atLeastOneEntrance', 'Es muss mindestens ein Eingang mit einer vollständigen Addresse eingegeben werden'),
+  new ErrorMessage('EntrancesFormArray', 'atLeastOneEntrance', 'Es muss mindestens ein Eingang mit einer vollständigen Addresse eingegeben werden'),
   new ErrorMessage('UserKey', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
   new ErrorMessage('Title', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
 

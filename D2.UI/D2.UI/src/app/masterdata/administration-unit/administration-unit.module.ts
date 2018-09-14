@@ -11,22 +11,26 @@ import { AdministrationUnitsListComponent } from './administration-units-list/ad
 import {SubunitCreateComponent} from '../subunit/subunit-create/subunit-create.component';
 import {SubunitListComponent} from '../subunit/subunit-list/subunit-list.component';
 import {SubunitListViewComponent} from '../subunit/subunit-list-view/subunit-list-view.component';
-
+import { EntrancesListComponent } from './administration-unit-edit/entrances-list/entrances-list.component';
+import { EntranceEditComponent } from './administration-unit-edit/entrance-edit/entrance-edit.component';
 
 @NgModule({
   imports: [
     AdministrationUnitRoutingModule,
     SharedModule,
     AdministrationUnitFeatureModule
-
   ],
+  entryComponents: [
+    EntranceEditComponent, SubunitCreateComponent],
   declarations: [
     AdministrationUnitEditComponent,
     AdministrationUnitPropertyComponent,
     AdministrationUnitsListComponent,
     SubunitCreateComponent,
     SubunitListComponent,
-    SubunitListViewComponent
+    SubunitListViewComponent,
+    EntrancesListComponent,
+    EntranceEditComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

@@ -5,30 +5,43 @@ import {Variant} from '../../../shared/variant';
 import {AdministrationUnitProperty} from './administration-unit-property';
 import {AdministrationUnitSubunit} from './administration-unit-subunit';
 import {Entrance} from '../../../shared/entrance';
+import { SubUnit } from '../../subunit/subunit';
 
 export class AdminUnitFactory {
-  static empty(): AdministrationUnit {
-    return new AdministrationUnit('00000000-0000-0000-0000-000000000000', '', '', new Date(), 0, [
-        {
-          Id: '00000000-0000-0000-0000-000000000000',
-          Title: '',
-          Version: 0,
-          Address: {
-            Country:
-              {Iso2: 'DE', Iso3: '', Name: ''},
-            City: '',
-            Street: '',
-            Number: '',
-            PostalCode: ''
-          },
-          Edit: '',
-          AdministrationUnitId: '',
-          SubUnits: []
-        }],
+  static emptyAdministrationUnit(): AdministrationUnit {
+    return new AdministrationUnit('00000000-0000-0000-0000-000000000000', '', '', new Date(), 0, [],
       null,
       [],
       [],
       []
+    );
+  }
+
+  static emptyEntrance(): Entrance {
+    return new Entrance(
+      '00000000-0000-0000-0000-000000000000',
+      '',
+      {
+        Country:
+          {Iso2: 'DE', Iso3: '', Name: ''},
+        City: '',
+        Street: '',
+        Number: '',
+        PostalCode: ''
+      },
+      '',
+      0,
+      '',
+      []
+    );
+  }
+
+  static emptySubUnit(): SubUnit {
+    return new SubUnit(
+      '00000000-0000-0000-0000-000000000000',
+      '',
+      0,
+      0
     );
   }
 
@@ -60,7 +73,7 @@ export class AdminUnitFactory {
         subunits[i].Floor ? subunits[i].Floor : '',
         subunits[i].Type ? subunits[i].Type : '',
         subunits[i].Entrance ? subunits[i].Entrance :
-          new Entrance());
+          '');
       subUnitsArr.push(subUnit);
     }
     return subUnitsArr;

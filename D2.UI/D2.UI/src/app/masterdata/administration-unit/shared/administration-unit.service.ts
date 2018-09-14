@@ -11,7 +11,6 @@ import {forEach} from '@angular/router/src/utils/collection';
 import { of } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { List } from 'linqts';
-import { ISubunit } from '../../subunit/isubunit';
 import { AdministrationUnitProperty } from './administration-unit-property';
 import { getLocaleDateFormat } from '@angular/common';
 import { Variant } from '../../../shared/variant';
@@ -264,7 +263,7 @@ export class AdministrationUnitService {
         {
           Title: 'Heizung',
           Description: null,
-          Value: {Tag: 3, Raw: 'Erdwärme'},
+          Value: {Tag: 3, Raw: 'ErdwÃ¤rme'},
           Version: 2,
           Id: '124969df-e174-4fff-9eb0-a94c006b675a',
           Edit: '0001-01-01T00: 00: 00'
@@ -514,7 +513,7 @@ export class AdministrationUnitService {
         {
           Title: 'Heizung',
           Description: null,
-          Value: {Tag: 3, Raw: 'Erdwärme'},
+          Value: {Tag: 3, Raw: 'Erdwï¿½rme'},
           Version: 2,
           Id: '124969df-e174-4fff-9eb0-a94c006b675a',
           Edit: '0001-01-01T00: 00: 00'
@@ -535,16 +534,17 @@ export class AdministrationUnitService {
       );
   }
 
-  getListNoObservable(): IAdministrationUnit[]  {
+  getListNoObservable(): AdministrationUnit[]  {
     return this.administrationUnits;
 }
   getSingle(id:  string):  Observable<AdministrationUnit> {
     if (id !== '0') {
+      // const adminUnitKopie = JSON.parse(JSON.stringify(this.administrationUnits));
       const list = new List <any>(this.administrationUnits) ;
       const adminUnit = list
         .Where(x  => x.Id === id )
         .FirstOrDefault();
-      return of(adminUnit)
+      return of(JSON.parse(JSON.stringify(adminUnit)))
         .pipe(
           map(rawAdministrationUnit => AdminUnitFactory.fromObject(rawAdministrationUnit))
         );
@@ -569,11 +569,10 @@ export class AdministrationUnitService {
         );
   }
 
-  pushSubUnits (AdminUnit: IAdministrationUnit | any) {
+  pushSubUnits (AdminUnit: AdministrationUnit | any) {
     const boundSubUnits = [];
     for (const entrance of AdminUnit.Entrances) {
       for ( const subUnit of entrance.SubUnits) {
-        subUnit.Entrance = entrance;
         boundSubUnits.push(subUnit);
       }
     }
@@ -592,7 +591,7 @@ export class AdministrationUnitService {
         this.buildPropertyValue(selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters)
       );
       const list = new List <any>(this.administrationUnits);
-      const adminUnit: IAdministrationUnit = list
+      const adminUnit: AdministrationUnit = list
         .Where(x  => x.Id === adminUnitId )
         .FirstOrDefault();
       adminUnit.AdministrationUnitProperties.push(adminUnitProperty);

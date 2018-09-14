@@ -70,23 +70,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.accounts.loadOidcConfiguration()
-      .subscribe(data => {
-        data.silentRefreshRedirectUri = window.location.origin + '/assets/silent-refresh.html';
-        data.requireHttps = false;
-
-        this.oauthService.configure(data);
-        this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-        this.oauthService.loadDiscoveryDocumentAndLogin()
-          .then(succeeded => {
-            console.log(`Login returned ${succeeded}`);
-            if (succeeded) {
-              console.log(`Setting up silent refresh with ${data.silentRefreshRedirectUri}`);
-              this.oauthService.setupAutomaticSilentRefresh();
-            }
-          });
-      });
-
     this.subscription = this.menuDisplay.menuNeeded
       .subscribe((data: Array<string>) => {
         this.MenuButtons.length = 0;
@@ -114,14 +97,5 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.confirmDialog.show(
-      'Bestätigung',
-      'Möchten Sie sich wirklich abmelden?',
-      value => {
-        if (value) {
-          this.oauthService.logOut();
-        }
-      }
-    );
   }
 }

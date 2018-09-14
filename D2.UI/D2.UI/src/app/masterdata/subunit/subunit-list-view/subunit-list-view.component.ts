@@ -1,26 +1,46 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { AdministrationUnitSubunit } from '../../administration-unit/shared/administration-unit-subunit';
 import { UnboundSubUnitType } from '../unbound-subunit-type';
+import { AdminUnitFactory } from '../../administration-unit/shared/admin-unit-factory';
+import { EntranceEditComponent } from '../../administration-unit/administration-unit-edit/entrance-edit/entrance-edit.component';
+import { SubunitCreateComponent } from '../subunit-create/subunit-create.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Entrance } from '../../../shared/entrance';
 
 @Component({
   selector: 'ui-subinit-list-view',
   templateUrl: './subunit-list-view.component.html',
-  styles: []
+  styles: [`
+    .mat-column-select {
+      overflow: initial;
+    }
+    .mat-row.selected {
+        background-color: lightblue;
+        cursor: pointer;
+    }
+  `]
 })
 export class SubunitListViewComponent implements OnInit {
   displayedColumns = ['Title', 'Number', 'Floor', 'Entrance', 'Type'];
   InboundSubUnitType = UnboundSubUnitType;
   @Input() SubUnits: AdministrationUnitSubunit[];
-  dataSource: MatTableDataSource<AdministrationUnitSubunit>;
+  @Input() Entrances: Entrance[];
+  DataSource: MatTableDataSource<AdministrationUnitSubunit>;
+  initialSelection = [];
+  allowMultiSelect = false;
+  selection = new SelectionModel<Entrance>(this.allowMultiSelect, this.initialSelection);
+  SubUnit = AdminUnitFactory.emptySubUnit();
   @ViewChild(MatSort) sort: MatSort;
-  constructor() {
+  constructor(
+    public dialog: MatDialog
+  ) {
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<AdministrationUnitSubunit>(this.SubUnits);
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = (item, property) => {
+    this.DataSource = new MatTableDataSource<AdministrationUnitSubunit>(this.SubUnits);
+    this.DataSource.sort = this.sort;
+    this.DataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
         case 'Entrance':
           if (item.Entrance.Address) {
@@ -42,11 +62,32 @@ export class SubunitListViewComponent implements OnInit {
     };
   }
   applyFilter(filterValue: string) {
-    /*this.dataSource.filterPredicate = (data, filter) =>
-      data.Title.trim().toLowerCase().indexOf(filter) !== -1 ||
-      data.Number.toString().trim().toLowerCase().indexOf(filter) !== -1;
-      this.InboundSubUnitType[data.Type + 1].toString().trim().toLowerCase().indexOf(filter) !== -1; */
+    this.DataSource.filter = filterValue.trim().replace(/\s/g, '' ).replace(',', '' ).toLowerCase();
+  }
 
-    this.dataSource.filter = filterValue.trim().replace(/\s/g, '' ).replace(',', '' ).toLowerCase();
+  selectRow (entrance: any, index: number) {
+    this.openDialog(entrance, index, this.Entrances);
+  }
+
+
+  openDialog (selectedSubUnit: any, index: number, entrances: Entrance []) {
+    const dialogRef = this.dialog.open(SubunitCreateComponent, {
+      width: '1000px',
+      height: '800px',
+      disableClose: false,
+      hasBackdrop: true,
+      data: {
+        selectedSubUnit,
+        entrances
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result !== selectedSubUnit && typeof(index) === 'number') {
+        this.DataSource.data[index] = result;
+      } else if (result && !index) {
+        this.DataSource.data.push(result);
+      }
+      this.DataSource._updateChangeSubscription();
+    });
   }
 }

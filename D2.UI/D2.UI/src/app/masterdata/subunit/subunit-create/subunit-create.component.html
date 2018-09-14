@@ -1,41 +1,49 @@
-<div fxFlex="20%">
-  <mat-form-field style="width: 100%">
-    <mat-label>Bezeichnung</mat-label>
-    <input matInput [formControl]="Title"  >
-  </mat-form-field>
-</div>
-<div fxFlex="50%">
-  <mat-form-field  style="width: 100%">
-    <mat-label>Nummer</mat-label>
-    <input matInput [formControl]="Number"  type="number">
-  </mat-form-field>
-</div>
-<div fxFlex="50%" *ngIf="Entrance">
-  <mat-form-field  style="width: 100%">
-    <mat-select placeholder="Eingang" [formControl]="Entrance">
-      <mat-option>Kein Eingang</mat-option>
-      <mat-option *ngFor="let entrance of Entrances" [value]=entrance>{{entrance.Title}} {{entrance.Address.Street}} {{entrance.Address.Number}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-<div fxFlex="50%" *ngIf="Entrance && !Entrance.value" >
-  <mat-form-field  style="width: 100%">
-    <mat-select  [formControl]="Type" (valueChange)="onSelectedType($event)">
-      <mat-option *ngFor="let Typ of UnboundSubUnitType.values(); let i = index" [value]=i+1>{{Typ}} </mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
-<div fxFlex="50%" *ngIf="Entrance && Entrance.value">
-  <mat-form-field  style="width: 100%">
-    <mat-label>Stockwerk</mat-label>
-    <input matInput [formControl]="Floor">
-  </mat-form-field>
-</div>
-<div fxLayout="row" fxLayoutWrap fxLayoutGap="2%" class="container"  fxLayoutAlign="left" fxFlex="100%" fxLayout.xs="column">
-  <div *ngIf="ArrayLastElement" fxFlex="50%">
-    <button (click)="onAddSubUnitControl()" style="width: 100%; margin-top: 0.25em;" type="button" class="ui button"> + </button>
+<div [formGroup]="SubUnit"
+     class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+  <div fxFlex="20%">
+    <mat-form-field style="width: 100%">
+      <mat-label>Bezeichnung</mat-label>
+      <input matInput formControlName="Title"  >
+    </mat-form-field>
   </div>
-  <div  fxFlex="50%">
-    <button  (click)="onRemoveSubUnitControl()" style="width: 100%; margin-top: 0.25em" type="button" class="ui button"> - </button>
+  <div fxFlex="50%">
+    <mat-form-field  style="width: 100%">
+      <mat-label>Nummer</mat-label>
+      <input matInput formControlName="Number"  type="number">
+    </mat-form-field>
+  </div>
+  <div fxFlex="50%">
+    <mat-form-field  style="width: 100%">
+      <mat-select placeholder="Eingang" formControlName="Entrance" [compareWith]="compareEntrance" (ngModelChange) ="onSelectedEntrance($event)">
+        <mat-option>Kein Eingang</mat-option>
+        <mat-option *ngFor="let entrance of subUnitData.entrances" [value]=entrance>{{entrance.Title}} {{entrance.Address.Street}} {{entrance.Address.Number}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxFlex="50%" *ngIf="!SubUnit.get('Entrance').value">
+    <mat-form-field  style="width: 100%">
+      <mat-select  formControlName="Type" (valueChange)="onSelectedType($event)">
+        <mat-option *ngFor="let Typ of UnboundSubUnitType.values(); let i = index" [value]=i+1>{{Typ}} </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxFlex="50%" *ngIf="SubUnit.get('Entrance').value">
+    <mat-form-field  style="width: 100%">
+      <mat-label>Stockwerk</mat-label>
+      <input matInput formControlName="Floor">
+    </mat-form-field>
   </div>
 </div>
+<div *ngIf="Errors?.SubUnitTitlemaxlength" class="ui negative message">
+  {{ Errors?.SubUnitTitlemaxlength }}
+</div>
+<div *ngIf="Errors?.SubUnitTitlerequired" class="ui negative message">
+  {{ Errors?.SubUnitTitlerequired }}
+</div>
+<div *ngIf="Errors?.SubUnitNumberrequired" class="ui negative message">
+  {{ Errors?.SubUnitNumberrequired }}
+</div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="onNoClick()">Abbrechen</button>
+    <button mat-raised-button [mat-dialog-close]="SubUnit.value" cdkFocusInitial [disabled]="SubUnit.invalid">Ok</button>
+  </div>
