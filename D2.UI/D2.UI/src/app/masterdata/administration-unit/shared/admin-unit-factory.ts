@@ -40,9 +40,12 @@ export class AdminUnitFactory {
     return new SubUnit(
       '00000000-0000-0000-0000-000000000000',
       '',
-      0,
       0
     );
+  }
+
+  static emptyProperty(): AdministrationUnitProperty {
+    return new AdministrationUnitProperty('', '', 0, '', new Variant(3, ''), '' );
   }
 
   static fromObject(rawAdministrationUnit: IAdministrationUnitRaws | any): AdministrationUnit {
@@ -58,7 +61,7 @@ export class AdminUnitFactory {
       rawAdministrationUnit.AdministrationUnitProperties ? this.fromObjectBuildAdministrationUnitProperty(rawAdministrationUnit.AdministrationUnitProperties) :
                                 rawAdministrationUnit.AdministrationUnitProperties,
       rawAdministrationUnit.UnboundSubUnits,
-      this.fromObjectBuildSubUnits(rawAdministrationUnit.SubUnits),
+      rawAdministrationUnit.SubUnits ? this.fromObjectBuildSubUnits(rawAdministrationUnit.SubUnits) : null,
     );
   }
 
@@ -87,8 +90,8 @@ export class AdminUnitFactory {
         properties[i].Edit,
         properties[i].Version,
         properties[i].Title,
-        properties[i].Description,
-        new Variant (properties[i].Value.Tag, properties[i].Value.Raw)
+        new Variant (properties[i].Value.Tag, properties[i].Value.Raw),
+        properties[i].Description
       );
       propertyArray.push(property);
     }
@@ -124,12 +127,12 @@ export class AdminUnitFactory {
     const propertyArray = new Array <AdministrationUnitProperty> ();
     for (let i = 0; i < properties.length; i++ ) {
        const property =  new AdministrationUnitProperty (
-        properties[i].Id,
-        properties[i].Edit,
-        properties[i].Version,
-        properties[i].Title,
-        properties[i].Description,
-        this.ToObjectBuildPropertyValue(properties[i])
+          properties[i].Id,
+          properties[i].Edit,
+          properties[i].Version,
+          properties[i].Title,
+          this.ToObjectBuildPropertyValue(properties[i]),
+          properties[i].Description,
       );
        propertyArray.push(property);
     }
@@ -138,9 +141,13 @@ export class AdminUnitFactory {
 
   static ToObjectBuildPropertyValue (property: any): Variant {
     if (property.Value.Tag === 3 || property.Value.Tag === 1) {
-      return new Variant (property.Value.Tag, property.Value.Raw);
+      if (property.Value.Raw) {
+        return new Variant(property.Value.Tag, property.Value.Raw._value);
+      } else {
+        return new Variant(property.Value.Tag, null);
+      }
     } else if (property.Value.Tag === 2) {
-      return new Variant (property.Value.Tag, property.Value.RawNumber);
+      return new Variant (property.Value.Tag, property.Value.Raw);
     }
   }
 }

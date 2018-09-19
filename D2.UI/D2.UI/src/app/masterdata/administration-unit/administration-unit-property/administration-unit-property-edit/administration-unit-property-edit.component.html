@@ -1,0 +1,72 @@
+<div [formGroup]="AdministrationUnitProperty"
+     class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
+  <div fxFlex="20%">
+    <mat-form-field style="width: 100%">
+      <mat-label>Bezeichnung</mat-label>
+      <input matInput formControlName="Title"  >
+    </mat-form-field>
+  </div>
+  <div fxFlex="50%">
+    <mat-form-field  style="width: 100%">
+      <mat-label>Beschreibung</mat-label>
+      <input matInput formControlName="Description"  >
+    </mat-form-field>
+  </div>
+  <div [formGroup]="Value" fxLayout="row" fxLayoutWrap fxLayoutGap="1%" class="container"  fxLayoutAlign="left" fxFlex="50%" fxLayout.xs="column"
+       [ngSwitch]="Value.get(['Tag']).value">
+    <div fxFlex="40">
+      <mat-form-field style="width: 100%">
+        <mat-select  formControlName="Tag" (valueChange)="onSelectedValueTag($event)">
+          <mat-option *ngFor="let Typ of DataType; let i = index" [value]=i+1>{{Typ}} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxFlex="60" *ngSwitchCase="1">
+      <mat-form-field  style="width: 100%">
+        <mat-label>Wert</mat-label>
+        <input matInput formControlName="Raw" [matDatepicker]="picker2" >
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxFlex="60" *ngSwitchCase="2" [formGroup]="Value.get(['RawNumber'])" fxLayout="row" fxLayoutGap="1%" fxFlexAlign="left">
+      <mat-form-field style="width: 33%">
+        <mat-label>Einheit</mat-label>
+        <input matInput formControlName="_unit">
+      </mat-form-field>
+      <mat-form-field style="width: 33%">
+        <mat-label>Nachkommastellen</mat-label>
+        <input matInput formControlName="_decimalPlaces" type="number" >
+      </mat-form-field>
+      <mat-form-field style="width: 33%">
+        <mat-label>Wert</mat-label>
+        <input matInput formControlName="_value" type="number" >
+      </mat-form-field>
+    </div>
+    <div fxFlex="60" *ngSwitchCase="3">
+      <mat-form-field style="width: 100%">
+        <mat-label>Wert</mat-label>
+        <input matInput formControlName="Raw" type="text" >
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+  <div *ngIf="Errors?.PropertyTitlerequired" class="ui negative message">
+    {{ Errors?.PropertyTitlerequired }}
+  </div>
+  <div *ngIf="Errors?.PropertyTitlemaxlength" class="ui negative message">
+    {{ Errors?.PropertyTitlerequired }}
+  </div>
+  <div *ngIf="Errors?.PropertyDescriptionmaxlength" class="ui negative message">
+    {{ Errors?.PropertyTitlerequired }}
+  </div>
+  <div *ngIf="Errors?.PropertyValueCheckProperty" class="ui negative message">
+    {{ Errors?.PropertyValueCheckProperty }}
+  </div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onNoClick()">Abbrechen</button>
+  <button mat-raised-button [mat-dialog-close]="AdministrationUnitProperty.value" cdkFocusInitial [disabled]="AdministrationUnitProperty.invalid ||
+    AdministrationUnitProperty.untouched">Ok</button>
+</div>
+
+

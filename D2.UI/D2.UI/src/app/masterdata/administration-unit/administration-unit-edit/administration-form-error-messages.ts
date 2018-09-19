@@ -33,7 +33,7 @@ export const PropertiesErrorMessages = [
 ];
 
 export const PropertyValueErrorMessages = [
-  new ErrorMessage('Tag', 'required', 'Wählen Sie bitte den Typ des Zusatzfeldes aus'),
+  new ErrorMessage('Value', 'CheckProperty', 'Bitte geben Sie die Nachkommastellen und die Maßeinheit ein'),
   new ErrorMessage('Raw', 'required', 'Geben Sie bitte den Wert des Zusatzfeldes ein'),
 ];
 
@@ -45,5 +45,7 @@ export const EntranceErrorMessages = [
 export const SubUnitsErrorMessages = [
   new ErrorMessage('Title', 'required', 'Es muss eine Bezeichnung eingegeben werden'),
   new ErrorMessage('Title', 'maxlength', 'Es dürfen maximal 256 Zeichen eingegeben werden'),
-  new ErrorMessage('Number', 'required', 'Es muss eine Nummer eingegeben werden')
+  new ErrorMessage('Number', 'required', 'Es muss eine Nummer eingegeben werden'),
+  new ErrorMessage('SubUnit', 'floorRequired', 'Es muss ein Stockwerk eingegeben werden'),
+  new ErrorMessage('SubUnit', 'typeRequired', 'Es muss ein Typ ausgewählt werden')
 ];

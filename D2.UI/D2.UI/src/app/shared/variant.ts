@@ -6,10 +6,10 @@ export class Variant {
     this.Tag = tag;
     switch (tag) {
       case 1:
-        this.Raw = raw;
+        if (raw) { this.Raw = new Date(raw); }
         break;
       case 3:
-        this.Raw = raw;
+        if (raw) { this.Raw = raw; }
         break;
       case 2:
         this.Raw = new TypedValue(raw._value, raw._unit, raw._decimalPlaces);

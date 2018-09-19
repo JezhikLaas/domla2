@@ -1,4 +1,4 @@
-<mat-table #table [dataSource]="dataSource" >
+<mat-table #table [dataSource]="DataSource" >
   <ng-container matColumnDef="Title">
     <mat-header-cell *matHeaderCellDef> Titel </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.Title}} </mat-cell>
@@ -24,7 +24,7 @@
     <mat-cell *matCellDef="let element"> {{element.TypedValueUnit}} </mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;">
+  <mat-header-row *matHeaderRowDef="DisplayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: DisplayedColumns;">
   </mat-row>
 </mat-table>

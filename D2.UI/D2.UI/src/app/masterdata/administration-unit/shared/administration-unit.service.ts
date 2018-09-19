@@ -14,6 +14,7 @@ import { List } from 'linqts';
 import { AdministrationUnitProperty } from './administration-unit-property';
 import { getLocaleDateFormat } from '@angular/common';
 import { Variant } from '../../../shared/variant';
+import { SubUnit } from '../../subunit/subunit';
 
 @Injectable()
 export class AdministrationUnitService {
@@ -267,7 +268,28 @@ export class AdministrationUnitService {
           Version: 2,
           Id: '124969df-e174-4fff-9eb0-a94c006b675a',
           Edit: '0001-01-01T00: 00: 00'
-        }],
+        },
+        {
+          Title: 'Modernisierungsdatum',
+          Description: null,
+          Value: {Tag: 1, Raw: '2012-01-30T00:00:00'},
+          Version: 2,
+          Id: '124969df-e174-4fff-9eb0-a94c006b675a',
+          Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Title: 'Fläche',
+          Description: '1',
+          Value:
+            {
+              Tag: 2,
+              Raw: { _value: 56.0, _unit: 'qm', _decimalPlaces: 2 }
+            },
+          Version: 2,
+          Id: '0032f567-bd63-4632-aee3-a95f00820bc0',
+          Edit: '0001-01-01T00:00:00'
+        }
+      ],
       YearOfConstruction: {Year: 2011, Month: 11},
       Version: 1,
       Id: '28FB737F-B006-4E36-99A6-2F0CACDABE2B',
@@ -513,16 +535,28 @@ export class AdministrationUnitService {
         {
           Title: 'Heizung',
           Description: null,
-          Value: {Tag: 3, Raw: 'Erdw�rme'},
+          Value: {Tag: 3, Raw: 'Erdwärme'},
           Version: 2,
           Id: '124969df-e174-4fff-9eb0-a94c006b675a',
           Edit: '0001-01-01T00: 00: 00'
+        },
+        {
+          Title: 'Fläche',
+          Description: '1',
+          Value:
+            {
+              Tag: 2,
+              Raw: { _value: 56.0, _unit: 'qm', _decimalPlaces: 2 }
+            },
+          Version: 2,
+          Id: '0032f567-bd63-4632-aee3-a95f00820bc0',
+          Edit: '0001-01-01T00:00:00'
         }],
       YearOfConstruction: {Year: 2011, Month: 11},
       Version: 1,
       Id: '567baf97-ab82-4681-847c-a94c006b674e',
       Edit: '0001-01-01T00: 00: 00'
-    }
+      }
     ];
   }
 
@@ -573,7 +607,9 @@ export class AdministrationUnitService {
     const boundSubUnits = [];
     for (const entrance of AdminUnit.Entrances) {
       for ( const subUnit of entrance.SubUnits) {
-        boundSubUnits.push(subUnit);
+        const boundSubUnitWithEntrance = JSON.parse(JSON.stringify(subUnit));
+        boundSubUnitWithEntrance.Entrance = entrance;
+        boundSubUnits.push(boundSubUnitWithEntrance);
       }
     }
     AdminUnit.SubUnits = AdminUnit.UnboundSubUnits
@@ -587,8 +623,8 @@ export class AdministrationUnitService {
         new Date(),
         1,
         selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters.Title,
+        this.buildPropertyValue(selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters),
         selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters.Description,
-        this.buildPropertyValue(selectedAdministrationUnitsPropertyParameter.AdministrationUnitsFeatureParameters)
       );
       const list = new List <any>(this.administrationUnits);
       const adminUnit: AdministrationUnit = list

@@ -16,6 +16,7 @@ export class AdministrationUnit {
     public YearOfConstruction?: YearMonth,
     public AdministrationUnitProperties?: AdministrationUnitProperty[],
     public UnboundSubUnits?: UnboundSubunit[],
-    public SubUnits?: AdministrationUnitSubunit[]
+    public SubUnits?: AdministrationUnitSubunit[],
+    public IsModified: boolean = false
   ) { }
 }

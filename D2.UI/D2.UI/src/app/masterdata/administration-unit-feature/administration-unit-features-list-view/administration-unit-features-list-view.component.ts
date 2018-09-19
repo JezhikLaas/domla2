@@ -12,8 +12,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class AdministrationUnitFeaturesListViewComponent implements OnInit {
 
-  displayedColumns = ['Title', 'Description', 'Tag', 'TypedValueDecimalPlace', 'TypedValueUnit'];
-  dataSource: MatTableDataSource<AdministrationUnitFeature>;
+  DisplayedColumns = ['Title', 'Description', 'Tag', 'TypedValueDecimalPlace', 'TypedValueUnit'];
+  DataSource: MatTableDataSource<AdministrationUnitFeature>;
   DataType = DataType;
 
   constructor(
@@ -23,6 +23,6 @@ export class AdministrationUnitFeaturesListViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<AdministrationUnitFeature>(this.route.snapshot.data['AdministrationUnitFeatures']);
+    this.DataSource = new MatTableDataSource<AdministrationUnitFeature>(this.route.snapshot.data['AdministrationUnitFeatures']);
   }
 }

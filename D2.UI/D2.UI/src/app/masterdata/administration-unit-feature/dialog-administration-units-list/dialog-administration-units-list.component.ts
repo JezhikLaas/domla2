@@ -48,7 +48,7 @@ export class DialogAdministrationUnitsListComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  /** Selects all rows if they are not all selected; otherwise clear Selection. */
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :

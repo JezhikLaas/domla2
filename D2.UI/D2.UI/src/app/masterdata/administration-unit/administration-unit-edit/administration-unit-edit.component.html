@@ -34,52 +34,27 @@
   <mat-tab label="Eingänge">
     <ng-template matTabContent>
       <ui-entrances-list
-        [entrances] = "AdminUnit.Entrances">
+        [Entrances]="AdminUnit.Entrances"
+        (IsModified) = "modifiedChildComponent()">
       </ui-entrances-list>
     </ng-template>
   </mat-tab>
   <mat-tab label="Verwaltungseinheiten">
     <ng-template matTabContent>
       <ui-subinit-list-view
-        [SubUnits] = "SubUnits"
-        [Entrances] = "AdminUnit.Entrances">
+        [SubUnits] = "AdminUnit.SubUnits"
+        [Entrances] = "AdminUnit.Entrances"
+        (IsModified) = "modifiedChildComponent()">
       </ui-subinit-list-view>
     </ng-template>
   </mat-tab>
   <mat-tab label="Zusatzeigenschaften">
     <ng-template matTabContent>
-      <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" style="margin-top: 3em">
-        <div formArrayName="AdministrationUnitProperties" fx="100%" *ngIf = "EditForm.get(['AdministrationUnitProperties']) !== null">
-          <div *ngFor="let control of Properties.controls; index as i; last as l"
-               [formGroupName]="i"
-               class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left">
-            <ui-administration-unit-property class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left"
-              [Value] = "EditForm.get(['AdministrationUnitProperties',i,'Value' ])"
-              [Title] = "EditForm.get(['AdministrationUnitProperties',i,'Title' ])"
-              [Tag] = "EditForm.get(['AdministrationUnitProperties',i,'Value', 'Tag' ])"
-              [Raw] = "EditForm.get(['AdministrationUnitProperties',i,'Value', 'Raw' ])"
-              [RawNumber] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber'])"
-              [RawNumberUnit] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_unit'])"
-              [RawNumberValue] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_value'])"
-              [RawNumberDecimalPlaces] = "EditForm.get(['AdministrationUnitProperties', i, 'Value', 'RawNumber', '_decimalPlaces'])"
-              [Description] = "EditForm.get(['AdministrationUnitProperties',i,'Description' ])"
-              [ArrayLastElement] = "l"
-              (addPropertiesControl) = "addPropertiesControl()"
-              (removePropertiesControl) = "removePropertiesControl(i)"
-              (selectedValueTag) = "selectedValueTag($event, i)">
-            </ui-administration-unit-property>
-          </div>
-          <div *ngIf="Errors?.PropertyTitlerequired" class="ui negative message">
-            {{ Errors?.PropertyTitlerequired }}
-          </div>
-          <div *ngIf="Errors?.PropertyValueTagrequired" class="ui negative message">
-            {{ Errors?.PropertyValueTagrequired }}
-          </div>
-          <div *ngIf="Errors?.PropertyValueRawrequired" class="ui negative message">
-            {{ Errors?.PropertyValueRawrequired }}
-          </div>
-        </div>
-      </div>
+            <ui-administration-unit-property-list
+                [AdministrationUnitProperties] = "AdminUnit.AdministrationUnitProperties"
+                (IsModified) = "modifiedChildComponent()">
+            </ui-administration-unit-property-list>
+
       <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="left" fxFlex="50">
         <div fxFlex="50" *ngIf ="IsUpdatingAdminUnit && !ShowPropertiesForAllAdministrationUnits">
           <button
@@ -92,9 +67,6 @@
             mat-raised-button
             (click)="onShowPropertiesForAllAdministrationUnits()">Zusatzfelder für alle/selektierte Objekte verbergen
           </button>
-        </div>
-        <div fxFlex="50">
-           <button mat-raised-button (click)="addPropertiesArray()"  *ngIf = "EditForm.get(['AdministrationUnitProperties']) === null">Zusaztfelder für dieses Objekt anlegen</button>
         </div>
       </div>
       <div style="margin-top: 2em" *ngIf = "ShowPropertiesForAllAdministrationUnits">

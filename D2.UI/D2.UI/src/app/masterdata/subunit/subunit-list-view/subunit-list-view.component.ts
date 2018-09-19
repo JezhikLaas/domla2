@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
 import { AdministrationUnitSubunit } from '../../administration-unit/shared/administration-unit-subunit';
 import { UnboundSubUnitType } from '../unbound-subunit-type';
@@ -22,20 +22,20 @@ import { Entrance } from '../../../shared/entrance';
   `]
 })
 export class SubunitListViewComponent implements OnInit {
-  displayedColumns = ['Title', 'Number', 'Floor', 'Entrance', 'Type'];
+  DisplayedColumns = ['Title', 'Number', 'Floor', 'Entrance', 'Type'];
   InboundSubUnitType = UnboundSubUnitType;
   @Input() SubUnits: AdministrationUnitSubunit[];
   @Input() Entrances: Entrance[];
+  @Output() IsModified: EventEmitter <any> = new EventEmitter <any>();
   DataSource: MatTableDataSource<AdministrationUnitSubunit>;
-  initialSelection = [];
-  allowMultiSelect = false;
-  selection = new SelectionModel<Entrance>(this.allowMultiSelect, this.initialSelection);
-  SubUnit = AdminUnitFactory.emptySubUnit();
+  InitialSelection = [];
+  AllowMultiSelect = false;
+  Selection = new SelectionModel<Entrance>(this.AllowMultiSelect, this.InitialSelection);
+  emptySubUnit = AdminUnitFactory.emptySubUnit();
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     public dialog: MatDialog
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
     this.DataSource = new MatTableDataSource<AdministrationUnitSubunit>(this.SubUnits);
@@ -65,8 +65,8 @@ export class SubunitListViewComponent implements OnInit {
     this.DataSource.filter = filterValue.trim().replace(/\s/g, '' ).replace(',', '' ).toLowerCase();
   }
 
-  selectRow (entrance: any, index: number) {
-    this.openDialog(entrance, index, this.Entrances);
+  selectRow (subUnit: any, index: number) {
+    this.openDialog(subUnit, index, this.Entrances);
   }
 
 
@@ -82,12 +82,15 @@ export class SubunitListViewComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result && result !== selectedSubUnit && typeof(index) === 'number') {
-        this.DataSource.data[index] = result;
-      } else if (result && !index) {
-        this.DataSource.data.push(result);
+      if (result) {
+        if (result !== selectedSubUnit && typeof(index) === 'number') {
+          this.DataSource.data[index] = result;
+        } else if (!index) {
+          this.DataSource.data.push(result);
+        }
+        this.DataSource._updateChangeSubscription();
+        this.IsModified.emit();
       }
-      this.DataSource._updateChangeSubscription();
     });
   }
 }

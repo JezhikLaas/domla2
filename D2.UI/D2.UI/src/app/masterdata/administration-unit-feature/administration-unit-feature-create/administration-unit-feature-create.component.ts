@@ -122,8 +122,8 @@ export class AdministrationUnitFeatureCreateComponent implements OnInit, AfterVi
 
   ngAfterViewChecked() {
     if (this.AdministrationUnitsListView) {
-      this.AdministrationUnitsListView.dataSource  = new MatTableDataSource<AdministrationUnit>(this.AdministrationUnits);
-      this.AdministrationUnitsListView.disableSelectRow = true;
+      this.AdministrationUnitsListView.DataSource  = new MatTableDataSource<AdministrationUnit>(this.AdministrationUnits);
+      this.AdministrationUnitsListView.DisableSelectRow = true;
     }
   }
 }

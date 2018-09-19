@@ -22,7 +22,7 @@ export class AdministrationUnitFeaturesListComponent implements OnInit {
   }
 
   refreshProperties() {
-    this.administrationUnitFeatureService.listAdministrationUnitFeature().subscribe(res => this.AdministrationUnitFeaturesListViewComponent.dataSource
+    this.administrationUnitFeatureService.listAdministrationUnitFeature().subscribe(res => this.AdministrationUnitFeaturesListViewComponent.DataSource
       = new MatTableDataSource<AdministrationUnitFeature>(res));
   }
 }

@@ -1,5 +1,5 @@
 <div>
-  <mat-table #table [dataSource]="dataSource">
+  <mat-table #table [dataSource]="DataSource">
     <ng-container matColumnDef="userKey">
       <mat-header-cell *matHeaderCellDef> Schlüssel </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.UserKey}} </mat-cell>
@@ -35,11 +35,11 @@
       <mat-cell *matCellDef="let element"> {{element.Entrances[0]?.Address?.Number}}</mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"
-             [class.selected] = "selection.isSelected(row) && !disableSelectRow"
-             (mouseover)="selection.select(row)"
-             (mouseleave)="selection.deselect(row)"
+    <mat-header-row *matHeaderRowDef="DisplayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: DisplayedColumns;"
+             [class.selected] = "Selection.isSelected(row) && !DisableSelectRow"
+             (mouseover)="Selection.select(row)"
+             (mouseleave)="Selection.deselect(row)"
              (click)="selectRow(row)">
     </mat-row>
   </mat-table>

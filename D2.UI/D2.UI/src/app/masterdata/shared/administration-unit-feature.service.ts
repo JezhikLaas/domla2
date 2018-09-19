@@ -71,8 +71,8 @@ export class AdministrationUnitFeatureService {
         new Date(),
         1,
         baseSettings.Title,
-        baseSettings.Description,
-        this.administrationUnitsService.buildPropertyValue(baseSettings)
+        this.administrationUnitsService.buildPropertyValue(baseSettings),
+        baseSettings.Description
       );
       adminUnit.AdministrationUnitProperties.push(adminUnitProperty);
     }

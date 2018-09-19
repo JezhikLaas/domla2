@@ -19,20 +19,20 @@ import { ActivatedRoute } from '@angular/router';
   `]
 })
 export class AdministrationUnitsListViewComponent implements OnInit {
-  displayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
-  dataSource: MatTableDataSource<AdministrationUnit>;
-  initialSelection = [];
-  allowMultiSelect = false;
-  selection = new SelectionModel<AdministrationUnit>(this.allowMultiSelect, this.initialSelection);
+  DisplayedColumns = ['userKey', 'title', 'country', 'postalCode', 'city', 'street', 'number'];
+  DataSource: MatTableDataSource<AdministrationUnit>;
+  InitialSelection = [];
+  AllowMultiSelect = false;
+  Selection = new SelectionModel<AdministrationUnit>(this.AllowMultiSelect, this.InitialSelection);
   @Output() administrationUnitSelected = new EventEmitter<any>();
-  disableSelectRow = false;
+  DisableSelectRow = false;
   constructor(
     private menuDisplay: MenuDisplayService,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource<AdministrationUnit>(this.route.snapshot.data['AdministrationUnits']);
+    this.DataSource = new MatTableDataSource<AdministrationUnit>(this.route.snapshot.data['AdministrationUnits']);
   }
 
   selectRow (administratinUnit: any) {

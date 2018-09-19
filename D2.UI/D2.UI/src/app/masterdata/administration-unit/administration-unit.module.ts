@@ -4,8 +4,8 @@ import { AdministrationUnitRoutingModule } from './administration-unit-routing.m
 import { AdministrationUnitEditComponent } from './administration-unit-edit/administration-unit-edit.component';
 import { SharedModule } from '../../shared/shared.module';
 import {
-  AdministrationUnitPropertyComponent
-} from './administration-unit-property/administration-unit-property.component';
+  AdministrationUnitPropertyEditComponent
+} from './administration-unit-property/administration-unit-property-edit/administration-unit-property-edit.component';
 import { AdministrationUnitFeatureModule} from '../administration-unit-feature/administration-unit-feature.module';
 import { AdministrationUnitsListComponent } from './administration-units-list/administration-units-list.component';
 import {SubunitCreateComponent} from '../subunit/subunit-create/subunit-create.component';
@@ -13,6 +13,7 @@ import {SubunitListComponent} from '../subunit/subunit-list/subunit-list.compone
 import {SubunitListViewComponent} from '../subunit/subunit-list-view/subunit-list-view.component';
 import { EntrancesListComponent } from './administration-unit-edit/entrances-list/entrances-list.component';
 import { EntranceEditComponent } from './administration-unit-edit/entrance-edit/entrance-edit.component';
+import { AdministrationUnitPropertyListComponent } from './administration-unit-property/administration-unit-property-list/administration-unit-property-list.component';
 
 @NgModule({
   imports: [
@@ -21,16 +22,19 @@ import { EntranceEditComponent } from './administration-unit-edit/entrance-edit/
     AdministrationUnitFeatureModule
   ],
   entryComponents: [
-    EntranceEditComponent, SubunitCreateComponent],
+    EntranceEditComponent,
+    SubunitCreateComponent,
+    AdministrationUnitPropertyEditComponent],
   declarations: [
     AdministrationUnitEditComponent,
-    AdministrationUnitPropertyComponent,
+    AdministrationUnitPropertyEditComponent,
     AdministrationUnitsListComponent,
     SubunitCreateComponent,
     SubunitListComponent,
     SubunitListViewComponent,
     EntrancesListComponent,
-    EntranceEditComponent
+    EntranceEditComponent,
+    AdministrationUnitPropertyListComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

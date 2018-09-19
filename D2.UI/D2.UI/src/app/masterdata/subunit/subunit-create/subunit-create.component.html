@@ -22,7 +22,7 @@
   </div>
   <div fxFlex="50%" *ngIf="!SubUnit.get('Entrance').value">
     <mat-form-field  style="width: 100%">
-      <mat-select  formControlName="Type" (valueChange)="onSelectedType($event)">
+      <mat-select  formControlName="Type">
         <mat-option *ngFor="let Typ of UnboundSubUnitType.values(); let i = index" [value]=i+1>{{Typ}} </mat-option>
       </mat-select>
     </mat-form-field>
@@ -43,7 +43,13 @@
 <div *ngIf="Errors?.SubUnitNumberrequired" class="ui negative message">
   {{ Errors?.SubUnitNumberrequired }}
 </div>
+<div *ngIf="Errors?.SubUnitfloorRequired" class="ui negative message">
+  {{ Errors?.SubUnitfloorRequired }}
+</div>
+<div *ngIf="Errors?.SubUnitNumberrequired" class="ui negative message">
+  {{ Errors?.SubUnittyperequired }}
+</div>
   <div mat-dialog-actions>
     <button mat-raised-button (click)="onNoClick()">Abbrechen</button>
-    <button mat-raised-button [mat-dialog-close]="SubUnit.value" cdkFocusInitial [disabled]="SubUnit.invalid">Ok</button>
+    <button mat-raised-button [mat-dialog-close]="SubUnit.value" cdkFocusInitial [disabled]="SubUnit.invalid || SubUnit.untouched">Ok</button>
   </div>
