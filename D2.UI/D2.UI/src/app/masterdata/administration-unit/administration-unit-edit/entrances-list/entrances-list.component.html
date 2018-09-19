@@ -1,0 +1,49 @@
+<div style="margin-top: 1em">
+  <mat-table #table [dataSource]="DataSource">
+    <ng-container matColumnDef="Title">
+      <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Title}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Bezeichnung </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Title}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="country">
+      <mat-header-cell *matHeaderCellDef> Land </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Address?.Country?.Iso2}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="postalCode">
+      <mat-header-cell *matHeaderCellDef> PLZ </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Address?.PostalCode}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="city">
+      <mat-header-cell *matHeaderCellDef> Stadt </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Address?.City}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="street">
+      <mat-header-cell *matHeaderCellDef> Straße </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.Address?.Street}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="number">
+      <mat-header-cell *matHeaderCellDef> Nr. </mat-header-cell>
+      <mat-cell *matCellDef="let element;"> {{element.Address?.Number}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="DisplayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: DisplayedColumns; let i = index"
+             [class.selected] = "Selection.isSelected(row) && !DisableSelectRow"
+             (mouseover)="Selection.select(row)"
+             (mouseleave)="Selection.deselect(row)"
+             (click)="selectRow(row, i)">
+    </mat-row>
+  </mat-table>
+  <button mat-raised-button style="margin: 2em" (click)="openDialog(Entrance)">
+    Hinzufügen
+  </button>
+</div>
