@@ -52,7 +52,6 @@ export class AccountService {
   constructor(
     private http: HttpClient,
     private storage: StorageService,
-    @Inject('API_URL') private api: string,
     @Inject(DOCUMENT) private document: any
   ) { }
 
@@ -61,7 +60,7 @@ export class AccountService {
   }
 
   fetchServices(): Observable<BrokerUrl> {
-    return this.http.get<BrokerUrl>(`${this.api}${AccountService.Services_Url}`)
+    return this.http.get<BrokerUrl>(`${AccountService.Services_Url}`)
       .pipe(catchError(error => {
         return observableThrowError(error);
       }));
