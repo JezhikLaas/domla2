@@ -26,6 +26,7 @@ import {AdministrationUnitFeatureResolver} from './masterdata/shared/administrat
 import {AdministrationUnitFeaturesResolver} from './masterdata/shared/administration-unit-features-resolver.service';
 import {MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material';
 import {AdministrationUnitFeatureService} from './masterdata/shared/administration-unit-feature.service';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
@@ -42,7 +43,13 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     HttpClientModule,
     SharedModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['http'],
+        sendAccessToken: true
+      }
+    })
   ],
   providers: [
     ErrorDialogComponent,
