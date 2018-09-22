@@ -114,7 +114,7 @@ export class UiMaterialModule {}
     SharedRoutingModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: ['http'],
+        allowedUrls: ['http', '/home'],
         sendAccessToken: true
       }
     })

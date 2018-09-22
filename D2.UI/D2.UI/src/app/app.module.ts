@@ -46,7 +46,7 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     NgSelectModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: ['http'],
+        allowedUrls: ['http', '/home'],
         sendAccessToken: true
       }
     })
