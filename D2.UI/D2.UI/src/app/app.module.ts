@@ -43,13 +43,7 @@ registerLocaleData(localeDe, 'de-DE', localeDeExtra);
     HttpClientModule,
     SharedModule,
     FormsModule,
-    NgSelectModule,
-    OAuthModule.forRoot({
-      resourceServer: {
-        allowedUrls: ['http', '/home'],
-        sendAccessToken: true
-      }
-    })
+    NgSelectModule
   ],
   providers: [
     ErrorDialogComponent,
